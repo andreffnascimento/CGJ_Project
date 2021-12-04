@@ -30,6 +30,8 @@ MyMesh createCylinder(float height, float radius, int sides);
 MyMesh createCone(float height, float baseRadius, int sides);
 MyMesh createPawn();
 MyMesh computeVAO(int numP, float *p, float *pfloatoints, int sides, float smoothCos);
+MyMesh initTable();
+MyMesh initWheel();
 int revSmoothNormal2(float *p, float *nx, float *ny, float smoothCos, int beginEnd);
 float *circularProfile(float minAngle, float maxAngle, float radius, int divisions, float transX= 0.0f, float transY = 0.0f);
 void ComputeTangentArray(int vertexCount, float *vertex, float *normal, float *texcoord, GLuint indexesCount, GLuint *faceIndex, float *tangent);

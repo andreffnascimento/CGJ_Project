@@ -42,6 +42,8 @@ int WinX = 1024, WinY = 768;
 
 unsigned int FrameCount = 0;
 
+int nObjects = 0;
+
 //shaders
 VSShaderLib shader;  //geometry
 VSShaderLib shaderText;  //render bitmap text
@@ -50,7 +52,7 @@ VSShaderLib shaderText;  //render bitmap text
 const string font_name = "fonts/arial.ttf";
 
 //Vector with meshes
-vector<struct MyMesh> myMeshes;
+vector<struct MyMesh> table;
 
 //External array storage defined in AVTmathLib.cpp
 
@@ -83,6 +85,19 @@ long myTime,timebase = 0,frame = 0;
 char s[32];
 float lightPos[4] = {4.0f, 6.0f, 2.0f, 1.0f};
 
+// Object Constants
+float table_length = 100.0f;
+float table_width = 40.0f;
+float table_thickness = 2.5f;
+
+float leg_length = 25.0f;
+float leg_thickness = 3.0f;
+
+float car_bodyL = 5.0f;
+float car_bodyW = 2.0f;
+float car_bodyT = 1.0F;
+
+float radius = 0.45f;
 
 void timer(int value)
 {
@@ -126,6 +141,133 @@ void changeSize(int w, int h) {
 // Render stufff
 //
 
+void processObject(MyMesh obj) {
+	computeDerivedMatrix(PROJ_VIEW_MODEL);
+	glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
+	glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
+	computeNormalMatrix3x3();
+	glUniformMatrix3fv(normal_uniformId, 1, GL_FALSE, mNormal3x3);
+
+	// Render mesh
+	glBindVertexArray(obj.vao);
+
+	if (!shader.isProgramValid()) {
+		printf("Program Not Valid!\n");
+		exit(1);
+	}
+	glDrawElements(obj.type, obj.numIndexes, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+
+	popMatrix(MODEL);
+
+}
+
+void renderLegs(float x, float y, float z) {
+	pushMatrix(MODEL);
+
+	translate(MODEL, x, y, z);
+	scale(MODEL, leg_thickness, leg_length, leg_thickness);
+
+}
+
+void renderTable() {
+	GLint loc;
+
+	MyMesh obj = initTable();
+
+	loc = glGetUniformLocation(shader.getProgramIndex(), "ambient");
+	glUniform4fv(loc, 1, obj.mat.ambient);
+	loc = glGetUniformLocation(shader.getProgramIndex(), "diffuse");
+	glUniform4fv(loc, 1, obj.mat.diffuse);
+	loc = glGetUniformLocation(shader.getProgramIndex(), "specular");
+	glUniform4fv(loc, 1, obj.mat.specular);
+	loc = glGetUniformLocation(shader.getProgramIndex(), "shininess");
+	glUniform1f(loc, obj.mat.shininess);
+
+	//Cover
+	pushMatrix(MODEL);
+	scale(MODEL, table_width, table_thickness, table_length);
+
+	processObject(obj);
+
+	//Legs
+	renderLegs(0, -leg_length, 0);
+	processObject(obj);
+
+	renderLegs(0, -leg_length, table_length - leg_thickness);
+	processObject(obj);
+
+	renderLegs(table_width - leg_thickness, -leg_length, table_length - leg_thickness);
+	processObject(obj);
+
+	renderLegs(table_width - leg_thickness, -leg_length, 0);
+	processObject(obj);
+}
+
+
+void renderWheels(float x, float y, float z) {
+	pushMatrix(MODEL);
+
+	translate(MODEL, x, y, z);
+	rotate(MODEL, 90.0f, 0, 0, 1);
+	scale(MODEL, 0.5f, 0.5f, 0.5f);
+
+}
+
+void renderCar() {
+	GLint loc;
+	
+	MyMesh obj = initTable(); //TO CHANGE
+	
+	loc = glGetUniformLocation(shader.getProgramIndex(), "ambient");
+	glUniform4fv(loc, 1, obj.mat.ambient);
+	loc = glGetUniformLocation(shader.getProgramIndex(), "diffuse");
+	glUniform4fv(loc, 1, obj.mat.diffuse);
+	loc = glGetUniformLocation(shader.getProgramIndex(), "specular");
+	glUniform4fv(loc, 1, obj.mat.specular);
+	loc = glGetUniformLocation(shader.getProgramIndex(), "shininess");
+	glUniform1f(loc, obj.mat.shininess);
+
+	pushMatrix(MODEL);
+
+	translate(MODEL, 5, table_thickness + radius, 5);
+	scale(MODEL, car_bodyW, car_bodyT, car_bodyL);
+
+	processObject(obj);
+
+	pushMatrix(MODEL);
+
+	translate(MODEL, 5, table_thickness + radius + car_bodyT, 5 + car_bodyW/2);
+	scale(MODEL, car_bodyW, car_bodyT/2, car_bodyL/3);
+
+	processObject(obj);
+
+
+	obj = initWheel(); //Using table cause fuckit
+
+	loc = glGetUniformLocation(shader.getProgramIndex(), "ambient");
+	glUniform4fv(loc, 1, obj.mat.ambient);
+	loc = glGetUniformLocation(shader.getProgramIndex(), "diffuse");
+	glUniform4fv(loc, 1, obj.mat.diffuse);
+	loc = glGetUniformLocation(shader.getProgramIndex(), "specular");
+	glUniform4fv(loc, 1, obj.mat.specular);
+	loc = glGetUniformLocation(shader.getProgramIndex(), "shininess");
+	glUniform1f(loc, obj.mat.shininess);
+
+
+	renderWheels(5, table_thickness + radius, 5);
+	processObject(obj);
+
+	renderWheels(5 + car_bodyW, table_thickness + radius, 5);
+	processObject(obj);
+
+	renderWheels(5 + car_bodyW, table_thickness + radius, 5 + car_bodyL);
+	processObject(obj);
+
+	renderWheels(5, table_thickness + radius, 5 + car_bodyL);
+	processObject(obj);
+}
+
 void renderScene(void) {
 
 	GLint loc;
@@ -141,87 +283,19 @@ void renderScene(void) {
 	// use our shader
 	glUseProgram(shader.getProgramIndex());
 
-		//send the light position in eye coordinates
-		//glUniform4fv(lPos_uniformId, 1, lightPos); //efeito capacete do mineiro, ou seja lighPos foi definido em eye coord 
+	//send the light position in eye coordinates
+	//glUniform4fv(lPos_uniformId, 1, lightPos); //efeito capacete do mineiro, ou seja lighPos foi definido em eye coord 
 
-		float res[4];
-		multMatrixPoint(VIEW, lightPos,res);   //lightPos definido em World Coord so is converted to eye space
-		glUniform4fv(lPos_uniformId, 1, res);
+	float res[4];
+	multMatrixPoint(VIEW, lightPos,res);   //lightPos definido em World Coord so is converted to eye space
+	glUniform4fv(lPos_uniformId, 1, res);
 
-	int objId=0; //id of the object mesh - to be used as index of mesh: Mymeshes[objID] means the current mesh
+	
+	//build table
+	renderTable();
 
-	for (int i = 0 ; i < 2; ++i) {
-		for (int j = 0; j < 2; ++j) {
+	renderCar();
 
-			// send the material
-			loc = glGetUniformLocation(shader.getProgramIndex(), "ambient");
-			glUniform4fv(loc, 1, myMeshes[objId].mat.ambient);
-			loc = glGetUniformLocation(shader.getProgramIndex(), "diffuse");
-			glUniform4fv(loc, 1, myMeshes[objId].mat.diffuse);
-			loc = glGetUniformLocation(shader.getProgramIndex(), "specular");
-			glUniform4fv(loc, 1, myMeshes[objId].mat.specular);
-			loc = glGetUniformLocation(shader.getProgramIndex(), "shininess");
-			glUniform1f(loc, myMeshes[objId].mat.shininess);
-			pushMatrix(MODEL);
-			translate(MODEL, i*2.0f, 0.0f, j*2.0f);
-
-			// send matrices to OGL
-			computeDerivedMatrix(PROJ_VIEW_MODEL);
-			glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
-			glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
-			computeNormalMatrix3x3();
-			glUniformMatrix3fv(normal_uniformId, 1, GL_FALSE, mNormal3x3);
-
-			// Render mesh
-			glBindVertexArray(myMeshes[objId].vao);
-			
-			if (!shader.isProgramValid()) {
-				printf("Program Not Valid!\n");
-				exit(1);	
-			}
-			glDrawElements(myMeshes[objId].type, myMeshes[objId].numIndexes, GL_UNSIGNED_INT, 0);
-			glBindVertexArray(0);
-
-			popMatrix(MODEL);
-			objId++;
-		}
-	}
-
-	if (objId == 4)
-	{
-		// send the material
-		loc = glGetUniformLocation(shader.getProgramIndex(), "ambient");
-		glUniform4fv(loc, 1, myMeshes[objId].mat.ambient);
-		loc = glGetUniformLocation(shader.getProgramIndex(), "diffuse");
-		glUniform4fv(loc, 1, myMeshes[objId].mat.diffuse);
-		loc = glGetUniformLocation(shader.getProgramIndex(), "specular");
-		glUniform4fv(loc, 1, myMeshes[objId].mat.specular);
-		loc = glGetUniformLocation(shader.getProgramIndex(), "shininess");
-		glUniform1f(loc, myMeshes[objId].mat.shininess);
-		pushMatrix(MODEL);
-		translate(MODEL, -2.0f, -1.5f, -2.0f);
-		scale(MODEL, 5.0f, 1.0f, 5.0f);
-
-		// send matrices to OGL
-		computeDerivedMatrix(PROJ_VIEW_MODEL);
-		glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
-		glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
-		computeNormalMatrix3x3();
-		glUniformMatrix3fv(normal_uniformId, 1, GL_FALSE, mNormal3x3);
-
-		// Render mesh
-		glBindVertexArray(myMeshes[objId].vao);
-
-		if (!shader.isProgramValid()) {
-			printf("Program Not Valid!\n");
-			exit(1);
-		}
-		glDrawElements(myMeshes[objId].type, myMeshes[objId].numIndexes, GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
-
-		popMatrix(MODEL);
-		objId++;
-	}
 
 	//Render text (bitmap fonts) in screen coordinates. So use ortoghonal projection with viewport coordinates.
 	glDisable(GL_DEPTH_TEST);
@@ -411,6 +485,52 @@ GLuint setupShaders() {
 // Model loading and OpenGL setup
 //
 
+
+MyMesh initTable() {
+	MyMesh amesh;
+
+	float amb[] = { 0.2f, 0.15f, 0.1f, 1.0f };
+	float diff[] = { 0.8f, 0.6f, 0.4f, 1.0f };
+	float spec[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+	float emissive[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	float shininess = 100.0f;
+	int texcount = 0;
+
+	//create legs + cover
+	amesh = createCube();
+		
+	memcpy(amesh.mat.ambient, amb, 4 * sizeof(float));
+	memcpy(amesh.mat.diffuse, diff, 4 * sizeof(float));
+	memcpy(amesh.mat.specular, spec, 4 * sizeof(float));
+	memcpy(amesh.mat.emissive, emissive, 4 * sizeof(float));
+	amesh.mat.shininess = shininess;
+	amesh.mat.texCount = texcount;
+	
+	return amesh;
+}
+
+MyMesh initWheel() {
+	MyMesh amesh;
+
+	float amb1[] = { 0.3f, 0.0f, 0.0f, 1.0f };
+	float diff1[] = { 0.8f, 0.1f, 0.1f, 1.0f };
+	float spec1[] = { 0.9f, 0.9f, 0.9f, 1.0f };
+	float emissive1[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	float shininess = 500.0f;
+	int texcount = 0;
+
+
+	amesh = createTorus(1.0f - radius, 1.0f, 20, 20);
+	memcpy(amesh.mat.ambient, amb1, 4 * sizeof(float));
+	memcpy(amesh.mat.diffuse, diff1, 4 * sizeof(float));
+	memcpy(amesh.mat.specular, spec1, 4 * sizeof(float));
+	memcpy(amesh.mat.emissive, emissive1, 4 * sizeof(float));
+	amesh.mat.shininess = shininess;
+	amesh.mat.texCount = texcount;
+	
+	return amesh;
+}
+
 void init()
 {
 	MyMesh amesh;
@@ -431,23 +551,16 @@ void init()
 	camZ = r * cos(alpha * 3.14f / 180.0f) * cos(beta * 3.14f / 180.0f);
 	camY = r *   						     sin(beta * 3.14f / 180.0f);
 
-	
-	float amb[]= {0.2f, 0.15f, 0.1f, 1.0f};
-	float diff[] = {0.8f, 0.6f, 0.4f, 1.0f};
-	float spec[] = {0.8f, 0.8f, 0.8f, 1.0f};
-	float emissive[] = {0.0f, 0.0f, 0.0f, 1.0f};
-	float shininess= 100.0f;
-	int texcount = 0;
-
 	// create geometry and VAO of the pawn
-	amesh = createPawn();
+	/*amesh = createPawn();
 	memcpy(amesh.mat.ambient, amb, 4 * sizeof(float));
 	memcpy(amesh.mat.diffuse, diff, 4 * sizeof(float));
 	memcpy(amesh.mat.specular, spec, 4 * sizeof(float));
 	memcpy(amesh.mat.emissive, emissive, 4 * sizeof(float));
 	amesh.mat.shininess = shininess;
 	amesh.mat.texCount = texcount;
-	myMeshes.push_back(amesh);
+	myMeshes.push_back(amesh); 
+	nObjects++;
 
 	
 	// create geometry and VAO of the sphere
@@ -459,6 +572,7 @@ void init()
 	amesh.mat.shininess = shininess;
 	amesh.mat.texCount = texcount;
 	myMeshes.push_back(amesh);
+	nObjects++;
 
 	float amb1[]= {0.3f, 0.0f, 0.0f, 1.0f};
 	float diff1[] = {0.8f, 0.1f, 0.1f, 1.0f};
@@ -474,6 +588,7 @@ void init()
 	amesh.mat.shininess = shininess;
 	amesh.mat.texCount = texcount;
 	myMeshes.push_back(amesh);
+	nObjects++;
 
 	// create geometry and VAO of the 
 	amesh = createCone(1.5f, 0.5f, 20);
@@ -484,6 +599,7 @@ void init()
 	amesh.mat.shininess = shininess;
 	amesh.mat.texCount = texcount;
 	myMeshes.push_back(amesh);
+	nObjects++;
 
 	// create geometry and VAO of the pawn
 	amesh = createCube();
@@ -494,7 +610,8 @@ void init()
 	amesh.mat.shininess = shininess;
 	amesh.mat.texCount = texcount;
 	myMeshes.push_back(amesh);
-
+	nObjects++;*/
+	
 	// some GL settings
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -509,22 +626,22 @@ void init()
 //
 
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
 
-//  GLUT initialization
+	//  GLUT initialization
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DEPTH|GLUT_DOUBLE|GLUT_RGBA|GLUT_MULTISAMPLE);
+	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE);
 
-	glutInitContextVersion (4, 3);
-	glutInitContextProfile (GLUT_CORE_PROFILE );
+	glutInitContextVersion(4, 3);
+	glutInitContextProfile(GLUT_CORE_PROFILE);
 	glutInitContextFlags(GLUT_FORWARD_COMPATIBLE | GLUT_DEBUG);
 
-	glutInitWindowPosition(100,100);
+	glutInitWindowPosition(100, 100);
 	glutInitWindowSize(WinX, WinY);
 	WindowHandle = glutCreateWindow(CAPTION);
 
 
-//  Callback Registration
+	//  Callback Registration
 	glutDisplayFunc(renderScene);
 	glutReshapeFunc(changeSize);
 
@@ -536,20 +653,20 @@ int main(int argc, char **argv) {
 	glutKeyboardFunc(processKeys);
 	glutMouseFunc(processMouseButtons);
 	glutMotionFunc(processMouseMotion);
-	glutMouseWheelFunc ( mouseWheel ) ;
-	
+	glutMouseWheelFunc(mouseWheel);
 
-//	return from main loop
+
+	//	return from main loop
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 
-//	Init GLEW
+	//	Init GLEW
 	glewExperimental = GL_TRUE;
 	glewInit();
 
-	printf ("Vendor: %s\n", glGetString (GL_VENDOR));
-	printf ("Renderer: %s\n", glGetString (GL_RENDERER));
-	printf ("Version: %s\n", glGetString (GL_VERSION));
-	printf ("GLSL: %s\n", glGetString (GL_SHADING_LANGUAGE_VERSION));
+	printf("Vendor: %s\n", glGetString(GL_VENDOR));
+	printf("Renderer: %s\n", glGetString(GL_RENDERER));
+	printf("Version: %s\n", glGetString(GL_VERSION));
+	printf("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
 	if (!setupShaders())
 		return(1);
@@ -561,6 +678,3 @@ int main(int argc, char **argv) {
 
 	return(0);
 }
-
-
-
