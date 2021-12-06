@@ -446,8 +446,8 @@ GLuint setupShaders() {
 
 	// Shader for models
 	shader.init();
-	shader.loadShader(VSShaderLib::VERTEX_SHADER, "shaders/gouraud.vert");
-	shader.loadShader(VSShaderLib::FRAGMENT_SHADER, "shaders/gouraud.frag");
+	shader.loadShader(VSShaderLib::VERTEX_SHADER, "src/shaders/gouraud.vert");
+	shader.loadShader(VSShaderLib::FRAGMENT_SHADER, "src/shaders/gouraud.frag");
 
 	// set semantics for the shader variables
 	glBindFragDataLocation(shader.getProgramIndex(), 0,"colorOut");
@@ -471,8 +471,8 @@ GLuint setupShaders() {
 
 	// Shader for bitmap Text
 	shaderText.init();
-	shaderText.loadShader(VSShaderLib::VERTEX_SHADER, "shaders/text.vert");
-	shaderText.loadShader(VSShaderLib::FRAGMENT_SHADER, "shaders/text.frag");
+	shaderText.loadShader(VSShaderLib::VERTEX_SHADER, "src/shaders/text.vert");
+	shaderText.loadShader(VSShaderLib::FRAGMENT_SHADER, "src/shaders/text.frag");
 
 	glLinkProgram(shaderText.getProgramIndex());
 	printf("InfoLog for Text Rendering Shader\n%s\n\n", shaderText.getAllInfoLogs().c_str());
