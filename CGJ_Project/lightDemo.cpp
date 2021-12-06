@@ -59,6 +59,7 @@ vector<struct MyMesh> meshes;
 int car_id = 0;
 int wheel_id = 0;
 int table_id = 0;
+int candle_id = 0;
 
 /* ------ Object Constants ------  */
 float table_length = 100.0f;
@@ -74,10 +75,28 @@ float car_bodyT = 1.0F;
 
 float radius = 0.45f;
 
+/* ------------ Candles ------------ */
+const float CANDLE_HEIGHT = 2;
+const float CANDLE_RADIUS = 0.5f;
+const int NUM_CANDLES = 6;
+
+typedef struct Candle {
+	int id;
+	float x = 0.0f, y = CANDLE_HEIGHT / 2 + table_thickness, z = 0.0f;
+} Candle;
+
+Candle Candles[NUM_CANDLES];
+
 /* --------- Car Movement -------- */
 int carX = 5;
 int carY = table_thickness + radius * 2;
 int carZ = 5;
+
+/* ------------ Lights ----------- */
+float lightPos[4] = { 1.0f, 12.0f, 1.0f ,1.0f };
+int globalLight = 1;  // 1 = lights ON,  0 = lights OFF
+int pointLights = 1;
+int carLights = 1;
 
 //External array storage defined in AVTmathLib.cpp
 
@@ -108,8 +127,6 @@ float r = 10.0f;
 // Frame counting and FPS computation
 long myTime,timebase = 0,frame = 0;
 char s[32];
-float lightPos[4] = {4.0f, 6.0f, 2.0f, 1.0f};
-
 
 
 void timer(int value)
@@ -148,6 +165,95 @@ void changeSize(int w, int h) {
 	perspective(53.13f, ratio, 0.1f, 1000.0f);
 }
 
+// ------------------------------------------------------------
+//
+// Light Functions
+//
+
+void addDirectionalLight(int id, float l_dirX, float l_dirY, float l_dirZ) {
+	GLint loc;
+
+	float globalLightPos[4] = {l_dirX, l_dirY, l_dirZ, 0.0};
+	float res[4];
+	string addressPart1 = "Lights[";
+	string strId = to_string(id);
+	string strIsEnabled = "].isEnabled";
+	string strLightType = "].lightType";
+	string strLightDir = "].lightDir";
+	string address;
+	multMatrixPoint(VIEW, globalLightPos, res);
+	glUniform4fv(lPos_uniformId, 1, res);
+	address = addressPart1 + strId + strIsEnabled;
+	loc = glGetUniformLocation(shader.getProgramIndex(), address.c_str());
+	glUniform1i(loc, globalLight);
+	address = addressPart1 + strId + strLightType;
+	loc = glGetUniformLocation(shader.getProgramIndex(), address.c_str());
+	glUniform1i(loc, 1);
+	address = addressPart1 + strId + strLightDir;
+	loc = glGetUniformLocation(shader.getProgramIndex(), address.c_str());
+	glUniform4fv(loc, 1, res);
+}
+
+void addPointLight(int id, float l_posX, float l_posY, float l_posZ) {
+
+	GLint loc;
+	string addressPart1 = "Lights[";
+	string strId = to_string(id);
+	string strIsEnabled = "].isEnabled";
+	string strLightType = "].lightType";
+	string strPosition = "].position";
+	string address;
+
+	float pointLightPos[4] = {l_posX, l_posY, l_posZ, 1.0};
+	float resPos[4];
+	multMatrixPoint(VIEW, pointLightPos, resPos);
+	glUniform4fv(lPos_uniformId, 1, resPos);
+	address = addressPart1 + strId + strIsEnabled;
+	loc = glGetUniformLocation(shader.getProgramIndex(), address.c_str());
+	glUniform1i(loc, pointLights);
+	address = addressPart1 + strId + strLightType;
+	loc = glGetUniformLocation(shader.getProgramIndex(), address.c_str());
+	glUniform1i(loc, 2);
+	address = addressPart1 + strId + strPosition;
+	loc = glGetUniformLocation(shader.getProgramIndex(), address.c_str());
+	glUniform4fv(loc, 1, resPos);
+}
+
+void addSpotLight(int id, float anglecutOff, float l_posX, float l_posY, float l_posZ, float l_dirX, float l_dirY, float l_dirZ) {
+
+	GLint loc;
+
+	string addressPart1 = "Lights[";
+	string strId = to_string(id);
+	string strIsEnabled = "].isEnabled";
+	string strLightType = "].lightType";
+	string strConeDirection = "].coneDirection";
+	string strSpotCutOff = "].spotCutOff";
+	string strPosition = "].position";
+	string address;
+	float spotLightDir[4] = {l_dirX, l_dirY, l_dirZ, 0.0};
+	float spotLightPos[4] = {l_posX, l_posY, l_posZ, 1.0};
+	float resDir[4];
+	float resPos[4];
+	multMatrixPoint(VIEW, spotLightDir, resDir);
+	multMatrixPoint(VIEW, spotLightPos, resPos);
+	glUniform4fv(lPos_uniformId, 1, resPos);
+	address = addressPart1 + strId + strIsEnabled;
+	loc = glGetUniformLocation(shader.getProgramIndex(), address.c_str());
+	glUniform1i(loc, carLights);
+	address = addressPart1 + strId + strLightType;
+	loc = glGetUniformLocation(shader.getProgramIndex(), address.c_str());
+	glUniform1i(loc, 3);
+	address = addressPart1 + strId + strConeDirection;
+	loc = glGetUniformLocation(shader.getProgramIndex(), address.c_str());
+	glUniform4fv(loc, 1, resDir);
+	address = addressPart1 + strId + strSpotCutOff;
+	loc = glGetUniformLocation(shader.getProgramIndex(), address.c_str());
+	glUniform1f(loc, anglecutOff);
+	address = addressPart1 + strId + strPosition;
+	loc = glGetUniformLocation(shader.getProgramIndex(), address.c_str());
+	glUniform4fv(loc, 1, resPos);
+}
 
 // ------------------------------------------------------------
 //
@@ -214,7 +320,6 @@ void renderTable() {
 	processObject(meshes[table_id]);
 }
 
-
 void renderWheels(float x, float y, float z) {
 	pushMatrix(MODEL);
 
@@ -275,6 +380,31 @@ void renderCar() {
 	processObject(meshes[wheel_id]);
 }
 
+void renderCandles() {
+	int i;
+	GLint loc;
+
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.ambient");
+	glUniform4fv(loc, 1, meshes[candle_id].mat.ambient);
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.diffuse");
+	glUniform4fv(loc, 1, meshes[candle_id].mat.diffuse);
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.specular");
+	glUniform4fv(loc, 1, meshes[candle_id].mat.specular);
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.shininess");
+	glUniform1f(loc, meshes[candle_id].mat.shininess);
+
+	for (i = 0; i < NUM_CANDLES; i++) {
+		addPointLight(Candles[i].id, Candles[i].x, Candles[i].y, Candles[i].z);
+
+		pushMatrix(MODEL);
+		translate(MODEL, Candles[i].x, Candles[i].y, Candles[i].z);
+
+		//glUniform1i(texMode_uniformId, 0); 	
+
+		processObject(meshes[candle_id]);
+	}
+}
+
 void renderScene(void) {
 
 	GLint loc;
@@ -297,11 +427,16 @@ void renderScene(void) {
 	multMatrixPoint(VIEW, lightPos,res);   //lightPos definido em World Coord so is converted to eye space
 	glUniform4fv(lPos_uniformId, 1, res);
 
-	
+	//add main direct light
+	addDirectionalLight(0, 1.0f, 12.0f, 1.0f);
+
+
 	//build table
 	renderTable();
 
 	renderCar();
+
+	renderCandles();
 
 
 	//Render text (bitmap fonts) in screen coordinates. So use ortoghonal projection with viewport coordinates.
@@ -343,12 +478,10 @@ void processKeys(unsigned char key, int xx, int yy)
 		case 27:
 			glutLeaveMainLoop();
 			break;
-
-		case 'c': 
-			printf("Camera Spherical Coordinates (%f, %f, %f)\n", alpha, beta, r);
-			break;
 		case 'm': glEnable(GL_MULTISAMPLE); break;
-		case 'n': glDisable(GL_MULTISAMPLE); break;
+		case 'n': if (globalLight == 1)globalLight = 0; else globalLight = 1; break;
+		case 'c': if (pointLights == 1)pointLights = 0; else pointLights = 1; break;
+		case 'h': if (carLights == 1)carLights = 0; else carLights = 1; break;
 	}
 }
 
@@ -454,8 +587,8 @@ GLuint setupShaders() {
 
 	// Shader for models
 	shader.init();
-	shader.loadShader(VSShaderLib::VERTEX_SHADER, "shaders/gouraud.vert");
-	shader.loadShader(VSShaderLib::FRAGMENT_SHADER, "shaders/gouraud.frag");
+	shader.loadShader(VSShaderLib::VERTEX_SHADER, "shaders/phong-blinn.vert");
+	shader.loadShader(VSShaderLib::FRAGMENT_SHADER, "shaders/phong-blinn.frag");
 
 	// set semantics for the shader variables
 	glBindFragDataLocation(shader.getProgramIndex(), 0,"colorOut");
@@ -567,6 +700,42 @@ void initCar() {
 	car_id = meshes.size() - 1;
 }
 
+void initCandle(int i, int id, float x, float z) {
+	Candles[i].x = x;
+	Candles[i].z = z;
+	Candles[i].id = id;
+}
+
+void initCandles() {
+	MyMesh amesh;
+	float amb[] = { 1.0f, 233.0f / 255.0f, 164.0f / 255.0f, 1.0f };
+	float diff[] = { 1.0f, 233.0f / 255.0f, 164.0f / 255.0, 1.0f };
+	float spec[] = { 1.0f, 233.0f / 255.0f, 164.0f / 255.0, 1.0f };
+	float emissive[] = { 1.0f, 233.0f / 255.0f, 164.0f / 255.0, 1.0f };
+	float shininess = 40.0f;
+	int texcount = 0;
+
+
+	amesh = createCylinder(2, 0.5, 20);
+	memcpy(amesh.mat.ambient, amb, 4 * sizeof(float));
+	memcpy(amesh.mat.diffuse, diff, 4 * sizeof(float));
+	memcpy(amesh.mat.specular, spec, 4 * sizeof(float));
+	memcpy(amesh.mat.emissive, emissive, 4 * sizeof(float));
+	amesh.mat.shininess = shininess;
+	amesh.mat.texCount = texcount;
+	meshes.push_back(amesh);
+
+	candle_id = meshes.size() - 1;
+
+	// Add hand-picked positions to the Candles[] array
+	initCandle(0, 1, -1, 6);
+	initCandle(1, 2, 10, -10);
+	initCandle(2, 3, 9, 7);
+	initCandle(3, 4, -10, 10);
+	initCandle(4, 5, -9, -7);
+	initCandle(5, 6, -1, -6);
+}
+
 void init()
 {
 	MyMesh amesh;
@@ -592,7 +761,8 @@ void init()
 	initTable();
 	initWheel();
 	initCar();
-
+	initCandles();
+	
 	// some GL settings
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
