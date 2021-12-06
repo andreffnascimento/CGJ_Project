@@ -3,8 +3,8 @@
 
 
 
-// Window caption
-const char *Application::CAPTION = "CGJ Project: Micro Machines 3D";
+const char *Application::CAPTION = "CGJ Project: Micro Machines 3D";	// window caption
+const char* Application::FONT_NAME = "fonts/arial.ttf";				// font name
 
 
 
@@ -21,7 +21,7 @@ Application::Application()
 
 Application& Application::getInstance()
 {
-	static Application app = Application();
+	static Application app;
 	return app;
 }
 
@@ -37,8 +37,6 @@ InputHandler& Application::getInputHandler()
 
 void Application::init(int argc, char** argv, bool lockedFps)
 {
-	Application app = Application();
-
 	//  GLUT initialization
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE);
@@ -49,7 +47,7 @@ void Application::init(int argc, char** argv, bool lockedFps)
 
 	glutInitWindowPosition(100, 100);
 	glutInitWindowSize(Application::WIDTH, Application::HEIGHT);
-	app._windowHandle = glutCreateWindow(CAPTION);
+	_windowHandle = glutCreateWindow(CAPTION);
 
 	// callback Registration
 	glutDisplayFunc(renderScene);
@@ -79,4 +77,35 @@ void Application::init(int argc, char** argv, bool lockedFps)
 	std::cout << "Renderer: " << glGetString(GL_RENDERER) << "\n";
 	std::cout << "Version: " << glGetString(GL_VERSION) << "\n";
 	std::cout << "GLSL: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << "\n";
+
+	// initialize the game
+	_game = Game();
+
+	// initialization of DevIL
+	if (ilGetInteger(IL_VERSION_NUM) < IL_VERSION)
+	{
+		printf("wrong DevIL version \n");
+		exit(0);
+	}
+	ilInit();
+
+	// initialization of freetype library with font_name file
+	freeType_init(Application::FONT_NAME);
+
+	// initialize the shaders
+	if (!setupShaders())
+		throw std::string("Unable to initialize the shaders");
+
+	// some GL settings
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_MULTISAMPLE);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+}
+
+
+void Application::run()
+{
+	//  GLUT main loop
+	glutMainLoop();
 }

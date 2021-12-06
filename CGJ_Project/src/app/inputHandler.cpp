@@ -1,6 +1,7 @@
 #include "inputHandler.h"
 
 
+
 InputHandler::InputHandler()
 {
 	resetInput();	

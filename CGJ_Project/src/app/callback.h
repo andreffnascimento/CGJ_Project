@@ -12,7 +12,7 @@
 // FPS display callback function
 void timer(int value)
 {
-	Application app = Application::getInstance();
+	Application& app = Application::getInstance();
 	std::ostringstream oss;
 	oss << Application::CAPTION << ": " << app._frameCount << " FPS @ (" << Application::WIDTH << "x" << Application::HEIGHT << ")";
 	std::string s = oss.str();
@@ -20,6 +20,7 @@ void timer(int value)
 	glutSetWindowTitle(s.c_str());
 	glutTimerFunc(1000, timer, 0);
 	app._frameCount = 0;
+
 }
 
 
@@ -50,7 +51,19 @@ void changeSize(int width, int height) {
 // Render callback function
 void renderScene()
 {
+	Application &app = Application::getInstance();
+	app._frameCount++;
 
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// =============================== TEMP ========================================
+	// load identity matrices
+	loadIdentity(VIEW);
+	loadIdentity(MODEL);
+	lookAt(0, 0, 0, 0, 0, 0, 0, 1, 0);					// set the camera using a function similar to gluLookAt
+	glUseProgram(getShader().getProgramIndex());		// use our shader
+
+	glutSwapBuffers();
 }
 
 
@@ -68,7 +81,7 @@ void processKeys(unsigned char key, int x, int y)
 // Mouse click callback function
 void processMouseButtons(int button, int state, int x, int y)
 {
-	InputHandler input = Application::getInputHandler();
+	InputHandler &input = Application::getInputHandler();
 	InputHandler::MouseStatus status = InputHandler::MouseStatus::NONE;
 
 	// start tracking the mouse
@@ -86,7 +99,7 @@ void processMouseButtons(int button, int state, int x, int y)
 // Mouse motion callback function
 void processMouseMotion(int x, int y)
 {
-	InputHandler input = Application::getInputHandler();
+	InputHandler &input = Application::getInputHandler();
 	input.updateMouse(x, y);
 }
 
@@ -94,7 +107,7 @@ void processMouseMotion(int x, int y)
 // Mouse wheel callback function
 void mouseWheel(int wheel, int direction, int x, int y) 
 {
-	InputHandler input = Application::getInputHandler();
+	InputHandler &input = Application::getInputHandler();
 	input.updateMouse(x, y);
 	input.updateMouseWeel(direction);
 }
