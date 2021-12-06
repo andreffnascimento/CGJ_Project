@@ -58,6 +58,9 @@ void WorldCameraScript::_processMouseClick(const InputHandler::MouseInfo& mouseI
 
 void WorldCameraScript::_processMouseMovement(const InputHandler::MouseInfo& mouseInfo)
 {
+	if (mouseInfo.status != InputHandler::MouseStatus::MOVE)
+		return;
+
 	float alphaAux = _camera._alpha;
 	float betaAux = _camera._beta;
 	float rAux = _camera._r;
@@ -65,11 +68,7 @@ void WorldCameraScript::_processMouseMovement(const InputHandler::MouseInfo& mou
 	int deltaX = -mouseInfo.coords.x + _startX;
 	int deltaY = mouseInfo.coords.y - _startY;
 
-	if (_trackingStatus == TrackingStatus::NONE)
-	{
-		return;
-	}
-	else if (_trackingStatus == TrackingStatus::MOVE)
+	if (_trackingStatus == TrackingStatus::MOVE)
 	{
 		alphaAux = _camera._alpha + deltaX;
 		betaAux = _camera._beta + deltaY;
@@ -98,7 +97,7 @@ void WorldCameraScript::_processMouseMovement(const InputHandler::MouseInfo& mou
 
 void WorldCameraScript::_processMouseWheel(const InputHandler::MouseInfo& mouseInfo)
 {
-	if (_trackingStatus != TrackingStatus::NONE || mouseInfo.wheelDirection == 0)
+	if (mouseInfo.status != InputHandler::MouseStatus::SCROL)
 		return;
 
 	_camera._r += mouseInfo.wheelDirection * 1.0f;

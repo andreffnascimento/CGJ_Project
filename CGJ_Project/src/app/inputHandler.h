@@ -14,7 +14,9 @@ public:
 		NONE,
 		LEFT_DOWN,
 		RIGHT_DOWN,
-		MOUSE_UP
+		MOUSE_UP,
+		MOVE,
+		SCROL
 	};
 	
 	struct Coords

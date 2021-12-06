@@ -136,6 +136,7 @@ void processMouseMotion(int x, int y)
 {
 	InputHandler &input = Application::getInputHandler();
 	input.updateMouse(x, y);
+	input.updateMouseStatus(InputHandler::MouseStatus::MOVE);
 }
 
 
@@ -145,6 +146,7 @@ void mouseWheel(int wheel, int direction, int x, int y)
 	InputHandler &input = Application::getInputHandler();
 	input.updateMouse(x, y);
 	input.updateMouseWeel(direction);
+	input.updateMouseStatus(InputHandler::MouseStatus::SCROL);
 }
 
 
