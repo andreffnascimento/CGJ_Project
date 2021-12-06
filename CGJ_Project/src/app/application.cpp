@@ -4,15 +4,22 @@
 
 
 const char *Application::CAPTION = "CGJ Project: Micro Machines 3D";	// window caption
-const char* Application::FONT_NAME = "fonts/arial.ttf";				// font name
+const char* Application::FONT_NAME = "fonts/arial.ttf";					// font name
 
 
 
 
 
 Application::Application()
+	: _windowHandle(0), _frameCount(0), _inputHandler(InputHandler()), _game(nullptr)
 {
-	_inputHandler = InputHandler();
+	// empty
+}
+
+
+Application::~Application()
+{
+	delete _game;
 }
 
 
@@ -26,10 +33,9 @@ Application& Application::getInstance()
 }
 
 
-
 InputHandler& Application::getInputHandler()
 {
-	Application app = Application::getInstance();
+	Application &app = Application::getInstance();
 	return app._inputHandler;
 }
 
@@ -78,9 +84,6 @@ void Application::init(int argc, char** argv, bool lockedFps)
 	std::cout << "Version: " << glGetString(GL_VERSION) << "\n";
 	std::cout << "GLSL: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << "\n";
 
-	// initialize the game
-	_game = Game();
-
 	// initialization of DevIL
 	if (ilGetInteger(IL_VERSION_NUM) < IL_VERSION)
 	{
@@ -101,11 +104,14 @@ void Application::init(int argc, char** argv, bool lockedFps)
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_MULTISAMPLE);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+	// initializes the game
+	_game = new Game();
 }
+
 
 
 void Application::run()
 {
-	//  GLUT main loop
 	glutMainLoop();
 }

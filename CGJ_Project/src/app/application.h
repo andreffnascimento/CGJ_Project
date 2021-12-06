@@ -37,10 +37,10 @@ public:
 
 private:
 	int _windowHandle;
-	unsigned int _frameCount = 0;
+	unsigned int _frameCount;
 
 	InputHandler _inputHandler;
-	Game _game;
+	Game *_game;
 
 
 
@@ -51,16 +51,24 @@ private:
 
 
 public:
+	~Application();
+	
+
+public:
 	static Application& getInstance();
 	static InputHandler& getInputHandler();
 
 
 public:
 	void init(int argc, char** argv, bool lockedFps);
+
+
+public:
 	void run();
 
-	inline int test() { return _frameCount; }
 
+public:
+	inline void updateGame() { _game->update(); }
 
 
 public:

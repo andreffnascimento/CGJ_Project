@@ -3,7 +3,7 @@
 
 
 // shaders
-static VSShaderLib shader;  //geometry
+static VSShaderLib shader;		//geometry
 static VSShaderLib shaderText;  //render bitmap text
 
 
@@ -57,7 +57,13 @@ int getUniformLocation(UniformType uniformType)
 }
 
 
-VSShaderLib getShader()
+VSShaderLib& getShader()
 {
 	return shader;
+}
+
+
+VSShaderLib& getTextShader()
+{
+	return shaderText;
 }

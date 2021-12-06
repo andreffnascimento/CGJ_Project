@@ -6,7 +6,7 @@
 #include <sstream>
 
 #include "application.h"
-
+#include "test.h"
 
 
 // FPS display callback function
@@ -20,7 +20,6 @@ void timer(int value)
 	glutSetWindowTitle(s.c_str());
 	glutTimerFunc(1000, timer, 0);
 	app._frameCount = 0;
-
 }
 
 
@@ -56,13 +55,46 @@ void renderScene()
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// =============================== TEMP ========================================
 	// load identity matrices
 	loadIdentity(VIEW);
 	loadIdentity(MODEL);
-	lookAt(0, 0, 0, 0, 0, 0, 0, 1, 0);					// set the camera using a function similar to gluLookAt
-	glUseProgram(getShader().getProgramIndex());		// use our shader
 
+	// use our shader
+	glUseProgram(getShader().getProgramIndex());
+
+	float res[4];
+	float lightPos[4] = { 4.0f, 6.0f, 2.0f, 1.0f };
+	multMatrixPoint(VIEW, lightPos, res);   //lightPos definido em World Coord so is converted to eye space
+	glUniform4fv(getUniformLocation(UniformType::L_POS), 1, res);
+
+	app.updateGame();
+	renderTable();
+
+	glDisable(GL_DEPTH_TEST);
+
+	//the glyph contains background colors and non-transparent for the actual character pixels. So we use the blending
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	int m_viewport[4];
+	glGetIntegerv(GL_VIEWPORT, m_viewport);
+
+	//viewer at origin looking down at  negative z direction
+	pushMatrix(MODEL);
+	loadIdentity(MODEL);
+	pushMatrix(PROJECTION);
+	loadIdentity(PROJECTION);
+	pushMatrix(VIEW);
+	loadIdentity(VIEW);
+	ortho(m_viewport[0], m_viewport[0] + m_viewport[2] - 1, m_viewport[1], m_viewport[1] + m_viewport[3] - 1, -1, 1);
+	RenderText(getTextShader(), "This is a sample text", 25.0f, 25.0f, 1.0f, 0.5f, 0.8f, 0.2f);
+	RenderText(getTextShader(), "CGJ Light and Text Rendering Demo", 440.0f, 570.0f, 0.5f, 0.3, 0.7f, 0.9f);
+	popMatrix(PROJECTION);
+	popMatrix(VIEW);
+	popMatrix(MODEL);
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
+
+	app._inputHandler.reset();
 	glutSwapBuffers();
 }
 
@@ -73,7 +105,7 @@ void renderScene()
 // Keyboard callback function
 void processKeys(unsigned char key, int x, int y)
 {
-	InputHandler input = Application::getInputHandler();
+	InputHandler &input = Application::getInputHandler();
 	input.pressKey(key);
 }
 
@@ -84,15 +116,18 @@ void processMouseButtons(int button, int state, int x, int y)
 	InputHandler &input = Application::getInputHandler();
 	InputHandler::MouseStatus status = InputHandler::MouseStatus::NONE;
 
-	// start tracking the mouse
-	if (state == GLUT_DOWN) {
+	if (state == GLUT_DOWN)
+	{
 		if (button == GLUT_LEFT_BUTTON)
-			status = InputHandler::MouseStatus::LEFT_CLICK;
+			status = InputHandler::MouseStatus::LEFT_DOWN;
 		else if (button == GLUT_RIGHT_BUTTON)
-			status = InputHandler::MouseStatus::RIGHT_CLICK;
+			status = InputHandler::MouseStatus::RIGHT_DOWN;
 	}
-
-	input.updateMouse(status, x, y);
+	else if (state == GLUT_UP)
+		status = InputHandler::MouseStatus::MOUSE_UP;
+	
+	input.updateMouse(x, y);
+	input.updateMouseStatus(status);
 }
 
 

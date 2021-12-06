@@ -30,7 +30,9 @@ GLuint setupShaders();
 
 int getUniformLocation(UniformType uniformType);
 
-VSShaderLib getShader();
+VSShaderLib& getShader();
+
+VSShaderLib& getTextShader();
 
 
 #endif // !RENDERER_SHADER_HELPER_H

@@ -12,14 +12,22 @@ public:
 	enum class MouseStatus
 	{
 		NONE,
-		LEFT_CLICK,
-		RIGHT_CLICK
+		LEFT_DOWN,
+		RIGHT_DOWN,
+		MOUSE_UP
 	};
 	
 	struct Coords
 	{
 		int x;
 		int y;
+	};
+
+	struct MouseInfo
+	{
+		MouseStatus status;
+		Coords coords;
+		int wheelDirection;
 	};
 
 
@@ -29,10 +37,8 @@ public:
 
 private:
 	bool _pressedKeys[N_KEYS];
-
-	MouseStatus _mouseStatus;
-	Coords _mouseStartCoords;
-	int _mouseWeelDirection;
+	MouseInfo _mouseInfo;
+	
 
 
 
@@ -41,8 +47,8 @@ public:
 	InputHandler();
 
 
-private:
-	void resetInput();
+public:
+	void reset();
 
 
 	// keyboard methods
@@ -53,9 +59,13 @@ public:
 
 	// mouse methods
 public:
-	void updateMouse(int x, int y);
-	void updateMouse(MouseStatus status, int x, int y);
-	void updateMouseWeel(int direction);
+	inline void updateMouse(int x, int y)				{ _mouseInfo.coords = { x, y }; }
+	inline void updateMouseStatus(MouseStatus status)	{ _mouseInfo.status = status; }
+	inline void updateMouseWeel(int direction)			{ _mouseInfo.wheelDirection = direction; }
+
+
+public:
+	inline const MouseInfo& getMouseInfo() { return _mouseInfo; }
 
 };
 

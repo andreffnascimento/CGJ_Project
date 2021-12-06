@@ -2,18 +2,43 @@
 #define GAME_CAMERA_H
 
 
+#include "game/gameObject.h"
 
-class Camera
+
+class Camera : public GameObject
 {
+
+public:
+	struct Coords
+	{
+		float x;
+		float y;
+		float z;
+	};
+
+
+
 private:
-	float _alpha = 39.0f;
-	float _beta = 51.0f;
-	float _r = 10.0f;
+	// camera position
+	Coords _coords;
+
+	// camera spherical coordinates
+	float _alpha;
+	float _beta;
+	float _r;
 
 
 
 public:
 	Camera();
+
+
+public:
+	inline const Coords& getCoords() const { return _coords; }
+
+
+public:
+	friend class WorldCameraScript;
 };
 
 
