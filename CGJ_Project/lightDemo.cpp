@@ -51,8 +51,14 @@ VSShaderLib shaderText;  //render bitmap text
 //File with the font
 const string font_name = "fonts/arial.ttf";
 
+/* -------- Scene Objects -------- */
 //Vector with meshes
-vector<struct MyMesh> table;
+vector<struct MyMesh> meshes;
+
+/* ---------- Mesh IDs ---------- */
+int car_id = 0;
+int wheel_id = 0;
+int table_id = 0;
 
 //External array storage defined in AVTmathLib.cpp
 
@@ -167,41 +173,38 @@ void renderLegs(float x, float y, float z) {
 
 	translate(MODEL, x, y, z);
 	scale(MODEL, leg_thickness, leg_length, leg_thickness);
-
 }
 
 void renderTable() {
 	GLint loc;
 
-	MyMesh obj = initTable();
-
 	loc = glGetUniformLocation(shader.getProgramIndex(), "ambient");
-	glUniform4fv(loc, 1, obj.mat.ambient);
+	glUniform4fv(loc, 1, meshes[table_id].mat.ambient);
 	loc = glGetUniformLocation(shader.getProgramIndex(), "diffuse");
-	glUniform4fv(loc, 1, obj.mat.diffuse);
+	glUniform4fv(loc, 1, meshes[table_id].mat.diffuse);
 	loc = glGetUniformLocation(shader.getProgramIndex(), "specular");
-	glUniform4fv(loc, 1, obj.mat.specular);
+	glUniform4fv(loc, 1, meshes[table_id].mat.specular);
 	loc = glGetUniformLocation(shader.getProgramIndex(), "shininess");
-	glUniform1f(loc, obj.mat.shininess);
+	glUniform1f(loc, meshes[table_id].mat.shininess);
 
 	//Cover
 	pushMatrix(MODEL);
 	scale(MODEL, table_width, table_thickness, table_length);
 
-	processObject(obj);
+	processObject(meshes[table_id]);
 
 	//Legs
 	renderLegs(0, -leg_length, 0);
-	processObject(obj);
+	processObject(meshes[table_id]);
 
 	renderLegs(0, -leg_length, table_length - leg_thickness);
-	processObject(obj);
+	processObject(meshes[table_id]);
 
 	renderLegs(table_width - leg_thickness, -leg_length, table_length - leg_thickness);
-	processObject(obj);
+	processObject(meshes[table_id]);
 
 	renderLegs(table_width - leg_thickness, -leg_length, 0);
-	processObject(obj);
+	processObject(meshes[table_id]);
 }
 
 
@@ -216,56 +219,53 @@ void renderWheels(float x, float y, float z) {
 
 void renderCar() {
 	GLint loc;
-	
-	MyMesh obj = initTable(); //TO CHANGE
+
 	
 	loc = glGetUniformLocation(shader.getProgramIndex(), "ambient");
-	glUniform4fv(loc, 1, obj.mat.ambient);
+	glUniform4fv(loc, 1, meshes[table_id].mat.ambient);
 	loc = glGetUniformLocation(shader.getProgramIndex(), "diffuse");
-	glUniform4fv(loc, 1, obj.mat.diffuse);
+	glUniform4fv(loc, 1, meshes[table_id].mat.diffuse);
 	loc = glGetUniformLocation(shader.getProgramIndex(), "specular");
-	glUniform4fv(loc, 1, obj.mat.specular);
+	glUniform4fv(loc, 1, meshes[table_id].mat.specular);
 	loc = glGetUniformLocation(shader.getProgramIndex(), "shininess");
-	glUniform1f(loc, obj.mat.shininess);
+	glUniform1f(loc, meshes[table_id].mat.shininess);
 
 	pushMatrix(MODEL);
 
 	translate(MODEL, 5, table_thickness + radius, 5);
 	scale(MODEL, car_bodyW, car_bodyT, car_bodyL);
 
-	processObject(obj);
+	processObject(meshes[table_id]);
 
 	pushMatrix(MODEL);
 
 	translate(MODEL, 5, table_thickness + radius + car_bodyT, 5 + car_bodyW/2);
 	scale(MODEL, car_bodyW, car_bodyT/2, car_bodyL/3);
 
-	processObject(obj);
+	processObject(meshes[table_id]);
 
-
-	obj = initWheel(); //Using table cause fuckit
 
 	loc = glGetUniformLocation(shader.getProgramIndex(), "ambient");
-	glUniform4fv(loc, 1, obj.mat.ambient);
+	glUniform4fv(loc, 1, meshes[wheel_id].mat.ambient);
 	loc = glGetUniformLocation(shader.getProgramIndex(), "diffuse");
-	glUniform4fv(loc, 1, obj.mat.diffuse);
+	glUniform4fv(loc, 1, meshes[wheel_id].mat.diffuse);
 	loc = glGetUniformLocation(shader.getProgramIndex(), "specular");
-	glUniform4fv(loc, 1, obj.mat.specular);
+	glUniform4fv(loc, 1, meshes[wheel_id].mat.specular);
 	loc = glGetUniformLocation(shader.getProgramIndex(), "shininess");
-	glUniform1f(loc, obj.mat.shininess);
+	glUniform1f(loc, meshes[wheel_id].mat.shininess);
 
 
 	renderWheels(5, table_thickness + radius, 5);
-	processObject(obj);
+	processObject(meshes[wheel_id]);
 
 	renderWheels(5 + car_bodyW, table_thickness + radius, 5);
-	processObject(obj);
+	processObject(meshes[wheel_id]);
 
 	renderWheels(5 + car_bodyW, table_thickness + radius, 5 + car_bodyL);
-	processObject(obj);
+	processObject(meshes[wheel_id]);
 
 	renderWheels(5, table_thickness + radius, 5 + car_bodyL);
-	processObject(obj);
+	processObject(meshes[wheel_id]);
 }
 
 void renderScene(void) {
@@ -384,8 +384,9 @@ void processMouseMotion(int xx, int yy)
 {
 
 	int deltaX, deltaY;
-	float alphaAux, betaAux;
-	float rAux;
+	float alphaAux = 0;
+	float betaAux = 0;
+	float rAux = 0;
 
 	deltaX =  - xx + startX;
 	deltaY =    yy - startY;
@@ -486,7 +487,7 @@ GLuint setupShaders() {
 //
 
 
-MyMesh initTable() {
+void initTable() {
 	MyMesh amesh;
 
 	float amb[] = { 0.2f, 0.15f, 0.1f, 1.0f };
@@ -506,10 +507,12 @@ MyMesh initTable() {
 	amesh.mat.shininess = shininess;
 	amesh.mat.texCount = texcount;
 	
-	return amesh;
+	meshes.push_back(amesh);
+
+	table_id = meshes.size() - 1;
 }
 
-MyMesh initWheel() {
+void initWheel() {
 	MyMesh amesh;
 
 	float amb1[] = { 0.3f, 0.0f, 0.0f, 1.0f };
@@ -528,7 +531,13 @@ MyMesh initWheel() {
 	amesh.mat.shininess = shininess;
 	amesh.mat.texCount = texcount;
 	
-	return amesh;
+	meshes.push_back(amesh);
+
+	wheel_id = meshes.size() - 1;
+}
+
+void initCar() {
+	MyMesh amesh;
 }
 
 void init()
@@ -551,67 +560,11 @@ void init()
 	camZ = r * cos(alpha * 3.14f / 180.0f) * cos(beta * 3.14f / 180.0f);
 	camY = r *   						     sin(beta * 3.14f / 180.0f);
 
-	// create geometry and VAO of the pawn
-	/*amesh = createPawn();
-	memcpy(amesh.mat.ambient, amb, 4 * sizeof(float));
-	memcpy(amesh.mat.diffuse, diff, 4 * sizeof(float));
-	memcpy(amesh.mat.specular, spec, 4 * sizeof(float));
-	memcpy(amesh.mat.emissive, emissive, 4 * sizeof(float));
-	amesh.mat.shininess = shininess;
-	amesh.mat.texCount = texcount;
-	myMeshes.push_back(amesh); 
-	nObjects++;
 
-	
-	// create geometry and VAO of the sphere
-	amesh = createSphere(1.0f, 20);
-	memcpy(amesh.mat.ambient, amb, 4 * sizeof(float));
-	memcpy(amesh.mat.diffuse, diff, 4 * sizeof(float));
-	memcpy(amesh.mat.specular, spec, 4 * sizeof(float));
-	memcpy(amesh.mat.emissive, emissive, 4 * sizeof(float));
-	amesh.mat.shininess = shininess;
-	amesh.mat.texCount = texcount;
-	myMeshes.push_back(amesh);
-	nObjects++;
+	// Store scene objects' properties
+	initWheel();
+	initTable();
 
-	float amb1[]= {0.3f, 0.0f, 0.0f, 1.0f};
-	float diff1[] = {0.8f, 0.1f, 0.1f, 1.0f};
-	float spec1[] = {0.9f, 0.9f, 0.9f, 1.0f};
-	shininess=500.0;
-
-	// create geometry and VAO of the cylinder
-	amesh = createCylinder(1.5f, 0.5f, 20);
-	memcpy(amesh.mat.ambient, amb1, 4 * sizeof(float));
-	memcpy(amesh.mat.diffuse, diff1, 4 * sizeof(float));
-	memcpy(amesh.mat.specular, spec1, 4 * sizeof(float));
-	memcpy(amesh.mat.emissive, emissive, 4 * sizeof(float));
-	amesh.mat.shininess = shininess;
-	amesh.mat.texCount = texcount;
-	myMeshes.push_back(amesh);
-	nObjects++;
-
-	// create geometry and VAO of the 
-	amesh = createCone(1.5f, 0.5f, 20);
-	memcpy(amesh.mat.ambient, amb, 4 * sizeof(float));
-	memcpy(amesh.mat.diffuse, diff, 4 * sizeof(float));
-	memcpy(amesh.mat.specular, spec, 4 * sizeof(float));
-	memcpy(amesh.mat.emissive, emissive, 4 * sizeof(float));
-	amesh.mat.shininess = shininess;
-	amesh.mat.texCount = texcount;
-	myMeshes.push_back(amesh);
-	nObjects++;
-
-	// create geometry and VAO of the pawn
-	amesh = createCube();
-	memcpy(amesh.mat.ambient, amb, 4 * sizeof(float));
-	memcpy(amesh.mat.diffuse, diff, 4 * sizeof(float));
-	memcpy(amesh.mat.specular, spec, 4 * sizeof(float));
-	memcpy(amesh.mat.emissive, emissive, 4 * sizeof(float));
-	amesh.mat.shininess = shininess;
-	amesh.mat.texCount = texcount;
-	myMeshes.push_back(amesh);
-	nObjects++;*/
-	
 	// some GL settings
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);

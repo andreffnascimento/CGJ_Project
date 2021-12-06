@@ -76,5 +76,11 @@
     </None>
     <None Include="shaders\gouraud.frag" />
     <None Include="shaders\gouraud.vert" />
+    <None Include="shaders\phong-blinn.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\phong-blinn.vert">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
