@@ -55,10 +55,29 @@ const string font_name = "fonts/arial.ttf";
 //Vector with meshes
 vector<struct MyMesh> meshes;
 
-/* ---------- Mesh IDs ---------- */
+/* ---------- Mesh IDs ----------- */
 int car_id = 0;
 int wheel_id = 0;
 int table_id = 0;
+
+/* ------ Object Constants ------  */
+float table_length = 100.0f;
+float table_width = 40.0f;
+float table_thickness = 2.5f;
+
+float leg_length = 25.0f;
+float leg_thickness = 3.0f;
+
+float car_bodyL = 5.0f;
+float car_bodyW = 2.0f;
+float car_bodyT = 1.0F;
+
+float radius = 0.45f;
+
+/* --------- Car Movement -------- */
+int carX = 5;
+int carY = table_thickness + radius * 2;
+int carZ = 5;
 
 //External array storage defined in AVTmathLib.cpp
 
@@ -91,19 +110,7 @@ long myTime,timebase = 0,frame = 0;
 char s[32];
 float lightPos[4] = {4.0f, 6.0f, 2.0f, 1.0f};
 
-// Object Constants
-float table_length = 100.0f;
-float table_width = 40.0f;
-float table_thickness = 2.5f;
 
-float leg_length = 25.0f;
-float leg_thickness = 3.0f;
-
-float car_bodyL = 5.0f;
-float car_bodyW = 2.0f;
-float car_bodyT = 1.0F;
-
-float radius = 0.45f;
 
 void timer(int value)
 {
@@ -213,7 +220,7 @@ void renderWheels(float x, float y, float z) {
 
 	translate(MODEL, x, y, z);
 	rotate(MODEL, 90.0f, 0, 0, 1);
-	scale(MODEL, 0.5f, 0.5f, 0.5f);
+	scale(MODEL, 0.5f, 1.0f, 0.5f);
 
 }
 
@@ -222,25 +229,25 @@ void renderCar() {
 
 	
 	loc = glGetUniformLocation(shader.getProgramIndex(), "ambient");
-	glUniform4fv(loc, 1, meshes[table_id].mat.ambient);
+	glUniform4fv(loc, 1, meshes[car_id].mat.ambient);
 	loc = glGetUniformLocation(shader.getProgramIndex(), "diffuse");
-	glUniform4fv(loc, 1, meshes[table_id].mat.diffuse);
+	glUniform4fv(loc, 1, meshes[car_id].mat.diffuse);
 	loc = glGetUniformLocation(shader.getProgramIndex(), "specular");
-	glUniform4fv(loc, 1, meshes[table_id].mat.specular);
+	glUniform4fv(loc, 1, meshes[car_id].mat.specular);
 	loc = glGetUniformLocation(shader.getProgramIndex(), "shininess");
-	glUniform1f(loc, meshes[table_id].mat.shininess);
+	glUniform1f(loc, meshes[car_id].mat.shininess);
 
 	pushMatrix(MODEL);
 
-	translate(MODEL, 5, table_thickness + radius, 5);
+	translate(MODEL, carX, carY, carZ);
 	scale(MODEL, car_bodyW, car_bodyT, car_bodyL);
 
 	processObject(meshes[table_id]);
 
 	pushMatrix(MODEL);
 
-	translate(MODEL, 5, table_thickness + radius + car_bodyT, 5 + car_bodyW/2);
-	scale(MODEL, car_bodyW, car_bodyT/2, car_bodyL/3);
+	translate(MODEL, carX, carY + car_bodyT, carZ + car_bodyW/2);
+	scale(MODEL, car_bodyW, car_bodyT/2, car_bodyL/2.5);
 
 	processObject(meshes[table_id]);
 
@@ -255,16 +262,16 @@ void renderCar() {
 	glUniform1f(loc, meshes[wheel_id].mat.shininess);
 
 
-	renderWheels(5, table_thickness + radius, 5);
+	renderWheels(carX, carY, carZ + 1);
 	processObject(meshes[wheel_id]);
 
-	renderWheels(5 + car_bodyW, table_thickness + radius, 5);
+	renderWheels(carX + car_bodyW, carY, carZ + 1);
 	processObject(meshes[wheel_id]);
 
-	renderWheels(5 + car_bodyW, table_thickness + radius, 5 + car_bodyL);
+	renderWheels(carX + car_bodyW, carY, carZ + car_bodyL - 1);
 	processObject(meshes[wheel_id]);
 
-	renderWheels(5, table_thickness + radius, 5 + car_bodyL);
+	renderWheels(carX, carY, carZ + car_bodyL - 1);
 	processObject(meshes[wheel_id]);
 }
 
@@ -515,19 +522,19 @@ void initTable() {
 void initWheel() {
 	MyMesh amesh;
 
-	float amb1[] = { 0.3f, 0.0f, 0.0f, 1.0f };
-	float diff1[] = { 0.8f, 0.1f, 0.1f, 1.0f };
-	float spec1[] = { 0.9f, 0.9f, 0.9f, 1.0f };
-	float emissive1[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	float shininess = 500.0f;
+	float amb[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+	float diff[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	float spec[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	float emissive[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	float shininess = 20.0f;
 	int texcount = 0;
 
 
 	amesh = createTorus(1.0f - radius, 1.0f, 20, 20);
-	memcpy(amesh.mat.ambient, amb1, 4 * sizeof(float));
-	memcpy(amesh.mat.diffuse, diff1, 4 * sizeof(float));
-	memcpy(amesh.mat.specular, spec1, 4 * sizeof(float));
-	memcpy(amesh.mat.emissive, emissive1, 4 * sizeof(float));
+	memcpy(amesh.mat.ambient, amb, 4 * sizeof(float));
+	memcpy(amesh.mat.diffuse, diff, 4 * sizeof(float));
+	memcpy(amesh.mat.specular, spec, 4 * sizeof(float));
+	memcpy(amesh.mat.emissive, emissive, 4 * sizeof(float));
 	amesh.mat.shininess = shininess;
 	amesh.mat.texCount = texcount;
 	
@@ -538,6 +545,26 @@ void initWheel() {
 
 void initCar() {
 	MyMesh amesh;
+
+	float amb[] = { 1.0f, 110.0f/255.0f, 25.0f / 255.0f, 1.0f };
+	float diff[] = { 1.0f, 110.0f / 255.0f, 25.0f / 255.0f, 1.0f };
+	float spec[] = { 1.0f, 110.0f / 255.0f, 25.0f / 255.0f, 1.0f };
+	float emissive[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	float shininess = 100.0f;
+	int texcount = 0;
+
+
+	amesh = createTorus(1.0f - radius, 1.0f, 20, 20);
+	memcpy(amesh.mat.ambient, amb, 4 * sizeof(float));
+	memcpy(amesh.mat.diffuse, diff, 4 * sizeof(float));
+	memcpy(amesh.mat.specular, spec, 4 * sizeof(float));
+	memcpy(amesh.mat.emissive, emissive, 4 * sizeof(float));
+	amesh.mat.shininess = shininess;
+	amesh.mat.texCount = texcount;
+
+	meshes.push_back(amesh);
+
+	car_id = meshes.size() - 1;
 }
 
 void init()
@@ -562,8 +589,9 @@ void init()
 
 
 	// Store scene objects' properties
-	initWheel();
 	initTable();
+	initWheel();
+	initCar();
 
 	// some GL settings
 	glEnable(GL_DEPTH_TEST);
