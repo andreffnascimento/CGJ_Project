@@ -14,6 +14,7 @@ private:
 	std::list<Script*> _scripts;			// game object contains a list of scripts
 
 
+
 public:
 	GameObject();
 	virtual ~GameObject();

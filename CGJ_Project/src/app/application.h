@@ -3,25 +3,15 @@
 
 #include <iostream>
 
-
-#include "inputHandler.h"
+#include "app/inputHandler.h"
 #include "game/game.h"
 #include "math/AVTmathLib.h"
 #include "renderer/shaderHelper.h"
 #include "text/avtFreeType.h"
 
-
-// include GLEW to access OpenGL 3.3 functions
-#include <GL/glew.h>
-
-// GLUT is the toolkit to interface with the OS
-#include <GL/freeglut.h>
-
-// DevIL library
-#include <IL/il.h>
-
-
-//int windowHandle = 0;
+#include <GL/glew.h>		// include GLEW to access OpenGL 3.3 functions
+#include <GL/freeglut.h>	// GLUT is the toolkit to interface with the OS
+#include <IL/il.h>			// DevIL library
 
 
 
@@ -35,14 +25,13 @@ public:
 	static const unsigned int HEIGHT = 768;
 
 
+
 private:
 	int _windowHandle;
 	unsigned int _frameCount;
 
 	InputHandler _inputHandler;
 	Game *_game;
-
-
 
 
 

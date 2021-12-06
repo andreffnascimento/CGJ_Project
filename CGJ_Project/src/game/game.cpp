@@ -8,13 +8,11 @@ Game::Game()
 	_init();
 }
 
-
 Game::~Game()
 {
 	for (auto& gameObject : _gameObjects)
 		delete gameObject;
 }
-
 
 
 
@@ -36,15 +34,9 @@ void Game::update()
 
 
 
-#include "app/application.h"
-#include "scripts/camera/worldCameraScript.h"
+#include "game/gameInit.h"		// set of methods to create all the game objects and initialize the world
 
 void Game::_init()
 {
-	InputHandler &input = Application::getInputHandler();
-	Camera *camera1 = new Camera();
-	camera1->addScript(new WorldCameraScript(*camera1, Application::getInputHandler()));
-	_gameObjects.push_back(camera1);
-
-	_activeCamera = camera1;
+	initCameras(*this);
 }

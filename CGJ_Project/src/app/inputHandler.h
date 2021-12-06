@@ -33,16 +33,16 @@ public:
 	};
 
 
+
 public:
 	static const unsigned int N_KEYS = 127;
+
 
 
 private:
 	bool _pressedKeys[N_KEYS];
 	MouseInfo _mouseInfo;
 	
-
-
 
 
 public:

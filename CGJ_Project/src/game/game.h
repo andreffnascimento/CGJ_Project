@@ -30,7 +30,8 @@ public:
 
 
 public:
-	inline void setActiveCamera(Camera *camera) { _activeCamera = camera; }
+	inline void setActiveCamera(Camera *camera)			{ _activeCamera = camera; }
+	inline void addGameObject(GameObject* gameObject)	{ _gameObjects.push_back(gameObject);  }
 
 
 private:

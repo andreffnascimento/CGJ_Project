@@ -10,7 +10,6 @@ InputHandler::InputHandler()
 
 
 
-
 void InputHandler::reset()
 {
 	std::fill(std::begin(_pressedKeys), std::end(_pressedKeys), false);

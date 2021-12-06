@@ -1,5 +1,8 @@
 #pragma once
 
+// THIS FILE IS TEMPORARY TO DRAW STUFF
+
+
 #include "inputHandler.h"
 #include "game/game.h"
 #include "math/AVTmathLib.h"
@@ -118,4 +121,41 @@ void renderTable() {
 
 	renderLegs(table_width - leg_thickness, -leg_length, 0);
 	processObject(obj);
+}
+
+
+void renderLight()
+{
+	float res[4];
+	float lightPos[4] = { 4.0f, 6.0f, 2.0f, 1.0f };
+	multMatrixPoint(VIEW, lightPos, res);   //lightPos definido em World Coord so is converted to eye space
+	glUniform4fv(getUniformLocation(UniformType::L_POS), 1, res);
+}
+
+
+void renderText()
+{
+	glDisable(GL_DEPTH_TEST);
+
+	//the glyph contains background colors and non-transparent for the actual character pixels. So we use the blending
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	int m_viewport[4];
+	glGetIntegerv(GL_VIEWPORT, m_viewport);
+
+	//viewer at origin looking down at  negative z direction
+	pushMatrix(MODEL);
+	loadIdentity(MODEL);
+	pushMatrix(PROJECTION);
+	loadIdentity(PROJECTION);
+	pushMatrix(VIEW);
+	loadIdentity(VIEW);
+	ortho(m_viewport[0], m_viewport[0] + m_viewport[2] - 1, m_viewport[1], m_viewport[1] + m_viewport[3] - 1, -1, 1);
+	RenderText(getTextShader(), "This is a sample text", 25.0f, 25.0f, 1.0f, 0.5f, 0.8f, 0.2f);
+	RenderText(getTextShader(), "CGJ Light and Text Rendering Demo", 440.0f, 570.0f, 0.5f, 0.3, 0.7f, 0.9f);
+	popMatrix(PROJECTION);
+	popMatrix(VIEW);
+	popMatrix(MODEL);
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
 }

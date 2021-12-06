@@ -8,13 +8,11 @@ GameObject::GameObject()
 	// empty
 }
 
-
 GameObject::~GameObject()
 {
 	for (auto& script : _scripts)
 		delete script;
 }
-
 
 
 

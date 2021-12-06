@@ -3,7 +3,7 @@
 
 
 Camera::Camera()
-	: _alpha(39.0f), _beta(51.0f), _r(10.0f)
+	: _alpha(200.0f), _beta(30.0f), _r(50.0f)
 {
 	_coords = Coords();
 	_coords.x = _r * sin(_alpha * 3.14f / 180.0f) * cos(_beta * 3.14f / 180.0f);

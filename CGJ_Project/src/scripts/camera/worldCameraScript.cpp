@@ -8,7 +8,8 @@ WorldCameraScript::WorldCameraScript(Camera &camera, InputHandler& input)
 	// empty
 }
 
-#include <iostream>
+
+
 
 void WorldCameraScript::run()
 {
@@ -17,7 +18,6 @@ void WorldCameraScript::run()
 	_processMouseMovement(mouseInfo);
 	_processMouseWheel(mouseInfo);
 }
-
 
 
 void WorldCameraScript::_processMouseClick(const InputHandler::MouseInfo& mouseInfo)
@@ -100,7 +100,7 @@ void WorldCameraScript::_processMouseWheel(const InputHandler::MouseInfo& mouseI
 	if (mouseInfo.status != InputHandler::MouseStatus::SCROL)
 		return;
 
-	_camera._r += mouseInfo.wheelDirection * 1.0f;
+	_camera._r -= mouseInfo.wheelDirection * 1.0f;
 	if (_camera._r < 0.1f)
 		_camera._r = 0.1f;
 

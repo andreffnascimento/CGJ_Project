@@ -1,5 +1,6 @@
 #include "application.h"
-#include "callback.h"
+
+#include "app/callback.h"
 
 
 
@@ -16,12 +17,10 @@ Application::Application()
 	// empty
 }
 
-
 Application::~Application()
 {
 	delete _game;
 }
-
 
 
 
@@ -32,12 +31,12 @@ Application& Application::getInstance()
 	return app;
 }
 
-
 InputHandler& Application::getInputHandler()
 {
 	Application &app = Application::getInstance();
 	return app._inputHandler;
 }
+
 
 
 
@@ -108,6 +107,7 @@ void Application::init(int argc, char** argv, bool lockedFps)
 	// initializes the game
 	_game = new Game();
 }
+
 
 
 
