@@ -291,13 +291,13 @@ void renderLegs(float x, float y, float z) {
 void renderTable() {
 	GLint loc;
 
-	loc = glGetUniformLocation(shader.getProgramIndex(), "ambient");
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.ambient");
 	glUniform4fv(loc, 1, meshes[table_id].mat.ambient);
-	loc = glGetUniformLocation(shader.getProgramIndex(), "diffuse");
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.diffuse");
 	glUniform4fv(loc, 1, meshes[table_id].mat.diffuse);
-	loc = glGetUniformLocation(shader.getProgramIndex(), "specular");
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.specular");
 	glUniform4fv(loc, 1, meshes[table_id].mat.specular);
-	loc = glGetUniformLocation(shader.getProgramIndex(), "shininess");
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.shininess");
 	glUniform1f(loc, meshes[table_id].mat.shininess);
 
 	//Cover
@@ -333,13 +333,13 @@ void renderCar() {
 	GLint loc;
 
 	
-	loc = glGetUniformLocation(shader.getProgramIndex(), "ambient");
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.ambient");
 	glUniform4fv(loc, 1, meshes[car_id].mat.ambient);
-	loc = glGetUniformLocation(shader.getProgramIndex(), "diffuse");
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.diffuse");
 	glUniform4fv(loc, 1, meshes[car_id].mat.diffuse);
-	loc = glGetUniformLocation(shader.getProgramIndex(), "specular");
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.specular");
 	glUniform4fv(loc, 1, meshes[car_id].mat.specular);
-	loc = glGetUniformLocation(shader.getProgramIndex(), "shininess");
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.shininess");
 	glUniform1f(loc, meshes[car_id].mat.shininess);
 
 	pushMatrix(MODEL);
@@ -357,13 +357,13 @@ void renderCar() {
 	processObject(meshes[table_id]);
 
 
-	loc = glGetUniformLocation(shader.getProgramIndex(), "ambient");
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.ambient");
 	glUniform4fv(loc, 1, meshes[wheel_id].mat.ambient);
-	loc = glGetUniformLocation(shader.getProgramIndex(), "diffuse");
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.diffuse");
 	glUniform4fv(loc, 1, meshes[wheel_id].mat.diffuse);
-	loc = glGetUniformLocation(shader.getProgramIndex(), "specular");
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.specular");
 	glUniform4fv(loc, 1, meshes[wheel_id].mat.specular);
-	loc = glGetUniformLocation(shader.getProgramIndex(), "shininess");
+	loc = glGetUniformLocation(shader.getProgramIndex(), "mat.shininess");
 	glUniform1f(loc, meshes[wheel_id].mat.shininess);
 
 
