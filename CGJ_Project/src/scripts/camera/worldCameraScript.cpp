@@ -2,7 +2,7 @@
 
 
 
-WorldCameraScript::WorldCameraScript(Camera &camera, InputHandler& input)
+WorldCameraScript::WorldCameraScript(Camera &camera, const InputHandler& input)
 	: _camera(camera), _input(input), _startX(0), _startY(0), _trackingStatus(TrackingStatus::NONE)
 {
 	// empty

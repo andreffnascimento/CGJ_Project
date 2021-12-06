@@ -3,15 +3,16 @@
 
 
 #include "app/application.h"
+#include "gameObjects/camera/camera.h"
 #include "scripts/camera/worldCameraScript.h"
 
 
 
 void initCameras(Game &game)
 {
-	InputHandler& input = Application::getInputHandler();
-	Camera* camera1 = new Camera();
-	camera1->addScript(new WorldCameraScript(*camera1, Application::getInputHandler()));
+	Camera *camera1 = new Camera();
+	const InputHandler &input = Application::getInputHandler();
+	camera1->addScript(new WorldCameraScript(*camera1, input));
 	game.addGameObject(camera1);
 
 	game.setActiveCamera(camera1);

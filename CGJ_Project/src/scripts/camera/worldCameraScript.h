@@ -4,7 +4,7 @@
 
 #include "app/inputHandler.h"
 #include "game/script.h"
-#include "game/camera.h"
+#include "gameObjects/camera/camera.h"
 
 
 
@@ -23,7 +23,7 @@ private:
 
 private:
 	Camera &_camera;
-	InputHandler& _input;
+	const InputHandler &_input;
 
 	int _startX;
 	int _startY;
@@ -32,7 +32,7 @@ private:
 
 
 public:
-	WorldCameraScript(Camera &camera, InputHandler &input);
+	WorldCameraScript(Camera &camera, const InputHandler &input);
 
 
 public:

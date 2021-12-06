@@ -5,7 +5,7 @@
 #include <list>
 
 #include "game/gameObject.h"
-#include "game/camera.h"
+#include "gameObjects/camera/camera.h"
 #include "math/AVTmathLib.h"
 
 

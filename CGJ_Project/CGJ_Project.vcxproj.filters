@@ -42,7 +42,7 @@
     <ClCompile Include="src\game\game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\camera.cpp">
+    <ClCompile Include="src\gameObjects\camera\camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\renderer\shaderHelper.cpp">
@@ -92,7 +92,7 @@
     <ClInclude Include="src\game\game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\camera.h">
+    <ClInclude Include="src\gameObjects\camera\camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\renderer\shaderHelper.h">
@@ -108,6 +108,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\scripts\camera\worldCameraScript.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\gameInit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

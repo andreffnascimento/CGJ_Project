@@ -167,7 +167,7 @@
   <ItemGroup>
     <ClCompile Include="src\app\application.cpp" />
     <ClCompile Include="src\app\inputHandler.cpp" />
-    <ClCompile Include="src\game\camera.cpp" />
+    <ClCompile Include="src\gameObjects\camera\camera.cpp" />
     <ClCompile Include="src\game\game.cpp" />
     <ClCompile Include="src\game\gameObject.cpp" />
     <ClCompile Include="src\renderer\shaderHelper.cpp" />
@@ -184,8 +184,9 @@
     <ClInclude Include="src\app\callback.h" />
     <ClInclude Include="src\app\inputHandler.h" />
     <ClInclude Include="src\app\test.h" />
-    <ClInclude Include="src\game\camera.h" />
+    <ClInclude Include="src\gameObjects\camera\camera.h" />
     <ClInclude Include="src\game\game.h" />
+    <ClInclude Include="src\game\gameInit.h" />
     <ClInclude Include="src\game\gameObject.h" />
     <ClInclude Include="src\game\script.h" />
     <ClInclude Include="src\renderer\shaderHelper.h" />

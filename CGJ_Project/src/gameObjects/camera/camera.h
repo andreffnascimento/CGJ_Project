@@ -1,5 +1,5 @@
-#ifndef GAME_CAMERA_H
-#define GAME_CAMERA_H
+#ifndef GAME_OBJECTS_CAMERA_CAMERA_H
+#define GAME_OBJECTS_CAMERA_CAMERA_H
 
 
 #include "game/gameObject.h"
@@ -42,4 +42,4 @@ public:
 };
 
 
-#endif // !GAME_CAMERA_H
+#endif // !GAME_OBJECTS_CAMERA_CAMERA_H

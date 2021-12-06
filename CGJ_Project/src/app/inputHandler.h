@@ -55,8 +55,8 @@ public:
 
 	// keyboard methods
 public:
-	void inline pressKey(char keyCode)		{ _pressedKeys[(int)keyCode] = true; }
-	bool inline keyPressed(char keyCode)	{ return _pressedKeys[(int)keyCode]; }
+	void inline pressKey(char keyCode)			{ _pressedKeys[(int)keyCode] = true; }
+	bool inline keyPressed(char keyCode) const	{ return _pressedKeys[(int)keyCode]; }
 
 
 	// mouse methods
@@ -67,7 +67,7 @@ public:
 
 
 public:
-	inline const MouseInfo& getMouseInfo() { return _mouseInfo; }
+	inline const MouseInfo& getMouseInfo() const { return _mouseInfo; }
 
 };
 
