@@ -590,6 +590,7 @@ GLuint setupShaders() {
 	shader.loadShader(VSShaderLib::VERTEX_SHADER, "shaders/phong-blinn.vert");
 	shader.loadShader(VSShaderLib::FRAGMENT_SHADER, "shaders/phong-blinn.frag");
 
+
 	// set semantics for the shader variables
 	glBindFragDataLocation(shader.getProgramIndex(), 0,"colorOut");
 	glBindAttribLocation(shader.getProgramIndex(), VERTEX_COORD_ATTRIB, "position");

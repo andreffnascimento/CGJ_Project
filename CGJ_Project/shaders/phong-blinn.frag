@@ -78,9 +78,11 @@ void main() {
 			vec3 h = normalize(l_dir + e);
 			float intSpec = max(dot(h,n), 0.0);
 			spec = mat.specular * pow(intSpec, mat.shininess);
+
+			colorOut += max(intensity * mat.diffuse + spec, mat.ambient);
 		}
 
-		colorOut += max(intensity * mat.diffuse + spec, mat.ambient);
+
 	}
 	
 }
