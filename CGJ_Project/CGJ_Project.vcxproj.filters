@@ -15,48 +15,48 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\AVTmathLib.cpp">
+    <ClCompile Include="src\math\AVTmathLib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\basic_geometry.cpp">
+    <ClCompile Include="src\renderer\basic_geometry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\vsShaderLib.cpp">
+    <ClCompile Include="src\renderer\vsShaderLib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Texture_Loader.cpp">
+    <ClCompile Include="src\renderer\Texture_Loader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\lightDemo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\avtFreeType.cpp">
+    <ClCompile Include="src\text\avtFreeType.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\AVTmathLib.h">
+    <ClInclude Include="src\math\AVTmathLib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\cube.h">
+    <ClInclude Include="src\renderer\cube.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\VertexAttrDef.h">
+    <ClInclude Include="src\renderer\VertexAttrDef.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\vsShaderLib.h">
+    <ClInclude Include="src\renderer\vsShaderLib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Texture_Loader.h">
+    <ClInclude Include="src\renderer\Texture_Loader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\geometry.h">
+    <ClInclude Include="src\renderer\geometry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ft2build.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\avtFreeType.h">
+    <ClInclude Include="src\text\avtFreeType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -67,7 +67,7 @@
     <None Include="src\shaders\pointlight.vert">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="src\Dependencies.exe" />
+    <None Include="Dependencies.exe" />
     <None Include="src\shaders\text.frag">
       <Filter>Resource Files</Filter>
     </None>

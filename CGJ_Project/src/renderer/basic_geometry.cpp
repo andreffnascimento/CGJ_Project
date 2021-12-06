@@ -16,7 +16,8 @@ Basic Revolution Geometry
 
 // GLUT is the toolkit to interface with the OS
 #include <GL/freeglut.h>
-#include "AVTmathLib.h"
+#include "math/AVTmathLib.h"
+
 #include "VertexAttrDef.h"
 #include "geometry.h"
 #include "cube.h"
@@ -147,7 +148,7 @@ MyMesh createCone(float height, float baseRadius, int sides) {
 	p.push_back(-baseRadius);	p.push_back(0.0f);
 	p.push_back(0.0f);			p.push_back(0.0f);
 	p.push_back(baseRadius);	p.push_back(0.0f);
-	int max = (int)(1 + height/ (baseRadius*2*3.14159 / sides)) ;
+	int max = (int)(1 + height/ (baseRadius*2*3.14159f / sides)) ;
 	for (int i = 0; i < max; ++i) {
 	
 		p.push_back(baseRadius - i * baseRadius  / max); p.push_back( i * height  / max);
@@ -171,7 +172,7 @@ MyMesh createCone(float height, float baseRadius, int sides) {
 	//		-baseRadius,	height*2.0f,
 	//	};
 
-	return(computeVAO((p.size()-4)/2, &(p[2]), &(p[0]), sides, 0.0f));
+	return (computeVAO((p.size()-4)/2, &(p[2]), &(p[0]), sides, 0.0f));
 }
 
 
@@ -233,10 +234,11 @@ MyMesh createPawn() {
 	int i; 
 	// two extra points are added for normal computation
 
-	float *points = (float *)malloc(sizeof(float) * (numP+2) * 2);
+	float *points = (float *)malloc(sizeof(float) * (numP + 2) * 2);
 
 	for(i=2;i<(numP+1)*2;i++) {
-		points[i] = p[i-2];
+		if (points + i)			// sanity check
+			points[i] = p[i-2];
 	}
 
 	// distinguishes between closed curves and open curves
@@ -293,19 +295,19 @@ MyMesh computeVAO(int numP, float *p, float *points, int sides, float smoothCos)
 			else
 				delta = 0.0f;
 
-			normal[((k)*(numSides+1) + j)*4]   = nx * cos(j*inc+delta);
-			normal[((k)*(numSides+1) + j)*4+1] = ny;
-			normal[((k)*(numSides+1) + j)*4+2] = nx * sin(-j*inc+delta);
+			normal[((k)*(numSides+1) + j)*4]   = (float)(nx * cos(j*inc+delta));
+			normal[((k)*(numSides+1) + j)*4+1] = (float)(ny);
+			normal[((k)*(numSides+1) + j)*4+2] = (float)(nx * sin(-j*inc+delta));
 			normal[((k)*(numSides+1) + j)*4+3] = 0.0f;
 
-			vertex[((k)*(numSides+1) + j)*4]   = p[i*2] * cos(j*inc);
-			vertex[((k)*(numSides+1) + j)*4+1] = p[(i*2)+1];
-			vertex[((k)*(numSides+1) + j)*4+2] = p[i*2] * sin(-j*inc);
+			vertex[((k)*(numSides+1) + j)*4]   = (float)(p[i*2] * cos(j*inc));
+			vertex[((k)*(numSides+1) + j)*4+1] = (float)(p[(i*2)+1]);
+			vertex[((k)*(numSides+1) + j)*4+2] = (float)(p[i*2] * sin(-j*inc));
 			vertex[((k)*(numSides+1) + j)*4+3] = 1.0f;
 
-			textco[((k)*(numSides+1) + j)*4]   = ((j+0.0f)/numSides);
-			textco[((k)*(numSides+1) + j)*4+1] = (i+0.0f)/(numP-1);
-			textco[((k)*(numSides+1) + j)*4+2] = 0;
+			textco[((k)*(numSides+1) + j)*4]   = (float)(((j+0.0f)/numSides));
+			textco[((k)*(numSides+1) + j)*4+1] = (float)((i+0.0f)/(numP-1));
+			textco[((k)*(numSides+1) + j)*4+2] = 0.0f;
 			textco[((k)*(numSides+1) + j)*4+3] = 1.0f;
 		}
 		k++;

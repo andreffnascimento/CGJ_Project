@@ -38,6 +38,10 @@ float mNormal3x3[9];
 void pushMatrix(MatrixTypes aType) {
 
 	float *aux = (float *)malloc(sizeof(float) * 16);
+
+	if (aux == nullptr)		// sanity check
+		return;
+
 	memcpy(aux, mMatrix[aType], sizeof(float) * 16);
 	mMatrixStack[aType].push_back(aux);
 }

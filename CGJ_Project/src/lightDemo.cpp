@@ -27,12 +27,12 @@
 
 
 // Use Very Simple Libs
-#include "VSShaderlib.h"
-#include "AVTmathLib.h"
-#include "VertexAttrDef.h"
-#include "geometry.h"
+#include "math/AVTmathLib.h"
+#include "renderer/VSShaderlib.h"
+#include "renderer/VertexAttrDef.h"
+#include "renderer/geometry.h"
 
-#include "avtFreeType.h"
+#include "text/avtFreeType.h"
 
 using namespace std;
 
