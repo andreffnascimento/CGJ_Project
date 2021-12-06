@@ -27,18 +27,20 @@
 
 
 // Use Very Simple Libs
-#include "math/AVTmathLib.h"
+//#include "math/AVTmathLib.h"
 #include "renderer/VSShaderlib.h"
 #include "renderer/VertexAttrDef.h"
 #include "renderer/geometry.h"
 
 #include "text/avtFreeType.h"
 
+#include "app/application.h"
+
 using namespace std;
 
-#define CAPTION "CGJ Demo: Phong Shading and Text rendered with FreeType"
-int WindowHandle = 0;
-int WinX = 1024, WinY = 768;
+// REMOVE: #define CAPTION "CGJ Demo: Phong Shading and Text rendered with FreeType"
+// REMOVE: int WindowHandle = 0;
+// REMOVE: int WinX = 1024, WinY = 768;
 
 unsigned int FrameCount = 0;
 
@@ -99,7 +101,7 @@ float car_bodyT = 1.0F;
 
 float radius = 0.45f;
 
-void timer(int value)
+/*void timer(int value)
 {
 	std::ostringstream oss;
 	oss << CAPTION << ": " << FrameCount << " FPS @ (" << WinX << "x" << WinY << ")";
@@ -114,26 +116,7 @@ void refresh(int value)
 {
 	glutTimerFunc(1000.0 / 60.0, refresh, 0);
 	glutPostRedisplay();
-}
-
-// ------------------------------------------------------------
-//
-// Reshape Callback Function
-//
-
-void changeSize(int w, int h) {
-
-	float ratio;
-	// Prevent a divide by zero, when window is too short
-	if(h == 0)
-		h = 1;
-	// set the viewport to be the entire window
-	glViewport(0, 0, w, h);
-	// set the projection matrix
-	ratio = (1.0f * w) / h;
-	loadIdentity(PROJECTION);
-	perspective(53.13f, ratio, 0.1f, 1000.0f);
-}
+}*/
 
 
 // ------------------------------------------------------------
@@ -141,7 +124,7 @@ void changeSize(int w, int h) {
 // Render stufff
 //
 
-void processObject(MyMesh obj) {
+/*void processObject(MyMesh obj) {
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
 	glUniformMatrix4fv(vm_uniformId, 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
 	glUniformMatrix4fv(pvm_uniformId, 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
@@ -268,7 +251,7 @@ void renderCar() {
 	processObject(obj);
 }
 
-void renderScene(void) {
+/*void renderScene(void) {
 
 	GLint loc;
 
@@ -322,14 +305,14 @@ void renderScene(void) {
 	glDisable(GL_BLEND);
 
 	glutSwapBuffers();
-}
+}*/
 
 // ------------------------------------------------------------
 //
 // Events from the Keyboard
 //
 
-void processKeys(unsigned char key, int xx, int yy)
+/*void processKeys(unsigned char key, int xx, int yy)
 {
 	switch(key) {
 
@@ -434,7 +417,7 @@ void mouseWheel(int wheel, int direction, int x, int y) {
 
 //  uncomment this if not using an idle or refresh func
 //	glutPostRedisplay();
-}
+}*/
 
 // --------------------------------------------------------
 //
@@ -628,45 +611,12 @@ void init()
 
 int main(int argc, char** argv) {
 
-	//  GLUT initialization
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE);
-
-	glutInitContextVersion(4, 3);
-	glutInitContextProfile(GLUT_CORE_PROFILE);
-	glutInitContextFlags(GLUT_FORWARD_COMPATIBLE | GLUT_DEBUG);
-
-	glutInitWindowPosition(100, 100);
-	glutInitWindowSize(WinX, WinY);
-	WindowHandle = glutCreateWindow(CAPTION);
+	Application application = Application::getInstance();
+	application.init(argc, argv, true);
+	
 
 
-	//  Callback Registration
-	glutDisplayFunc(renderScene);
-	glutReshapeFunc(changeSize);
 
-	glutTimerFunc(0, timer, 0);
-	//glutIdleFunc(renderScene);	// Use it for maximum performance
-	glutTimerFunc(0, refresh, 0);   //use it to to get 60 FPS whatever
-
-//	Mouse and Keyboard Callbacks
-	glutKeyboardFunc(processKeys);
-	glutMouseFunc(processMouseButtons);
-	glutMotionFunc(processMouseMotion);
-	glutMouseWheelFunc(mouseWheel);
-
-
-	//	return from main loop
-	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
-
-	//	Init GLEW
-	glewExperimental = GL_TRUE;
-	glewInit();
-
-	printf("Vendor: %s\n", glGetString(GL_VENDOR));
-	printf("Renderer: %s\n", glGetString(GL_RENDERER));
-	printf("Version: %s\n", glGetString(GL_VERSION));
-	printf("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
 	if (!setupShaders())
 		return(1);

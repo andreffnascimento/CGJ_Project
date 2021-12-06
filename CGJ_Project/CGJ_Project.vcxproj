@@ -162,6 +162,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\app\application.cpp" />
+    <ClCompile Include="src\app\inputHandler.cpp" />
     <ClCompile Include="src\text\avtFreeType.cpp" />
     <ClCompile Include="src\math\AVTmathLib.cpp" />
     <ClCompile Include="src\renderer\basic_geometry.cpp" />
@@ -170,6 +172,9 @@
     <ClCompile Include="src\renderer\vsShaderLib.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\app\application.h" />
+    <ClInclude Include="src\app\callback.h" />
+    <ClInclude Include="src\app\inputHandler.h" />
     <ClInclude Include="src\text\avtFreeType.h" />
     <ClInclude Include="src\math\AVTmathLib.h" />
     <ClInclude Include="src\renderer\cube.h" />
