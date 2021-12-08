@@ -23,11 +23,9 @@ void terminateApp()
 void timer(int value)
 {
 	Application &app = Application::getInstance();
+	const Application::ApplicationData &appData = app._applicationData;
 	if (!app._running)
 		return;
-
-	const Application::ApplicationData &appData = app._applicationData;
-	app._frameCount = 0;
 
 	std::ostringstream oss;
 	oss << appData.caption << ": " << app._frameCount << " FPS @ (" << appData.width << "x" << appData.heigth << ")";
@@ -35,6 +33,8 @@ void timer(int value)
 	glutSetWindow(app._windowHandle);
 	glutSetWindowTitle(s.c_str());
 	glutTimerFunc(1000, timer, 0);
+
+	app._frameCount = 0;
 }
 
 
