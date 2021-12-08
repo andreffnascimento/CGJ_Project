@@ -1,12 +1,14 @@
 #include "scene.h"
 
+#include "engine/game/components/renderable.h"
+
 
 
 
 Scene::Scene()
 	: _gameObjects(std::list<GameObject*>()), _activeCamera(nullptr)
 {
-	_init();
+	//empty
 }
 
 Scene::~Scene()
@@ -24,20 +26,19 @@ void Scene::update()
 		gameObject->update();
 }
 
-std::list<GameObject*> Scene::getObjectsByType(GameObject::Type type) const
+
+
+
+template<class T>
+std::list<T*> Scene::getObjectsByType() const
 {
-	std::list<GameObject*> gameObjects = std::list<GameObject*>();
-	for (auto &gameObject : _gameObjects)
-		if (gameObject->getType() == type)
-			gameObjects.push_back(gameObject);
+	T* temp = nullptr;
+	std::list<T*> gameObjects = std::list<T*>();
+	for (auto& object : _gameObjects)
+		if ((temp = dynamic_cast<T*>(object)) != nullptr)
+			gameObjects.push_back(temp);
 
 	return gameObjects;
 }
 
-
-
-
-void Scene::_init()
-{
-	// empty
-}
+template std::list<Renderable*> Scene::getObjectsByType() const;

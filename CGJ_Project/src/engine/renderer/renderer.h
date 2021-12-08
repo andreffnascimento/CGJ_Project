@@ -2,9 +2,11 @@
 #define __RENDERER_RENDERER_H__
 
 
-// shaderes and vertex information
 #include "engine/game/scene.h"
+#include "engine/game/components/renderable.h"
+#include "engine/renderer/geometry.h"
 #include "engine/renderer/vsShaderLib.h"
+#include "engine/utils/coords.h"
 
 
 
@@ -30,12 +32,11 @@ public:
 	static const char* FONT_NAME;
 
 
-private:
+public:
 	VSShaderLib _shader;		//geometry
 	VSShaderLib _shaderText;	//render bitmap text
 
 	int _uniformLocation[ShaderUniformType::N_UNIFORMS];	// uniform locations
-
 
 
 
@@ -45,11 +46,17 @@ public:
 
 
 public:
-	void render(const Scene &scene);
+	void renderScene(const Scene &scene);
+	void renderCamera(const Coords3f &cameraCoords, const Coords3f &targetCoords) const;
+	void renderObject(const MyMesh &mesh, const Renderable::TransformData &transform) const;
+	void terminateRenderObject() const;
 
 
 private:
 	GLuint _setupShaders();
+	void _loadMesh(const MyMesh &mesh) const;
+	void _applyTransform(const Renderable::TransformData& transform) const;
+	void _renderMesh(const MyMesh& mesh) const;
 
 };
 

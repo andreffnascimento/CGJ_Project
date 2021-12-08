@@ -8,8 +8,8 @@
 #include <ft2build.h>
 #include <freetype/freetype.h>
 
-#include "renderer/VSShaderlib.h"
-#include "math/AVTmathLib.h"
+#include "engine/renderer/VSShaderlib.h"
+#include "engine/math/AVTmathLib.h"
 
 using namespace std;
 

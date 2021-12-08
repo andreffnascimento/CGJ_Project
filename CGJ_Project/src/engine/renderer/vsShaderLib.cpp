@@ -148,7 +148,7 @@ VSShaderLib::setVertexAttribName(VSShaderLib::AttribType at, std::string name) {
 
 
 GLuint
-VSShaderLib::getProgramIndex() {
+VSShaderLib::getProgramIndex() const {
 
 	return pProgram;
 }
@@ -475,7 +475,7 @@ VSShaderLib::getProgramInfoLog() {
 
 
 bool
-VSShaderLib::isProgramValid() {
+VSShaderLib::isProgramValid() const {
 
 	GLint b = GL_FALSE;
 

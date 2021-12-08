@@ -6,6 +6,9 @@
 #include "engine/utils/coords.h"
 
 
+class Renderer;
+
+
 
 
 class Camera : public GameObject
@@ -32,7 +35,7 @@ public:
 
 
 public:
-	void render() override;
+	void renderCamera(const Renderer &renderer) const;
 
 
 public:

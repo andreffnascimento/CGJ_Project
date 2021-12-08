@@ -3,10 +3,27 @@
 
 
 
+unsigned int GameObject::s_nextId = 0;
+
+
+
+
 GameObject::GameObject()
-	: _scripts(std::list<Script*>()), _tag(0)
+	: _id(GameObject::s_nextId), _tag(""), _scripts(std::list<Script*>())
 {
-	// empty
+	GameObject::s_nextId++;
+}
+
+GameObject::GameObject(const char* tag)
+	: _id(GameObject::s_nextId), _tag(tag), _scripts(std::list<Script*>())
+{
+	GameObject::s_nextId++;
+}
+
+GameObject::GameObject(const std::string& tag)
+	: _id(GameObject::s_nextId), _tag(tag), _scripts(std::list<Script*>())
+{
+	GameObject::s_nextId++;
 }
 
 
@@ -23,16 +40,4 @@ void GameObject::update()
 {
 	for (auto& script : _scripts)
 		script->run();
-}
-
-
-void GameObject::render()
-{
-	// empty by default
-}
-
-
-GameObject::Type GameObject::getType() const
-{
-	return GameObject::Type::GAME_OBJECT;
 }

@@ -2,13 +2,18 @@
 
 #include <iostream>
 
+#include "engine/game/components/camera.h"
+#include "engine/game/components/renderable.h"
 #include "engine/math/AVTmathLib.h"
 #include "engine/renderer/VertexAttrDef.h"
 #include "engine/text/avtFreeType.h"
 
 
-#include <GL/glew.h>		// include GLEW to access OpenGL 3.3 functions
-#include <IL/il.h>			// DevIL library
+#include <GL/glew.h>
+#include <IL/il.h>
+
+extern float mCompMatrix[COUNT_COMPUTED_MATRICES][16];
+extern float mNormal3x3[9];
 
 
 
@@ -18,7 +23,7 @@ const char* Renderer::FONT_NAME = "fonts/arial.ttf";					// font name
 
 
 
-Renderer::Renderer() 
+Renderer::Renderer()
 {
 	// init GLEW
 	glewExperimental = GL_TRUE;
@@ -45,7 +50,7 @@ Renderer::Renderer()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_MULTISAMPLE);
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	
 	// setup shaders
 	if (!_setupShaders())
@@ -61,32 +66,46 @@ Renderer::~Renderer()
 
 
 
-void Renderer::render(const Scene& scene)
+void Renderer::renderScene(const Scene& scene)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// load identity matrices
-	loadIdentity(VIEW);
-	loadIdentity(MODEL);
-
 	if (scene.getActiveCamera() != nullptr)
-		scene.getActiveCamera()->render();
+		scene.getActiveCamera()->renderCamera(*this);
 
 	glUseProgram(_shader.getProgramIndex());
 
-	// render lights
-	for (auto &lightObject : scene.getObjectsByType(GameObject::Type::LIGHT))
-		lightObject->render();
-
-	// TEMPORARY CODE TO GET SOME LIGHT
-	float lightPos[4] = { 1.0f, 12.0f, 1.0f ,1.0f };
-	float res[4];
-	multMatrixPoint(VIEW, lightPos, res);
-	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::L_POS], 1, res);
-
 	// render objects
-	for (auto &renderableObject : scene.getObjectsByType(GameObject::Type::RENDERABLE))
-		renderableObject->render();
+	for (auto &renderableObject : scene.getObjectsByType<Renderable>())
+		renderableObject->renderObject(*this);
+}
+
+
+void Renderer::renderCamera(const Coords3f &cameraCoords, const Coords3f &targetCoords) const
+{
+	Coords3f up = { 0.0f, 1.0f, 0.0f };
+	if (cameraCoords.x == 0.0f && cameraCoords.y != 0.0f && cameraCoords.z == 0.0f)
+		up = { 0.0f, 0.0f, 1.0f };
+
+	loadIdentity(VIEW);
+	loadIdentity(MODEL);
+	lookAt(cameraCoords.x, cameraCoords.y, cameraCoords.z,	// camera position
+		   targetCoords.x, targetCoords.y, targetCoords.z,	// target position
+		   up.x, up.y, up.z);								// up vector
+}
+
+
+void Renderer::renderObject(const MyMesh &mesh, const Renderable::TransformData &transform) const
+{
+	_loadMesh(mesh);				// this might require some optimization to stop loading meshes when they are already there
+	_applyTransform(transform);
+	_renderMesh(mesh);
+}
+
+
+void Renderer::terminateRenderObject() const
+{
+	popMatrix(MODEL);
 }
 
 
@@ -96,8 +115,8 @@ GLuint Renderer::_setupShaders()
 {
 	// Shader for models
 	_shader.init();
-	_shader.loadShader(VSShaderLib::VERTEX_SHADER, "src/engine/shaders/phong_blinn.vert");
-	_shader.loadShader(VSShaderLib::FRAGMENT_SHADER, "src/engine/shaders/phong_blinn.frag");
+	_shader.loadShader(VSShaderLib::VERTEX_SHADER, "src/engine/shaders/gouraud.vert");
+	_shader.loadShader(VSShaderLib::FRAGMENT_SHADER, "src/engine/shaders/gouraud.frag");
 
 	// set semantics for the shader variables
 	glBindFragDataLocation(_shader.getProgramIndex(), 0, "colorOut");
@@ -127,4 +146,57 @@ GLuint Renderer::_setupShaders()
 	std::cout << "InfoLog for Text Rendering Shader\n" << _shaderText.getAllInfoLogs().c_str() << "\n\n";
 
 	return _shader.isProgramLinked() && _shaderText.isProgramLinked();
+}
+
+
+void Renderer::_loadMesh(const MyMesh& mesh) const
+{
+	GLint loc;
+	loc = glGetUniformLocation(_shader.getProgramIndex(), "mat.ambient");
+	glUniform4fv(loc, 1, mesh.mat.ambient);
+	loc = glGetUniformLocation(_shader.getProgramIndex(), "mat.diffuse");
+	glUniform4fv(loc, 1, mesh.mat.diffuse);
+	loc = glGetUniformLocation(_shader.getProgramIndex(), "mat.specular");
+	glUniform4fv(loc, 1, mesh.mat.specular);
+	loc = glGetUniformLocation(_shader.getProgramIndex(), "mat.shininess");
+	glUniform1f(loc, mesh.mat.shininess);
+}
+
+
+void Renderer::_applyTransform(const Renderable::TransformData& transform) const
+{
+	pushMatrix(MODEL);
+
+	if (transform.position != Coords3f({ 0.0f, 0.0f, 0.0f }))
+		translate(MODEL, transform.position.x, transform.position.y, transform.position.z);
+
+	if (transform.scale != Coords3f({ 1.0f, 1.0f, 1.0f }))
+		scale(MODEL, transform.scale.x, transform.scale.y, transform.scale.z);
+
+	if (transform.rotation.x != 0.0f)
+		rotate(MODEL, transform.rotation.x, 1, 0, 0);
+
+	if (transform.rotation.y != 0.0f)
+		rotate(MODEL, transform.rotation.y, 0, 1, 0);
+
+	if (transform.rotation.z != 0.0f)
+		rotate(MODEL, transform.rotation.z, 0, 0, 1);
+}
+
+
+void Renderer::_renderMesh(const MyMesh &mesh) const
+{
+	computeDerivedMatrix(PROJ_VIEW_MODEL);
+	glUniformMatrix4fv(_uniformLocation[Renderer::ShaderUniformType::VM], 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
+	glUniformMatrix4fv(_uniformLocation[Renderer::ShaderUniformType::PVM], 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
+	computeNormalMatrix3x3();
+	glUniformMatrix3fv(_uniformLocation[Renderer::ShaderUniformType::NORMAL], 1, GL_FALSE, mNormal3x3);
+
+	glBindVertexArray(mesh.vao);	// render mesh
+
+	if (!_shader.isProgramValid())
+		throw std::string("Invalid shader program!");
+
+	glDrawElements(mesh.type, mesh.numIndexes, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 }

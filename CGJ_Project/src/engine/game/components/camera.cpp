@@ -1,6 +1,6 @@
 #include "camera.h"
 
-#include "engine/math/AVTmathLib.h"
+#include "engine/renderer/renderer.h"
 
 
 
@@ -37,11 +37,7 @@ void Camera::setTarget(float x, float y, float z)
 
 
 
-void Camera::render()
+void Camera::renderCamera(const Renderer &renderer) const
 {
-	loadIdentity(VIEW);
-	loadIdentity(MODEL);
-	lookAt(_cameraCoords.x, _cameraCoords.y, _cameraCoords.z,	// camera position
-		   _targetCoords.x, _targetCoords.y, _targetCoords.z,	// target position
-		   0, 1, 0);											// up vector
+	renderer.renderCamera(_cameraCoords, _targetCoords);
 }

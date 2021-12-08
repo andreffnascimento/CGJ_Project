@@ -4,11 +4,14 @@ uniform mat4 m_pvm;
 uniform mat4 m_viewModel;
 uniform mat3 m_normal;
 
+struct Materials {
+	vec4 ambient;
+	vec4 diffuse;
+	vec4 specular;
+	float shininess;
+};
 
-uniform vec4 ambient;
-uniform vec4 diffuse;
-uniform vec4 specular;
-uniform float shininess;
+uniform Materials mat;
 
 uniform vec4 l_pos;
 
@@ -32,9 +35,9 @@ void main () {
 	vec3 E = normalize(-v);
 	vec3 R = normalize(-reflect(L, N));
 
-	vec4 iAmb = ambient;
-	vec4 iDiff = diffuse * max(dot(N, L), 0.0);
-	vec4 iSpec = specular * pow(max(dot(R, E), 0.0), 0.3 * shininess);
+	vec4 iAmb = mat.ambient;
+	vec4 iDiff = mat.diffuse * max(dot(N, L), 0.0);
+	vec4 iSpec = mat.specular * pow(max(dot(R, E), 0.0), 0.3 * mat.shininess);
 
 	vColor = vec4(iAmb + iDiff + iSpec);
 	gl_Position = m_pvm * position;

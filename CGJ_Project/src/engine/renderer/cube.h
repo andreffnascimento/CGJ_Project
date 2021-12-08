@@ -1,4 +1,5 @@
-
+#ifndef __CUBE_H__
+#define __CUBE_H__
 
 
 int verticeCount = 24;
@@ -173,3 +174,6 @@ unsigned int faceIndex[] = {
 unsigned int quad_faceIndex[] = {
 	0,1,2,2,3,0
 };
+
+
+#endif // !__CUBE_H__

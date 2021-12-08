@@ -19,6 +19,7 @@ private:
 
 private:
 	void _initCameras();
+	void _initTable();
 };
 
 

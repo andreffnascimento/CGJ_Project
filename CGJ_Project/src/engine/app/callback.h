@@ -68,7 +68,7 @@ void displayScene()
 
 	app._frameCount++;
 	app._scene->update();
-	app._renderer->render(*app._scene);	
+	app._renderer->renderScene(*app._scene);	
 	app._inputHandler.reset();
 
 	glutSwapBuffers();

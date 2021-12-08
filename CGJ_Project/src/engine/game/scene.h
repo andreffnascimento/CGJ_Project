@@ -26,7 +26,11 @@ public:
 
 public:
 	void update();
-	std::list<GameObject*> getObjectsByType(GameObject::Type type) const;
+
+
+public:
+	template<class T>
+	std::list<T*> getObjectsByType() const;
 
 
 public:
@@ -37,7 +41,7 @@ public:
 
 
 private:
-	virtual void _init();					// concrete scenes must override this method to setup the game world
+	virtual void _init() = 0;				// concrete scenes must override this method to setup the game world
 
 };
 

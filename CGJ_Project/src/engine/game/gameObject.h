@@ -3,6 +3,7 @@
 
 
 #include <list>
+#include <string>
 
 #include "script.h"
 
@@ -12,40 +13,32 @@
 class GameObject
 {
 
-public:
-	enum class Type
-	{
-		GAME_OBJECT,
-		CAMERA,
-		LIGHT,
-		RENDERABLE
-	};
-
-
-
+private:
+	static unsigned int s_nextId;			// the id for the next gameObject
 
 private:
+	unsigned int _id;						// the id of the gameObject
+	std::string _tag;						// gameObjects can have tags associated to them
 	std::list<Script*> _scripts;			// game object contains a list of scripts
-	unsigned int _tag;						// gameObjects can have tags associated to them
 
 
 
 
 public:
 	GameObject();
+	GameObject(const char *tag);
+	GameObject(const std::string &tag);
 	virtual ~GameObject();					// to destroy the scripts in the concrete classes
 
 
 public:
 	virtual void update();
-	virtual void render();
-
-	virtual GameObject::Type getType() const;
 
 
 public:
-	inline void addScript(Script *script)		{ _scripts.push_back(script); }
-	inline bool hasTag(unsigned int tag) const	{ return _tag == tag; }
+	inline void addScript(Script *script)				{ _scripts.push_back(script); }
+	inline bool hasTag(const char *tag) const			{ return _tag.compare(tag) == 0; }
+	inline bool hasTag(const std::string &tag) const	{ return _tag.compare(tag) == 0; }
 
 };
 
