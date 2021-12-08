@@ -167,12 +167,16 @@ void Renderer::_applyTransform(const Renderable::TransformData& transform) const
 {
 	pushMatrix(MODEL);
 
-	if (transform.position != Coords3f({ 0.0f, 0.0f, 0.0f }))
-		translate(MODEL, transform.position.x, transform.position.y, transform.position.z);
+	Coords3f fixedPosition = {
+		-transform.scale.x / 2 + transform.position.x,
+		-transform.scale.y / 2 + transform.position.y,
+		-transform.scale.z / 2 + transform.position.z
+	};
 
-	if (transform.scale != Coords3f({ 1.0f, 1.0f, 1.0f }))
-		scale(MODEL, transform.scale.x, transform.scale.y, transform.scale.z);
+	translate(MODEL, fixedPosition.x, fixedPosition.y, fixedPosition.z);
+	scale(MODEL, transform.scale.x, transform.scale.y, transform.scale.z);
 
+	// avoid rotate operation if it is not needed (the other two are very common)
 	if (transform.rotation.x != 0.0f)
 		rotate(MODEL, transform.rotation.x, 1, 0, 0);
 

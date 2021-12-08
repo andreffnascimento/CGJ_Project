@@ -22,6 +22,6 @@ Table::Table()
 	//create mesh for table (legs + cover)
 	_mesh = createCube();
 	setMaterial(material);
-	setPosition(-TABLE_LENGTH / 2.0f, -TABLE_THICKNESS, -TABLE_WIDTH / 2.0f);
+	setPosition(0.0f, TABLE_THICKNESS / 2.0f, 0.0f);
 	setScale(TABLE_LENGTH, TABLE_THICKNESS, TABLE_WIDTH);
 }
