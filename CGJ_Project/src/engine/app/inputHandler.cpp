@@ -1,5 +1,8 @@
 #include "inputHandler.h"
 
+#include <string>
+
+
 
 
 InputHandler::InputHandler()

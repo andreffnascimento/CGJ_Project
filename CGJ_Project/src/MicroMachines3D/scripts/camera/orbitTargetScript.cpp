@@ -1,4 +1,4 @@
-#include "worldCameraScript.h"
+/*#include "worldCameraScript.h"
 
 
 
@@ -107,4 +107,4 @@ void WorldCameraScript::_processMouseWheel(const InputHandler::MouseInfo& mouseI
 	_camera._coords.x = _camera._r * sin(_camera._alpha * 3.14f / 180.0f) * cos(_camera._beta * 3.14f / 180.0f);
 	_camera._coords.z = _camera._r * cos(_camera._alpha * 3.14f / 180.0f) * cos(_camera._beta * 3.14f / 180.0f);
 	_camera._coords.y = _camera._r * sin(_camera._beta * 3.14f / 180.0f);
-}
+}*/

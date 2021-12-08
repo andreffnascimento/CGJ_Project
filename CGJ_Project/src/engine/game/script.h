@@ -1,5 +1,5 @@
-#ifndef GAME_SCRIPT_H
-#define GAME_SCRIPT_H
+#ifndef __ENGINE_GAME_SCRIPT_H__
+#define __ENGINE_GAME_SCRIPT_H__
 
 
 
@@ -15,4 +15,4 @@ public:
 };
 
 
-#endif // !GAME_SCRIPT_H
+#endif // !__ENGINE_GAME_SCRIPT_H__

@@ -1,75 +1,76 @@
-#ifndef APP_CALLBACK_H
-#define APP_CALLBACK_H
+#ifndef __ENGINE_APP_CALLBACK_H__
+#define __ENGINE_APP_CALLBACK_H__
 
 
 #include <iostream>
 #include <sstream>
 
-#include "app/application.h"
-#include "app/test.h"
+#include "engine/app/application.h"
+#include "engine/math/AVTmathLib.h"
 
+#include <GL/freeglut.h>
+
+
+
+
+void terminateApp()
+{
+	Application::terminate();
+}
 
 
 // FPS display callback function
 void timer(int value)
 {
-	Application& app = Application::getInstance();
+	Application &app = Application::getInstance();
+	if (!app._running)
+		return;
+
+	const Application::ApplicationData &appData = app._applicationData;
+	app._frameCount = 0;
+
 	std::ostringstream oss;
-	oss << Application::CAPTION << ": " << app._frameCount << " FPS @ (" << Application::WIDTH << "x" << Application::HEIGHT << ")";
+	oss << appData.caption << ": " << app._frameCount << " FPS @ (" << appData.width << "x" << appData.heigth << ")";
 	std::string s = oss.str();
 	glutSetWindow(app._windowHandle);
 	glutSetWindowTitle(s.c_str());
 	glutTimerFunc(1000, timer, 0);
-	app._frameCount = 0;
 }
 
 
 // Screen refresh callback function
 void refresh(int value)
 {
-	glutTimerFunc(1000.0 / 60.0, refresh, 0);
+	Application& app = Application::getInstance();
+	if (!app._running)
+		return;
+
+	glutTimerFunc((unsigned int)(1000.0 / 60.0), refresh, 0);
 	glutPostRedisplay();
 }
 
 
 // Reshape callback Function
-void changeSize(int width, int height) {
-
-	float ratio;
-	if (height == 0)					// prevent a divide by zero, when window is too short
-		height = 1;
-
-	glViewport(0, 0, width, height);	// set the viewport to be the entire window
-
-	// set the projection matrix
-	ratio = (1.0f * width) / height;
-	loadIdentity(PROJECTION);
-	perspective(53.13f, ratio, 0.1f, 1000.0f);
+void changeViewportSize(int width, int height)
+{
+	Application &app = Application::getInstance();
+	if (app._scene != nullptr && app._scene->getActiveCamera() != nullptr)
+		app._scene->getActiveCamera()->setViewport(width, height);
 }
 
 
 // Render callback function
-void renderScene()
+void displayScene()
 {
 	Application &app = Application::getInstance();
+	if (app._scene == nullptr)
+		throw std::string("Application is missing an attached scene!");
+
 	app._frameCount++;
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	// load identity matrices
-	loadIdentity(VIEW);
-	loadIdentity(MODEL);
-
-	// use our shader
-	glUseProgram(getShader().getProgramIndex());
-
-	app.updateGame();
-
-	renderLight();		// TEMP
-	renderTable();		// TEMP
-	renderText();		// TEMP
-	
+	app._scene->update();
+	app._renderer->render(*app._scene);	
 	app._inputHandler.reset();
+
 	glutSwapBuffers();
 }
 
@@ -124,4 +125,4 @@ void mouseWheel(int wheel, int direction, int x, int y)
 }
 
 
-#endif // !APP_CALLBACK_H
+#endif // !__ENGINE_APP_CALLBACK_H__

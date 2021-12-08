@@ -15,120 +15,137 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\math\AVTmathLib.cpp">
+    <ClCompile Include="src\engine\math\AVTmathLib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderer\basic_geometry.cpp">
+    <ClCompile Include="src\engine\renderer\basic_geometry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderer\vsShaderLib.cpp">
+    <ClCompile Include="src\engine\renderer\vsShaderLib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderer\Texture_Loader.cpp">
+    <ClCompile Include="src\engine\renderer\Texture_Loader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\MicroMachines3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\text\avtFreeType.cpp">
+    <ClCompile Include="src\engine\text\avtFreeType.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\app\application.cpp">
+    <ClCompile Include="src\engine\app\application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\app\inputHandler.cpp">
+    <ClCompile Include="src\engine\app\inputHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\game.cpp">
+    <ClCompile Include="src\engine\game\scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\gameObjects\camera\camera.cpp">
+    <ClCompile Include="src\engine\game\components\camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderer\shaderHelper.cpp">
+    <ClCompile Include="src\engine\game\gameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\gameObject.cpp">
+    <ClCompile Include="src\MicroMachines3D\scripts\camera\orbitTargetScript.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\scripts\camera\worldCameraScript.cpp">
+    <ClCompile Include="src\engine\renderer\renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MicroMachines3D\gameObjects\camera\perspectiveCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MicroMachines3D\scenes\MicroMachines3DScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MicroMachines3D\gameObjects\camera\orthographicCamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\math\AVTmathLib.h">
+    <ClInclude Include="src\engine\math\AVTmathLib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\cube.h">
+    <ClInclude Include="src\engine\renderer\cube.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\VertexAttrDef.h">
+    <ClInclude Include="src\engine\renderer\VertexAttrDef.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\vsShaderLib.h">
+    <ClInclude Include="src\engine\renderer\vsShaderLib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\Texture_Loader.h">
+    <ClInclude Include="src\engine\renderer\Texture_Loader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\geometry.h">
+    <ClInclude Include="src\engine\renderer\geometry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ft2build.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\text\avtFreeType.h">
+    <ClInclude Include="src\engine\text\avtFreeType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\app\application.h">
+    <ClInclude Include="src\engine\app\application.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\app\callback.h">
+    <ClInclude Include="src\engine\app\callback.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\app\inputHandler.h">
+    <ClInclude Include="src\engine\app\inputHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\game.h">
+    <ClInclude Include="src\engine\game\scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\gameObjects\camera\camera.h">
+    <ClInclude Include="src\engine\game\components\camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\renderer\shaderHelper.h">
+    <ClInclude Include="src\engine\game\gameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\gameObject.h">
+    <ClInclude Include="src\engine\game\script.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\script.h">
+    <ClInclude Include="src\MicroMachines3D\scripts\camera\orbitTargetScript.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\app\test.h">
+    <ClInclude Include="src\engine\renderer\renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\scripts\camera\worldCameraScript.h">
+    <ClInclude Include="src\engine\utils\coords.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\gameInit.h">
+    <ClInclude Include="src\MicroMachines3D\gameObjects\camera\perspectiveCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MicroMachines3D\scenes\MicroMachines3DScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MicroMachines3D\gameObjects\camera\orthographicCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\shaders\pointlight.frag">
+    <None Include="src\engine\shaders\pointlight.frag">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="src\shaders\pointlight.vert">
+    <None Include="src\engine\shaders\pointlight.vert">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Dependencies.exe" />
-    <None Include="src\shaders\text.frag">
+    <None Include="src\engine\shaders\text.frag">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="src\shaders\text.vert">
+    <None Include="src\engine\shaders\text.vert">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="src\shaders\gouraud.frag" />
-    <None Include="src\shaders\gouraud.vert" />
+    <None Include="src\engine\shaders\gouraud.frag" />
+    <None Include="src\engine\shaders\gouraud.vert" />
+    <None Include="src\engine\shaders\phong_blinn.frag" />
+    <None Include="src\engine\shaders\phong_blinn.vert" />
   </ItemGroup>
 </Project>

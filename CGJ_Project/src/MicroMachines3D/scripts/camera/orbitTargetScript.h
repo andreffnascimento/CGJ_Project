@@ -1,10 +1,11 @@
-#ifndef SCRIPTS_CAMERA_WORLD_CAMERA_SCRIPT_H
-#define SCRIPTS_CAMERA_WORLD_CAMERA_SCRIPT_H
+/*#ifndef __MM3D_SCRIPS_CAMERA_ORBITTARGETSCRIPT_H__
+#define __MM3D_SCRIPS_CAMERA_ORBITTARGETSCRIPT_H__
 
 
-#include "app/inputHandler.h"
-#include "game/script.h"
-#include "gameObjects/camera/camera.h"
+#include "engine/app/inputHandler.h"
+#include "engine/game/script.h"
+#include "engine/"
+#include "engine/gameObjects/components/camera.h"
 
 
 
@@ -46,4 +47,4 @@ private:
 };
 
 
-#endif // !SCRIPTS_CAMERA_WORLD_CAMERA_SCRIPT_H
+#endif // !__MM3D_SCRIPS_CAMERA_ORBITTARGETSCRIPT_H_`*/
