@@ -2,8 +2,8 @@
 #define __MM3D_GAMEOBJECTS_CAMERA_ORTHOGRAPHICCAMERA_H__
 
 
-#include "engine/game/components/camera.h"
 #include "engine/math/AVTmathLib.h"
+#include "engine/scene/components/camera.h"
 
 
 

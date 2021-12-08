@@ -2,7 +2,7 @@
 #define __MM3D_GAMEOBJECTS_WORLD_TABLE_H__
 
 
-#include "engine/game/components/renderable.h"
+#include "engine/scene/components/renderable.h"
 
 
 

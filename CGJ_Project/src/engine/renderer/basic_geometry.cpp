@@ -16,7 +16,7 @@ Basic Revolution Geometry
 
 // GLUT is the toolkit to interface with the OS
 #include <GL/freeglut.h>
-#include "math/AVTmathLib.h"
+#include "engine/math/AVTmathLib.h"
 
 #include "VertexAttrDef.h"
 #include "geometry.h"

@@ -1,8 +1,8 @@
-#ifndef __ENGINE_GAME_COMPONENTS_CAMERA_H__
-#define __ENGINE_GAME_COMPONENTS_CAMERA_H__
+#ifndef __ENGINE_SCENE_COMPONENTS_CAMERA_H__
+#define __ENGINE_SCENE_COMPONENTS_CAMERA_H__
 
 
-#include "engine/game/gameObject.h"
+#include "engine/scene/entity.h"
 #include "engine/utils/coords.h"
 
 
@@ -11,7 +11,7 @@ class Renderer;
 
 
 
-class Camera : public GameObject
+class Camera : public Entity
 {
 
 protected:
@@ -44,4 +44,4 @@ public:
 };
 
 
-#endif // !__ENGINE_GAME_COMPONENTS_CAMERA_H__
+#endif // !__ENGINE_SCENE_COMPONENTS_CAMERA_H__

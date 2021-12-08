@@ -1,11 +1,11 @@
-#ifndef __ENGINE_GAME_SCENE_H__
-#define __ENGINE_GAME_SCENE_H__
+#ifndef __ENGINE_SCENE_SCENE_H__
+#define __ENGINE_SCENE_SCENE_H__
 
 
 #include <list>
 
-#include "engine/game/gameObject.h"
-#include "engine/game/components/camera.h"
+#include "engine/scene/entity.h"
+#include "engine/scene/components/camera.h"
 
 
 
@@ -13,7 +13,7 @@ class Scene
 {
 
 private:
-	std::list<GameObject*> _gameObjects;	// all the objects of the world that are being rendered
+	std::list<Entity*> _entities;			// all the entities of scene
 	Camera *_activeCamera;					// the camera used to render the scene
 
 
@@ -30,11 +30,11 @@ public:
 
 public:
 	template<class T>
-	std::list<T*> getObjectsByType() const;
+	std::list<T*> getEntitiesByType() const;
 
 
 public:
-	inline void addGameObject(GameObject* gameObject)	{ _gameObjects.push_back(gameObject);  }
+	inline void addEntity(Entity* gameObject)			{ _entities.push_back(gameObject);  }
 
 	inline Camera* getActiveCamera() const				{ return _activeCamera; }
 	inline void setActiveCamera(Camera *camera)			{ _activeCamera = camera; }
@@ -46,4 +46,4 @@ private:
 };
 
 
-#endif // !__ENGINE_GAME_SCENE_H__
+#endif // !__ENGINE_SCENE_SCENE_H__

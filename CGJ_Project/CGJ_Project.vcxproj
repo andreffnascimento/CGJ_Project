@@ -167,10 +167,10 @@
   <ItemGroup>
     <ClCompile Include="src\engine\app\application.cpp" />
     <ClCompile Include="src\engine\app\inputHandler.cpp" />
-    <ClCompile Include="src\engine\game\components\camera.cpp" />
-    <ClCompile Include="src\engine\game\components\renderable.cpp" />
-    <ClCompile Include="src\engine\game\scene.cpp" />
-    <ClCompile Include="src\engine\game\gameObject.cpp" />
+    <ClCompile Include="src\engine\scene\components\camera.cpp" />
+    <ClCompile Include="src\engine\scene\components\renderable.cpp" />
+    <ClCompile Include="src\engine\scene\scene.cpp" />
+    <ClCompile Include="src\engine\scene\entity.cpp" />
     <ClCompile Include="src\engine\renderer\renderer.cpp" />
     <ClCompile Include="src\MicroMachines3D\gameObjects\camera\orthographicCamera.cpp" />
     <ClCompile Include="src\MicroMachines3D\gameObjects\camera\perspectiveCamera.cpp" />
@@ -188,12 +188,12 @@
     <ClInclude Include="src\engine\app\application.h" />
     <ClInclude Include="src\engine\app\callback.h" />
     <ClInclude Include="src\engine\app\inputHandler.h" />
-    <ClInclude Include="src\engine\game\components\renderable.h" />
+    <ClInclude Include="src\engine\scene\components\renderable.h" />
     <ClInclude Include="src\engine\utils\coords.h" />
-    <ClInclude Include="src\engine\game\components\camera.h" />
-    <ClInclude Include="src\engine\game\scene.h" />
-    <ClInclude Include="src\engine\game\gameObject.h" />
-    <ClInclude Include="src\engine\game\script.h" />
+    <ClInclude Include="src\engine\scene\components\camera.h" />
+    <ClInclude Include="src\engine\scene\scene.h" />
+    <ClInclude Include="src\engine\scene\entity.h" />
+    <ClInclude Include="src\engine\scene\script.h" />
     <ClInclude Include="src\engine\renderer\renderer.h" />
     <ClInclude Include="src\MicroMachines3D\common\constants.h" />
     <ClInclude Include="src\MicroMachines3D\gameObjects\camera\orthographicCamera.h" />

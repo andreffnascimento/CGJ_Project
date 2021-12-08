@@ -6,7 +6,7 @@
 
 #include "engine/app/inputHandler.h"
 #include "engine/renderer/renderer.h"
-#include "engine/game/scene.h"
+#include "engine/scene/scene.h"
 
 
 

@@ -2,10 +2,10 @@
 #define __RENDERER_RENDERER_H__
 
 
-#include "engine/game/scene.h"
-#include "engine/game/components/renderable.h"
 #include "engine/renderer/geometry.h"
 #include "engine/renderer/vsShaderLib.h"
+#include "engine/scene/scene.h"
+#include "engine/scene/components/renderable.h"
 #include "engine/utils/coords.h"
 
 

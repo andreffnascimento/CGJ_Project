@@ -2,7 +2,7 @@
 #define __MM3D_SCENES_MICROMACHINES3D_H__
 
 
-#include "engine/game/scene.h"
+#include "engine/scene/scene.h"
 
 
 

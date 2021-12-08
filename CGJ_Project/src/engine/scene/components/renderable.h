@@ -1,10 +1,10 @@
-#ifndef __ENGINE_GAME_COMPONENTS_RENDERABLE_H__
-#define __ENGINE_GAME_COMPONENTS_RENDERABLE_H__
+#ifndef __ENGINE_SCENE_COMPONENTS_RENDERABLE_H__
+#define __ENGINE_SCENE_COMPONENTS_RENDERABLE_H__
 
 
 #include <list>
 
-#include "engine/game/gameObject.h"
+#include "engine/scene/entity.h"
 #include "engine/renderer/geometry.h"
 #include "engine/utils/coords.h"
 
@@ -14,7 +14,7 @@ class Renderer;
 
 
 
-class Renderable : public GameObject
+class Renderable : public Entity
 {
 public:
 	struct TransformData
@@ -57,4 +57,4 @@ public:
 };
 
 
-#endif // !__ENGINE_GAME_COMPONENTS_RENDERABLE_H__
+#endif // !__ENGINE_SCENE_COMPONENTS_RENDERABLE_H__

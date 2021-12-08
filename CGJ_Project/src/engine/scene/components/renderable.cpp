@@ -6,7 +6,7 @@
 
 
 Renderable::Renderable()
-	: GameObject(), _mesh(MyMesh()), _transform(Renderable::TransformData())
+	: Entity(), _mesh(MyMesh()), _transform(Renderable::TransformData())
 {
 	// empty
 }

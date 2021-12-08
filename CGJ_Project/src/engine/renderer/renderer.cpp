@@ -2,10 +2,10 @@
 
 #include <iostream>
 
-#include "engine/game/components/camera.h"
-#include "engine/game/components/renderable.h"
 #include "engine/math/AVTmathLib.h"
 #include "engine/renderer/VertexAttrDef.h"
+#include "engine/scene/components/camera.h"
+#include "engine/scene/components/renderable.h"
 #include "engine/text/avtFreeType.h"
 
 
@@ -75,8 +75,13 @@ void Renderer::renderScene(const Scene& scene)
 
 	glUseProgram(_shader.getProgramIndex());
 
+	float lightPos[4] = { 1.0f, 12.0f, 1.0f ,1.0f };
+	float res[4];
+	multMatrixPoint(VIEW, lightPos, res);   //lightPos definido em World Coord so is converted to eye space
+	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::L_POS], 1, res);
+
 	// render objects
-	for (auto &renderableObject : scene.getObjectsByType<Renderable>())
+	for (auto &renderableObject : scene.getEntitiesByType<Renderable>())
 		renderableObject->renderObject(*this);
 }
 

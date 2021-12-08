@@ -39,13 +39,13 @@
     <ClCompile Include="src\engine\app\inputHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\game\scene.cpp">
+    <ClCompile Include="src\engine\scene\scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\game\components\camera.cpp">
+    <ClCompile Include="src\engine\scene\components\camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\game\gameObject.cpp">
+    <ClCompile Include="src\engine\scene\entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\MicroMachines3D\scripts\camera\orbitTargetScript.cpp">
@@ -63,7 +63,7 @@
     <ClCompile Include="src\MicroMachines3D\gameObjects\camera\orthographicCamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\game\components\renderable.cpp">
+    <ClCompile Include="src\engine\scene\components\renderable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\MicroMachines3D\gameObjects\world\table.cpp">
@@ -104,16 +104,16 @@
     <ClInclude Include="src\engine\app\inputHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\game\scene.h">
+    <ClInclude Include="src\engine\scene\scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\game\components\camera.h">
+    <ClInclude Include="src\engine\scene\components\camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\game\gameObject.h">
+    <ClInclude Include="src\engine\scene\entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\game\script.h">
+    <ClInclude Include="src\engine\scene\script.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\MicroMachines3D\scripts\camera\orbitTargetScript.h">
@@ -137,7 +137,7 @@
     <ClInclude Include="src\MicroMachines3D\common\constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\game\components\renderable.h">
+    <ClInclude Include="src\engine\scene\components\renderable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\MicroMachines3D\gameObjects\world\table.h">
