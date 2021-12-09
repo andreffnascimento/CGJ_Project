@@ -33,6 +33,10 @@ public:
 	void setTarget(float x, float y, float z);
 
 
+public:
+	inline void setNear(float near) { _near = near; }
+	inline void setFar(float far)	{ _far = far; }
+
 
 public:
 	void renderCamera(const Renderer &renderer) const;

@@ -6,7 +6,7 @@
 
 
 Camera::Camera()
-	: _cameraCoords({ 0.0f, 0.0f, 0.0f }), _targetCoords({ 0.0f, 0.0f, 0.0f }), _near(-1.0f), _far(1.0f)
+	: Entity(), _cameraCoords({ 0.0f, 0.0f, 0.0f }), _targetCoords({ 0.0f, 0.0f, 0.0f }), _near(-1.0f), _far(1.0f)
 {
 	// emtpy
 }

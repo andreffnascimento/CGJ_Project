@@ -2,7 +2,7 @@
 #define __ENGINE_SCENE_COMPONENTS_RENDERABLE_H__
 
 
-#include <list>
+#include <memory>
 
 #include "engine/scene/entity.h"
 #include "engine/renderer/geometry.h"
@@ -28,16 +28,12 @@ public:
 
 
 protected:
-	MyMesh _mesh;
+	std::shared_ptr<MyMesh> _mesh;
 	TransformData _transform;
-
-	std::list<Renderable*> _children;
-
 
 
 protected:
 	Renderable();
-	virtual ~Renderable();
 
 
 public:
@@ -49,10 +45,6 @@ public:
 
 public:
 	virtual void renderObject(const Renderer &renderer) const;
-
-
-public:
-	inline void addChildren(Renderable* renderable) { _children.push_back(renderable); }
 
 };
 

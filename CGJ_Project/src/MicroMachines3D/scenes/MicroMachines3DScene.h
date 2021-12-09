@@ -4,22 +4,46 @@
 
 #include "engine/scene/scene.h"
 
+#include "MicroMachines3D/gameObjects/manager/cameraManager.h"
+#include "MicroMachines3D/gameObjects/world/table/table.h"
 
 
 class MicroMachines3DScene : public Scene
 {
 
 public:
-	MicroMachines3DScene();
+	MicroMachines3DScene()
+		: Scene()
+	{
+		_init();
+	}
+
+
 
 
 private:
-	void _init() override;
+	void _init() override
+	{
+		_initCameraManager();
+		_initTable();
+	}
+
+
 
 
 private:
-	void _initCameras();
-	void _initTable();
+	void MicroMachines3DScene::_initCameraManager()
+	{
+		CameraManager* cameraManager = new CameraManager(*this);
+		addEntity(cameraManager);
+	}
+
+
+	void MicroMachines3DScene::_initTable()
+	{
+		Table* table = new Table();
+		addEntity(table);
+	}
 };
 
 

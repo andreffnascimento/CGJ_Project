@@ -172,10 +172,6 @@
     <ClCompile Include="src\engine\scene\scene.cpp" />
     <ClCompile Include="src\engine\scene\entity.cpp" />
     <ClCompile Include="src\engine\renderer\renderer.cpp" />
-    <ClCompile Include="src\MicroMachines3D\gameObjects\camera\orthographicCamera.cpp" />
-    <ClCompile Include="src\MicroMachines3D\gameObjects\camera\perspectiveCamera.cpp" />
-    <ClCompile Include="src\MicroMachines3D\gameObjects\world\table.cpp" />
-    <ClCompile Include="src\MicroMachines3D\scenes\MicroMachines3DScene.cpp" />
     <ClCompile Include="src\MicroMachines3D\scripts\camera\orbitTargetScript.cpp" />
     <ClCompile Include="src\engine\text\avtFreeType.cpp" />
     <ClCompile Include="src\engine\math\AVTmathLib.cpp" />
@@ -198,7 +194,10 @@
     <ClInclude Include="src\MicroMachines3D\common\constants.h" />
     <ClInclude Include="src\MicroMachines3D\gameObjects\camera\orthographicCamera.h" />
     <ClInclude Include="src\MicroMachines3D\gameObjects\camera\perspectiveCamera.h" />
-    <ClInclude Include="src\MicroMachines3D\gameObjects\world\table.h" />
+    <ClInclude Include="src\MicroMachines3D\gameObjects\manager\cameraManager.h" />
+    <ClInclude Include="src\MicroMachines3D\gameObjects\world\table\table.h" />
+    <ClInclude Include="src\MicroMachines3D\gameObjects\world\table\tableLeg.h" />
+    <ClInclude Include="src\MicroMachines3D\gameObjects\world\table\tableTop.h" />
     <ClInclude Include="src\MicroMachines3D\scenes\MicroMachines3DScene.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\camera\orbitTargetScript.h" />
     <ClInclude Include="src\engine\text\avtFreeType.h" />

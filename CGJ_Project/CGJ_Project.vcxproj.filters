@@ -54,19 +54,7 @@
     <ClCompile Include="src\engine\renderer\renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\MicroMachines3D\gameObjects\camera\perspectiveCamera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MicroMachines3D\scenes\MicroMachines3DScene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MicroMachines3D\gameObjects\camera\orthographicCamera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine\scene\components\renderable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MicroMachines3D\gameObjects\world\table.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -140,7 +128,16 @@
     <ClInclude Include="src\engine\scene\components\renderable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\MicroMachines3D\gameObjects\world\table.h">
+    <ClInclude Include="src\MicroMachines3D\gameObjects\world\table\tableTop.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MicroMachines3D\gameObjects\manager\cameraManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MicroMachines3D\gameObjects\world\table\tableLeg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MicroMachines3D\gameObjects\world\table\table.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

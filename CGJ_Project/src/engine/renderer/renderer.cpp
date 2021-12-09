@@ -108,12 +108,6 @@ void Renderer::renderObject(const MyMesh &mesh, const Renderable::TransformData 
 }
 
 
-void Renderer::terminateRenderObject() const
-{
-	popMatrix(MODEL);
-}
-
-
 
 
 GLuint Renderer::_setupShaders() 
@@ -178,18 +172,18 @@ void Renderer::_applyTransform(const Renderable::TransformData& transform) const
 		-transform.scale.z / 2 + transform.position.z
 	};
 
-	translate(MODEL, fixedPosition.x, fixedPosition.y, fixedPosition.z);
-	scale(MODEL, transform.scale.x, transform.scale.y, transform.scale.z);
-
 	// avoid rotate operation if it is not needed (the other two are very common)
+	if (transform.rotation.z != 0.0f)
+		rotate(MODEL, transform.rotation.z, 0, 0, 1);
+
 	if (transform.rotation.x != 0.0f)
 		rotate(MODEL, transform.rotation.x, 1, 0, 0);
 
 	if (transform.rotation.y != 0.0f)
 		rotate(MODEL, transform.rotation.y, 0, 1, 0);
 
-	if (transform.rotation.z != 0.0f)
-		rotate(MODEL, transform.rotation.z, 0, 0, 1);
+	translate(MODEL, fixedPosition.x, fixedPosition.y, fixedPosition.z);
+	scale(MODEL, transform.scale.x, transform.scale.y, transform.scale.z);
 }
 
 
@@ -208,4 +202,5 @@ void Renderer::_renderMesh(const MyMesh &mesh) const
 
 	glDrawElements(mesh.type, mesh.numIndexes, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
+	popMatrix(MODEL);
 }

@@ -13,7 +13,7 @@ class Scene
 {
 
 private:
-	std::list<Entity*> _entities;			// all the entities of scene
+	std::list<Entity*> _registry;			// all the entities of scene
 	Camera *_activeCamera;					// the camera used to render the scene
 
 
@@ -27,6 +27,8 @@ public:
 public:
 	void update();
 
+	void addEntity(Entity* entity);
+
 
 public:
 	template<class T>
@@ -34,8 +36,6 @@ public:
 
 
 public:
-	inline void addEntity(Entity* gameObject)			{ _entities.push_back(gameObject);  }
-
 	inline Camera* getActiveCamera() const				{ return _activeCamera; }
 	inline void setActiveCamera(Camera *camera)			{ _activeCamera = camera; }
 
