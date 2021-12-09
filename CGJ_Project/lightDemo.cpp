@@ -446,8 +446,8 @@ void renderScene(void) {
 		perspective(53.13f, ratio, 0.1f, 1000.0f);
 
 		//calc cam pos and up
-		camX = carX - cos(yaw * (PI) / 180) * 8;
-		camZ = carZ + sin(yaw * (PI) / 180) * 8;
+		camX = carX + sin(yaw * (PI) / 180) * 8;
+		camZ = carZ - cos(yaw * (PI) / 180) * 8;
 		camY = carY + 3;
 
 		float dir[3];
