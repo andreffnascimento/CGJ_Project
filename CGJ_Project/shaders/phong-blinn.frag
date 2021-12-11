@@ -49,12 +49,10 @@ void main() {
 		if(Lights[i].isEnabled == 0){
 			continue;
 		}
-			
-		if(Lights[i].lightType == 1) { // Direct light
-			
+		
+		if(Lights[i].lightType == 1) { // Direct light		
 			l_dir = normalize(vec3(Lights[i].lightDir));
 			e = normalize(vec3(DataIn.eyeDir));
-
 		}
 		else if(Lights[i].lightType == 2) { // Point light
 			e = normalize(vec3(DataIn.eye));	
@@ -77,12 +75,12 @@ void main() {
 
 			vec3 h = normalize(l_dir + e);
 			float intSpec = max(dot(h,n), 0.0);
-			spec = mat.specular * pow(intSpec, mat.shininess);
-
+			spec = mat.specular * pow(intSpec, mat.shininess);	
 			colorOut += max(intensity * mat.diffuse + spec, mat.ambient);
 		}
 
-
 	}
+
+	colorOut = vec4(vec3(max(colorOut, mat.ambient)),mat.diffuse.a);
 	
 }

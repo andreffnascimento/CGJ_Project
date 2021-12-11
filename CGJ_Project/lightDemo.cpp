@@ -479,9 +479,9 @@ void processKeys(unsigned char key, int xx, int yy)
 			glutLeaveMainLoop();
 			break;
 		case 'm': glEnable(GL_MULTISAMPLE); break;
-		case 'n': if (globalLight == 1)globalLight = 0; else globalLight = 1; break;
-		case 'c': if (pointLights == 1)pointLights = 0; else pointLights = 1; break;
-		case 'h': if (carLights == 1)carLights = 0; else carLights = 1; break;
+		case 'n': globalLight = !globalLight; break;
+		case 'c': pointLights = !pointLights; break;
+		case 'h': carLights = !carLights; break;
 	}
 }
 
@@ -680,7 +680,7 @@ void initWheel() {
 void initCar() {
 	MyMesh amesh;
 
-	float amb[] = { 1.0f, 110.0f/255.0f, 25.0f / 255.0f, 1.0f };
+	float amb[] = { 0.5f, 110.0f/510.0f, 25.0f / 510.0f, 1.0f };
 	float diff[] = { 1.0f, 110.0f / 255.0f, 25.0f / 255.0f, 1.0f };
 	float spec[] = { 1.0f, 110.0f / 255.0f, 25.0f / 255.0f, 1.0f };
 	float emissive[] = { 0.0f, 0.0f, 0.0f, 1.0f };
@@ -709,7 +709,7 @@ void initCandle(int i, int id, float x, float z) {
 
 void initCandles() {
 	MyMesh amesh;
-	float amb[] = { 1.0f, 233.0f / 255.0f, 164.0f / 255.0f, 1.0f };
+	float amb[] = { 0.5f, 233.0f / 510.0f, 164.0f / 510.0f, 1.0f };
 	float diff[] = { 1.0f, 233.0f / 255.0f, 164.0f / 255.0, 1.0f };
 	float spec[] = { 1.0f, 233.0f / 255.0f, 164.0f / 255.0, 1.0f };
 	float emissive[] = { 1.0f, 233.0f / 255.0f, 164.0f / 255.0, 1.0f };
