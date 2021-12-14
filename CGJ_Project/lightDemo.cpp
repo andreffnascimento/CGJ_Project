@@ -37,6 +37,9 @@
 using namespace std;
 
 #define CAPTION "CGJ Demo: Phong Shading and Text rendered with FreeType"
+
+#define PI 3.14159265
+
 int WindowHandle = 0;
 int WinX = 1024, WinY = 768;
 
@@ -91,12 +94,18 @@ Candle Candles[NUM_CANDLES];
 int carX = 5;
 int carY = table_thickness + radius * 2;
 int carZ = 5;
+float yaw = 0;
 
 /* ------------ Lights ----------- */
 float lightPos[4] = { 1.0f, 12.0f, 1.0f ,1.0f };
 int globalLight = 1;  // 1 = lights ON,  0 = lights OFF
 int pointLights = 1;
 int carLights = 1;
+
+/* ------------ Camera ----------- */
+int currentCamera = 1;
+float cameraYaw = 0, cameraPitch = 0;
+float ratio = 1;
 
 //External array storage defined in AVTmathLib.cpp
 
@@ -152,8 +161,6 @@ void refresh(int value)
 //
 
 void changeSize(int w, int h) {
-
-	float ratio;
 	// Prevent a divide by zero, when window is too short
 	if(h == 0)
 		h = 1;
@@ -415,8 +422,55 @@ void renderScene(void) {
 	// load identity matrices
 	loadIdentity(VIEW);
 	loadIdentity(MODEL);
-	// set the camera using a function similar to gluLookAt
-	lookAt(camX, camY, camZ, 0,0,0, 0,1,0);
+	
+	if (currentCamera == 1) {
+		//printf("cam = 1");
+		loadIdentity(PROJECTION);
+		ortho(-40 * ratio, 40 * ratio, -40, 40, -40, 50);
+		rotate(VIEW, cameraPitch, 1, 0, 0);
+		rotate(VIEW, cameraYaw, 0, 1, 0);
+		lookAt(0, 30, 0, 0, 0, 0, 1, 0, 0);
+
+	}
+	else if (currentCamera == 2) {
+		loadIdentity(PROJECTION);
+		perspective(53.13f, ratio, 0.1f, 1000.0f);
+		//calc cam pos and up
+		//lookAt(0,30,0,0,0,0,1,0,0);
+		rotate(VIEW, cameraPitch, 1, 0, 0);
+		rotate(VIEW, cameraYaw, 0, 1, 0);
+		lookAt(16, 50, 16, 0, 0, 0, 1, 0, 0);
+	}
+	else if (currentCamera == 3) {
+		loadIdentity(PROJECTION);
+		perspective(53.13f, ratio, 0.1f, 1000.0f);
+
+		//calc cam pos and up
+		camX = carX - cos(yaw * (PI) / 180) * 8;
+		camZ = carZ + sin(yaw * (PI) / 180) * 8;
+		camY = carY + 3;
+
+		float dir[3];
+		dir[0] = carX - camX;
+		dir[1] = carY - camY;
+		dir[2] = carZ - camZ;
+		normalize(dir);
+
+		float upVert[3];
+		upVert[0] = 0;
+		upVert[1] = 1;
+		upVert[2] = 0;
+
+		float sideVec[3];
+		crossProduct(dir, upVert, sideVec);
+
+		float upVec[3];
+		normalize(sideVec);
+		crossProduct(sideVec, dir, upVec);
+		normalize(upVec);
+
+		lookAt(camX, camY, camZ, carX, carY, carZ, upVec[0], upVec[1], upVec[2]);
+	}
 	// use our shader
 	glUseProgram(shader.getProgramIndex());
 
@@ -482,6 +536,9 @@ void processKeys(unsigned char key, int xx, int yy)
 		case 'n': globalLight = !globalLight; break;
 		case 'c': pointLights = !pointLights; break;
 		case 'h': carLights = !carLights; break;
+		case '1': currentCamera = 1; break;
+		case '2': currentCamera = 2; break;
+		case '3': currentCamera = 3; break;
 	}
 }
 
