@@ -68,7 +68,7 @@ Renderer::~Renderer()
 
 void Renderer::renderScene(const Scene& scene)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	/*glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	if (scene.getActiveCamera() != nullptr)
 		scene.getActiveCamera()->renderCamera(*this);
@@ -82,7 +82,7 @@ void Renderer::renderScene(const Scene& scene)
 
 	// render objects
 	for (auto &renderableObject : scene.getEntitiesByType<Renderable>())
-		renderableObject->renderObject(*this);
+		renderableObject->renderObject(*this);*/
 }
 
 

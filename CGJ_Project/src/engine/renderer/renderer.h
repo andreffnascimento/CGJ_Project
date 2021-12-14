@@ -49,7 +49,6 @@ public:
 	void renderScene(const Scene &scene);
 	void renderCamera(const Coords3f &cameraCoords, const Coords3f &targetCoords) const;
 	void renderObject(const MyMesh &mesh, const Renderable::TransformData &transform) const;
-	void terminateRenderObject() const;
 
 
 private:

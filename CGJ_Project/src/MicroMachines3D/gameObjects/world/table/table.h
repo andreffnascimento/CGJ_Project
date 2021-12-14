@@ -31,7 +31,7 @@ public:
 		//create mesh for table (legs + cover)
 		_mesh = std::shared_ptr<MyMesh>(new MyMesh(createCube()));
 		
-		TableTop *top = new TableTop(material, _mesh);
+		/*TableTop* top = new TableTop(material, _mesh);
 		addChild(top);
 
 		TableLeg *leg1 = new TableLeg(material, _mesh, -1.0f, -1.0f);
@@ -44,7 +44,7 @@ public:
 		addChild(leg3);
 
 		TableLeg *leg4 = new TableLeg(material, _mesh, 1.0f, 1.0f);
-		addChild(leg4);
+		addChild(leg4);*/
 	}
 
 };

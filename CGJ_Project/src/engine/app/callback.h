@@ -22,8 +22,8 @@ void terminateApp()
 // FPS display callback function
 void timer(int value)
 {
-	Application &app = Application::getInstance();
-	const Application::ApplicationData &appData = app._applicationData;
+	Application& app = Application::getInstance();
+	const Application::ApplicationData& appData = app._applicationData;
 	if (!app._running)
 		return;
 
@@ -53,22 +53,21 @@ void refresh(int value)
 // Reshape callback Function
 void changeViewportSize(int width, int height)
 {
-	Application &app = Application::getInstance();
-	if (app._scene != nullptr && app._scene->getActiveCamera() != nullptr)
-		app._scene->getActiveCamera()->setViewport(width, height);
+	Application& app = Application::getInstance();
+	//if (app._scene != nullptr && app._scene->getActiveCamera() != nullptr)
+		//app._scene->getActiveCamera()->setViewport(width, height);
 }
 
 
 // Render callback function
 void displayScene()
 {
-	Application &app = Application::getInstance();
+	Application& app = Application::getInstance();
 	if (app._scene == nullptr)
 		throw std::string("Application is missing an attached scene!");
 
 	app._frameCount++;
-	app._scene->update();
-	app._renderer->renderScene(*app._scene);	
+	app._scene->onUpdate();
 	app._inputHandler.reset();
 
 	glutSwapBuffers();
@@ -80,7 +79,7 @@ void displayScene()
 // Keyboard callback function
 void processKeys(unsigned char key, int x, int y)
 {
-	InputHandler &input = Application::getInputHandler();
+	InputHandler& input = Application::getInputHandler();
 	input.pressKey(key);
 }
 
@@ -88,7 +87,7 @@ void processKeys(unsigned char key, int x, int y)
 // Mouse click callback function
 void processMouseButtons(int button, int state, int x, int y)
 {
-	InputHandler &input = Application::getInputHandler();
+	InputHandler& input = Application::getInputHandler();
 	InputHandler::MouseStatus status = InputHandler::MouseStatus::NONE;
 
 	if (state == GLUT_DOWN)
@@ -100,7 +99,7 @@ void processMouseButtons(int button, int state, int x, int y)
 	}
 	else if (state == GLUT_UP)
 		status = InputHandler::MouseStatus::MOUSE_UP;
-	
+
 	input.updateMouse(x, y);
 	input.updateMouseStatus(status);
 }
@@ -109,16 +108,16 @@ void processMouseButtons(int button, int state, int x, int y)
 // Mouse motion callback function
 void processMouseMotion(int x, int y)
 {
-	InputHandler &input = Application::getInputHandler();
+	InputHandler& input = Application::getInputHandler();
 	input.updateMouse(x, y);
 	input.updateMouseStatus(InputHandler::MouseStatus::MOVE);
 }
 
 
 // Mouse wheel callback function
-void mouseWheel(int wheel, int direction, int x, int y) 
+void mouseWheel(int wheel, int direction, int x, int y)
 {
-	InputHandler &input = Application::getInputHandler();
+	InputHandler& input = Application::getInputHandler();
 	input.updateMouse(x, y);
 	input.updateMouseWeel(direction);
 	input.updateMouseStatus(InputHandler::MouseStatus::SCROL);

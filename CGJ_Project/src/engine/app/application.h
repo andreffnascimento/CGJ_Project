@@ -38,8 +38,8 @@ private:
 	unsigned int _frameCount;
 
 	InputHandler _inputHandler;
-	Renderer *_renderer;
-	Scene *_scene;
+	Renderer* _renderer;
+	Scene* _scene;
 
 
 
@@ -53,12 +53,13 @@ public:
 	
 
 public:
-	static Application& init(const ApplicationData &applicationData, int argc, char** argv);
+	static Application& init(const ApplicationData& applicationData, int argc, char** argv);
 	static void terminate();
 
 public:
 	static Application& getInstance();
 	static InputHandler& getInputHandler();
+	static Renderer& getRenderer();
 
 
 public:

@@ -16,7 +16,7 @@ class CameraManager : public Entity
 public:
 	CameraManager(Scene &scene)
 	{
-		OrthographicCamera* camera1 = new OrthographicCamera(-97.7f, 97.7f, -55.0f, 55.0f, 0.1f, 1000.0f);
+		/*OrthographicCamera* camera1 = new OrthographicCamera(-97.7f, 97.7f, -55.0f, 55.0f, 0.1f, 1000.0f);
 		camera1->setPosition(0.0f, 70.0f, 0.0f);
 		camera1->setTarget(0.0f, 0.0f, 0.0f);
 		addChild(camera1);

@@ -27,13 +27,13 @@ Application::~Application()
 	glutLeaveMainLoop();
 
 	delete _renderer;
-	delete _scene;
+	//delete _scene;
 }
 
 
 
 
-Application& Application::init(const ApplicationData &applicationData, int argc, char** argv)
+Application& Application::init(const ApplicationData& applicationData, int argc, char** argv)
 {
 	// checks if the application was previously instantiated
 	if (Application::s_application != nullptr)
@@ -41,7 +41,7 @@ Application& Application::init(const ApplicationData &applicationData, int argc,
 
 	// instantiates the application
 	Application::s_application = new Application();
-	Application &app = *Application::s_application;
+	Application& app = *Application::s_application;
 
 	// instantiates the application data
 	Application::ApplicationData &appData = app._applicationData;
@@ -109,16 +109,22 @@ Application& Application::getInstance()
 
 InputHandler& Application::getInputHandler()
 {
-	Application &app = Application::getInstance();
+	Application& app = Application::getInstance();
 	return app._inputHandler;
 }
 
+Renderer& Application::getRenderer()
+{
+	Application& app = Application::getInstance();
+	return *app._renderer;
+}
 
 
 
 void Application::setScene(Scene* scene)
 {
 	_scene = scene;
+	_scene->onCreate();
 }
 
 

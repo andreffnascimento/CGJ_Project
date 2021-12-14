@@ -1,59 +1,63 @@
 #include "scene.h"
 
-#include "engine/scene/components/renderable.h"
+#include <unordered_map>
+
+#include "engine/scene/entity.h"
+#include "engine/scene/components.h"
 
 
 
 
-Scene::Scene()
-	: _registry(std::list<Entity*>()), _activeCamera(nullptr)
+Entity Scene::createEntity()
 {
-	//empty
+	Entity entity = Entity(_registry.createEntity(), this);
+	entity.addComponent<TagComponent>((std::string)entity);
+	entity.addComponent<TransformComponent>();
+	return entity;
 }
 
-Scene::~Scene()
+Entity Scene::createEntity(const std::string& tag)
 {
-	for (auto &gameObject : _registry)
-		delete gameObject;
+	Entity entity = Entity(_registry.createEntity(), this);
+	entity.addComponent<TagComponent>(tag);
+	entity.addComponent<TransformComponent>();
+	return entity;
 }
 
 
 
-
-void Scene::update()
+void Scene::destroyEntity(EntityHandle entityHandle)
 {
-	for (auto &gameObject : _registry)
-		gameObject->update();
-}
-
-
-void Scene::addEntity(Entity* entity)
-{
-	for (auto &child : entity->_children)
-		addEntity(child);
-
-	if (entity->_scene != nullptr)			// entities can only be associated once to a scene
-		return;
-
-	entity->_scene = this;
-	_registry.push_back(entity);
+	_registry.destroyEntity(entityHandle);
 }
 
 
 
 
-#include <iostream>
-template<class T>
-std::list<T*> Scene::getEntitiesByType() const
+std::unordered_set<Entity> Scene::getEntitiesByTag(const std::string& tag)
 {
-	T* temp = nullptr;
-	std::list<T*> entities = std::list<T*>();
-	for (auto& object : _registry)
-		if ((temp = dynamic_cast<T*>(object)) != nullptr)
-			entities.push_back(temp);
-
+	auto& taggedEntities = _registry.getComponents<TagComponent>();
+	auto entities = std::unordered_set<Entity>();
+	for (auto& iterator : taggedEntities)
+		if (iterator.second == tag)
+			entities.emplace(iterator.first, this);
 	return entities;
 }
 
-template std::list<Camera*> Scene::getEntitiesByType() const;
-template std::list<Renderable*> Scene::getEntitiesByType() const;
+std::unordered_set<Entity> Scene::getEntitiesByTag(const std::regex& regex)
+{
+	auto& taggedEntities = _registry.getComponents<TagComponent>();
+	auto entities = std::unordered_set<Entity>();
+	for (auto& iterator : taggedEntities)
+		if (iterator.second == regex)
+			entities.emplace(Entity(iterator.first, this));
+	return entities;
+}
+
+
+
+
+void Scene::onUpdate()
+{
+
+}

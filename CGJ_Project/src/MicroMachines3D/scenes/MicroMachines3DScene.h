@@ -10,39 +10,17 @@
 
 class MicroMachines3DScene : public Scene
 {
-
+	
 public:
-	MicroMachines3DScene()
-		: Scene()
-	{
-		_init();
-	}
+	MicroMachines3DScene() : Scene() {}
 
 
 
 
 private:
-	void _init() override
+	void onCreate() override
 	{
-		_initCameraManager();
-		_initTable();
-	}
-
-
-
-
-private:
-	void MicroMachines3DScene::_initCameraManager()
-	{
-		CameraManager* cameraManager = new CameraManager(*this);
-		addEntity(cameraManager);
-	}
-
-
-	void MicroMachines3DScene::_initTable()
-	{
-		Table* table = new Table();
-		addEntity(table);
+		
 	}
 };
 

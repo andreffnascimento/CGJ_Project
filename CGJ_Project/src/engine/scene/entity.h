@@ -2,13 +2,12 @@
 #define __ENGINE_SCENE_ENTITY_H__
 
 
-#include <list>
 #include <string>
+#include <unordered_set>
 
-#include "engine/scene/script.h"
+#include "engine/scene/ecsRegistry.h"
+#include "engine/scene/scene.h"
 
-
-class Scene;
 
 
 
@@ -16,43 +15,66 @@ class Entity
 {
 
 private:
-	static unsigned int s_nextId;			// the id for the next entity
+	const EntityHandle _entityHandle	= EntityHandle();
+	Scene* _scene						= nullptr;
 
-private:
-	unsigned int _id;						// the id of the gameObject
-	std::string _tag;						// gameObjects can have tags associated to them
-	std::list<Script*> _scripts;			// game object contains a list of scripts
+
 	
-	const Scene *_scene;					// a reference to the scene where the entity is stored
-	const Entity *_parent;					// the entity's parent (nullptr if none)
-	std::list<Entity*> _children;			// the children of the entity
+
+public:
+	Entity() = default;
+	Entity(const Entity& entity) = default;
+	Entity(const EntityHandle& entityHandle, Scene*&& scene);
+
+
+public:
+	inline operator EntityHandle()	const { return _entityHandle; }
+	inline operator std::string()	const { return std::to_string(_entityHandle); }
+
+	inline bool operator==(const Entity& other) const { return _entityHandle == other._entityHandle; }
+	inline bool operator!=(const Entity& other) const { return _entityHandle != other._entityHandle; }
 
 
 
 
 public:
-	Entity();
-	virtual ~Entity();						// to destroy the scripts in the concrete classes
+	template <typename T, typename... Args>
+	T& addComponent(Args&&... args) const
+	{
+		if (_scene == nullptr)
+			throw std::string("Unable to add a component to an entity that is not part of a scene");
+
+		T& component = _scene->_registry.addComponent<T>(_entityHandle, std::forward<Args>(args)...);
+		return component;
+	}
 
 
-public:
-	virtual void update();
-	void addChild(Entity *child);
+	template <typename T>
+	T& getComponent() const
+	{
+		return _scene->_registry.getComponent<T>(_entityHandle);
+	}
 
 
-public:
-	inline void addScript(Script *script)				{ _scripts.push_back(script); }
-	inline void addTag(const char* tag)					{ _tag = std::string(tag); }
-	inline void addTag(const std::string &tag)			{ _tag = std::string(tag); }
-	inline bool hasTag(const char *tag) const			{ return _tag.compare(tag) == 0; }
-	inline bool hasTag(const std::string &tag) const	{ return _tag.compare(tag) == 0; }
-
-
-public:
-	friend class Scene;
+	template <typename T>
+	bool hasComponent() const
+	{
+		return _scene->_registry.hasComponent<T>(_entityHandle);
+	}
 
 };
 
+
+
+
+template <>
+struct std::hash<Entity>
+{
+	std::size_t operator()(const Entity& entity) const
+	{
+		return hash<unsigned int>()((EntityHandle)entity);
+	}
+};
 
 
 #endif // !__ENGINE_SCENE_ENTITY_H__
