@@ -51,11 +51,13 @@ void refresh(int value)
 
 
 // Reshape callback Function
-void changeViewportSize(int width, int height)
+void viewportResize(int width, int height)
 {
 	Application& app = Application::getInstance();
-	//if (app._scene != nullptr && app._scene->getActiveCamera() != nullptr)
-		//app._scene->getActiveCamera()->setViewport(width, height);
+	if (app._scene == nullptr)
+		throw std::string("Active scene camera is required to change the viewport size!");
+
+	app._scene->onViewportResize(width, height);
 }
 
 

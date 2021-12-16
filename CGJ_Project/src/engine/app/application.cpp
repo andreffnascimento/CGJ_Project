@@ -14,20 +14,10 @@ Application* Application::s_application = nullptr;
 
 
 
-Application::Application()
-	: _applicationData(Application::ApplicationData()), _running(false), _windowHandle(0), _frameCount(0), 
-	  _inputHandler(InputHandler()), _renderer(nullptr), _scene(nullptr) 
-{
-	// empty
-}
-
 Application::~Application()
 {
 	_running = false;
 	glutLeaveMainLoop();
-
-	delete _renderer;
-	//delete _scene;
 }
 
 
@@ -68,7 +58,7 @@ Application& Application::init(const ApplicationData& applicationData, int argc,
 	// callback Registration
 	glutCloseFunc(terminateApp);
 	glutDisplayFunc(displayScene);
-	glutReshapeFunc(changeViewportSize);
+	glutReshapeFunc(viewportResize);
 	glutTimerFunc(0, timer, 0);
 
 	if (appData.lockedFps)
@@ -85,7 +75,7 @@ Application& Application::init(const ApplicationData& applicationData, int argc,
 	// return from main loop
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 
-	app._renderer = new Renderer();		// initializes the renderer
+	app._renderer.init();				// initializes the renderer
 	app._running = true;				// starts the app
 	return app;
 }
@@ -116,7 +106,7 @@ InputHandler& Application::getInputHandler()
 Renderer& Application::getRenderer()
 {
 	Application& app = Application::getInstance();
-	return *app._renderer;
+	return app._renderer;
 }
 
 

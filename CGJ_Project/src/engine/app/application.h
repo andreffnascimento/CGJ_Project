@@ -31,21 +31,21 @@ private:
 
 
 private:
-	ApplicationData _applicationData;
+	ApplicationData _applicationData = Application::ApplicationData();
 
-	bool _running;
-	int _windowHandle;
-	unsigned int _frameCount;
+	bool _running = false;
+	int _windowHandle = 0;
+	unsigned int _frameCount = 0;
 
-	InputHandler _inputHandler;
-	Renderer* _renderer;
+	InputHandler _inputHandler = InputHandler();
+	Renderer _renderer = Renderer();
 	Scene* _scene;
 
 
 
 
 private:
-	Application();		// application is a singleton
+	Application() = default;		// application is a singleton
 
 
 public:
@@ -63,6 +63,10 @@ public:
 
 
 public:
+	inline WindowCoords getWindowSize() const { return { _applicationData.width, _applicationData.heigth }; }
+
+
+public:
 	void setScene(Scene* scene);
 	void run();
 
@@ -70,7 +74,7 @@ public:
 public:
 	friend void timer(int value);
 	friend void refresh(int value);
-	friend void changeViewportSize(int width, int height);
+	friend void viewportResize(int width, int height);
 	friend void displayScene();
 
 };

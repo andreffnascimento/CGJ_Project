@@ -6,7 +6,9 @@
 #include <unordered_set>
 
 #include "engine/scene/ecsRegistry.h"
-#include "engine/scene/scene.h"
+
+
+class Scene;
 
 
 
@@ -15,16 +17,20 @@ class Entity
 {
 
 private:
-	const EntityHandle _entityHandle	= EntityHandle();
-	Scene* _scene						= nullptr;
+	EntityHandle _entityHandle	= EntityHandle();
+	Scene* _scene				= nullptr;
 
 
 	
 
-public:
+protected:
 	Entity() = default;
-	Entity(const Entity& entity) = default;
+
+
+public:
+	Entity(const Entity&) = default;
 	Entity(const EntityHandle& entityHandle, Scene*&& scene);
+	virtual ~Entity() = default;
 
 
 public:
@@ -33,6 +39,9 @@ public:
 
 	inline bool operator==(const Entity& other) const { return _entityHandle == other._entityHandle; }
 	inline bool operator!=(const Entity& other) const { return _entityHandle != other._entityHandle; }
+
+private:
+	ECSRegistry& _getSceneRegistry() const;
 
 
 
@@ -44,7 +53,7 @@ public:
 		if (_scene == nullptr)
 			throw std::string("Unable to add a component to an entity that is not part of a scene");
 
-		T& component = _scene->_registry.addComponent<T>(_entityHandle, std::forward<Args>(args)...);
+		T& component = _getSceneRegistry().addComponent<T>(_entityHandle, std::forward<Args>(args)...);
 		return component;
 	}
 
@@ -52,14 +61,14 @@ public:
 	template <typename T>
 	T& getComponent() const
 	{
-		return _scene->_registry.getComponent<T>(_entityHandle);
+		return _getSceneRegistry().getComponent<T>(_entityHandle);
 	}
 
 
 	template <typename T>
 	bool hasComponent() const
 	{
-		return _scene->_registry.hasComponent<T>(_entityHandle);
+		return _getSceneRegistry().hasComponent<T>(_entityHandle);
 	}
 
 };

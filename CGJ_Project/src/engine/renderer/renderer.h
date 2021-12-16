@@ -5,7 +5,7 @@
 #include "engine/renderer/geometry.h"
 #include "engine/renderer/vsShaderLib.h"
 #include "engine/scene/scene.h"
-#include "engine/scene/components/renderable.h"
+#include "engine/scene/components.h"
 #include "engine/utils/coords.h"
 
 
@@ -41,21 +41,32 @@ public:
 
 
 public:
-	Renderer();
-	~Renderer();
+	Renderer() = default;
+	~Renderer() = default;
 
 
 public:
-	void renderScene(const Scene &scene);
-	void renderCamera(const Coords3f &cameraCoords, const Coords3f &targetCoords) const;
-	void renderObject(const MyMesh &mesh, const Renderable::TransformData &transform) const;
+	void init();
+
+
+public:
+	void updateViewport(CameraComponent& camera, int width, int height) const;
+
+	void initSceneRendering() const;
+	void renderCamera(const Camera& camera) const;
+
+	//void renderObject(const MyMesh &mesh, const Renderable::TransformData &transform) const;
 
 
 private:
 	GLuint _setupShaders();
-	void _loadMesh(const MyMesh &mesh) const;
-	void _applyTransform(const Renderable::TransformData& transform) const;
-	void _renderMesh(const MyMesh& mesh) const;
+
+	void _setOrthographicViewport(CameraComponent& camera, int width, int height) const;
+	void _setPerspectiveViewport(CameraComponent& camera, int width, int height) const;
+
+	//void _loadMesh(const MyMesh &mesh) const;
+	//void _applyTransform(const Renderable::TransformData& transform) const;
+	//void _renderMesh(const MyMesh& mesh) const;
 
 };
 

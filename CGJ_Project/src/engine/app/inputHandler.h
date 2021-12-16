@@ -25,7 +25,7 @@ public:
 	struct MouseInfo
 	{
 		InputHandler::MouseStatus status;
-		Coords2i coords;
+		WindowCoords coords;
 		int wheelDirection;
 	};
 
@@ -58,7 +58,7 @@ public:
 
 public:
 	inline void pressKey(char keyCode)								{ _pressedKeys[(int)keyCode] = true; }
-	inline void updateMouse(int x, int y)							{ _mouseInfo.coords = { x, y }; }
+	inline void updateMouse(unsigned int x, unsigned int y)			{ _mouseInfo.coords = { x, y }; }
 	inline void updateMouseStatus(InputHandler::MouseStatus status)	{ _mouseInfo.status = status; }
 	inline void updateMouseWeel(int direction)						{ _mouseInfo.wheelDirection = direction; }
 

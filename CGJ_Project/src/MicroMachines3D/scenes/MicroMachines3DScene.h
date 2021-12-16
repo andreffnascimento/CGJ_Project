@@ -3,9 +3,9 @@
 
 
 #include "engine/scene/scene.h"
+#include "engine/math/transform.h"
 
-#include "MicroMachines3D/gameObjects/manager/cameraManager.h"
-#include "MicroMachines3D/gameObjects/world/table/table.h"
+
 
 
 class MicroMachines3DScene : public Scene
@@ -20,7 +20,13 @@ public:
 private:
 	void onCreate() override
 	{
-		
+		// temporary test camera
+		Entity entity = createEntity();
+		CameraComponent& camera = entity.addComponent<CameraComponent>();
+		camera.setPerspectiveCamera({ 0.01f, 1000.0f }, 60.0f);
+		camera.setTargetCoords({ 0.0f, 0.0f, 0.0f });
+		Transform::translateTo(entity, { -50, 0, 0 });
+		setActiveCamera(Camera(entity));
 	}
 };
 

@@ -17,8 +17,8 @@ int main(int argc, char** argv) {
 	try 
 	{
 		Application &application = Application::init(appData, argc, argv);
-		MicroMachines3DScene *scene = new MicroMachines3DScene();
-		application.setScene(scene);
+		MicroMachines3DScene scene = MicroMachines3DScene();
+		application.setScene(&scene);
 		application.run();
 	} 
 	catch (std::string e) 

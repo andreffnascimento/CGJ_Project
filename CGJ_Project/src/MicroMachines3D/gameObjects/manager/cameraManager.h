@@ -4,10 +4,6 @@
 
 #include "engine/scene/entity.h"
 
-#include "MicroMachines3D/gameObjects/camera/orthographicCamera.h"
-#include "MicroMachines3D/gameObjects/camera/perspectiveCamera.h"
-
-
 
 
 class CameraManager : public Entity

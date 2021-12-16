@@ -2,8 +2,8 @@
 
 #include <unordered_map>
 
-#include "engine/scene/entity.h"
-#include "engine/scene/components.h"
+#include "engine/app/application.h"
+#include "engine/renderer/renderer.h"
 
 
 
@@ -11,7 +11,7 @@
 Entity Scene::createEntity()
 {
 	Entity entity = Entity(_registry.createEntity(), this);
-	entity.addComponent<TagComponent>((std::string)entity);
+	entity.addComponent<TagComponent>("Entity$" + (std::string)entity);
 	entity.addComponent<TransformComponent>();
 	return entity;
 }
@@ -59,5 +59,13 @@ std::unordered_set<Entity> Scene::getEntitiesByTag(const std::regex& regex)
 
 void Scene::onUpdate()
 {
+	Renderer& renderer = Application::getRenderer();
+	renderer.initSceneRendering();
+}
 
+
+void Scene::onViewportResize(int width, int height)
+{
+	Renderer& renderer = Application::getRenderer();
+	renderer.updateViewport(_activeCamera, width, height);
 }

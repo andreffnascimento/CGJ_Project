@@ -10,3 +10,11 @@ Entity::Entity(const EntityHandle& entityHandle, Scene*&& scene)
 {
 	// empty
 }
+
+
+
+
+ECSRegistry& Entity::_getSceneRegistry() const
+{
+	return _scene->_registry;
+}

@@ -7,9 +7,9 @@
 #include <unordered_set>
 
 #include "engine/scene/ecsRegistry.h"
-
-
-class Entity;
+#include "engine/scene/entity.h"
+#include "engine/scene/camera.h"
+#include "engine/scene/components.h"
 
 
 
@@ -19,18 +19,27 @@ class Scene
 
 private:
 	ECSRegistry _registry = ECSRegistry();
-	//Camera* _activeCamera;
+	Camera _activeCamera = Camera();
 
 
 
 
 protected:
 	Scene() = default;
-	Scene(const Scene& scene) = delete;
+	Scene(const Scene& scene) = default;
+
+
+public:
 	virtual ~Scene() = default;
 
 
-protected:
+public:
+	virtual void onCreate() = 0;
+	void onUpdate();
+	void onViewportResize(int width, int height);
+
+
+public:
 	Entity createEntity();
 	Entity createEntity(const std::string& tag);
 
@@ -41,11 +50,10 @@ protected:
 
 
 public:
-	virtual void onCreate() = 0;
-	void onUpdate();
+	inline void setActiveCamera(const Camera& camera) { _activeCamera = camera; }
 
 
-public:
+public:		
 	friend class Entity;
 
 };

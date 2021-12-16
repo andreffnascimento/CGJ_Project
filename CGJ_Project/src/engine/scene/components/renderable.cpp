@@ -53,6 +53,6 @@ void Renderable::setRotation(float x, float y, float z)
 
 void Renderable::renderObject(const Renderer &renderer) const
 {
-	if (_mesh.get() != nullptr)
-		renderer.renderObject(*_mesh, _transform);
+	//if (_mesh.get() != nullptr)
+	//	renderer.renderObject(*_mesh, _transform);
 }

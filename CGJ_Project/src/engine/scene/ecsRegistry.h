@@ -10,10 +10,10 @@
 struct EntityHandle
 {
 public:
-	static const unsigned int EntityHandleNull = 0;
+	static const unsigned int ENTITY_HANDLE_NULL = 0;
 
 private:
-	unsigned int _id = EntityHandle::EntityHandleNull;
+	unsigned int _id = EntityHandle::ENTITY_HANDLE_NULL;
 
 public:
 	EntityHandle() = default;
@@ -21,8 +21,8 @@ public:
 	EntityHandle(unsigned int id) : _id(id) {}
 	~EntityHandle() = default;
 
-	bool operator==(const EntityHandle& other) const { return _id != EntityHandle::EntityHandleNull && _id == other._id; }
-	bool operator!=(const EntityHandle& other) const { return _id == EntityHandle::EntityHandleNull || _id != other._id; }
+	inline bool operator==(const EntityHandle& other) const { return _id != EntityHandle::ENTITY_HANDLE_NULL && _id == other._id; }
+	inline bool operator!=(const EntityHandle& other) const { return _id == EntityHandle::ENTITY_HANDLE_NULL || _id != other._id; }
 
 	operator unsigned int() const { return _id; }
 };
