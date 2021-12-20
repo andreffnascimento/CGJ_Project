@@ -30,8 +30,6 @@ private:
 
 
 		Table table = Table(createEntity());
-		Transform::rotate(table, { 30.0f, 0.0f, 0.0f });
-
 	}
 };
 

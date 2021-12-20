@@ -110,7 +110,7 @@ void Transform::_groupTranslate(const Entity& entity, const Coords3f& translatio
 
 	std::unordered_set<TransformComponent*> expandedGroup = std::unordered_set<TransformComponent*>();
 	mainEntityGroup.expandGroupToComponent<TransformComponent>(expandedGroup);
-	_updateGroup(expandedGroup, translation, Transform::_translate);
+	Transform::_updateGroup(expandedGroup, translation, Transform::_translate);
 
 }
 
@@ -122,8 +122,8 @@ void Transform::_groupRotate(const Entity& entity, const Coords3f& rotation)
 
 	std::unordered_set<TransformComponent*> expandedGroup = std::unordered_set<TransformComponent*>();
 	mainEntityGroup.expandGroupToComponent<TransformComponent>(expandedGroup);
-	_updateGroup(expandedGroup, rotation, Transform::_rotate);
-	_rotateGroup(expandedGroup, mainEntityTransform._translation, rotation);
+	Transform::_updateGroup(expandedGroup, rotation, Transform::_rotate);
+	Transform::_rotateGroup(expandedGroup, mainEntityTransform._translation, rotation);
 }
 
 void Transform::_groupScale(const Entity& entity, const Coords3f& scale)
@@ -134,7 +134,8 @@ void Transform::_groupScale(const Entity& entity, const Coords3f& scale)
 
 	std::unordered_set<TransformComponent*> expandedGroup = std::unordered_set<TransformComponent*>();
 	mainEntityGroup.expandGroupToComponent<TransformComponent>(expandedGroup);
-	_updateGroup(expandedGroup, scale, Transform::_scale);
+	Transform::_updateGroup(expandedGroup, scale, Transform::_scale);
+	Transform::_scaleGroup(expandedGroup, mainEntityTransform._translation, scale);
 }
 
 
@@ -167,6 +168,19 @@ void Transform::_updateGroup(std::unordered_set<TransformComponent*>& expandedGr
 {
 	for (TransformComponent *transform : expandedGroup)
 		transformFunc(*transform, transformUpdate);
+}
+
+
+
+
+void Transform::_scaleGroup(std::unordered_set<TransformComponent*>& expandedGroup, const Coords3f& originalPosition, const Coords3f& scale)
+{
+	for (TransformComponent* transform : expandedGroup)
+	{
+		transform->_translation.x += (transform->_translation.x - originalPosition.x) * (scale.x - 1.0f);
+		transform->_translation.y += (transform->_translation.y - originalPosition.y) * (scale.y - 1.0f);
+		transform->_translation.z += (transform->_translation.z - originalPosition.z) * (scale.z - 1.0f);
+	}
 }
 
 
@@ -223,5 +237,5 @@ void Transform::_rotateInAxis(float& coord1, float& coord2, double angleCos, dou
 	float originalCoord2 = coord2;
 
 	coord1 = (float)(originalCoord1 * angleCos - originalCoord2 * angleSin);
-	coord2 = (float)(originalCoord2 * angleCos + originalCoord1 * angleSin);
+	coord2 = (float)(originalCoord1 * angleSin + originalCoord2 * angleCos);
 }

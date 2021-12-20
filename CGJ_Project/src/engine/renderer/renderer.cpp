@@ -217,23 +217,19 @@ void Renderer::_loadMesh(const MeshComponent& mesh) const
 void Renderer::_applyTransform(const TransformComponent& transform) const
 {
 	pushMatrix(MODEL);
-
-	Coords3f fixedPosition = {
-		-transform.scale().x / 2 + transform.translation().x,
-		-transform.scale().y / 2 + transform.translation().y,
-		-transform.scale().z / 2 + transform.translation().z
-	};
+	translate(MODEL, transform.translation().x, transform.translation().y, transform.translation().z);
 
 	// avoid rotate operation if it is not needed (the other two are very common)
-	if (transform.rotation().z != 0.0f)
-		rotate(MODEL, transform.rotation().z, 0, 0, 1);
-
 	if (transform.rotation().x != 0.0f)
 		rotate(MODEL, transform.rotation().x, 1, 0, 0);
 
 	if (transform.rotation().y != 0.0f)
 		rotate(MODEL, transform.rotation().y, 0, 1, 0);
 
+	if (transform.rotation().z != 0.0f)
+		rotate(MODEL, transform.rotation().z, 0, 0, 1);
+
+	Coords3f fixedPosition = {-transform.scale().x / 2,	-transform.scale().y / 2, -transform.scale().z / 2 };
 	translate(MODEL, fixedPosition.x, fixedPosition.y, fixedPosition.z);
 	scale(MODEL, transform.scale().x, transform.scale().y, transform.scale().z);
 }

@@ -66,6 +66,10 @@ private:
 
 
 private:
+	static void _scaleGroup(std::unordered_set<TransformComponent*>& expandedGroup, const Coords3f& originalPosition, const Coords3f& scale);
+
+
+private:
 	static void _rotateGroup(std::unordered_set<TransformComponent*>& expandedGroup, const Coords3f& originalPosition, const Coords3f& rotation);
 	static void _rotateGroupXAxis(std::unordered_set<TransformComponent*>& expandedGroup, const Coords3f& originalPosition, double radians);
 	static void _rotateGroupYAxis(std::unordered_set<TransformComponent*>& expandedGroup, const Coords3f& originalPosition, double radians);

@@ -34,7 +34,6 @@ public:
 		MeshComponent::setMaterial(mesh, material);
 
 		GroupComponent& group = entity.addComponent<GroupComponent>();
-
 		createTop(group, mesh);
 		createLeg(group, mesh, -1.0f, -1.0f);
 		createLeg(group, mesh,  1.0f, -1.0f);
