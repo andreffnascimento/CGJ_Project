@@ -2,8 +2,7 @@
 #define __MM3D_SCENES_MICROMACHINES3D_H__
 
 
-#include "engine/scene/scene.h"
-#include "engine/math/transform.h"
+#include "MicroMachines3D/world/table.h"
 
 
 
@@ -25,24 +24,14 @@ private:
 		CameraComponent& camera = entity.addComponent<CameraComponent>();
 		camera.setPerspectiveCamera({ 0.01f, 1000.0f }, 53.13f);
 		camera.setTargetCoords({ 0.0f, 0.0f, 0.0f });
-		Transform::translateTo(entity, { 30.0f, 50.0f, 30.0f });
+		Transform::translateTo(entity, { 100.0f, 10.0f, 170.0f });
 		setActiveCamera(Camera(entity));
+		// temporaty test end
 
-		// temporary object
-		Material material = {
-			{ 0.2f, 0.15f, 0.1f, 1.0f },
-			{ 0.8f, 0.6f, 0.4f, 1.0f },
-			{ 0.8f, 0.8f, 0.8f, 1.0f },
-			{ 0.0f, 0.0f, 0.0f, 1.0f },
-			100.0f,
-			0
-		};
 
-		Entity cube = createEntity();
-		MeshComponent& mesh = cube.addComponent<MeshComponent>(new MyMesh(createCube()));
-		Transform::scaleTo(cube, { 10.0f, 2.5f, 10.0f });
-		mesh.setMaterial(material);
-		
+		Table table = Table(createEntity());
+		Transform::rotate(table, { 30.0f, 0.0f, 0.0f });
+
 	}
 };
 

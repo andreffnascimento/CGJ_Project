@@ -1,6 +1,23 @@
 #include "components.h"
 
+#include "engine/scene/scene.h"
 
+
+
+
+Entity GroupComponent::addNewEntity(const Entity& parentEntity)
+{
+	Entity entity = parentEntity._getScene().createEntity();
+	add(entity);
+	return entity;
+}
+
+Entity GroupComponent::addNewEntity(const Entity& parentEntity, const std::string& tag)
+{
+	Entity entity = parentEntity._getScene().createEntity(tag);
+	add(entity);
+	return entity;
+}
 
 
 void GroupComponent::expandGroup(std::unordered_set<Entity>& outExpandedGroup) const
@@ -35,12 +52,12 @@ void CameraComponent::setPerspectiveCamera(const ClippingPlanes& clippingPlanes,
 
 
 
-void MeshComponent::setMaterial(const Material& material)
+void MeshComponent::setMaterial(MyMesh* mesh, const Material& material)
 {
-	memcpy(_mesh->mat.ambient, material.ambient, 4 * sizeof(float));
-	memcpy(_mesh->mat.diffuse, material.diffuse, 4 * sizeof(float));
-	memcpy(_mesh->mat.specular, material.specular, 4 * sizeof(float));
-	memcpy(_mesh->mat.emissive, material.emissive, 4 * sizeof(float));
-	_mesh->mat.shininess = material.shininess;
-	_mesh->mat.texCount = material.texCount;
+	memcpy(mesh->mat.ambient, material.ambient, 4 * sizeof(float));
+	memcpy(mesh->mat.diffuse, material.diffuse, 4 * sizeof(float));
+	memcpy(mesh->mat.specular, material.specular, 4 * sizeof(float));
+	memcpy(mesh->mat.emissive, material.emissive, 4 * sizeof(float));
+	mesh->mat.shininess = material.shininess;
+	mesh->mat.texCount = material.texCount;
 }

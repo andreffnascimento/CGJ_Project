@@ -54,13 +54,13 @@ public:
 	GroupComponent(const GroupComponent&) = default;
 	~GroupComponent() = default;
 
-	inline void addToGroup(Entity entity)						{ _group.emplace(entity); }
-	inline const std::unordered_set<Entity>& getGroup() const	{ return _group; }
-
-	inline void operator+=(Entity entity)						{ addToGroup(entity); }
-	inline operator const std::unordered_set<Entity>& () const	{ return getGroup(); }
-
+	Entity addNewEntity(const Entity& parentEntity);
+	Entity addNewEntity(const Entity& parentEntity, const std::string& tag);
 	void expandGroup(std::unordered_set<Entity>& outExpandedGroup) const;
+
+	inline void add(Entity entity)								{ _group.emplace(entity); }
+	inline const std::unordered_set<Entity>& getGroup() const	{ return _group; }
+	inline operator const std::unordered_set<Entity>& () const	{ return getGroup(); }
 
 	template <typename T>
 	void expandGroupToComponent(std::unordered_set<T*>& outExpandedGroup) const
@@ -146,14 +146,14 @@ public:
 	MeshComponent() = default;
 	MeshComponent(const MeshComponent&) = default;
 	MeshComponent(MyMesh* mesh) : _mesh(mesh) {}
-	MeshComponent(const std::shared_ptr<MyMesh>& mesh) : _mesh(mesh) {}
+	MeshComponent(MyMesh* mesh, const Material& material) : _mesh(mesh) { MeshComponent::setMaterial(_mesh.get(), material); }
 	~MeshComponent() = default;
 
 	inline const MyMesh* getMeshPtr() const { return _mesh.get(); }
 	inline const MyMesh& getMeshData() const { return *getMeshPtr(); }
 
 
-	void setMaterial(const Material& material);
+	static void setMaterial(MyMesh* mesh, const Material& material);
 };
 
 

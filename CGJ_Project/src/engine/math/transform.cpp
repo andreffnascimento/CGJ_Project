@@ -51,39 +51,33 @@ void Transform::scale(const Entity& entity, const Coords3f& scale, bool applyToG
 
 void Transform::_singleTranslateTo(const Entity& entity, const Coords3f& newTranslation)
 {
-	TransformComponent& transform = entity.getComponent<TransformComponent>();
-	transform._translation = newTranslation;
+	entity.transform()._translation = newTranslation;
 }
 
 void Transform::_singleRotateTo(const Entity& entity, const Coords3f& newRotation)
 {
-	TransformComponent& transform = entity.getComponent<TransformComponent>();
-	transform._rotation = newRotation;
+	entity.transform()._rotation = newRotation;
 }
 
 void Transform::_singleScaleTo(const Entity& entity, const Coords3f& newScale)
 {
-	TransformComponent& transform = entity.getComponent<TransformComponent>();
-	transform._scale = newScale;
+	entity.transform()._scale = newScale;
 }
 
 
 void Transform::_singleTranslate(const Entity& entity, const Coords3f& translation)
 {
-	TransformComponent& transform = entity.getComponent<TransformComponent>();
-	transform._translation += translation;
+	entity.transform()._translation += translation;
 }
 
 void Transform::_singleRotate(const Entity& entity, const Coords3f& rotation)
 {
-	TransformComponent& transform = entity.getComponent<TransformComponent>();
-	transform._rotation += rotation;
+	entity.transform()._rotation += rotation;
 }
 
 void Transform::_singleScale(const Entity& entity, const Coords3f& scale)
 {
-	TransformComponent& transform = entity.getComponent<TransformComponent>();
-	transform._scale *= scale;
+	entity.transform()._scale *= scale;
 }
 
 
@@ -91,29 +85,26 @@ void Transform::_singleScale(const Entity& entity, const Coords3f& scale)
 
 void Transform::_groupTranslateTo(const Entity& entity, const Coords3f& newTranslation)
 {
-	TransformComponent& transform = entity.getComponent<TransformComponent>();
-	Coords3f translation = newTranslation - transform._translation;
+	Coords3f translation = newTranslation - entity.transform()._translation;
 	Transform::_groupTranslate(entity, translation);
 }
 
 void Transform::_groupRotateTo(const Entity& entity, const Coords3f& newRotation)
 {
-	TransformComponent& transform = entity.getComponent<TransformComponent>();
-	Coords3f rotation = newRotation - transform._rotation;
+	Coords3f rotation = newRotation - entity.transform()._rotation;
 	Transform::_groupTranslate(entity, rotation);
 }
 
 void Transform::_groupScaleTo(const Entity& entity, const Coords3f& newScale)
 {
-	TransformComponent& transform = entity.getComponent<TransformComponent>();
-	Coords3f scale = newScale / transform._scale;
+	Coords3f scale = newScale / entity.transform()._scale;
 	Transform::_groupTranslate(entity, scale);
 }
 
 
 void Transform::_groupTranslate(const Entity& entity, const Coords3f& translation)
 {
-	TransformComponent& mainEntityTransform = entity.getComponent<TransformComponent>();
+	TransformComponent& mainEntityTransform = entity.transform();
 	GroupComponent& mainEntityGroup = entity.getComponent<GroupComponent>();
 	Transform::_translate(mainEntityTransform, translation);
 
@@ -125,7 +116,7 @@ void Transform::_groupTranslate(const Entity& entity, const Coords3f& translatio
 
 void Transform::_groupRotate(const Entity& entity, const Coords3f& rotation)
 {
-	TransformComponent& mainEntityTransform = entity.getComponent<TransformComponent>();
+	TransformComponent& mainEntityTransform = entity.transform();
 	GroupComponent& mainEntityGroup = entity.getComponent<GroupComponent>();
 	Transform::_rotate(mainEntityTransform, rotation);
 
@@ -137,7 +128,7 @@ void Transform::_groupRotate(const Entity& entity, const Coords3f& rotation)
 
 void Transform::_groupScale(const Entity& entity, const Coords3f& scale)
 {
-	TransformComponent& mainEntityTransform = entity.getComponent<TransformComponent>();
+	TransformComponent& mainEntityTransform = entity.transform();
 	GroupComponent& mainEntityGroup = entity.getComponent<GroupComponent>();
 	Transform::_scale(mainEntityTransform, scale);
 

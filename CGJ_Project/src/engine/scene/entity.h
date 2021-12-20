@@ -10,6 +10,9 @@
 
 class Scene;
 
+struct TagComponent;
+struct TransformComponent;
+
 
 
 
@@ -34,13 +37,20 @@ public:
 
 
 public:
+	TagComponent& tag() const;
+	TransformComponent& transform() const;
+
+
+public:
 	inline operator EntityHandle()	const { return _entityHandle; }
 	inline operator std::string()	const { return std::to_string(_entityHandle); }
 
 	inline bool operator==(const Entity& other) const { return _entityHandle == other._entityHandle; }
 	inline bool operator!=(const Entity& other) const { return _entityHandle != other._entityHandle; }
 
+
 private:
+	Scene& _getScene() const;
 	ECSRegistry& _getSceneRegistry() const;
 
 
@@ -70,6 +80,12 @@ public:
 	{
 		return _getSceneRegistry().hasComponent<T>(_entityHandle);
 	}
+
+
+
+
+public:
+	friend struct GroupComponent;
 
 };
 

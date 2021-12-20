@@ -100,10 +100,11 @@ void Renderer::renderCamera(const Camera& camera) const
 void Renderer::renderObjects(const ECSRegistry& registry) const
 {
 	// temp light code
-	float lightPos[4] = { 1.0f, 12.0f, 1.0f ,1.0f };
+	float lightPos[4] = { -30.0f, 20.0f, -15.0f ,1.0f };
 	float res[4];
 	multMatrixPoint(VIEW, lightPos, res);   //lightPos definido em World Coord so is converted to eye space
 	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::L_POS], 1, res);
+	// temp light code end
 
 	std::unordered_map<EntityHandle, MeshComponent>& meshComponents = registry.getComponents<MeshComponent>();
 	for (auto& iterator : meshComponents)

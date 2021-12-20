@@ -197,10 +197,8 @@
     <ClInclude Include="src\engine\scene\script.h" />
     <ClInclude Include="src\engine\renderer\renderer.h" />
     <ClInclude Include="src\MicroMachines3D\common\constants.h" />
-    <ClInclude Include="src\MicroMachines3D\gameObjects\manager\cameraManager.h" />
-    <ClInclude Include="src\MicroMachines3D\gameObjects\world\table\table.h" />
-    <ClInclude Include="src\MicroMachines3D\gameObjects\world\table\tableLeg.h" />
-    <ClInclude Include="src\MicroMachines3D\gameObjects\world\table\tableTop.h" />
+    <ClInclude Include="src\MicroMachines3D\common\include.h" />
+    <ClInclude Include="src\MicroMachines3D\world\table.h" />
     <ClInclude Include="src\MicroMachines3D\scenes\MicroMachines3DScene.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\camera\orbitTargetScript.h" />
     <ClInclude Include="src\engine\text\avtFreeType.h" />
