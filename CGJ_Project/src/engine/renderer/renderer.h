@@ -4,6 +4,7 @@
 
 #include "engine/renderer/geometry.h"
 #include "engine/renderer/vsShaderLib.h"
+#include "engine/scene/ecsRegistry.h"
 #include "engine/scene/scene.h"
 #include "engine/scene/components.h"
 #include "engine/utils/coords.h"
@@ -32,7 +33,7 @@ public:
 	static const char* FONT_NAME;
 
 
-public:
+private:
 	VSShaderLib _shader;		//geometry
 	VSShaderLib _shaderText;	//render bitmap text
 
@@ -54,8 +55,7 @@ public:
 
 	void initSceneRendering() const;
 	void renderCamera(const Camera& camera) const;
-
-	//void renderObject(const MyMesh &mesh, const Renderable::TransformData &transform) const;
+	void renderObjects(const ECSRegistry& registry) const;
 
 
 private:
@@ -64,9 +64,11 @@ private:
 	void _setOrthographicViewport(CameraComponent& camera, int width, int height) const;
 	void _setPerspectiveViewport(CameraComponent& camera, int width, int height) const;
 
-	//void _loadMesh(const MyMesh &mesh) const;
-	//void _applyTransform(const Renderable::TransformData& transform) const;
-	//void _renderMesh(const MyMesh& mesh) const;
+public:
+	void _renderObject(const MeshComponent& mesh, const TransformComponent& transform) const;
+	void _loadMesh(const MeshComponent& mesh) const;
+	void _applyTransform(const TransformComponent& transform) const;
+	void _renderMesh(const MeshComponent& mesh) const;
 
 };
 

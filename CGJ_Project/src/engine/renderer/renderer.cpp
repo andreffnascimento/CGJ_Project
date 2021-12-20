@@ -1,6 +1,7 @@
 #include "renderer.h"
 
 #include <iostream>
+#include <unordered_map>
 
 #include "engine/math/AVTmathLib.h"
 #include "engine/renderer/VertexAttrDef.h"
@@ -9,6 +10,7 @@
 
 #include <GL/glew.h>
 #include <IL/il.h>
+
 
 extern float mCompMatrix[COUNT_COMPUTED_MATRICES][16];
 extern float mNormal3x3[9];
@@ -71,6 +73,7 @@ void Renderer::updateViewport(CameraComponent& camera, int width, int height) co
 void Renderer::initSceneRendering() const
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glUseProgram(_shader.getProgramIndex());
 }
 
 
@@ -83,8 +86,8 @@ void Renderer::renderCamera(const Camera& camera) const
 	const Coords3f& targetCoords = cameraSettings.targetCoords();
 
 	Coords3f up = { 0.0f, 1.0f, 0.0f };
-	if (cameraCoords.x == 0.0f && cameraCoords.x != 0.0f && cameraCoords.z == 0.0f)
-		up = { 0.0f, 0.0f, 1.0f };
+	if (cameraCoords.x == 0.0f && cameraCoords.y != 0.0f && cameraCoords.z == 0.0f)
+		up = { 1.0f, 0.0f, 0.0f };
 
 	loadIdentity(VIEW);
 	loadIdentity(MODEL);
@@ -94,33 +97,22 @@ void Renderer::renderCamera(const Camera& camera) const
 }
 
 
-
-
-/*void Renderer::renderScene(const Scene& scene)
+void Renderer::renderObjects(const ECSRegistry& registry) const
 {
-	if (scene.getActiveCamera() != nullptr)
-		scene.getActiveCamera()->renderCamera(*this);
-
-	glUseProgram(_shader.getProgramIndex());
-
+	// temp light code
 	float lightPos[4] = { 1.0f, 12.0f, 1.0f ,1.0f };
 	float res[4];
 	multMatrixPoint(VIEW, lightPos, res);   //lightPos definido em World Coord so is converted to eye space
 	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::L_POS], 1, res);
 
-	// render objects
-	for (auto &renderableObject : scene.getEntitiesByType<Renderable>())
-		renderableObject->renderObject(*this);
-}*/
-
-
-
-/*void Renderer::renderObject(const MyMesh& mesh, const Renderable::TransformData& transform) const
-{
-	_loadMesh(mesh);				// this might require some optimization to stop loading meshes when they are already there
-	_applyTransform(transform);
-	_renderMesh(mesh);
-}*/
+	std::unordered_map<EntityHandle, MeshComponent>& meshComponents = registry.getComponents<MeshComponent>();
+	for (auto& iterator : meshComponents)
+	{
+		const MeshComponent& mesh = iterator.second;
+		const TransformComponent& transform = registry.getComponent<TransformComponent>(iterator.first);
+		_renderObject(mesh, transform);
+	}
+}
 
 
 
@@ -166,10 +158,10 @@ GLuint Renderer::_setupShaders()
 
 void Renderer::_setOrthographicViewport(CameraComponent& camera, int width, int height) const
 {
+	float left = camera.viewportRect().left;
 	float right = camera.viewportRect().right;
-	float left = camera.viewportRect().right;
-	float top = right * ((float)height / (float)width);
 	float bottom = left * ((float)height / (float)width);
+	float top = right * ((float)height / (float)width);
 	float near = camera.clippingPlanes().near;
 	float far = camera.clippingPlanes().far;
 
@@ -178,7 +170,6 @@ void Renderer::_setOrthographicViewport(CameraComponent& camera, int width, int 
 	// set the projection matrix
 	loadIdentity(PROJECTION);
 	ortho(left, right, bottom, top, near, far);
-
 	Rectf viewportRect = { left, right, bottom, top };
 	camera.setOrthographicCamera(camera.clippingPlanes(), viewportRect);
 }
@@ -199,59 +190,71 @@ void Renderer::_setPerspectiveViewport(CameraComponent& camera, int width, int h
 
 
 
-/*void Renderer::_loadMesh(const MyMesh& mesh) const
+void Renderer::_renderObject(const MeshComponent& mesh, const TransformComponent& transform) const
 {
+	_loadMesh(mesh);				// this might require some optimization to stop loading meshes when they are already there
+	_applyTransform(transform);
+	_renderMesh(mesh);
+}
+
+
+void Renderer::_loadMesh(const MeshComponent& mesh) const
+{
+	const MyMesh& meshData = mesh.getMeshData();
 	GLint loc;
 	loc = glGetUniformLocation(_shader.getProgramIndex(), "mat.ambient");
-	glUniform4fv(loc, 1, mesh.mat.ambient);
+	glUniform4fv(loc, 1, meshData.mat.ambient);
 	loc = glGetUniformLocation(_shader.getProgramIndex(), "mat.diffuse");
-	glUniform4fv(loc, 1, mesh.mat.diffuse);
+	glUniform4fv(loc, 1, meshData.mat.diffuse);
 	loc = glGetUniformLocation(_shader.getProgramIndex(), "mat.specular");
-	glUniform4fv(loc, 1, mesh.mat.specular);
+	glUniform4fv(loc, 1, meshData.mat.specular);
 	loc = glGetUniformLocation(_shader.getProgramIndex(), "mat.shininess");
-	glUniform1f(loc, mesh.mat.shininess);
-}*/
+	glUniform1f(loc, meshData.mat.shininess);
+}
 
 
-/*void Renderer::_applyTransform(const Renderable::TransformData& transform) const
+void Renderer::_applyTransform(const TransformComponent& transform) const
 {
 	pushMatrix(MODEL);
 
 	Coords3f fixedPosition = {
-		-transform.scale.x / 2 + transform.position.x,
-		-transform.scale.y / 2 + transform.position.y,
-		-transform.scale.z / 2 + transform.position.z
+		-transform.scale().x / 2 + transform.translation().x,
+		-transform.scale().y / 2 + transform.translation().y,
+		-transform.scale().z / 2 + transform.translation().z
 	};
 
 	// avoid rotate operation if it is not needed (the other two are very common)
-	if (transform.rotation.z != 0.0f)
-		rotate(MODEL, transform.rotation.z, 0, 0, 1);
+	if (transform.rotation().z != 0.0f)
+		rotate(MODEL, transform.rotation().z, 0, 0, 1);
 
-	if (transform.rotation.x != 0.0f)
-		rotate(MODEL, transform.rotation.x, 1, 0, 0);
+	if (transform.rotation().x != 0.0f)
+		rotate(MODEL, transform.rotation().x, 1, 0, 0);
 
-	if (transform.rotation.y != 0.0f)
-		rotate(MODEL, transform.rotation.y, 0, 1, 0);
+	if (transform.rotation().y != 0.0f)
+		rotate(MODEL, transform.rotation().y, 0, 1, 0);
 
 	translate(MODEL, fixedPosition.x, fixedPosition.y, fixedPosition.z);
-	scale(MODEL, transform.scale.x, transform.scale.y, transform.scale.z);
-}*/
+	scale(MODEL, transform.scale().x, transform.scale().y, transform.scale().z);
+}
 
 
-/*void Renderer::_renderMesh(const MyMesh& mesh) const
+void Renderer::_renderMesh(const MeshComponent& mesh) const
 {
+	const MyMesh& meshData = mesh.getMeshData();
+
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
 	glUniformMatrix4fv(_uniformLocation[Renderer::ShaderUniformType::VM], 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
 	glUniformMatrix4fv(_uniformLocation[Renderer::ShaderUniformType::PVM], 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
 	computeNormalMatrix3x3();
 	glUniformMatrix3fv(_uniformLocation[Renderer::ShaderUniformType::NORMAL], 1, GL_FALSE, mNormal3x3);
 
-	glBindVertexArray(mesh.vao);	// render mesh
+	glBindVertexArray(meshData.vao);	// render mesh
 
 	if (!_shader.isProgramValid())
 		throw std::string("Invalid shader program!");
 
-	glDrawElements(mesh.type, mesh.numIndexes, GL_UNSIGNED_INT, 0);
+	glDrawElements(meshData.type, meshData.numIndexes, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
+	
 	popMatrix(MODEL);
-}*/
+}

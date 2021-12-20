@@ -61,6 +61,8 @@ void Scene::onUpdate()
 {
 	Renderer& renderer = Application::getRenderer();
 	renderer.initSceneRendering();
+	renderer.renderCamera(_activeCamera);
+	renderer.renderObjects(_registry);
 }
 
 

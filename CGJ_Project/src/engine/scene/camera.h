@@ -28,17 +28,18 @@ public:
 
 public:
 	Camera(const Entity& entity)
-		: Entity(), _cameraComponent(&entity.getComponent<CameraComponent>()) {}
+		: Entity(entity), _cameraComponent(&entity.getComponent<CameraComponent>()) {}
 
 
 public:
-	inline operator CameraComponent& ()				{ _validateCamera();  return *_cameraComponent; }
+	inline operator CameraComponent& ()	{ _validateCamera();  return *_cameraComponent; }
+	inline bool isCameraValid() const	{ return _cameraComponent != nullptr;  }
 
 
 private:
 	void _validateCamera() const
 	{
-		if (_cameraComponent == nullptr)
+		if (!isCameraValid())
 			throw std::string("Unable to use a camara that wasn't initialized");
 	}
 

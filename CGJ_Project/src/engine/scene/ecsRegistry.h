@@ -73,7 +73,7 @@ public:
 
 
 	template <typename T>
-	T& getComponent(EntityHandle entityHandle)
+	T& getComponent(EntityHandle entityHandle) const
 	{
 		auto& componentMap = getComponents<T>();
 		auto iterator = componentMap.find(entityHandle);
@@ -82,7 +82,7 @@ public:
 
 
 	template <typename T>
-	bool hasComponent(EntityHandle entityHandle)
+	bool hasComponent(EntityHandle entityHandle) const
 	{
 		auto& componentMap = getComponents<T>();
 		auto iterator = componentMap.find(entityHandle);
@@ -93,7 +93,7 @@ public:
 
 public:
 	template <typename T>
-	std::unordered_map<EntityHandle, T>& getComponents()
+	std::unordered_map<EntityHandle, T>& getComponents() const
 	{
 		static std::unordered_map<EntityHandle, T> componentMap = std::unordered_map<EntityHandle, T>();
 		return componentMap;

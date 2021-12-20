@@ -4,6 +4,7 @@
 
 #include <string>
 #include <regex>
+#include <memory>
 #include <unordered_set>
 
 #include "engine/scene/entity.h"
@@ -59,16 +60,7 @@ public:
 	inline void operator+=(Entity entity)						{ addToGroup(entity); }
 	inline operator const std::unordered_set<Entity>& () const	{ return getGroup(); }
 
-	void expandGroup(std::unordered_set<Entity>& outExpandedGroup) const
-	{
-		for (Entity entity : _group)
-		{
-			if (entity.hasComponent<GroupComponent>())
-				entity.getComponent<GroupComponent>().expandGroup(outExpandedGroup);
-
-			outExpandedGroup.emplace(entity);
-		}
-	}
+	void expandGroup(std::unordered_set<Entity>& outExpandedGroup) const;
 
 	template <typename T>
 	void expandGroupToComponent(std::unordered_set<T*>& outExpandedGroup) const
@@ -138,19 +130,8 @@ public:
 	inline const Rectf& viewportRect() const { return _viewportRect; }
 	inline float fov() const { return _fov; }
 
-	void setOrthographicCamera(const ClippingPlanes& clippingPlanes, const Rectf& viewportRect) 
-	{
-		_cameraProjection = CameraProjection::ORTHOGRAPHIC;
-		_clippingPlanes = clippingPlanes;
-		_viewportRect = viewportRect;
-	}
-
-	void setPerspectiveCamera(const ClippingPlanes& clippingPlanes, float fov)
-	{
-		_cameraProjection = CameraProjection::PERSPECTIVE;
-		_clippingPlanes = clippingPlanes;
-		_fov = fov;
-	}
+	void setOrthographicCamera(const ClippingPlanes& clippingPlanes, const Rectf& viewportRect);
+	void setPerspectiveCamera(const ClippingPlanes& clippingPlanes, float fov);
 };
 
 
@@ -159,13 +140,20 @@ public:
 struct MeshComponent
 {
 private:
-	MyMesh _mesh;
+	std::shared_ptr<MyMesh> _mesh;
 
 public:
 	MeshComponent() = default;
 	MeshComponent(const MeshComponent&) = default;
-	MeshComponent(const MyMesh& mesh) : _mesh(mesh) {}
+	MeshComponent(MyMesh* mesh) : _mesh(mesh) {}
+	MeshComponent(const std::shared_ptr<MyMesh>& mesh) : _mesh(mesh) {}
 	~MeshComponent() = default;
+
+	inline const MyMesh* getMeshPtr() const { return _mesh.get(); }
+	inline const MyMesh& getMeshData() const { return *getMeshPtr(); }
+
+
+	void setMaterial(const Material& material);
 };
 
 

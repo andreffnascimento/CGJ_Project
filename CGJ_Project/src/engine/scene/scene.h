@@ -53,6 +53,8 @@ public:
 	inline void setActiveCamera(const Camera& camera) { _activeCamera = camera; }
 
 
+
+
 public:		
 	friend class Entity;
 
