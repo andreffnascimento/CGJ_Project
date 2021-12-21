@@ -30,6 +30,7 @@ private:
 		Transform::translate(table, { 0.0f, -TABLE_THICKNESS, 0.0f });
 
 		Car car = Car(this);
+		Transform::translate(car, { 0.0f, CAR_BOTTOM_HEIGHT / 2.0f, 0.0f });
 	}
 };
 
