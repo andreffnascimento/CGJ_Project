@@ -42,6 +42,7 @@ void main() {
 
 	vec3 n = normalize(DataIn.normal);
 	vec3 e = normalize(DataIn.eye);
+	colorOut = vec4(0, 0, 0, 0);
 
 
 	int i;
