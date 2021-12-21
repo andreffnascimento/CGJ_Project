@@ -158,9 +158,13 @@
     <None Include="src\engine\shaders\text.vert">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="src\engine\shaders\gouraud.frag" />
-    <None Include="src\engine\shaders\gouraud.vert" />
-    <None Include="src\engine\shaders\phong_blinn.frag" />
-    <None Include="src\engine\shaders\phong_blinn.vert" />
+    <None Include="shaders\gouraud.frag" />
+    <None Include="shaders\gouraud.vert" />
+    <None Include="shaders\phong-blinn.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\phong-blinn.vert">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -212,14 +212,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />
-    <None Include="src\engine\shaders\gouraud.frag" />
-    <None Include="src\engine\shaders\gouraud.vert" />
-    <None Include="src\engine\shaders\phong_blinn.frag" />
-    <None Include="src\engine\shaders\phong_blinn.vert" />
-    <None Include="src\engine\shaders\pointlight.frag" />
-    <None Include="src\engine\shaders\pointlight.vert" />
-    <None Include="src\engine\shaders\text.frag" />
-    <None Include="src\engine\shaders\text.vert" />
+    <None Include="shaders\gouraud.frag" />
+    <None Include="shaders\gouraud.vert" />
+    <None Include="shaders\phong-blinn.frag" />
+    <None Include="shaders\phong-blinn.vert" />
+    <None Include="shaders\pointlight.frag" />
+    <None Include="shaders\pointlight.vert" />
+    <None Include="shaders\text.frag" />
+    <None Include="shaders\text.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
