@@ -87,7 +87,7 @@ void Renderer::renderCamera(const Camera& camera) const
 
 	Coords3f up = { 0.0f, 1.0f, 0.0f };
 	if (cameraCoords.x == 0.0f && cameraCoords.y != 0.0f && cameraCoords.z == 0.0f)
-		up = { 0.0f, 0.0f, 1.0f };
+		up = { 0.0f, 0.0f, -1.0f };
 
 	loadIdentity(VIEW);
 	loadIdentity(MODEL);
@@ -218,7 +218,7 @@ void Renderer::_applyTransform(const TransformComponent& transform) const
 {
 	pushMatrix(MODEL);
 	translate(MODEL, transform.translation().x, transform.translation().y, transform.translation().z);
-
+	
 	// avoid rotate operation if it is not needed (the other two are very common)
 	if (transform.rotation().x != 0.0f)
 		rotate(MODEL, transform.rotation().x, 1, 0, 0);
@@ -229,8 +229,6 @@ void Renderer::_applyTransform(const TransformComponent& transform) const
 	if (transform.rotation().z != 0.0f)
 		rotate(MODEL, transform.rotation().z, 0, 0, 1);
 
-	Coords3f fixedPosition = {-transform.scale().x / 2,	-transform.scale().y / 2, -transform.scale().z / 2 };
-	translate(MODEL, fixedPosition.x, fixedPosition.y, fixedPosition.z);
 	scale(MODEL, transform.scale().x, transform.scale().y, transform.scale().z);
 }
 
