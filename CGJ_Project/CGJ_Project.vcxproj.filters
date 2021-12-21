@@ -143,21 +143,12 @@
     <ClInclude Include="src\engine\scene\sceneEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\MicroMachines3D\scripts\camera\cameraManagerScript.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\engine\shaders\pointlight.frag">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="src\engine\shaders\pointlight.vert">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Dependencies.exe" />
-    <None Include="src\engine\shaders\text.frag">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="src\engine\shaders\text.vert">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="shaders\gouraud.frag" />
     <None Include="shaders\gouraud.vert" />
     <None Include="shaders\phong-blinn.frag">
@@ -166,5 +157,17 @@
     <None Include="shaders\phong-blinn.vert">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="shaders\pointlight.frag" />
+    <None Include="shaders\pointlight.vert" />
+    <None Include="shaders\text.frag" />
+    <None Include="shaders\text.vert" />
+    <None Include="src\engine\shaders\gouraud.frag" />
+    <None Include="src\engine\shaders\gouraud.vert" />
+    <None Include="src\engine\shaders\phong_blinn.frag" />
+    <None Include="src\engine\shaders\phong_blinn.vert" />
+    <None Include="src\engine\shaders\pointlight.frag" />
+    <None Include="src\engine\shaders\pointlight.vert" />
+    <None Include="src\engine\shaders\text.frag" />
+    <None Include="src\engine\shaders\text.vert" />
   </ItemGroup>
 </Project>

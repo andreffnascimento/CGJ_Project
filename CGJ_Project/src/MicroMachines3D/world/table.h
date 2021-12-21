@@ -24,8 +24,8 @@ public:
 		};
 		
 		//create mesh for table (legs + cover)
-		MyMesh *mesh = new MyMesh(createCube());
-		MeshComponent::setMaterial(mesh, material);
+		std::shared_ptr<MyMesh> mesh = std::make_shared<MyMesh>(createCube());
+		MeshComponent::setMaterial(*mesh, material);
 
 		GroupComponent& group = addComponent<GroupComponent>();
 		createTop(group, mesh);
@@ -37,7 +37,7 @@ public:
 
 
 private:
-	void createTop(GroupComponent& group, MyMesh* mesh)
+	void createTop(GroupComponent& group, const std::shared_ptr<MyMesh>& mesh)
 	{
 		Entity top = group.addNewEntity(*this, "top");
 		top.addComponent<MeshComponent>(mesh);
@@ -46,7 +46,7 @@ private:
 	}
 
 
-	void createLeg(GroupComponent& group, MyMesh* mesh, float xMod, float zMod, const char *legId)
+	void createLeg(GroupComponent& group, const std::shared_ptr<MyMesh>& mesh, float xMod, float zMod, const char *legId)
 	{
 		Entity leg = group.addNewEntity(*this, "leg" + std::string(legId));
 		leg.addComponent<MeshComponent>(mesh);

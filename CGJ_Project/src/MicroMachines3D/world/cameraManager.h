@@ -4,6 +4,8 @@
 
 #include "MicroMachines3D/common/include.h"
 
+#include "MicroMachines3D/scripts/camera/cameraManagerScript.h"
+
 
 
 
@@ -18,7 +20,8 @@ public:
 		Entity camera2 = _createCamera2(scene->createEntity("Camera2"));	// camera 2 : perspective camera with top view		
 		Entity camera3 = _createCamera3(scene->createEntity("Camera3"));	// camera 3 : perspective camera that follows the car
 
-		scene->setActiveCamera(Camera(camera1));
+		std::shared_ptr<Script> script = std::make_shared<CameraManagerScript>(scene);
+		ScriptComponent& scriptComponent = addComponent<ScriptComponent>(script);
 	}
 
 

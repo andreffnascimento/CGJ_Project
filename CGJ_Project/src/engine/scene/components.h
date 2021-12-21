@@ -8,6 +8,7 @@
 #include <unordered_set>
 
 #include "engine/scene/entity.h"
+#include "engine/scene/script.h"
 #include "engine/renderer/geometry.h"
 #include "engine/utils/coords.h"
 
@@ -94,6 +95,7 @@ public:
 	inline const Coords3f& rotation() const { return _rotation; }
 	inline const Coords3f& scale() const { return _scale; }
 
+public:
 	friend class Transform;
 };
 
@@ -144,15 +146,33 @@ private:
 public:
 	MeshComponent() = default;
 	MeshComponent(const MeshComponent&) = default;
-	MeshComponent(MyMesh* mesh) : _mesh(mesh) {}
-	MeshComponent(MyMesh* mesh, const Material& material) : _mesh(mesh) { MeshComponent::setMaterial(_mesh.get(), material); }
+	MeshComponent(const std::shared_ptr<MyMesh>& mesh) : _mesh(mesh) {}
+	MeshComponent(const std::shared_ptr<MyMesh>& mesh, const Material& material) : _mesh(mesh) { MeshComponent::setMaterial(*_mesh, material); }
 	~MeshComponent() = default;
 
-	inline const MyMesh* getMeshPtr() const { return _mesh.get(); }
-	inline const MyMesh& getMeshData() const { return *getMeshPtr(); }
+	inline const MyMesh* getMeshPtr()	const { return _mesh.get(); }
+	inline const MyMesh& getMeshData()	const { return *getMeshPtr(); }
 
 
-	static void setMaterial(MyMesh* mesh, const Material& material);
+	static void setMaterial(MyMesh& mesh, const Material& material);
+};
+
+
+
+
+struct ScriptComponent
+{
+private:
+	std::shared_ptr<Script> _script;
+
+public:
+	ScriptComponent() = default;
+	ScriptComponent(const ScriptComponent&) = default;
+	ScriptComponent(const std::shared_ptr<Script>& script) : _script(script) {}
+	~ScriptComponent() = default;
+
+	inline Script* getScript() const { return _script.get(); }
+	inline operator Script* () const { return getScript(); }
 };
 
 

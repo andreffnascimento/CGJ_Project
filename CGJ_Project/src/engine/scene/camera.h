@@ -17,11 +17,8 @@ private:
 
 
 
-private:
-	Camera() = default;
-
-
 public:
+	Camera() = default;
 	Camera(const Camera&) = default;
 	virtual ~Camera() = default;
 
@@ -42,10 +39,6 @@ private:
 		if (!isCameraValid())
 			throw std::string("Unable to use a camara that wasn't initialized");
 	}
-
-
-public:
-	friend class Scene;
 
 };
 

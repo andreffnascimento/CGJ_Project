@@ -36,6 +36,9 @@ private:
 	bool _running = false;
 	int _windowHandle = 0;
 	unsigned int _frameCount = 0;
+	
+	unsigned int _prevTime = 0;
+	float _ts = 0;
 
 	InputHandler _inputHandler = InputHandler();
 	Renderer _renderer = Renderer();
@@ -58,6 +61,7 @@ public:
 
 
 public:
+	static bool isRunning();
 	static Application& getInstance();
 	static InputHandler& getInputHandler();
 	static Renderer& getRenderer();

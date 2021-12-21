@@ -3,15 +3,30 @@
 
 
 
+
 class Script
 {
+protected:
+	Scene* _scene;
+
+
+
+
 public:
-	Script() {}
+	Script() = delete;
+	Script(const Script&) = default;
+	Script(Scene* scene) : _scene(scene) {}
+	virtual ~Script() = default;
 
+
+protected:
+	virtual void onCreate()			{}
+	virtual void onUpdate(float ts) {}
 
 
 public:
-	virtual void run() = 0;			// concrete script implements this method
+	friend class Scene;
+
 };
 
 

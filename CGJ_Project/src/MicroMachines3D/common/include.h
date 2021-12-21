@@ -2,7 +2,11 @@
 #define __MM3D_COMMON_INCLUDE_H__
 
 
+#include "engine/app/application.h"
+#include "engine/app/inputHandler.h"
+
 #include "engine/scene/entity.h"
+#include "engine/scene/script.h"
 #include "engine/scene/sceneEntity.h"
 #include "engine/scene/components.h"
 #include "engine/scene/scene.h"

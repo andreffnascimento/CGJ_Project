@@ -1,9 +1,8 @@
 #include <iostream>
 
-#include "engine/app/application.h"
+#include "MicroMachines3D/common/include.h"
 
 #include "MicroMachines3D/scenes/MicroMachines3DScene.h"
-#include "engine/scene/ecsRegistry.h"
 
 
 

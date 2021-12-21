@@ -60,6 +60,10 @@ public:
 	void destroyEntity(EntityHandle entityHandle);
 
 
+public:
+	inline unsigned int getNextId() const { return _nextId; }
+
+
 
 
 public:

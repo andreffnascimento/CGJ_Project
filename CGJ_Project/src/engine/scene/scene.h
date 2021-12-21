@@ -34,9 +34,13 @@ public:
 
 
 public:
-	virtual void onCreate() = 0;
-	void onUpdate();
+	void onCreate();
+	void onUpdate(float ts);
 	void onViewportResize(int width, int height);
+
+
+public:
+	virtual void setupScene() = 0;
 
 
 public:
@@ -45,14 +49,14 @@ public:
 
 	void destroyEntity(EntityHandle entityHandler);
 
-	std::unordered_set<Entity> getEntitiesByTag(const std::string& tag);
+	bool hasEntityWithTag(const std::string& tag) const;
+
+	Entity getEntityByTag(const std::string& tag);
 	std::unordered_set<Entity> getEntitiesByTag(const std::regex& regex);
 
 
 public:
-	inline void setActiveCamera(const Camera& camera) { _activeCamera = camera; }
-
-
+	void setActiveCamera(const Camera& camera);
 
 
 public:		

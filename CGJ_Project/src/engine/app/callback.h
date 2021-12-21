@@ -22,10 +22,11 @@ void terminateApp()
 // FPS display callback function
 void timer(int value)
 {
+	if (!Application::isRunning())
+		return;
+
 	Application& app = Application::getInstance();
 	const Application::ApplicationData& appData = app._applicationData;
-	if (!app._running)
-		return;
 
 	std::ostringstream oss;
 	oss << appData.caption << ": " << app._frameCount << " FPS @ (" << appData.width << "x" << appData.heigth << ")";
@@ -41,10 +42,10 @@ void timer(int value)
 // Screen refresh callback function
 void refresh(int value)
 {
-	Application& app = Application::getInstance();
-	if (!app._running)
+	if (!Application::isRunning())
 		return;
 
+	Application& app = Application::getInstance();
 	glutTimerFunc((unsigned int)(1000.0 / 60.0), refresh, 0);
 	glutPostRedisplay();
 }
@@ -70,8 +71,12 @@ void displayScene()
 	if (app._scene == nullptr)
 		throw std::string("Application is missing an attached scene!");
 
+	unsigned int currTime = glutGet(GLUT_ELAPSED_TIME);
+	app._ts = (float)(currTime - app._prevTime) / 1000.0f;
+	app._prevTime = currTime;
+
 	app._frameCount++;
-	app._scene->onUpdate();
+	app._scene->onUpdate(app._ts);
 	app._inputHandler.reset();
 
 	glutSwapBuffers();

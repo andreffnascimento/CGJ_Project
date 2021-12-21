@@ -20,7 +20,7 @@ public:
 
 
 private:
-	void onCreate() override
+	void setupScene() override
 	{
 		// scene cameras setups
 		CameraManager cameraManager = CameraManager(this);

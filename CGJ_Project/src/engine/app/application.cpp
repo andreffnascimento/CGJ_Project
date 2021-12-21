@@ -16,7 +16,6 @@ Application* Application::s_application = nullptr;
 
 Application::~Application()
 {
-	_running = false;
 	glutLeaveMainLoop();
 }
 
@@ -76,7 +75,6 @@ Application& Application::init(const ApplicationData& applicationData, int argc,
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 
 	app._renderer.init();				// initializes the renderer
-	app._running = true;				// starts the app
 	return app;
 }
 
@@ -84,11 +82,19 @@ Application& Application::init(const ApplicationData& applicationData, int argc,
 void Application::terminate()
 {
 	if (Application::s_application != nullptr)
+	{
 		delete Application::s_application;
+		Application::s_application = nullptr;
+	}
 }
 
 
 
+
+bool Application::isRunning()
+{
+	return Application::s_application != nullptr && Application::s_application->_running;
+}
 
 Application& Application::getInstance()
 {
@@ -114,12 +120,15 @@ Renderer& Application::getRenderer()
 void Application::setScene(Scene* scene)
 {
 	_scene = scene;
+	_scene->setupScene();
 	_scene->onCreate();
+
+	_running = true;
 }
 
 
 void Application::run()
 {
-	if (_running)
+	if (Application::isRunning())
 		glutMainLoop();
 }
