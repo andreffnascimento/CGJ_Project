@@ -38,12 +38,28 @@ private:
 
 		Entity carBottom = group.addNewEntity(*this, "bottom");
 		carBottom.addComponent<MeshComponent>(mesh);
-		Transform::scale(carBottom, { CAR_BOTTOM_WIDTH, CAR_BOTTOM_HEIGHT, CAR_BOTTOM_LENGTH });
+		Transform::scale(carBottom, { CAR_BOTTOM_SIZE });
 
 		Entity carTop = group.addNewEntity(*this, "top");
 		carTop.addComponent<MeshComponent>(mesh);
-		Transform::scale(carTop, { CAR_TOP_WIDTH, CAR_TOP_HEIGHT, CAR_TOP_LENGTH });
-		Transform::translate(carTop, { 0.0f, (CAR_BOTTOM_HEIGHT + CAR_TOP_HEIGHT) / 2.0f, 0.0f });
+		Transform::scale(carTop, CAR_TOP_SIZE);
+		Transform::translate(carTop, { 0.0f, (CAR_BOTTOM_SIZE.y + CAR_TOP_SIZE.y) / 2.0f, -CAR_BOTTOM_SIZE.z / 10.0f });
+
+		Entity carSpoilerSupport = group.addNewEntity(*this, "spoilerSupport");
+		carSpoilerSupport.addComponent<MeshComponent>(mesh);
+		Transform::scale(carSpoilerSupport, { CAR_SPOILER_SUPPORT_SIZE.x, CAR_SPOILER_SUPPORT_SIZE.y, CAR_SPOILER_SUPPORT_SIZE.z });
+		Transform::rotate(carSpoilerSupport, { -45.0f, 0.0f, 0.0f });
+		Transform::translate(carSpoilerSupport, { 0.0f, (CAR_BOTTOM_SIZE.y + CAR_SPOILER_SUPPORT_SIZE.y) / 2.5f, -(CAR_BOTTOM_SIZE.z - CAR_SPOILER_SUPPORT_SIZE.z) / 2.0f });
+
+		Entity carSpoiler = group.addNewEntity(*this, "spoiler");
+		carSpoiler.addComponent<MeshComponent>(mesh);
+		Transform::scale(carSpoiler, CAR_SPOILER_SIZE);
+		Transform::translate(carSpoiler, { 0.0f, CAR_BOTTOM_SIZE.y - CAR_SPOILER_SIZE.y, CAR_BOTTOM_SIZE.z / -2.0f});
+
+		Entity carBumper = group.addNewEntity(*this, "bumper");
+		carBumper.addComponent<MeshComponent>(mesh);
+		Transform::scale(carBumper, CAR_BUMPER_SIZE);
+		Transform::translate(carBumper, { 0.0f, -(CAR_BOTTOM_SIZE.y - CAR_BUMPER_SIZE.y) / 2.0f, (CAR_BOTTOM_SIZE.z + CAR_BUMPER_SIZE.z) / 2.0f });
 	}
 
 
@@ -74,11 +90,11 @@ private:
 		wheel.addComponent<MeshComponent>(mesh);
 
 		Transform::rotate(wheel, { 0.0f, 0.0f, 90.0f });
-		Transform::scale(wheel, { WHEEL_WIDTH, WHEEL_HEIGHT, WHEEL_LENGTH });
+		Transform::scale(wheel, WHEEL_SIZE);
 
-		float xPos = (xMod * CAR_BOTTOM_WIDTH / 2.0f) + (xMod * WHEEL_WIDTH / 2.0f);
-		float zPos = (zMod * CAR_BOTTOM_LENGTH / 2.0f) - (zMod * WHEEL_LENGTH);
-		Transform::translate(wheel, { xPos, 0.0f, zPos });
+		float xPos = (xMod * CAR_BOTTOM_SIZE.x / 2.0f) + (xMod * WHEEL_SIZE.x / 2.0f);
+		float zPos = (zMod * CAR_BOTTOM_SIZE.z / 2.0f) - (zMod * WHEEL_SIZE.z / 0.8f);
+		Transform::translate(wheel, { xPos, -CAR_FLOOR_DISTANCE, zPos });
 	}
 
 };

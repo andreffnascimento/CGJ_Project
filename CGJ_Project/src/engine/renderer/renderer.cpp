@@ -87,7 +87,7 @@ void Renderer::renderCamera(const Camera& camera) const
 
 	Coords3f up = { 0.0f, 1.0f, 0.0f };
 	if (cameraCoords.x == 0.0f && cameraCoords.y != 0.0f && cameraCoords.z == 0.0f)
-		up = { 0.0f, 0.0f, -1.0f };
+		up = { 0.0f, 0.0f, 1.0f };
 
 	loadIdentity(VIEW);
 	loadIdentity(MODEL);

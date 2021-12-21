@@ -1,32 +1,26 @@
 #ifndef __mm3d_common_constants__
 #define __mm3d_common_constants__
 
-
-constexpr float TABLE_LENGTH = 180.0f;
-constexpr float TABLE_WIDTH = 100.0f;
-constexpr float TABLE_THICKNESS = 5.0f;
-
-constexpr float LEG_LENGTH = 50.0f;
-constexpr float LEG_THICKNESS = 5.0f;
+#include "MicroMachines3D/common/include.h"
 
 
+constexpr Coords3f TABLE_SIZE = { 180.0f, 5.0f, 100.0f };
+constexpr Coords3f LEG_SIZE = { 5.0f, 50.0f, 5.0f };
 
-constexpr float CAR_BOTTOM_WIDTH = 1.5f;
-constexpr float CAR_BOTTOM_HEIGHT = 1.0f;
-constexpr float CAR_BOTTOM_LENGTH = 5.0f;
 
-constexpr float CAR_TOP_WIDTH  = CAR_BOTTOM_WIDTH;
-constexpr float CAR_TOP_HEIGHT = CAR_BOTTOM_HEIGHT / 2.0f;
-constexpr float CAR_TOP_LENGTH = CAR_BOTTOM_LENGTH / 2.5f;
+constexpr float CAR_FLOOR_DISTANCE = 0.35f;
+
+constexpr Coords3f CAR_BOTTOM_SIZE = { 1.5f, 1.0f, 5.0f };
+constexpr Coords3f CAR_TOP_SIZE = { CAR_BOTTOM_SIZE.x, CAR_BOTTOM_SIZE.y / 2.0f, CAR_BOTTOM_SIZE.z / 2.5f };
+constexpr Coords3f CAR_SPOILER_SUPPORT_SIZE = { 0.2f, 0.5f, 0.2f };
+constexpr Coords3f CAR_SPOILER_SIZE = { 2.0f, 0.2f, 0.5f };
+constexpr Coords3f CAR_BUMPER_SIZE = { 1.5f, 0.4f, 0.2f };
+constexpr Coords3f WHEEL_SIZE = { 0.5f, 1.0f, 0.5f };
 
 constexpr float WHEEL_INNER_RADIUS = 0.55f;
 constexpr float WHEEL_OUTER_RADIUS = 1.0f;
 constexpr int   WHEEL_RINGS = 20;
 constexpr int   WHEEL_SIDES = 20;
-
-constexpr float WHEEL_WIDTH = 0.5f;
-constexpr float WHEEL_HEIGHT = 1.0f;
-constexpr float WHEEL_LENGTH = 0.5f;
 
 
 #endif // !__mm3d_common_constants__

@@ -40,8 +40,8 @@ private:
 	{
 		Entity top = group.addNewEntity(*this, "top");
 		top.addComponent<MeshComponent>(mesh);
-		Transform::scale(top, { TABLE_LENGTH, TABLE_THICKNESS, TABLE_WIDTH });
-		Transform::translate(top, { 0.0f, TABLE_THICKNESS / 2.0f, 0.0f });
+		Transform::scale(top, TABLE_SIZE);
+		Transform::translate(top, { 0.0f, TABLE_SIZE.y / 2.0f, 0.0f });
 	}
 
 
@@ -49,11 +49,11 @@ private:
 	{
 		Entity leg = group.addNewEntity(*this, "leg" + std::string(legId));
 		leg.addComponent<MeshComponent>(mesh);
-		Transform::scale(leg, { LEG_THICKNESS, LEG_LENGTH, LEG_THICKNESS });
+		Transform::scale(leg, LEG_SIZE);
 
-		float xPos = (xMod * TABLE_LENGTH / 2.0f) - (xMod * LEG_THICKNESS / 2.0f);
-		float yPos = -LEG_LENGTH / 2.0f;
-		float zPos = (zMod * TABLE_WIDTH / 2.0f) - (zMod * LEG_THICKNESS / 2.0f);
+		float xPos = (xMod * TABLE_SIZE.x / 2.0f) - (xMod * LEG_SIZE.x / 2.0f);
+		float yPos = -LEG_SIZE.y / 2.0f;
+		float zPos = (zMod * TABLE_SIZE.z / 2.0f) - (zMod * LEG_SIZE.z / 2.0f);
 		Transform::translate(leg, { xPos, yPos, zPos });
 	}
 

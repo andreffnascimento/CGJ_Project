@@ -51,8 +51,7 @@ private:
 	{
 		CameraComponent& camera = entity.addComponent<CameraComponent>();
 		camera.setPerspectiveCamera({ 0.01f, 1000.0f }, 53.13f);
-		camera.setTargetCoords({ 0.0f, 0.0f, 0.0f });
-		
+
 		std::shared_ptr<Script> script = std::make_shared<TargetOrbitalCameraScript>(scene);
 		ScriptComponent& scriptComponent = entity.addComponent<ScriptComponent>(script);
 

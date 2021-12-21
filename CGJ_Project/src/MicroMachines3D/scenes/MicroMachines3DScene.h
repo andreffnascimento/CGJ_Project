@@ -27,10 +27,10 @@ private:
 
 
 		Table table = Table(this);
-		Transform::translate(table, { 0.0f, -TABLE_THICKNESS, 0.0f });
+		Transform::translate(table, { 0.0f, -TABLE_SIZE.y, 0.0f });
 
 		Car car = Car(this);
-		Transform::translate(car, { 0.0f, CAR_BOTTOM_HEIGHT / 2.0f, 0.0f });
+		Transform::translate(car, { 0.0f, CAR_BOTTOM_SIZE.y / 2.0f + CAR_FLOOR_DISTANCE, 0.0f });
 	}
 };
 

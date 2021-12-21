@@ -24,12 +24,14 @@ private:
 private:
 	const InputHandler* _inputHandler = nullptr;
 
+	Entity _car = Entity();
+
 	Camera _camera = Camera();
 	TrackingStatus _trackingStatus = TrackingStatus::NONE;
 	int _startX = 0;
 	int _startY = 0;
 
-	float _alpha = 0.0f;
+	float _alpha = 180.0f;
 	float _beta = 50.0f;
 	float _r = 10.0f;
 
@@ -47,6 +49,7 @@ public:
 	void onCreate() override
 	{
 		_inputHandler = &Application::getInputHandler();
+		_car = _scene->getEntityByTag("Car");
 		_camera = _scene->getEntityByTag("Camera3");
 		_updateCameraTransform(_alpha, _beta, _r);
 	}
@@ -58,6 +61,7 @@ public:
 		_processMouseClick(mouseInfo);
 		_processMouseMovement(mouseInfo);
 		_processMouseWheel(mouseInfo);
+		_setCameraTarget();
 	}
 
 
@@ -82,12 +86,12 @@ private:
 		case InputHandler::MouseStatus::MOUSE_UP:
 			if (_trackingStatus == TrackingStatus::MOVE)
 			{
-				_alpha -= (mouseInfo.coords.x - _startX);
-				_beta += (mouseInfo.coords.y - _startY);
+				_alpha += -(int)mouseInfo.coords.x + _startX;
+				_beta +=   (int)mouseInfo.coords.y - _startY;
 			}
 			else if (_trackingStatus == TrackingStatus::ZOOM)
 			{
-				_r += (mouseInfo.coords.y - _startY) * 0.01f;
+				_r += (mouseInfo.coords.y - _startY) * 0.1f;
 				if (_r < 0.1f)
 					_r = 0.01f;
 			}
@@ -107,14 +111,13 @@ private:
 		float betaAux = _beta;
 		float rAux = _r;
 
-		int deltaX = -(int)(mouseInfo.coords.x) + _startX;
-		int deltaY =  (int)(mouseInfo.coords.y) - _startY;
+		int deltaX = -(int)mouseInfo.coords.x + _startX;
+		int deltaY =  (int)mouseInfo.coords.y - _startY;
 
 		if (_trackingStatus == TrackingStatus::MOVE)
 		{
 			alphaAux = _alpha + deltaX;
 			betaAux = _beta + deltaY;
-			rAux = _r;
 
 			if (betaAux > 85.0f)
 				betaAux = 85.0f;
@@ -123,10 +126,7 @@ private:
 		}
 		else if (_trackingStatus == TrackingStatus::ZOOM)
 		{
-			alphaAux = _alpha;
-			betaAux = _beta;
 			rAux = _r + (deltaY * 0.1f);
-
 			if (rAux < 0.1f)
 				rAux = 0.1f;
 		}
@@ -154,6 +154,13 @@ private:
 		float cameraZ = r * cos(alpha * (float)Transform::PI / 180.0f) * cos(beta * (float)Transform::PI / 180.0f);
 		float cameraY = r * sin(beta *  (float)Transform::PI / 180.0f);
 		Transform::translateTo((Entity&)_camera, { cameraX, cameraY, cameraZ });
+	}
+
+
+	void _setCameraTarget() const
+	{
+		CameraComponent& cameraComponent = _camera.getComponent<CameraComponent>();
+		cameraComponent.setTargetCoords(_car.transform().translation());
 	}
 
 };

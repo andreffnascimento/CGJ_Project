@@ -24,13 +24,8 @@ private:
 	Scene* _scene				= nullptr;
 
 
-	
-
-protected:
-	Entity() = default;
-
-
 public:
+	Entity() = default;
 	Entity(const Entity&) = default;
 	Entity(const EntityHandle& entityHandle, Scene*&& scene);
 	virtual ~Entity() = default;
