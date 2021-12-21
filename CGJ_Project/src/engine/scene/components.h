@@ -58,7 +58,6 @@ public:
 	Entity addNewEntity(const Entity& parentEntity, const std::string& tag);
 	void expandGroup(std::unordered_set<Entity>& outExpandedGroup) const;
 
-	inline void add(Entity entity)								{ _group.emplace(entity); }
 	inline const std::unordered_set<Entity>& getGroup() const	{ return _group; }
 	inline operator const std::unordered_set<Entity>& () const	{ return getGroup(); }
 

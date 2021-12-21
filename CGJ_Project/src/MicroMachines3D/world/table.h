@@ -28,33 +28,33 @@ public:
 			100.0f,
 			0
 		};
-
+		
 		//create mesh for table (legs + cover)
 		MyMesh *mesh = new MyMesh(createCube());
 		MeshComponent::setMaterial(mesh, material);
 
 		GroupComponent& group = entity.addComponent<GroupComponent>();
 		createTop(group, mesh);
-		createLeg(group, mesh, -1.0f, -1.0f);
-		createLeg(group, mesh,  1.0f, -1.0f);
-		createLeg(group, mesh, -1.0f,  1.0f);
-		createLeg(group, mesh,  1.0f,  1.0f);
+		createLeg(group, mesh, -1.0f, -1.0f, "1");
+		createLeg(group, mesh,  1.0f, -1.0f, "2");
+		createLeg(group, mesh, -1.0f,  1.0f, "3");
+		createLeg(group, mesh,  1.0f,  1.0f, "4");
 	}
 
 
 private:
 	void createTop(GroupComponent& group, MyMesh* mesh)
 	{
-		Entity top = group.addNewEntity(*this);
+		Entity top = group.addNewEntity(*this, "top");
 		top.addComponent<MeshComponent>(mesh);
 		Transform::scale(top, { TABLE_LENGTH, TABLE_THICKNESS, TABLE_WIDTH });
 		Transform::translate(top, { 0.0f, TABLE_THICKNESS / 2.0f, 0.0f });
 	}
 
 
-	void createLeg(GroupComponent& group, MyMesh* mesh, float xMod, float zMod)
+	void createLeg(GroupComponent& group, MyMesh* mesh, float xMod, float zMod, const char *legId)
 	{
-		Entity leg = group.addNewEntity(*this);
+		Entity leg = group.addNewEntity(*this, "leg" + std::string(legId));
 		leg.addComponent<MeshComponent>(mesh);
 		Transform::scale(leg, { LEG_THICKNESS, LEG_LENGTH, LEG_THICKNESS });
 

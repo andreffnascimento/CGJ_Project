@@ -11,15 +11,15 @@
 Entity Scene::createEntity()
 {
 	Entity entity = Entity(_registry.createEntity(), this);
-	entity.addComponent<TagComponent>("Entity$" + (std::string)entity);
+	entity.addComponent<TagComponent>("Entity$<" + (std::string)entity + ">");
 	entity.addComponent<TransformComponent>();
 	return entity;
 }
 
-Entity Scene::createEntity(const std::string& tag)
+Entity Scene::createEntity(const std::string& tag, bool joinId)
 {
 	Entity entity = Entity(_registry.createEntity(), this);
-	entity.addComponent<TagComponent>(tag);
+	entity.addComponent<TagComponent>(tag + (joinId ? "$<" + (std::string)entity + ">" : ""));
 	entity.addComponent<TransformComponent>();
 	return entity;
 }

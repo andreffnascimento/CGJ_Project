@@ -41,7 +41,7 @@ public:
 
 public:
 	Entity createEntity();
-	Entity createEntity(const std::string& tag);
+	Entity createEntity(const std::string& tag, bool joinId = false);
 
 	void destroyEntity(EntityHandle entityHandler);
 

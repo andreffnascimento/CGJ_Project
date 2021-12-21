@@ -7,15 +7,15 @@
 
 Entity GroupComponent::addNewEntity(const Entity& parentEntity)
 {
-	Entity entity = parentEntity._getScene().createEntity();
-	add(entity);
+	Entity entity = parentEntity._getScene().createEntity(parentEntity.tag(), true);
+	_group.emplace(entity);
 	return entity;
 }
 
 Entity GroupComponent::addNewEntity(const Entity& parentEntity, const std::string& tag)
 {
-	Entity entity = parentEntity._getScene().createEntity(tag);
-	add(entity);
+	Entity entity = parentEntity._getScene().createEntity(parentEntity.tag().getTag() + ":" + tag);
+	_group.emplace(entity);
 	return entity;
 }
 

@@ -20,7 +20,7 @@ private:
 	void onCreate() override
 	{
 		// temporary test camera
-		Entity entity = createEntity();
+		Entity entity = createEntity("test");
 		CameraComponent& camera = entity.addComponent<CameraComponent>();
 		camera.setPerspectiveCamera({ 0.01f, 1000.0f }, 53.13f);
 		camera.setTargetCoords({ 0.0f, 0.0f, 0.0f });
@@ -28,8 +28,8 @@ private:
 		setActiveCamera(Camera(entity));
 		// temporaty test end
 
-
-		Table table = Table(createEntity());
+		// world objects setup
+		Table table = Table(createEntity("Table"));
 	}
 };
 
