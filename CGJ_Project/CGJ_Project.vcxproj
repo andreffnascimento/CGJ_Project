@@ -199,6 +199,7 @@
     <ClInclude Include="src\MicroMachines3D\common\include.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\camera\cameraManagerScript.h" />
     <ClInclude Include="src\MicroMachines3D\world\cameraManager.h" />
+    <ClInclude Include="src\MicroMachines3D\world\car.h" />
     <ClInclude Include="src\MicroMachines3D\world\table.h" />
     <ClInclude Include="src\MicroMachines3D\scenes\MicroMachines3DScene.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\camera\orbitTargetScript.h" />

@@ -51,7 +51,7 @@ private:
 		CameraComponent& camera = entity.addComponent<CameraComponent>();
 		camera.setPerspectiveCamera({ 0.01f, 1000.0f }, 53.13f);
 		camera.setTargetCoords({ 0.0f, 0.0f, 0.0f });
-		Transform::translateTo(entity, { 100.0f, 30.0f, 170.0f });		// TEMPORATY CODE UNTIL THE CAR IS CREATED
+		Transform::translateTo(entity, { 5.0f, 10.0f, 5.0f });		// TEMPORATY CODE UNTIL THE CAR IS CREATED
 		return entity;
 	}
 };

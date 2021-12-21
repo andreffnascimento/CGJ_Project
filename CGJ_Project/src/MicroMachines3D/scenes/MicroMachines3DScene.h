@@ -6,6 +6,7 @@
 
 #include "MicroMachines3D/world/cameraManager.h"
 #include "MicroMachines3D/world/table.h"
+#include "MicroMachines3D/world/car.h"
 
 
 
@@ -22,11 +23,13 @@ public:
 private:
 	void setupScene() override
 	{
-		// scene cameras setups
 		CameraManager cameraManager = CameraManager(this);
 
-		// world objects setup
+
 		Table table = Table(this);
+		Transform::translate(table, { 0.0f, -TABLE_THICKNESS, 0.0f });
+
+		Car car = Car(this);
 	}
 };
 

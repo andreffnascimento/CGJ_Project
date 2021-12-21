@@ -146,6 +146,9 @@
     <ClInclude Include="src\MicroMachines3D\scripts\camera\cameraManagerScript.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\MicroMachines3D\world\car.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />

@@ -23,7 +23,6 @@ public:
 			0
 		};
 		
-		//create mesh for table (legs + cover)
 		std::shared_ptr<MyMesh> mesh = std::make_shared<MyMesh>(createCube());
 		MeshComponent::setMaterial(*mesh, material);
 
