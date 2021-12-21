@@ -1,5 +1,5 @@
-#ifndef __MM3D_GAMEOBJECTS_WORLD_TABLE_TABLE_H__
-#define __MM3D_GAMEOBJECTS_WORLD_TABLE_TABLE_H__
+#ifndef __MM3D_WORLD_TABLE_H__
+#define __MM3D_WORLD_TABLE_H__
 
 
 #include "MicroMachines3D/common/include.h"
@@ -7,18 +7,12 @@
 
 
 
-class Table : public Entity
+class Table : public SceneEntity
 {
 
 public:
-	Table() = delete;
-	Table(const Table&) = default;
-	~Table() = default;
-
-
-public:
-	Table(const Entity& entity)
-		: Entity(entity)
+	Table(Scene* scene)
+		: SceneEntity(scene->createEntity("Table"))
 	{
 		Material material = {
 			{ 0.2f, 0.15f, 0.1f, 1.0f },
@@ -33,7 +27,7 @@ public:
 		MyMesh *mesh = new MyMesh(createCube());
 		MeshComponent::setMaterial(mesh, material);
 
-		GroupComponent& group = entity.addComponent<GroupComponent>();
+		GroupComponent& group = addComponent<GroupComponent>();
 		createTop(group, mesh);
 		createLeg(group, mesh, -1.0f, -1.0f, "1");
 		createLeg(group, mesh,  1.0f, -1.0f, "2");
@@ -67,4 +61,4 @@ private:
 };
 
 
-#endif // !__MM3D_GAMEOBJECTS_WORLD_TABLE_TABLE_H__
+#endif // !__MM3D_WORLD_TABLE_H__

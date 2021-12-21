@@ -2,8 +2,9 @@
 #define __MM3D_COMMON_INCLUDE_H__
 
 
-#include "engine/scene/components.h"
 #include "engine/scene/entity.h"
+#include "engine/scene/sceneEntity.h"
+#include "engine/scene/components.h"
 #include "engine/scene/scene.h"
 
 #include "engine/math/transform.h"
