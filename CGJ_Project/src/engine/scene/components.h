@@ -1,5 +1,5 @@
-#ifndef __ENGINE_SCENE_COMPONENTS_H__
-#define __ENGINE_SCENE_COMPONENTS_H__
+#ifndef __engine_scene_components__
+#define __engine_scene_components__
 
 
 #include <string>
@@ -176,4 +176,4 @@ public:
 };
 
 
-#endif // !__ENGINE_SCENE_COMPONENTS_H__
+#endif // !__engine_scene_components__

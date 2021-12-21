@@ -1,5 +1,5 @@
-#ifndef __MM3D_COMMON_CONSTANTS_H__
-#define __MM3D_COMMON_CONSTANTS_H__
+#ifndef __mm3d_common_constants__
+#define __mm3d_common_constants__
 
 
 constexpr float TABLE_LENGTH = 180.0f;
@@ -29,4 +29,4 @@ constexpr float WHEEL_HEIGHT = 1.0f;
 constexpr float WHEEL_LENGTH = 0.5f;
 
 
-#endif // !__MM3D_COMMON_CONSTANTS_H__
+#endif // !__mm3d_common_constants__

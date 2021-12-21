@@ -1,5 +1,5 @@
-#ifndef __MM3D_COMMON_INCLUDE_H__
-#define __MM3D_COMMON_INCLUDE_H__
+#ifndef __mm3d_common_include__
+#define __mm3d_common_include__
 
 
 #include "engine/app/application.h"
@@ -19,4 +19,4 @@
 #include "MicroMachines3D/common/constants.h"
 
 
-#endif // !__MM3D_COMMON_INCLUDE_H__
+#endif // !__mm3d_common_include__

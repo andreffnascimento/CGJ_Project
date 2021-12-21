@@ -1,5 +1,5 @@
-#ifndef __MM3D_WORLD_CAMERAMANAGER_H__
-#define __MM3D_WORLD_CAMERAMANAGER_H__
+#ifndef __mm3d_world_cameraManager__
+#define __mm3d_world_cameraManager__
 
 
 #include "MicroMachines3D/common/include.h"
@@ -57,4 +57,4 @@ private:
 };
 
 
-#endif // !__MM3D_WORLD_TABLE_H__
+#endif // !__mm3d_world_cameraManager__

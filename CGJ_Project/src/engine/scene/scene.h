@@ -1,5 +1,5 @@
-#ifndef __ENGINE_SCENE_SCENE_H__
-#define __ENGINE_SCENE_SCENE_H__
+#ifndef __engine_scene_scene__
+#define __engine_scene_scene__
 
 
 #include <regex>
@@ -65,4 +65,4 @@ public:
 };
 
 
-#endif // !__ENGINE_SCENE_SCENE_H__
+#endif // !__engine_scene_scene__

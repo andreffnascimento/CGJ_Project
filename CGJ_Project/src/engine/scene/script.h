@@ -1,5 +1,5 @@
-#ifndef __ENGINE_GAME_SCRIPT_H__
-#define __ENGINE_GAME_SCRIPT_H__
+#ifndef __engine_scene_script__
+#define __engine_scene_script__
 
 
 
@@ -30,4 +30,4 @@ public:
 };
 
 
-#endif // !__ENGINE_GAME_SCRIPT_H__
+#endif // !__engine_scene_script__

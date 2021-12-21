@@ -1,5 +1,5 @@
-#ifndef __CUBE_H__
-#define __CUBE_H__
+#ifndef __engine_renderer_cube__
+#define __engine_renderer_cube__
 
 
 constexpr int verticeCount = 24;
@@ -182,4 +182,4 @@ unsigned int quad_faceIndex[] = {
 };
 
 
-#endif // !__CUBE_H__
+#endif // !__engine_renderer_cube__

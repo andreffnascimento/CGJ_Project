@@ -1,5 +1,5 @@
-#ifndef __MM3D_SCENES_MICROMACHINES3D_H__
-#define __MM3D_SCENES_MICROMACHINES3D_H__
+#ifndef __mm3d_scenes_MicroMachines3D__
+#define __mm3d_scenes_MicroMachines3D__
 
 
 #include "MicroMachines3D/common/include.h"
@@ -35,4 +35,4 @@ private:
 };
 
 
-#endif // !__MM3D_SCENES_MICROMACHINES3D_H__
+#endif // !__mm3d_scenes_MicroMachines3D__

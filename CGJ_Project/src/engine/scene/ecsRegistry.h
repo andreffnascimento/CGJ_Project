@@ -1,5 +1,5 @@
-#ifndef __ENGINE_SCENE_ECSREGISTRY_H__
-#define __ENGINE_SCENE_ECSREGISTRY_H__
+#ifndef __engine_scene_ecsRegistry__
+#define __engine_scene_ecsRegistry__
 
 
 #include <unordered_map>
@@ -106,5 +106,4 @@ public:
 };
 
 
-#endif // !__ENGINE_SCENE_ECSREGISTRY_H__
-
+#endif // !__engine_scene_ecsRegistry__

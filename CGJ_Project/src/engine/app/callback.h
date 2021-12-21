@@ -1,5 +1,5 @@
-#ifndef __ENGINE_APP_CALLBACK_H__
-#define __ENGINE_APP_CALLBACK_H__
+#ifndef __engine_app_callback__
+#define __engine_app_callback__
 
 
 #include <iostream>
@@ -133,4 +133,4 @@ void mouseWheel(int wheel, int direction, int x, int y)
 }
 
 
-#endif // !__ENGINE_APP_CALLBACK_H__
+#endif // !__engine_app_callback__

@@ -1,5 +1,5 @@
-#ifndef RENDERER_VERTEX_ATTR_DEF_H
-#define RENDERER_VERTEX_ATTR_DEF_H
+#ifndef __engine_renderer_VertexAttrDef__
+#define __engine_renderer_VertexAttrDef__
 
 
 
@@ -17,4 +17,4 @@ enum AttribType {
 };
 
 
-#endif // !RENDERER_VERTEX_ATTR_DEF_H
+#endif // !__engine_renderer_VertexAttrDef__

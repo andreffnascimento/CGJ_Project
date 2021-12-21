@@ -1,5 +1,5 @@
-#ifndef __ENGINE_UTILS_COORDS_H__
-#define __ENGINE_UTILS_COORDS_H__
+#ifndef __engine_utils_coords__
+#define __engine_utils_coords__
 
 
 struct WindowCoords
@@ -83,4 +83,4 @@ struct SphericalCoords
 };
 
 
-#endif // !__ENGINE_UTILS_COORDS_H__
+#endif // !__engine_utils_coords__

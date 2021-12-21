@@ -30,8 +30,8 @@
  ---------------------------------------------------------------*/
 
 
-#ifndef __VSShaderLib__
-#define __VSShaderLib__
+#ifndef __engine_renderer_VSShaderLib__
+#define __engine_renderer_VSShaderLib__
 
 #include <string>
 #include <vector>

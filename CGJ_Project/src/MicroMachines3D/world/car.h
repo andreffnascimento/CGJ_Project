@@ -1,5 +1,5 @@
-#ifndef __MM3D_WORLD_CAR_H__
-#define __MM3D_WORLD_CAR_H__
+#ifndef __mm3d_world_car__
+#define __mm3d_world_car__
 
 
 #include "MicroMachines3D/common/include.h"
@@ -84,4 +84,4 @@ private:
 };
 
 
-#endif // !__MM3D_WORLD_TABLE_H__
+#endif // !__mm3d_world_car__

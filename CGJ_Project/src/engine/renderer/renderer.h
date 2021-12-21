@@ -1,5 +1,5 @@
-#ifndef __RENDERER_RENDERER_H__
-#define __RENDERER_RENDERER_H__
+#ifndef __engine_renderer_renderer__
+#define __engine_renderer_renderer__
 
 
 #include "engine/renderer/geometry.h"
@@ -73,4 +73,4 @@ public:
 };
 
 
-#endif // !RENDERER_RENDERER_H
+#endif // !__engine_renderer_renderer__

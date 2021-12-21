@@ -1,5 +1,5 @@
-#ifndef __ENGINE_SCENE_CAMERA_H__
-#define __ENGINE_SCENE_CAMERA_H__
+#ifndef __engine_scene_camera__
+#define __engine_scene_camera__
 
 
 #include "engine/scene/entity.h"
@@ -43,4 +43,4 @@ private:
 };
 
 
-#endif // !__ENGINE_SCENE_CAMERA_H__
+#endif // !__engine_scene_camera__

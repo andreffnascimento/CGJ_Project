@@ -1,5 +1,5 @@
-#ifndef __ENGINE_APP_INPUTHANDLER_H__
-#define __ENGINE_APP_INPUTHANDLER_H__
+#ifndef __engine_app_inputHandler__
+#define __engine_app_inputHandler__
 
 
 #include "engine/utils/coords.h"
@@ -65,4 +65,4 @@ public:
 };
 
 
-#endif // !__ENGINE_APP_INPUTHANDLER_H__
+#endif // !__engine_app_inputHandler__

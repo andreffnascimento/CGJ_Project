@@ -1,5 +1,5 @@
-#ifndef __ENGINE_SCENE_SCENEENTITY_H__
-#define __ENGINE_SCENE_SCENEENTITY_H__
+#ifndef __engine_scene_sceneEntity__
+#define __engine_scene_sceneEntity__
 
 
 #include "engine/scene/entity.h"
@@ -22,4 +22,4 @@ public:
 };
 
 
-#endif // !__ENGINE_SCENE_SCENEENTITY_H__
+#endif // !__engine_scene_sceneEntity__

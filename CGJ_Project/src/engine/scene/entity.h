@@ -1,5 +1,5 @@
-#ifndef __ENGINE_SCENE_ENTITY_H__
-#define __ENGINE_SCENE_ENTITY_H__
+#ifndef __engine_scene_entity__
+#define __engine_scene_entity__
 
 
 #include <string>
@@ -102,4 +102,4 @@ struct std::hash<Entity>
 };
 
 
-#endif // !__ENGINE_SCENE_ENTITY_H__
+#endif // !__engine_scene_entity__

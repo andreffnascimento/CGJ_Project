@@ -1,5 +1,5 @@
-#ifndef __ENGINE_MATH_TRANSFORM_H__
-#define __ENGINE_MATH_TRANSFORM_H__
+#ifndef __engine_math_transform__
+#define __engine_math_transform__
 
 
 #include <unordered_set>
@@ -80,4 +80,4 @@ private:
 
 
 
-#endif // !__ENGINE_MATH_TRANSFORM_H__
+#endif // !__engine_math_transform__

@@ -10,8 +10,8 @@
  *
  * 
  ---------------------------------------------------------------*/
-#ifndef __AVTmathLib__
-#define __AVTmathLib__
+#ifndef __engine_math_AVTmathLib__
+#define __engine_math_AVTmathLib__
 
 #include <vector>
 #include <string>

@@ -1,5 +1,5 @@
-#ifndef __ENGINE_APP_APPLICATION_H__
-#define __ENGINE_APP_APPLICATION_H__
+#ifndef __engine_app_application__
+#define __engine_app_application__
 
 
 #include <string>
@@ -87,4 +87,4 @@ public:
 };
 
 
-#endif // !__ENGINE_APP_APPLICATION_H__
+#endif // !__engine_app_application__
