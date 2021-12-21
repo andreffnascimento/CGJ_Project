@@ -5,6 +5,7 @@
 #include "MicroMachines3D/common/include.h"
 
 #include "MicroMachines3D/scripts/camera/cameraManagerScript.h"
+#include "MicroMachines3D/scripts/camera/targetOrbitalCameraScript.h"
 
 
 
@@ -16,9 +17,9 @@ public:
 	CameraManager(Scene* scene)
 		: SceneEntity(scene->createEntity("CameraManager"))
 	{
-		Entity camera1 = _createCamera1(scene->createEntity("Camera1"));	// camera 1 : orthographic camera with top view
-		Entity camera2 = _createCamera2(scene->createEntity("Camera2"));	// camera 2 : perspective camera with top view		
-		Entity camera3 = _createCamera3(scene->createEntity("Camera3"));	// camera 3 : perspective camera that follows the car
+		Entity camera1 = _createCamera1(scene->createEntity("Camera1"));		// camera 1 : orthographic camera with top view
+		Entity camera2 = _createCamera2(scene->createEntity("Camera2"));		// camera 2 : perspective camera with top view		
+		Entity camera3 = _createCamera3(scene->createEntity("Camera3"), scene);	// camera 3 : perspective camera that follows the car
 
 		std::shared_ptr<Script> script = std::make_shared<CameraManagerScript>(scene);
 		ScriptComponent& scriptComponent = addComponent<ScriptComponent>(script);
@@ -46,12 +47,15 @@ private:
 	}
 
 
-	Entity _createCamera3(Entity entity)
+	Entity _createCamera3(Entity entity, Scene* scene)
 	{
 		CameraComponent& camera = entity.addComponent<CameraComponent>();
 		camera.setPerspectiveCamera({ 0.01f, 1000.0f }, 53.13f);
-		camera.setTargetCoords({ 0.0f, 0.5f, 0.0f });
-		Transform::translateTo(entity, { 5.0f, 5.0f, 5.0f });		// TEMPORATY CODE UNTIL THE CAR IS CREATED
+		camera.setTargetCoords({ 0.0f, 0.0f, 0.0f });
+		
+		std::shared_ptr<Script> script = std::make_shared<TargetOrbitalCameraScript>(scene);
+		ScriptComponent& scriptComponent = entity.addComponent<ScriptComponent>(script);
+
 		return entity;
 	}
 };

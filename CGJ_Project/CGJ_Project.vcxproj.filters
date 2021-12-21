@@ -45,9 +45,6 @@
     <ClCompile Include="src\engine\scene\entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\MicroMachines3D\scripts\camera\orbitTargetScript.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine\renderer\renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -107,9 +104,6 @@
     <ClInclude Include="src\engine\scene\script.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\MicroMachines3D\scripts\camera\orbitTargetScript.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\engine\renderer\renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -147,6 +141,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\MicroMachines3D\world\car.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MicroMachines3D\scripts\camera\targetOrbitalCameraScript.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

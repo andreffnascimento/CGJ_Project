@@ -9,8 +9,9 @@
 
 class CameraManagerScript : public Script
 {
+
 private:
-	InputHandler* _inputHandler = nullptr;
+	const InputHandler* _inputHandler = nullptr;
 
 	Camera _camera1 = Camera();
 	Camera _camera2 = Camera();
@@ -48,6 +49,7 @@ public:
 		if (_inputHandler->keyPressed('3'))
 			_scene->setActiveCamera(_camera3);
 	}
+
 };
 
 
