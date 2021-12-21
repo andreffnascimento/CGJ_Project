@@ -129,7 +129,7 @@ public:
 	inline const Rectf& viewportRect() const { return _viewportRect; }
 	inline float fov() const { return _fov; }
 
-	void setOrthographicCamera(const ClippingPlanes& clippingPlanes, const Rectf& viewportRect);
+	void setOrthographicCamera(const ClippingPlanes& clippingPlanes, float viewportSize);
 	void setPerspectiveCamera(const ClippingPlanes& clippingPlanes, float fov);
 };
 

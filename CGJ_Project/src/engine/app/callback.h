@@ -49,7 +49,7 @@ void refresh(int value)
 	glutPostRedisplay();
 }
 
-
+#include <iostream>
 // Reshape callback Function
 void viewportResize(int width, int height)
 {
@@ -57,6 +57,8 @@ void viewportResize(int width, int height)
 	if (app._scene == nullptr)
 		throw std::string("Active scene camera is required to change the viewport size!");
 
+	app._applicationData.width = width;
+	app._applicationData.heigth = height;
 	app._scene->onViewportResize(width, height);
 }
 

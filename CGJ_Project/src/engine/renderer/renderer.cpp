@@ -159,10 +159,12 @@ GLuint Renderer::_setupShaders()
 
 void Renderer::_setOrthographicViewport(CameraComponent& camera, int width, int height) const
 {
+	camera.setOrthographicCamera(camera.clippingPlanes(), camera.viewportRect().right);
+
 	float left = camera.viewportRect().left;
 	float right = camera.viewportRect().right;
-	float bottom = left * ((float)height / (float)width);
-	float top = right * ((float)height / (float)width);
+	float bottom = camera.viewportRect().bottom;
+	float top = camera.viewportRect().top;
 	float near = camera.clippingPlanes().near;
 	float far = camera.clippingPlanes().far;
 
@@ -171,8 +173,6 @@ void Renderer::_setOrthographicViewport(CameraComponent& camera, int width, int 
 	// set the projection matrix
 	loadIdentity(PROJECTION);
 	ortho(left, right, bottom, top, near, far);
-	Rectf viewportRect = { left, right, bottom, top };
-	camera.setOrthographicCamera(camera.clippingPlanes(), viewportRect);
 }
 
 

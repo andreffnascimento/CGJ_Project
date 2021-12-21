@@ -56,6 +56,7 @@ public:
 	static Application& init(const ApplicationData& applicationData, int argc, char** argv);
 	static void terminate();
 
+
 public:
 	static Application& getInstance();
 	static InputHandler& getInputHandler();
@@ -69,6 +70,8 @@ public:
 public:
 	void setScene(Scene* scene);
 	void run();
+
+
 
 
 public:

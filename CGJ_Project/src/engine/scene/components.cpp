@@ -1,5 +1,6 @@
 #include "components.h"
 
+#include "engine/app/application.h"
 #include "engine/scene/scene.h"
 
 
@@ -32,13 +33,17 @@ void GroupComponent::expandGroup(std::unordered_set<Entity>& outExpandedGroup) c
 }
 
 
+#include <iostream>
 
-
-void CameraComponent::setOrthographicCamera(const ClippingPlanes& clippingPlanes, const Rectf& viewportRect)
+void CameraComponent::setOrthographicCamera(const ClippingPlanes& clippingPlanes, float viewportSize)
 {
+	Application& app = Application::getInstance();
+	WindowCoords windowCoords = app.getWindowSize();
+	float ratio = (float)windowCoords.y / (float)windowCoords.x;
+
 	_cameraProjection = CameraProjection::ORTHOGRAPHIC;
 	_clippingPlanes = clippingPlanes;
-	_viewportRect = viewportRect;
+	_viewportRect = { -viewportSize, viewportSize, -viewportSize * ratio, viewportSize * ratio };
 }
 
 
