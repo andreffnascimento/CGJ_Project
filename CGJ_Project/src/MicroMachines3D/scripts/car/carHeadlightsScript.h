@@ -39,7 +39,7 @@ public:
 
 	void onUpdate(float ts) override
 	{
-		if (_inputHandler->keyPressed('H'))
+		if (_inputHandler->keyPressed('H') || _inputHandler->keyPressed('h'))
 		{
 			_lightsOn = !_lightsOn;
 
