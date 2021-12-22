@@ -23,7 +23,7 @@ private:
 
 private:
 	static constexpr float DECAY_SPEED = 1.0f;
-	static constexpr float ORIGINAL_ALPHA = 90.0f;
+	static constexpr float MAX_ALPHA = 360.0f;
 	static constexpr float ORIGINAL_BETA = 30.0f;
 	static constexpr float ORIGINAL_R = 15.0f;
 
@@ -38,7 +38,7 @@ private:
 	int _startX = 0;
 	int _startY = 0;
 
-	float _alpha = TargetOrbitalCameraScript::ORIGINAL_ALPHA;
+	float _alpha = TargetOrbitalCameraScript::MAX_ALPHA;
 	float _beta = TargetOrbitalCameraScript::ORIGINAL_BETA;
 	float _r = TargetOrbitalCameraScript::ORIGINAL_R;
 
@@ -146,6 +146,8 @@ private:
 				_betaAux = 85.0f;
 			else if (_betaAux < -85.0f)
 				_betaAux = -85.0f;
+
+			_alphaAux = std::fmod(_alphaAux, TargetOrbitalCameraScript::MAX_ALPHA);
 		}
 		else if (_trackingStatus == TargetOrbitalCameraScript::TrackingStatus::ZOOM)
 		{
