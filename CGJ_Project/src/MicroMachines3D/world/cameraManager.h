@@ -50,7 +50,7 @@ private:
 	Entity _createCamera3(Entity entity, Scene* scene)
 	{
 		CameraComponent& camera = entity.addComponent<CameraComponent>();
-		camera.setPerspectiveCamera({ 0.01f, 1000.0f }, 53.13f);
+		camera.setPerspectiveCamera({ 0.01f, 1000.0f }, 70.0f);
 
 		std::shared_ptr<Script> script = std::make_shared<TargetOrbitalCameraScript>(scene);
 		ScriptComponent& scriptComponent = entity.addComponent<ScriptComponent>(script);

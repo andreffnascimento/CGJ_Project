@@ -22,18 +22,29 @@ private:
 
 
 private:
+	static constexpr float DECAY_SPEED = 1.0f;
+	static constexpr float ORIGINAL_ALPHA = 90.0f;
+	static constexpr float ORIGINAL_BETA = 30.0f;
+	static constexpr float ORIGINAL_R = 15.0f;
+
+
+private:
 	const InputHandler* _inputHandler = nullptr;
 
 	Entity _car = Entity();
 
 	Camera _camera = Camera();
-	TrackingStatus _trackingStatus = TrackingStatus::NONE;
+	TargetOrbitalCameraScript::TrackingStatus _trackingStatus = TargetOrbitalCameraScript::TrackingStatus::NONE;
 	int _startX = 0;
 	int _startY = 0;
 
-	float _alpha = 180.0f;
-	float _beta = 50.0f;
-	float _r = 10.0f;
+	float _alpha = TargetOrbitalCameraScript::ORIGINAL_ALPHA;
+	float _beta = TargetOrbitalCameraScript::ORIGINAL_BETA;
+	float _r = TargetOrbitalCameraScript::ORIGINAL_R;
+
+	float _alphaAux = _alpha;
+	float _betaAux = _beta;
+	float _rAux = _r;
 
 
 
@@ -51,7 +62,8 @@ public:
 		_inputHandler = &Application::getInputHandler();
 		_car = _scene->getEntityByTag("Car");
 		_camera = _scene->getEntityByTag("Camera3");
-		_updateCameraTransform(_alpha, _beta, _r);
+		_updateCameraTransform();
+		_setCameraTarget();
 	}
 
 
@@ -61,11 +73,20 @@ public:
 		_processMouseClick(mouseInfo);
 		_processMouseMovement(mouseInfo);
 		_processMouseWheel(mouseInfo);
+		_decayOrbitalValuesToOriginal(ts);
+		_updateCameraTransform();
 		_setCameraTarget();
 	}
 
 
 private:
+	void _setCameraTarget() const
+	{
+		CameraComponent& cameraComponent = _camera.getComponent<CameraComponent>();
+		cameraComponent.setTargetCoords(_car.transform().translation());
+	}
+
+
 	void _processMouseClick(const InputHandler::MouseInfo& mouseInfo)
 	{
 		switch (mouseInfo.status)
@@ -74,29 +95,29 @@ private:
 		case InputHandler::MouseStatus::LEFT_DOWN:
 			_startX = mouseInfo.coords.x;
 			_startY = mouseInfo.coords.y;
-			_trackingStatus = TrackingStatus::MOVE;
+			_trackingStatus = TargetOrbitalCameraScript::TrackingStatus::MOVE;
 			break;
 
 		case InputHandler::MouseStatus::RIGHT_DOWN:
 			_startX = mouseInfo.coords.x;
 			_startY = mouseInfo.coords.y;
-			_trackingStatus = TrackingStatus::ZOOM;
+			_trackingStatus = TargetOrbitalCameraScript::TrackingStatus::ZOOM;
 			break;
 
 		case InputHandler::MouseStatus::MOUSE_UP:
-			if (_trackingStatus == TrackingStatus::MOVE)
+			if (_trackingStatus == TargetOrbitalCameraScript::TrackingStatus::MOVE)
 			{
 				_alpha += -(int)mouseInfo.coords.x + _startX;
 				_beta +=   (int)mouseInfo.coords.y - _startY;
 			}
-			else if (_trackingStatus == TrackingStatus::ZOOM)
+			else if (_trackingStatus == TargetOrbitalCameraScript::TrackingStatus::ZOOM)
 			{
 				_r += (mouseInfo.coords.y - _startY) * 0.1f;
 				if (_r < 0.1f)
 					_r = 0.01f;
 			}
 
-			_trackingStatus = TrackingStatus::NONE;
+			_trackingStatus = TargetOrbitalCameraScript::TrackingStatus::NONE;
 			break;
 		}
 	}
@@ -107,31 +128,29 @@ private:
 		if (mouseInfo.status != InputHandler::MouseStatus::MOVE)
 			return;
 
-		float alphaAux = _alpha;
-		float betaAux = _beta;
-		float rAux = _r;
+		_alphaAux = _alpha;
+		_betaAux = _beta;
+		_rAux = _r;
 
 		int deltaX = -(int)mouseInfo.coords.x + _startX;
 		int deltaY =  (int)mouseInfo.coords.y - _startY;
 
-		if (_trackingStatus == TrackingStatus::MOVE)
+		if (_trackingStatus == TargetOrbitalCameraScript::TrackingStatus::MOVE)
 		{
-			alphaAux = _alpha + deltaX;
-			betaAux = _beta + deltaY;
+			_alphaAux = _alpha + deltaX;
+			_betaAux = _beta + deltaY;
 
-			if (betaAux > 85.0f)
-				betaAux = 85.0f;
-			else if (betaAux < -85.0f)
-				betaAux = -85.0f;
+			if (_betaAux > 85.0f)
+				_betaAux = 85.0f;
+			else if (_betaAux < -85.0f)
+				_betaAux = -85.0f;
 		}
-		else if (_trackingStatus == TrackingStatus::ZOOM)
+		else if (_trackingStatus == TargetOrbitalCameraScript::TrackingStatus::ZOOM)
 		{
-			rAux = _r + (deltaY * 0.1f);
-			if (rAux < 0.1f)
-				rAux = 0.1f;
+			_rAux = _r + (deltaY * 0.1f);
+			if (_rAux < 0.1f)
+				_rAux = 0.1f;
 		}
-
-		_updateCameraTransform(alphaAux, betaAux, rAux);
 	}
 
 
@@ -140,27 +159,41 @@ private:
 		if (mouseInfo.status != InputHandler::MouseStatus::SCROL)
 			return;
 
-		_r -= mouseInfo.wheelDirection * 1.0f;
-		if (_r < 0.1f)
-			_r = 0.1f;
+		_rAux -= mouseInfo.wheelDirection * 1.0f;
+		if (_rAux < 0.1f)
+			_rAux = 0.1f;
 
-		_updateCameraTransform(_alpha, _beta, _r);
+		_r = _rAux;
 	}
 
 
-	void _updateCameraTransform(float alpha, float beta, float r)
+	void _decayOrbitalValuesToOriginal(float ts)
 	{
-		float cameraX = r * sin(alpha * (float)Transform::PI / 180.0f) * cos(beta * (float)Transform::PI / 180.0f);
-		float cameraZ = r * cos(alpha * (float)Transform::PI / 180.0f) * cos(beta * (float)Transform::PI / 180.0f);
-		float cameraY = r * sin(beta *  (float)Transform::PI / 180.0f);
+		if (_trackingStatus != TargetOrbitalCameraScript::TrackingStatus::NONE && true)		// FIXME: check if car is moving
+			return;
+
+		_alphaAux += (TargetOrbitalCameraScript::ORIGINAL_ALPHA - _alphaAux) * TargetOrbitalCameraScript::DECAY_SPEED * ts;
+		_betaAux += (TargetOrbitalCameraScript::ORIGINAL_BETA - _betaAux) * TargetOrbitalCameraScript::DECAY_SPEED * ts;
+		_rAux += (TargetOrbitalCameraScript::ORIGINAL_R - _rAux) * TargetOrbitalCameraScript::DECAY_SPEED * ts;
+
+		_alpha = _alphaAux;
+		_beta = _betaAux;
+		_r = _rAux;
+	}
+
+	
+	void _updateCameraTransform()
+	{	
+		float orbitalCameraX = _rAux * sin(_alphaAux * (float)Transform::PI / 180.0f) * cos(_betaAux * (float)Transform::PI / 180.0f);
+		float orbitalCameraZ = _rAux * cos(_alphaAux * (float)Transform::PI / 180.0f) * cos(_betaAux * (float)Transform::PI / 180.0f);
+		float orbitalCameraY = _rAux * sin(_betaAux *  (float)Transform::PI / 180.0f);
+
+		const Coords3f& carPosition = _car.transform().translation();
+		float cameraX = carPosition.x + orbitalCameraX;
+		float cameraY = carPosition.y + orbitalCameraY;
+		float cameraZ = carPosition.z + orbitalCameraZ;
+
 		Transform::translateTo((Entity&)_camera, { cameraX, cameraY, cameraZ });
-	}
-
-
-	void _setCameraTarget() const
-	{
-		CameraComponent& cameraComponent = _camera.getComponent<CameraComponent>();
-		cameraComponent.setTargetCoords(_car.transform().translation());
 	}
 
 };
