@@ -13,9 +13,9 @@ class CameraManagerScript : public Script
 private:
 	const InputHandler* _inputHandler = nullptr;
 
-	Camera _camera1 = Camera();
-	Camera _camera2 = Camera();
-	Camera _camera3 = Camera();
+	CameraEntity _camera1 = CameraEntity();
+	CameraEntity _camera2 = CameraEntity();
+	CameraEntity _camera3 = CameraEntity();
 
 
 

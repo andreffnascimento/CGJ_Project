@@ -72,7 +72,7 @@ std::unordered_set<Entity> Scene::getEntitiesByTag(const std::regex& regex)
 	return entities;
 }
 
-void Scene::setActiveCamera(const Camera& camera)
+void Scene::setActiveCamera(const CameraEntity& camera)
 {
 	_activeCamera = camera;
 

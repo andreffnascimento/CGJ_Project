@@ -54,7 +54,7 @@ public:
 	void updateViewport(CameraComponent& camera, int width, int height) const;
 
 	void initSceneRendering() const;
-	void renderCamera(const Camera& camera) const;
+	void renderCamera(const CameraEntity& camera) const;
 	void renderObjects(const ECSRegistry& registry) const;
 
 
@@ -64,8 +64,7 @@ private:
 	void _setOrthographicViewport(CameraComponent& camera, int width, int height) const;
 	void _setPerspectiveViewport(CameraComponent& camera, int width, int height) const;
 
-public:
-	void _renderObject(const MeshComponent& mesh, const TransformComponent& transform) const;
+private:
 	void _loadMesh(const MeshComponent& mesh) const;
 	void _applyTransform(const TransformComponent& transform) const;
 	void _renderMesh(const MeshComponent& mesh) const;

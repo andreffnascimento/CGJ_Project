@@ -77,7 +77,7 @@ void Renderer::initSceneRendering() const
 }
 
 
-void Renderer::renderCamera(const Camera& camera) const
+void Renderer::renderCamera(const CameraEntity& camera) const
 {
 	TransformComponent& transform = camera.getComponent<TransformComponent>();
 	CameraComponent& cameraSettings = camera.getComponent<CameraComponent>();
@@ -111,7 +111,9 @@ void Renderer::renderObjects(const ECSRegistry& registry) const
 	{
 		const MeshComponent& mesh = iterator.second;
 		const TransformComponent& transform = registry.getComponent<TransformComponent>(iterator.first);
-		_renderObject(mesh, transform);
+		_loadMesh(mesh);				// this might require some optimization to stop loading meshes when they are already there
+		_applyTransform(transform);
+		_renderMesh(mesh);
 	}
 }
 
@@ -189,14 +191,6 @@ void Renderer::_setPerspectiveViewport(CameraComponent& camera, int width, int h
 	perspective(camera.fov(), ratio, camera.clippingPlanes().near, camera.clippingPlanes().far);
 }
 
-
-
-void Renderer::_renderObject(const MeshComponent& mesh, const TransformComponent& transform) const
-{
-	_loadMesh(mesh);				// this might require some optimization to stop loading meshes when they are already there
-	_applyTransform(transform);
-	_renderMesh(mesh);
-}
 
 
 void Renderer::_loadMesh(const MeshComponent& mesh) const

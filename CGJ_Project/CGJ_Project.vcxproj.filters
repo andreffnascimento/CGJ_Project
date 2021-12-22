@@ -95,7 +95,7 @@
     <ClInclude Include="src\engine\scene\scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\scene\camera.h">
+    <ClInclude Include="src\engine\scene\cameraEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\scene\entity.h">

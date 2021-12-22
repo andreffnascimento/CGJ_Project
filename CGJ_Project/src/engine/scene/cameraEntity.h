@@ -1,5 +1,5 @@
-#ifndef __engine_scene_camera__
-#define __engine_scene_camera__
+#ifndef __engine_scene_cameraEntity__
+#define __engine_scene_cameraEntity__
 
 
 #include "engine/scene/entity.h"
@@ -8,7 +8,7 @@
 
 
 
-class Camera : public Entity
+class CameraEntity : public Entity
 {
 
 private:
@@ -18,13 +18,13 @@ private:
 
 
 public:
-	Camera() = default;
-	Camera(const Camera&) = default;
-	virtual ~Camera() = default;
+	CameraEntity() = default;
+	CameraEntity(const CameraEntity&) = default;
+	virtual ~CameraEntity() = default;
 
 
 public:
-	Camera(const Entity& entity)
+	CameraEntity(const Entity& entity)
 		: Entity(entity), _cameraComponent(&entity.getComponent<CameraComponent>()) {}
 
 
@@ -43,4 +43,4 @@ private:
 };
 
 
-#endif // !__engine_scene_camera__
+#endif // !__engine_scene_cameraEntity__

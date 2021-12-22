@@ -45,6 +45,29 @@ public:
 
 
 
+struct TransformComponent
+{
+private:
+	Coords3f _translation = { 0.0f, 0.0f, 0.0f };
+	Coords3f _rotation = { 0.0f, 0.0f, 0.0f };
+	Coords3f _scale = { 1.0f, 1.0f, 1.0f };
+
+public:
+	TransformComponent() = default;
+	TransformComponent(const TransformComponent&) = default;
+	~TransformComponent() = default;
+
+	inline const Coords3f& translation() const { return _translation; }
+	inline const Coords3f& rotation() const { return _rotation; }
+	inline const Coords3f& scale() const { return _scale; }
+
+public:
+	friend class Transform;
+};
+
+
+
+
 struct GroupComponent
 {
 private:
@@ -74,29 +97,6 @@ public:
 				outExpandedGroup.emplace(&entity.getComponent<T>());
 		}
 	}
-};
-
-
-
-
-struct TransformComponent
-{
-private:
-	Coords3f _translation	= { 0.0f, 0.0f, 0.0f };
-	Coords3f _rotation		= { 0.0f, 0.0f, 0.0f };
-	Coords3f _scale			= { 1.0f, 1.0f, 1.0f };
-
-public:
-	TransformComponent() = default;
-	TransformComponent(const TransformComponent&) = default;
-	~TransformComponent() = default;
-
-	inline const Coords3f& translation() const { return _translation; }
-	inline const Coords3f& rotation() const { return _rotation; }
-	inline const Coords3f& scale() const { return _scale; }
-
-public:
-	friend class Transform;
 };
 
 

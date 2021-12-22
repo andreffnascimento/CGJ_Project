@@ -8,7 +8,7 @@
 
 #include "engine/scene/ecsRegistry.h"
 #include "engine/scene/entity.h"
-#include "engine/scene/camera.h"
+#include "engine/scene/cameraEntity.h"
 #include "engine/scene/components.h"
 
 
@@ -19,7 +19,7 @@ class Scene
 
 private:
 	ECSRegistry _registry = ECSRegistry();
-	Camera _activeCamera = Camera();
+	CameraEntity _activeCamera = CameraEntity();
 
 
 
@@ -56,7 +56,7 @@ public:
 
 
 public:
-	void setActiveCamera(const Camera& camera);
+	void setActiveCamera(const CameraEntity& camera);
 
 
 public:		

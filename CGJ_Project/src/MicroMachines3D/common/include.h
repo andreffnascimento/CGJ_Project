@@ -7,6 +7,7 @@
 
 #include "engine/scene/entity.h"
 #include "engine/scene/script.h"
+#include "engine/scene/cameraEntity.h"
 #include "engine/scene/sceneEntity.h"
 #include "engine/scene/components.h"
 #include "engine/scene/scene.h"

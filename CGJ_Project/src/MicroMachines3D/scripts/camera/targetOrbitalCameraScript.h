@@ -33,7 +33,7 @@ private:
 
 	Entity _car = Entity();
 
-	Camera _camera = Camera();
+	CameraEntity _camera = CameraEntity();
 	TargetOrbitalCameraScript::TrackingStatus _trackingStatus = TargetOrbitalCameraScript::TrackingStatus::NONE;
 	int _startX = 0;
 	int _startY = 0;
