@@ -30,7 +30,7 @@ private:
 	Entity _createCamera1(Entity entity)
 	{
 		CameraComponent& camera = entity.addComponent<CameraComponent>();
-		camera.setOrthographicCamera({ 0.01f, 1000.0f }, 120.0f);
+		camera.setOrthographicCamera({ 0.01f, 1000.0f }, 80.0f);
 		camera.setTargetCoords({ 0.0f, 0.0f, 0.0f });
 		Transform::translateTo(entity, { 0.0f, 30.0f, 0.0f });
 		return entity;
@@ -42,7 +42,7 @@ private:
 		CameraComponent& camera = entity.addComponent<CameraComponent>();
 		camera.setPerspectiveCamera({ 0.01f, 1000.0f }, 53.13f);
 		camera.setTargetCoords({ 0.0f, 0.0f, 0.0f });
-		Transform::translateTo(entity, { 0.0f, 150.0f, 0.0f });
+		Transform::translateTo(entity, { 0.0f, 120.0f, 0.0f });
 		return entity;
 	}
 
