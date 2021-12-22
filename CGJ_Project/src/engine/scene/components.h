@@ -78,8 +78,8 @@ public:
 	GroupComponent(const GroupComponent&) = default;
 	~GroupComponent() = default;
 
-	Entity addNewEntity(const Entity& parentEntity);
-	Entity addNewEntity(const Entity& parentEntity, const std::string& tag);
+	Entity addNewEntity(Scene* scene, const Entity& parentEntity);
+	Entity addNewEntity(Scene* scene, const Entity& parentEntity, const std::string& tag);
 	void expandGroup(std::unordered_set<Entity>& outExpandedGroup) const;
 
 	inline const std::unordered_set<Entity>& getGroup() const	{ return _group; }
@@ -142,6 +142,7 @@ struct MeshComponent
 {
 private:
 	std::shared_ptr<MyMesh> _mesh;
+	bool _visible = true;
 
 public:
 	MeshComponent() = default;
@@ -150,9 +151,11 @@ public:
 	MeshComponent(const std::shared_ptr<MyMesh>& mesh, const Material& material) : _mesh(mesh) { MeshComponent::setMaterial(*_mesh, material); }
 	~MeshComponent() = default;
 
-	inline const MyMesh* getMeshPtr()	const { return _mesh.get(); }
-	inline const MyMesh& getMeshData()	const { return *getMeshPtr(); }
+	inline bool isVisible()	const			{ return _visible; }
+	inline void setVisibility(bool visible) { _visible = visible; }
 
+	inline const MyMesh* getMeshPtr()	const { return _mesh.get(); }
+	inline const MyMesh& getMeshData()	const { return *getMeshPtr(); } 
 
 	static void setMaterial(MyMesh& mesh, const Material& material);
 };

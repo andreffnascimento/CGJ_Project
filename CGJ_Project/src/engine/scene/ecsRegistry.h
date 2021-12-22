@@ -57,7 +57,6 @@ public:
 
 public:
 	EntityHandle createEntity();
-	void destroyEntity(EntityHandle entityHandle);
 
 
 public:
@@ -68,7 +67,7 @@ public:
 
 public:
 	template <typename T, typename... Args>
-	T& addComponent(const EntityHandle entityHandle, Args&&... args)
+	T& addComponent(const EntityHandle entityHandle, Args&&... args) const
 	{
 		auto& componentMap = getComponents<T>();
 		auto iterator = componentMap.emplace(entityHandle, T(args...));

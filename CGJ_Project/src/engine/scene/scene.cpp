@@ -34,13 +34,6 @@ Entity Scene::createEntity(const std::string& tag, bool joinId)
 
 
 
-void Scene::destroyEntity(EntityHandle entityHandle)
-{
-	_registry.destroyEntity(entityHandle);
-}
-
-
-
 bool Scene::hasEntityWithTag(const std::string& tag) const
 {
 	auto& taggedEntities = _registry.getComponents<TagComponent>();
@@ -51,7 +44,16 @@ bool Scene::hasEntityWithTag(const std::string& tag) const
 }
 
 
-Entity Scene::getEntityByTag(const std::string& tag)
+Entity Scene::getEntityById(const EntityHandle& entityHandle) const
+{
+	if (_registry.getNextId() < entityHandle)
+		throw std::string("There is no entity with the provided id: " + (unsigned int)entityHandle);
+
+	return Entity(entityHandle, this);
+}
+
+
+Entity Scene::getEntityByTag(const std::string& tag) const
 {
 	auto& taggedEntities = _registry.getComponents<TagComponent>();
 	for (auto& iterator : taggedEntities)
@@ -62,7 +64,7 @@ Entity Scene::getEntityByTag(const std::string& tag)
 }
 
 
-std::unordered_set<Entity> Scene::getEntitiesByTag(const std::regex& regex)
+std::unordered_set<Entity> Scene::getEntitiesByTag(const std::regex& regex) const
 {
 	auto& taggedEntities = _registry.getComponents<TagComponent>();
 	auto entities = std::unordered_set<Entity>();
@@ -102,7 +104,7 @@ void Scene::onUpdate(float ts)
 	Renderer& renderer = Application::getRenderer();
 	renderer.initSceneRendering();
 	renderer.renderCamera(_activeCamera);
-	renderer.renderObjects(_registry);
+	renderer.renderObjects(*this);
 }
 
 

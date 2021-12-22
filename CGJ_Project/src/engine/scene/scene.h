@@ -47,16 +47,23 @@ public:
 	Entity createEntity();
 	Entity createEntity(const std::string& tag, bool joinId = false);
 
-	void destroyEntity(EntityHandle entityHandler);
-
 	bool hasEntityWithTag(const std::string& tag) const;
 
-	Entity getEntityByTag(const std::string& tag);
-	std::unordered_set<Entity> getEntitiesByTag(const std::regex& regex);
+	Entity getEntityById(const EntityHandle& entityHandle) const;
+	Entity getEntityByTag(const std::string& tag) const;
+	std::unordered_set<Entity> getEntitiesByTag(const std::regex& regex) const;
 
 
 public:
 	void setActiveCamera(const CameraEntity& camera);
+
+
+public:
+	template <typename T>
+	std::unordered_map<EntityHandle, T>& getSceneComponents() const
+	{
+		return _registry.getComponents<T>();
+	}
 
 
 public:		

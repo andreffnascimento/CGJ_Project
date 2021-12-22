@@ -97,7 +97,7 @@ void Renderer::renderCamera(const CameraEntity& camera) const
 }
 
 
-void Renderer::renderObjects(const ECSRegistry& registry) const
+void Renderer::renderObjects(const Scene& scene) const
 {
 	// temp light code
 	float lightPos[4] = { -30.0f, 20.0f, -15.0f ,1.0f };
@@ -106,11 +106,11 @@ void Renderer::renderObjects(const ECSRegistry& registry) const
 	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::L_POS], 1, res);
 	// temp light code end
 
-	std::unordered_map<EntityHandle, MeshComponent>& meshComponents = registry.getComponents<MeshComponent>();
+	const auto& meshComponents = scene.getSceneComponents<MeshComponent>();
 	for (auto& iterator : meshComponents)
 	{
 		const MeshComponent& mesh = iterator.second;
-		const TransformComponent& transform = registry.getComponent<TransformComponent>(iterator.first);
+		const TransformComponent& transform = scene.getEntityById(iterator.first).transform();
 		_loadMesh(mesh);				// this might require some optimization to stop loading meshes when they are already there
 		_applyTransform(transform);
 		_renderMesh(mesh);

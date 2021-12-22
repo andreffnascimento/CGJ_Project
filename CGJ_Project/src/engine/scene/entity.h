@@ -21,13 +21,13 @@ class Entity
 
 private:
 	EntityHandle _entityHandle	= EntityHandle();
-	Scene* _scene				= nullptr;
+	const Scene* _scene			= nullptr;
 
 
 public:
 	Entity() = default;
 	Entity(const Entity&) = default;
-	Entity(const EntityHandle& entityHandle, Scene*&& scene);
+	Entity(const EntityHandle& entityHandle, const Scene*&& scene);
 	virtual ~Entity() = default;
 
 
@@ -45,8 +45,8 @@ public:
 
 
 private:
-	Scene& _getScene() const;
-	ECSRegistry& _getSceneRegistry() const;
+	const Scene& _getScene() const;
+	const ECSRegistry& _getSceneRegistry() const;
 
 
 

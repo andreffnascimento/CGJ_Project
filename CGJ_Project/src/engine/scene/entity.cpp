@@ -6,7 +6,7 @@
 
 
 
-Entity::Entity(const EntityHandle& entityHandle, Scene*&& scene)
+Entity::Entity(const EntityHandle& entityHandle, const Scene*&& scene)
 	: _entityHandle(EntityHandle(entityHandle)), _scene(scene)
 {
 	// empty
@@ -28,12 +28,12 @@ TransformComponent& Entity::transform() const
 
 
 
-Scene& Entity::_getScene() const
+const Scene& Entity::_getScene() const
 {
 	return *_scene;
 }
 
-ECSRegistry& Entity::_getSceneRegistry() const
+const ECSRegistry& Entity::_getSceneRegistry() const
 {
 	return _scene->_registry;
 }

@@ -27,27 +27,27 @@ public:
 		MeshComponent::setMaterial(*mesh, material);
 
 		GroupComponent& group = addComponent<GroupComponent>();
-		createTop(group, mesh);
-		createLeg(group, mesh, -1.0f, -1.0f, "1");
-		createLeg(group, mesh,  1.0f, -1.0f, "2");
-		createLeg(group, mesh, -1.0f,  1.0f, "3");
-		createLeg(group, mesh,  1.0f,  1.0f, "4");
+		createTop(scene, group, mesh);
+		createLeg(scene, group, mesh, -1.0f, -1.0f, "1");
+		createLeg(scene, group, mesh,  1.0f, -1.0f, "2");
+		createLeg(scene, group, mesh, -1.0f,  1.0f, "3");
+		createLeg(scene, group, mesh,  1.0f,  1.0f, "4");
 	}
 
 
 private:
-	void createTop(GroupComponent& group, const std::shared_ptr<MyMesh>& mesh)
+	void createTop(Scene* scene, GroupComponent& group, const std::shared_ptr<MyMesh>& mesh)
 	{
-		Entity top = group.addNewEntity(*this, "top");
+		Entity top = group.addNewEntity(scene, *this, "top");
 		top.addComponent<MeshComponent>(mesh);
 		Transform::scale(top, TABLE_SIZE);
 		Transform::translate(top, { 0.0f, TABLE_SIZE.y / 2.0f, 0.0f });
 	}
 
 
-	void createLeg(GroupComponent& group, const std::shared_ptr<MyMesh>& mesh, float xMod, float zMod, const char *legId)
+	void createLeg(Scene* scene, GroupComponent& group, const std::shared_ptr<MyMesh>& mesh, float xMod, float zMod, const char *legId)
 	{
-		Entity leg = group.addNewEntity(*this, "leg" + std::string(legId));
+		Entity leg = group.addNewEntity(scene, *this, "leg" + std::string(legId));
 		leg.addComponent<MeshComponent>(mesh);
 		Transform::scale(leg, LEG_SIZE);
 

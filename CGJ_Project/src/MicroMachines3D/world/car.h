@@ -16,13 +16,13 @@ public:
 	{
 		GroupComponent& group = addComponent<GroupComponent>();
 
-		_initCarBody(group);
-		_initCarWheels(group);
+		_initCarBody(scene, group);
+		_initCarWheels(scene, group);
 	}
 
 
 private:
-	void _initCarBody(GroupComponent& group)
+	void _initCarBody(Scene* scene, GroupComponent& group)
 	{
 		Material material = {
 			{ 0.5f, 110.0f / 510.0f, 25.0f / 510.0f, 1.0f },
@@ -36,34 +36,34 @@ private:
 		std::shared_ptr<MyMesh> mesh = std::make_shared<MyMesh>(createCube());
 		MeshComponent::setMaterial(*mesh, material);
 
-		Entity carBottom = group.addNewEntity(*this, "bottom");
+		Entity carBottom = group.addNewEntity(scene, *this, "bottom");
 		carBottom.addComponent<MeshComponent>(mesh);
 		Transform::scale(carBottom, { CAR_BOTTOM_SIZE });
 
-		Entity carTop = group.addNewEntity(*this, "top");
+		Entity carTop = group.addNewEntity(scene, *this, "top");
 		carTop.addComponent<MeshComponent>(mesh);
 		Transform::scale(carTop, CAR_TOP_SIZE);
 		Transform::translate(carTop, { 0.0f, (CAR_BOTTOM_SIZE.y + CAR_TOP_SIZE.y) / 2.0f, -CAR_BOTTOM_SIZE.z / 10.0f });
 
-		Entity carSpoilerSupport = group.addNewEntity(*this, "spoilerSupport");
+		Entity carSpoilerSupport = group.addNewEntity(scene, *this, "spoilerSupport");
 		carSpoilerSupport.addComponent<MeshComponent>(mesh);
 		Transform::scale(carSpoilerSupport, { CAR_SPOILER_SUPPORT_SIZE.x, CAR_SPOILER_SUPPORT_SIZE.y, CAR_SPOILER_SUPPORT_SIZE.z });
 		Transform::rotate(carSpoilerSupport, { -45.0f, 0.0f, 0.0f });
 		Transform::translate(carSpoilerSupport, { 0.0f, (CAR_BOTTOM_SIZE.y + CAR_SPOILER_SUPPORT_SIZE.y) / 2.5f, -(CAR_BOTTOM_SIZE.z - CAR_SPOILER_SUPPORT_SIZE.z) / 2.0f });
 
-		Entity carSpoiler = group.addNewEntity(*this, "spoiler");
+		Entity carSpoiler = group.addNewEntity(scene, *this, "spoiler");
 		carSpoiler.addComponent<MeshComponent>(mesh);
 		Transform::scale(carSpoiler, CAR_SPOILER_SIZE);
 		Transform::translate(carSpoiler, { 0.0f, CAR_BOTTOM_SIZE.y - CAR_SPOILER_SIZE.y, CAR_BOTTOM_SIZE.z / -2.0f});
 
-		Entity carBumper = group.addNewEntity(*this, "bumper");
+		Entity carBumper = group.addNewEntity(scene, *this, "bumper");
 		carBumper.addComponent<MeshComponent>(mesh);
 		Transform::scale(carBumper, CAR_BUMPER_SIZE);
 		Transform::translate(carBumper, { 0.0f, -(CAR_BOTTOM_SIZE.y - CAR_BUMPER_SIZE.y) / 2.0f, (CAR_BOTTOM_SIZE.z + CAR_BUMPER_SIZE.z) / 2.0f });
 	}
 
 
-	void _initCarWheels(GroupComponent& group)
+	void _initCarWheels(Scene* scene, GroupComponent& group)
 	{
 		Material material = {
 			{ 0.1f, 0.1f, 0.1f, 1.0f },
@@ -77,16 +77,16 @@ private:
 		std::shared_ptr<MyMesh> mesh = std::make_shared<MyMesh>(createTorus(WHEEL_INNER_RADIUS, WHEEL_OUTER_RADIUS, WHEEL_RINGS, WHEEL_SIDES));
 		MeshComponent::setMaterial(*mesh, material);
 
-		_initCarWheel(group, mesh,  1.0f,  1.0f, "1");
-		_initCarWheel(group, mesh, -1.0f,  1.0f, "2");
-		_initCarWheel(group, mesh, -1.0f, -1.0f, "3");
-		_initCarWheel(group, mesh,  1.0f, -1.0f, "4");
+		_initCarWheel(scene, group, mesh,  1.0f,  1.0f, "1");
+		_initCarWheel(scene, group, mesh, -1.0f,  1.0f, "2");
+		_initCarWheel(scene, group, mesh, -1.0f, -1.0f, "3");
+		_initCarWheel(scene, group, mesh,  1.0f, -1.0f, "4");
 	}
 
 
-	void _initCarWheel(GroupComponent& group, const std::shared_ptr<MyMesh>& mesh, float xMod, float zMod, const char* wheelId)
+	void _initCarWheel(Scene* scene, GroupComponent& group, const std::shared_ptr<MyMesh>& mesh, float xMod, float zMod, const char* wheelId)
 	{
-		Entity wheel = group.addNewEntity(*this, "wheel" + std::string(wheelId));
+		Entity wheel = group.addNewEntity(scene, *this, "wheel" + std::string(wheelId));
 		wheel.addComponent<MeshComponent>(mesh);
 
 		Transform::rotate(wheel, { 0.0f, 0.0f, 90.0f });

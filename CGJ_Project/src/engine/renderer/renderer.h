@@ -55,7 +55,7 @@ public:
 
 	void initSceneRendering() const;
 	void renderCamera(const CameraEntity& camera) const;
-	void renderObjects(const ECSRegistry& registry) const;
+	void renderObjects(const Scene& scene) const;
 
 
 private:
