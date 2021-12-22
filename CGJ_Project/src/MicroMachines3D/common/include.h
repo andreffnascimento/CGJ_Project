@@ -18,6 +18,7 @@
 
 
 #include "MicroMachines3D/common/constants.h"
+#include "MicroMachines3D/common/materials.h"
 
 
 #endif // !__mm3d_common_include__

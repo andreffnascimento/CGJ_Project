@@ -179,6 +179,7 @@
     <ClCompile Include="src\MicroMachines3D.cpp" />
     <ClCompile Include="src\engine\renderer\Texture_Loader.cpp" />
     <ClCompile Include="src\engine\renderer\vsShaderLib.cpp" />
+    <ClCompile Include="src\MicroMachines3D\common\materials.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\app\application.h" />
@@ -198,6 +199,7 @@
     <ClInclude Include="src\MicroMachines3D\common\include.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\camera\cameraManagerScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\camera\targetOrbitalCameraScript.h" />
+    <ClInclude Include="src\MicroMachines3D\scripts\car\carHeadlightsScript.h" />
     <ClInclude Include="src\MicroMachines3D\world\cameraManager.h" />
     <ClInclude Include="src\MicroMachines3D\world\car.h" />
     <ClInclude Include="src\MicroMachines3D\world\table.h" />

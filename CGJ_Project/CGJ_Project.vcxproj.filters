@@ -57,6 +57,9 @@
     <ClCompile Include="src\engine\scene\components.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\MicroMachines3D\common\materials.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\math\AVTmathLib.h">
@@ -144,6 +147,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\MicroMachines3D\scripts\camera\targetOrbitalCameraScript.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MicroMachines3D\scripts\car\carHeadlightsScript.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

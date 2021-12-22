@@ -13,18 +13,9 @@ class Table : public SceneEntity
 public:
 	Table(Scene* scene)
 		: SceneEntity(scene->createEntity("Table"))
-	{
-		Material material = {
-			{ 0.2f, 0.15f, 0.1f, 1.0f },
-			{ 0.8f, 0.6f, 0.4f, 1.0f },
-			{ 0.8f, 0.8f, 0.8f, 1.0f },
-			{ 0.0f, 0.0f, 0.0f, 1.0f },
-			100.0f,
-			0
-		};
-		
+	{	
 		std::shared_ptr<MyMesh> mesh = std::make_shared<MyMesh>(createCube());
-		MeshComponent::setMaterial(*mesh, material);
+		MeshComponent::setMaterial(*mesh, TABLE_MATERIAL);
 
 		GroupComponent& group = addComponent<GroupComponent>();
 		createTop(scene, group, mesh);

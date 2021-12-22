@@ -4,6 +4,8 @@
 
 #include "MicroMachines3D/common/include.h"
 
+#include "MicroMachines3D/scripts/car/carHeadlightsScript.h"
+
 
 
 
@@ -18,23 +20,18 @@ public:
 
 		_initCarBody(scene, group);
 		_initCarWheels(scene, group);
+		_initCarHeadlights(scene, group);
+
+		std::shared_ptr<Script> script = std::make_shared<CarHeadlightsScript>(scene);
+		ScriptComponent& scriptComponent = addComponent<ScriptComponent>(script);
 	}
 
 
 private:
 	void _initCarBody(Scene* scene, GroupComponent& group)
 	{
-		Material material = {
-			{ 0.5f, 110.0f / 510.0f, 25.0f / 510.0f, 1.0f },
-			{ 1.0f, 110.0f / 255.0f, 25.0f / 255.0f, 1.0f },
-			{ 1.0f, 110.0f / 255.0f, 25.0f / 255.0f, 1.0f },
-			{ 0.0f, 0.0f, 0.0f, 1.0f },
-			100.0f,
-			0
-		};
-
 		std::shared_ptr<MyMesh> mesh = std::make_shared<MyMesh>(createCube());
-		MeshComponent::setMaterial(*mesh, material);
+		MeshComponent::setMaterial(*mesh, CAR_BODY_MATERIAL);
 
 		Entity carBottom = group.addNewEntity(scene, *this, "bottom");
 		carBottom.addComponent<MeshComponent>(mesh);
@@ -65,17 +62,8 @@ private:
 
 	void _initCarWheels(Scene* scene, GroupComponent& group)
 	{
-		Material material = {
-			{ 0.1f, 0.1f, 0.1f, 1.0f },
-			{ 0.0f, 0.0f, 0.0f, 0.0f },
-			{ 0.0f, 0.0f, 0.0f, 0.0f },
-			{ 0.0f, 0.0f, 0.0f, 1.0f },
-			20.0f,
-			0
-		};
-
 		std::shared_ptr<MyMesh> mesh = std::make_shared<MyMesh>(createTorus(WHEEL_INNER_RADIUS, WHEEL_OUTER_RADIUS, WHEEL_RINGS, WHEEL_SIDES));
-		MeshComponent::setMaterial(*mesh, material);
+		MeshComponent::setMaterial(*mesh, CAR_WHEEL_MATERIAL);
 
 		_initCarWheel(scene, group, mesh,  1.0f,  1.0f, "1");
 		_initCarWheel(scene, group, mesh, -1.0f,  1.0f, "2");
@@ -95,6 +83,34 @@ private:
 		float xPos = (xMod * CAR_BOTTOM_SIZE.x / 2.0f) + (xMod * WHEEL_SIZE.x / 2.0f);
 		float zPos = (zMod * CAR_BOTTOM_SIZE.z / 2.0f) - (zMod * WHEEL_SIZE.z / 0.8f);
 		Transform::translate(wheel, { xPos, -CAR_FLOOR_DISTANCE, zPos });
+	}
+
+
+	void _initCarHeadlights(Scene* scene, GroupComponent& group)
+	{
+		std::shared_ptr<MyMesh> frontMesh = std::make_shared<MyMesh>(createCube());
+		MeshComponent::setMaterial(*frontMesh, CAR_HEADLIGHT_FRONT_OFF_MATERIAL);
+
+		std::shared_ptr<MyMesh> backMesh = std::make_shared<MyMesh>(createCube());
+		MeshComponent::setMaterial(*backMesh, CAR_HEADLIGHT_BACK_OFF_MATERIAL);
+
+		_initCarHeadlight(scene, group, frontMesh,  1.0f,  1.0f, "frontLeft");
+		_initCarHeadlight(scene, group, frontMesh, -1.0f,  1.0f, "frontRight");
+		_initCarHeadlight(scene, group, backMesh,   1.0f, -1.0f, "backLeft");
+		_initCarHeadlight(scene, group, backMesh,  -1.0f, -1.0f, "backRight");
+	}
+
+	void _initCarHeadlight(Scene* scene, GroupComponent& group, const std::shared_ptr<MyMesh>& mesh, float xMod, float zMod, const char* headlightId)
+	{
+		Entity headlight = group.addNewEntity(scene, *this, "headlight-" + std::string(headlightId));
+		headlight.addComponent<MeshComponent>(mesh);
+
+		Transform::scale(headlight, CAR_HEADLIGHT_SIZE);
+		
+		float xPos = (xMod * CAR_BOTTOM_SIZE.x / 2.0f) - (xMod * CAR_HEADLIGHT_SIZE.x / 1.5f);
+		float yPos = CAR_HEADLIGHT_SIZE.y / 2.0f;
+		float zPos = (zMod * CAR_BOTTOM_SIZE.z / 2.0f) + (zMod * CAR_HEADLIGHT_SIZE.z / 2.0f);
+		Transform::translate(headlight, { xPos, yPos, zPos });
 	}
 
 };

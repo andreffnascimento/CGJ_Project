@@ -64,6 +64,8 @@ public:
 		_camera = _scene->getEntityByTag("Camera3");
 		_updateCameraTransform();
 		_setCameraTarget();
+
+		_alpha = _alphaAux = _getStaticAlpha();
 	}
 
 
@@ -172,7 +174,7 @@ private:
 		if (_trackingStatus != TargetOrbitalCameraScript::TrackingStatus::NONE && true)		// FIXME: check if car is moving
 			return;
 
-		_alphaAux += (TargetOrbitalCameraScript::ORIGINAL_ALPHA - _alphaAux) * TargetOrbitalCameraScript::DECAY_SPEED * ts;
+		_alphaAux += (_getStaticAlpha() - _alphaAux) * TargetOrbitalCameraScript::DECAY_SPEED * ts;
 		_betaAux += (TargetOrbitalCameraScript::ORIGINAL_BETA - _betaAux) * TargetOrbitalCameraScript::DECAY_SPEED * ts;
 		_rAux += (TargetOrbitalCameraScript::ORIGINAL_R - _rAux) * TargetOrbitalCameraScript::DECAY_SPEED * ts;
 
@@ -195,6 +197,9 @@ private:
 
 		Transform::translateTo((Entity&)_camera, { cameraX, cameraY, cameraZ });
 	}
+
+
+	inline float _getStaticAlpha() { return _car.transform().rotation().y + 180.0f; }
 
 };
 

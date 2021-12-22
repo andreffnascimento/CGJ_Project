@@ -110,6 +110,9 @@ void Renderer::renderObjects(const Scene& scene) const
 	for (auto& iterator : meshComponents)
 	{
 		const MeshComponent& mesh = iterator.second;
+		if (!mesh.isVisible())
+			continue;
+
 		const TransformComponent& transform = scene.getEntityById(iterator.first).transform();
 		_loadMesh(mesh);				// this might require some optimization to stop loading meshes when they are already there
 		_applyTransform(transform);

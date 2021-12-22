@@ -148,7 +148,7 @@ public:
 	MeshComponent() = default;
 	MeshComponent(const MeshComponent&) = default;
 	MeshComponent(const std::shared_ptr<MyMesh>& mesh) : _mesh(mesh) {}
-	MeshComponent(const std::shared_ptr<MyMesh>& mesh, const Material& material) : _mesh(mesh) { MeshComponent::setMaterial(*_mesh, material); }
+	MeshComponent(const std::shared_ptr<MyMesh>& mesh, const Material& material) : _mesh(mesh) { setMaterial(material); }
 	~MeshComponent() = default;
 
 	inline bool isVisible()	const			{ return _visible; }
@@ -156,6 +156,8 @@ public:
 
 	inline const MyMesh* getMeshPtr()	const { return _mesh.get(); }
 	inline const MyMesh& getMeshData()	const { return *getMeshPtr(); } 
+
+	inline void setMaterial(const Material& material) { return MeshComponent::setMaterial(*_mesh, material); }
 
 	static void setMaterial(MyMesh& mesh, const Material& material);
 };

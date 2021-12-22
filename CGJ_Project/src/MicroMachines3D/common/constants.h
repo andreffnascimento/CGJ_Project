@@ -1,7 +1,7 @@
 #ifndef __mm3d_common_constants__
 #define __mm3d_common_constants__
 
-#include "MicroMachines3D/common/include.h"
+#include "engine/utils/coords.h"
 
 
 constexpr Coords3f TABLE_SIZE = { 150.0f, 5.0f, 75.0f };
@@ -15,6 +15,7 @@ constexpr Coords3f CAR_TOP_SIZE = { CAR_BOTTOM_SIZE.x, CAR_BOTTOM_SIZE.y / 2.0f,
 constexpr Coords3f CAR_SPOILER_SUPPORT_SIZE = { 0.2f, 0.5f, 0.2f };
 constexpr Coords3f CAR_SPOILER_SIZE = { 2.0f, 0.2f, 0.5f };
 constexpr Coords3f CAR_BUMPER_SIZE = { 1.5f, 0.4f, 0.2f };
+constexpr Coords3f CAR_HEADLIGHT_SIZE = { 0.3f, 0.15f, 0.1f };
 constexpr Coords3f WHEEL_SIZE = { 0.5f, 1.0f, 0.5f };
 
 constexpr float WHEEL_INNER_RADIUS = 0.55f;
