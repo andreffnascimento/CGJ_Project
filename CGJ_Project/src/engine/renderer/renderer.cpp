@@ -100,7 +100,7 @@ void Renderer::renderCamera(const CameraEntity& camera) const
 void Renderer::renderObjects(const Scene& scene) const
 {
 	// temp light code
-	float lightPos[4] = { -30.0f, 20.0f, -15.0f ,1.0f };
+	float lightPos[4] = { 30.0f, 30.0f, 15.0f, 1.0f };		// allow light position to be set in the scene???
 	float res[4];
 	multMatrixPoint(VIEW, lightPos, res);   //lightPos definido em World Coord so is converted to eye space
 	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::L_POS], 1, res);
@@ -110,7 +110,7 @@ void Renderer::renderObjects(const Scene& scene) const
 	for (auto& iterator : meshComponents)
 	{
 		const MeshComponent& mesh = iterator.second;
-		if (!mesh.isVisible())
+		if (!mesh.isEnabled())
 			continue;
 
 		const TransformComponent& transform = scene.getEntityById(iterator.first).transform();

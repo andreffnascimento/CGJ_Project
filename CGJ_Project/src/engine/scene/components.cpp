@@ -66,3 +66,26 @@ void MeshComponent::setMaterial(MyMesh& mesh, const Material& material)
 	mesh.mat.shininess = material.shininess;
 	mesh.mat.texCount = material.texCount;
 }
+
+
+
+
+void LightComponent::setDirectionalLight(const Coords3f& direction)
+{
+	_lightType = LightComponent::LightType::DIRECTIONAL;
+	_direction = direction;
+}
+
+
+void LightComponent::setPointLight()
+{
+	_lightType = LightComponent::LightType::POINT;
+}
+
+
+void LightComponent::setSpotLight(const Coords3f& direction, float angleCutOff)
+{
+	_lightType = LightComponent::LightType::SPOT;
+	_direction = direction;
+	_angleCutOff = angleCutOff;
+}

@@ -142,7 +142,7 @@ struct MeshComponent
 {
 private:
 	std::shared_ptr<MyMesh> _mesh;
-	bool _visible = true;
+	bool _enabled = true;
 
 public:
 	MeshComponent() = default;
@@ -151,8 +151,8 @@ public:
 	MeshComponent(const std::shared_ptr<MyMesh>& mesh, const Material& material) : _mesh(mesh) { setMaterial(material); }
 	~MeshComponent() = default;
 
-	inline bool isVisible()	const			{ return _visible; }
-	inline void setVisibility(bool visible) { _visible = visible; }
+	inline bool isEnabled()	const			{ return _enabled; }
+	inline void setEnabled(bool enabled)	{ _enabled = enabled; }
 
 	inline const MyMesh* getMeshPtr()	const { return _mesh.get(); }
 	inline const MyMesh& getMeshData()	const { return *getMeshPtr(); } 
@@ -178,6 +178,38 @@ public:
 
 	inline Script* getScript() const { return _script.get(); }
 	inline operator Script* () const { return getScript(); }
+};
+
+
+
+
+struct LightComponent
+{
+public:
+	enum class LightType
+	{
+		DIRECTIONAL,
+		POINT,
+		SPOT
+	};
+
+private:
+	LightComponent::LightType _lightType = LightComponent::LightType::DIRECTIONAL;
+	Coords3f _direction = { 0.0f, 0.0f, 0.0f };
+	float _angleCutOff = 0.0f;
+	bool _enabled = true;
+
+public:
+	LightComponent() = default;
+	LightComponent(const LightComponent&) = default;
+	~LightComponent() = default;
+
+	void setDirectionalLight(const Coords3f& direction);
+	void setPointLight();
+	void setSpotLight(const Coords3f& direction, float angleCutOff);
+
+	inline bool isEnabled()	const { return _enabled; }
+	inline void setEnabled(bool enabled) { _enabled = enabled; }
 };
 
 
