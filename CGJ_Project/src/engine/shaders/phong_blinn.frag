@@ -4,12 +4,15 @@
 const uint MAX_LIGHTS = 32;
 
 
+
+
 struct VertexData {
 	vec4 position;
 	vec3 normal;
 	vec3 eye;
 	vec3 eyeDir;
 };
+
 
 struct MaterialData {
 	vec4 diffuse;
@@ -20,6 +23,7 @@ struct MaterialData {
 	int texCount;
 };
 
+
 struct LightingData {
 	uint nLights;
 	uint lightTypes[MAX_LIGHTS];
@@ -27,7 +31,12 @@ struct LightingData {
 	vec4 lightDirections[MAX_LIGHTS];
 	float lightIntensities[MAX_LIGHTS];
 	float lightCutOffs[MAX_LIGHTS];
+
+	float ambientCoefficient;
+	float diffuseCoefficient;
+	float specularCoefficient;
 };
+
 
 struct FragLightingData {
 	vec4 specular;
@@ -116,5 +125,5 @@ void main() {
 		}
 	}
 
-	colorOut = material.ambient + fragLighting.diffuse + fragLighting.specular;
+	colorOut = (lighting.ambientCoefficient * material.ambient) + (lighting.diffuseCoefficient * fragLighting.diffuse) + (lighting.specularCoefficient * fragLighting.specular);
 }

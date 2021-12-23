@@ -87,6 +87,21 @@ void Scene::setActiveCamera(const CameraEntity& camera)
 }
 
 
+void Scene::setReflectionCoefficients(float ambient, float diffuse, float specular)
+{
+	if (ambient < 0.0f || ambient > 1.0f)
+		throw std::string("Ambient coefficient must be a float value between 0.0f and 1.0f");
+
+	if (diffuse < 0.0f || diffuse > 1.0f)
+		throw std::string("Diffuse coefficient must be a float value between 0.0f and 1.0f");
+
+	if (specular < 0.0f || specular > 1.0f)
+		throw std::string("Specular coefficient must be a float value between 0.0f and 1.0f");
+
+	_reflectionCoefficients = { ambient, diffuse, specular };
+}
+
+
 
 
 void Scene::onCreate()
@@ -106,7 +121,7 @@ void Scene::onUpdate(float ts)
 	// render objects to the screen
 	Renderer& renderer = Application::getRenderer();
 	renderer.initSceneRendering();
-	renderer.renderCamera(_activeCamera);
+	renderer.renderCamera(*this);
 	renderer.renderLights(*this);
 	renderer.renderMeshes(*this);
 }

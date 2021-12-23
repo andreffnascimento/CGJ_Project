@@ -53,6 +53,10 @@ private:
 		GLfloat lightDirections[4 * Renderer::MAX_LIGHTS] = {};
 		GLfloat lightIntensities[Renderer::MAX_LIGHTS] = {};
 		GLfloat lightCutOffs[Renderer::MAX_LIGHTS] = {};
+
+		GLfloat ambientCoefficient = 1.0f;
+		GLfloat diffuseCoefficient = 1.0f;
+		GLfloat specularCoefficient = 1.0f;
 	};
 
 
@@ -78,7 +82,7 @@ public:
 
 
 public:
-	void renderCamera(const CameraEntity& camera) const;
+	void renderCamera(const Scene& scene) const;
 	void renderLights(const Scene& scene) const;
 	void renderMeshes(const Scene& scene) const;
 

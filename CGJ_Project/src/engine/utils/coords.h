@@ -104,8 +104,26 @@ struct SphericalCoords
 	float beta = 0.0f;
 	float r = 1.0f;
 
+	SphericalCoords() = default;
+	SphericalCoords(const SphericalCoords&) = default;
+	~SphericalCoords() = default;
+
 	bool operator==(const SphericalCoords& other) const { return alpha == other.alpha && beta == other.beta && r == other.r; }
 	bool operator!=(const SphericalCoords& other) const { return alpha != other.alpha && beta != other.beta && r != other.r; }
+};
+
+
+
+
+struct ReflectionCoefficients
+{
+	float ambient = 1.0f;
+	float diffuse = 1.0f;
+	float specular = 1.0f;
+
+	ReflectionCoefficients() = default;
+	ReflectionCoefficients(const ReflectionCoefficients&) = default;
+	~ReflectionCoefficients() = default;
 };
 
 

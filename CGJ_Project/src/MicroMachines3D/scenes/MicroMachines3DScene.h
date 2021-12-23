@@ -23,6 +23,8 @@ public:
 private:
 	void setupScene() override
 	{
+		setReflectionCoefficients(0.3f, 1.0f, 1.0f);
+		
 		CameraManager cameraManager = CameraManager(this);
 
 

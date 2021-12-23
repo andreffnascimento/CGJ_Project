@@ -3,8 +3,9 @@
 
 
 
-void Renderer::renderCamera(const CameraEntity& camera) const
+void Renderer::renderCamera(const Scene& scene) const
 {
+	const CameraEntity& camera = scene.activeCamera();
 	TransformComponent& transform = camera.getComponent<TransformComponent>();
 	CameraComponent& cameraSettings = camera.getComponent<CameraComponent>();
 
