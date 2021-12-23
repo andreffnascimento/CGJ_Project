@@ -42,6 +42,22 @@ private:
 	constexpr static const char* FONT_NAME = "fonts/arial.ttf";
 
 
+
+
+private:
+	struct LightData
+	{
+		GLuint nLights = 0;
+		GLuint lightTypes[Renderer::MAX_LIGHTS] = {};
+		GLfloat lightPositions[4 * Renderer::MAX_LIGHTS] = {};
+		GLfloat lightDirections[4 * Renderer::MAX_LIGHTS] = {};
+		GLfloat lightIntensities[Renderer::MAX_LIGHTS] = {};
+		GLfloat lightCutOffs[Renderer::MAX_LIGHTS] = {};
+	};
+
+
+
+
 private:
 	VSShaderLib _shader;		//geometry
 	VSShaderLib _shaderText;	//render bitmap text
@@ -77,18 +93,10 @@ private:
 
 
 private:
-	void _initializeLightRendering() const;
-
-	void _formatDirectionalLight(const LightComponent& light, const TransformComponent& transform, 
-		size_t id, size_t types[], Coords4f directions[]) const;
-
-	void _formatPointLight(const LightComponent& light, const TransformComponent& transform, 
-		size_t id, size_t typess[], Coords4f positions[]) const;
-
-	void _formatSpotLight(const LightComponent& light, const TransformComponent& transform, 
-		size_t id, size_t types[], Coords4f positions[], Coords4f directions[], float spotCutOffs[]) const;
-
-	void _submitLightData(size_t nLights, size_t types[], Coords4f positions[], Coords4f directions[], float spotCutOffs[]) const;
+	void _formatDirectionalLight(const LightComponent& light, const TransformComponent& transform, Renderer::LightData& lightData) const;
+	void _formatPointLight(const LightComponent& light, const TransformComponent& transform, Renderer::LightData& lightData) const;
+	void _formatSpotLight(const LightComponent& light, const TransformComponent& transform, Renderer::LightData& lightData) const;
+	void _submitLightData(const Renderer::LightData& lightData) const;
 
 
 private:

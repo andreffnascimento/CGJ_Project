@@ -29,13 +29,13 @@ void Renderer::_loadMesh(const MeshComponent& mesh) const
 {
 	const MyMesh& meshData = mesh.meshData();
 	GLint loc;
-	loc = glGetUniformLocation(_shader.getProgramIndex(), "mat.ambient");
+	loc = glGetUniformLocation(_shader.getProgramIndex(), "material.ambient");
 	glUniform4fv(loc, 1, meshData.mat.ambient);
-	loc = glGetUniformLocation(_shader.getProgramIndex(), "mat.diffuse");
+	loc = glGetUniformLocation(_shader.getProgramIndex(), "material.diffuse");
 	glUniform4fv(loc, 1, meshData.mat.diffuse);
-	loc = glGetUniformLocation(_shader.getProgramIndex(), "mat.specular");
+	loc = glGetUniformLocation(_shader.getProgramIndex(), "material.specular");
 	glUniform4fv(loc, 1, meshData.mat.specular);
-	loc = glGetUniformLocation(_shader.getProgramIndex(), "mat.shininess");
+	loc = glGetUniformLocation(_shader.getProgramIndex(), "material.shininess");
 	glUniform1f(loc, meshData.mat.shininess);
 }
 
@@ -69,7 +69,7 @@ void Renderer::_renderMesh(const MeshComponent& mesh) const
 	computeNormalMatrix3x3();
 	glUniformMatrix3fv(_uniformLocation[Renderer::ShaderUniformType::NORMAL], 1, GL_FALSE, mNormal3x3);
 
-	glBindVertexArray(meshData.vao);	// render mesh
+	glBindVertexArray(meshData.vao);
 
 	if (!_shader.isProgramValid())
 		throw std::string("Invalid shader program!");

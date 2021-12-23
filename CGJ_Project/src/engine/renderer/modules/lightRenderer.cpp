@@ -1,17 +1,16 @@
 #include "engine/renderer/renderer.h"
 
+#include <GL/glew.h>
+
+
+
+
 
 
 
 void Renderer::renderLights(const Scene& scene) const
 {
-	_initializeLightRendering();
-
-	size_t nLights = 0;
-	size_t lightTypes[Renderer::MAX_LIGHTS] = {};
-	Coords4f lightPositions[Renderer::MAX_LIGHTS] = {};
-	Coords4f lightDirections[Renderer::MAX_LIGHTS] = {};
-	float lightCutOffs[Renderer::MAX_LIGHTS] = {};
+	Renderer::LightData lightData = Renderer::LightData();
 
 	const auto& lightComponents = scene.getSceneComponents<LightComponent>();
 	if (lightComponents.size() > Renderer::MAX_LIGHTS)
@@ -27,63 +26,94 @@ void Renderer::renderLights(const Scene& scene) const
 		switch (light.lightType())
 		{
 		case LightComponent::LightType::DIRECTIONAL:
-			_formatDirectionalLight(light, transform, nLights, lightTypes, lightDirections);
+			_formatDirectionalLight(light, transform, lightData);
 			break;
 
 		case LightComponent::LightType::POINT:
-			_formatPointLight(light, transform, nLights, lightTypes, lightPositions);
+			_formatPointLight(light, transform, lightData);
 			break;
 
 		case LightComponent::LightType::SPOT:
-			_formatSpotLight(light, transform, nLights, lightTypes, lightPositions, lightDirections, lightCutOffs);
+			_formatSpotLight(light, transform, lightData);
 			break;
 		}
 
-		nLights++;
+		lightData.nLights++;
 	}
 
-	_submitLightData(nLights, lightTypes, lightPositions, lightDirections, lightCutOffs);
+	_submitLightData(lightData);
 }
 
 
 
 
-void Renderer::_initializeLightRendering() const
+void Renderer::_formatDirectionalLight(const LightComponent& light, const TransformComponent& transform, Renderer::LightData& lightData) const
 {
-	float lightPos[4] = { 30.0f, 30.0f, 15.0f, 1.0f };
-	float res[4];
-	multMatrixPoint(VIEW, lightPos, res);
-	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::L_POS], 1, res);
+	float lightDirection[4] = { light.direction().x, light.direction().y, light.direction().z, 0.0f };
+	float viewLightDirection[4] = {};
+	multMatrixPoint(VIEW, lightDirection, viewLightDirection);
+
+	lightData.lightTypes[lightData.nLights] = Renderer::DIRECTIONAL_LIGHT_TYPE;
+	memcpy(&lightData.lightDirections[4 * lightData.nLights], viewLightDirection, 4 * sizeof(float));
+	lightData.lightIntensities[lightData.nLights] = light.intensity();
 }
 
 
-void Renderer::_formatDirectionalLight(const LightComponent& light, const TransformComponent& transform, 
-	size_t id, size_t types[], Coords4f directions[]) const
+void Renderer::_formatPointLight(const LightComponent& light, const TransformComponent& transform, Renderer::LightData& lightData) const
 {
-	types[id] = Renderer::DIRECTIONAL_LIGHT_TYPE;
-	directions[id] = { light.direction().x, light.direction().y, light.direction().z, 0.0f };
+	float lightPosition[4] = { transform.translation().x, transform.translation().y, transform.translation().z, 1.0f };
+	float viewLightPosition[4] = {};
+	multMatrixPoint(VIEW, lightPosition, viewLightPosition);
+
+	lightData.lightTypes[lightData.nLights] = Renderer::POINT_LIGHT_TYPE;
+	memcpy(&lightData.lightPositions[4 * lightData.nLights], viewLightPosition, 4 * sizeof(float));
+	lightData.lightIntensities[lightData.nLights] = light.intensity();
 }
 
 
-void Renderer::_formatPointLight(const LightComponent& light, const TransformComponent& transform, 
-	size_t id, size_t types[], Coords4f positions[]) const
+void Renderer::_formatSpotLight(const LightComponent& light, const TransformComponent& transform, Renderer::LightData& lightData) const
 {
-	types[id] = Renderer::POINT_LIGHT_TYPE;
-	positions[id] = { transform.translation().x, transform.translation().y, transform.translation().z, 1.0f };
+	float lightPosition[4] = { transform.translation().x, transform.translation().y, transform.translation().z, 1.0f };
+	float viewLightPosition[4] = {};
+	multMatrixPoint(VIEW, lightPosition, viewLightPosition);
+
+	float lightDirection[4] = { light.direction().x, light.direction().y, light.direction().z, 0.0f };
+	float viewLightDirection[4] = {};
+	multMatrixPoint(VIEW, lightDirection, viewLightDirection);
+
+	lightData.lightTypes[lightData.nLights] = Renderer::SPOT_LIGHT_TYPE;
+	memcpy(&lightData.lightPositions[4 * lightData.nLights], viewLightPosition, 4 * sizeof(float));
+	memcpy(&lightData.lightDirections[4 * lightData.nLights], viewLightDirection, 4 * sizeof(float));
+	lightData.lightIntensities[lightData.nLights] = light.intensity();
+	lightData.lightCutOffs[lightData.nLights] = light.cutOff();
 }
 
-
-void Renderer::_formatSpotLight(const LightComponent& light, const TransformComponent& transform, 
-	size_t id, size_t types[], Coords4f positions[], Coords4f directions[], float spotCutOffs[]) const
+#include <iostream>
+void Renderer::_submitLightData(const Renderer::LightData& lightData) const
 {
-	types[id] = Renderer::SPOT_LIGHT_TYPE;
-	positions[id] = { transform.translation().x, transform.translation().y, transform.translation().z, 1.0f };
-	directions[id] = { light.direction().x, light.direction().y, light.direction().z, 0.0f };
-	spotCutOffs[id] = light.cutOff();
-}
+	GLint loc;
+	constexpr const char* N_LIGHTS_ADDRESS = "lighting.nLights";
+	constexpr const char* LIGHT_TYPES_ADDRESS = "lighting.lightTypes";
+	constexpr const char* LIGHT_POSITIONS_ADDRESS = "lighting.lightPositions";
+	constexpr const char* LIGHT_DIRECTIONS_ADDRESS = "lighting.lightDirections";
+	constexpr const char* LIGHT_INTENSITIES_ADDRESS = "lighting.lightIntensities";
+	constexpr const char* LIGHT_CUTOFFS_ADDRESS = "lighting.lightCutOffs";
 
+	loc = glGetUniformLocation(_shader.getProgramIndex(), N_LIGHTS_ADDRESS);
+	glUniform1ui(loc, lightData.nLights);
 
-void Renderer::_submitLightData(size_t nLights, size_t types[], Coords4f positions[], Coords4f directions[], float spotCutOffs[]) const
-{
+	loc = glGetUniformLocation(_shader.getProgramIndex(), LIGHT_TYPES_ADDRESS);
+	glUniform1uiv(loc, lightData.nLights, lightData.lightTypes);
 
+	loc = glGetUniformLocation(_shader.getProgramIndex(), LIGHT_POSITIONS_ADDRESS);
+	glUniform4fv(loc, lightData.nLights, lightData.lightPositions);
+
+	loc = glGetUniformLocation(_shader.getProgramIndex(), LIGHT_DIRECTIONS_ADDRESS);
+	glUniform4fv(loc, lightData.nLights, lightData.lightDirections);
+
+	loc = glGetUniformLocation(_shader.getProgramIndex(), LIGHT_INTENSITIES_ADDRESS);
+	glUniform1fv(loc, lightData.nLights, lightData.lightIntensities);
+
+	loc = glGetUniformLocation(_shader.getProgramIndex(), LIGHT_CUTOFFS_ADDRESS);
+	glUniform1fv(loc, lightData.nLights, lightData.lightCutOffs);
 }

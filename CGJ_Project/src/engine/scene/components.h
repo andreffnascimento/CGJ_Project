@@ -196,6 +196,7 @@ public:
 private:
 	LightComponent::LightType _lightType = LightComponent::LightType::DIRECTIONAL;
 	Coords3f _direction = { 0.0f, 0.0f, 0.0f };
+	float _intensity = 1.0f;
 	float _cutOff = 0.0f;
 	bool _enabled = true;
 
@@ -206,14 +207,15 @@ public:
 
 	inline const LightType& lightType() const { return _lightType; }
 	inline const Coords3f& direction()  const { return _direction; }
+	inline float intensity()			const { return _intensity; }
 	inline float cutOff()				const { return _cutOff; }
 
 	inline bool isEnabled()	const { return _enabled; }
 	inline void setEnabled(bool enabled) { _enabled = enabled; }
 
-	void setDirectionalLight(const Coords3f& direction);
-	void setPointLight();
-	void setSpotLight(const Coords3f& direction, float cutOff);
+	void setDirectionalLight(const Coords3f& direction, float intensity);
+	void setPointLight(float intensity);
+	void setSpotLight(const Coords3f& direction, float intensity, float cutOff);
 };
 
 

@@ -70,22 +70,25 @@ void MeshComponent::setMaterial(MyMesh& mesh, const Material& material)
 
 
 
-void LightComponent::setDirectionalLight(const Coords3f& direction)
+void LightComponent::setDirectionalLight(const Coords3f& direction, float intensity)
 {
 	_lightType = LightComponent::LightType::DIRECTIONAL;
 	_direction = direction;
+	_intensity = intensity;
 }
 
 
-void LightComponent::setPointLight()
+void LightComponent::setPointLight(float intensity)
 {
 	_lightType = LightComponent::LightType::POINT;
+	_intensity = intensity;
 }
 
 
-void LightComponent::setSpotLight(const Coords3f& direction, float cutOff)
+void LightComponent::setSpotLight(const Coords3f& direction, float intensity, float cutOff)
 {
 	_lightType = LightComponent::LightType::SPOT;
 	_direction = direction;
+	_intensity = intensity;
 	_cutOff = cutOff;
 }

@@ -38,7 +38,7 @@ void Renderer::init()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_MULTISAMPLE);
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	// setup shaders
 	if (!_setupShaders())
@@ -69,8 +69,8 @@ GLuint Renderer::_setupShaders()
 {
 	// Shader for models
 	_shader.init();
-	_shader.loadShader(VSShaderLib::VERTEX_SHADER, "src/engine/shaders/gouraud.vert");
-	_shader.loadShader(VSShaderLib::FRAGMENT_SHADER, "src/engine/shaders/gouraud.frag");
+	_shader.loadShader(VSShaderLib::VERTEX_SHADER, "src/engine/shaders/phong_blinn.vert");
+	_shader.loadShader(VSShaderLib::FRAGMENT_SHADER, "src/engine/shaders/phong_blinn.frag");
 
 	// set semantics for the shader variables
 	glBindFragDataLocation(_shader.getProgramIndex(), 0, "colorOut");
@@ -83,11 +83,6 @@ GLuint Renderer::_setupShaders()
 	_uniformLocation[ShaderUniformType::PVM] = glGetUniformLocation(_shader.getProgramIndex(), "m_pvm");
 	_uniformLocation[ShaderUniformType::VM] = glGetUniformLocation(_shader.getProgramIndex(), "m_viewModel");
 	_uniformLocation[ShaderUniformType::NORMAL] = glGetUniformLocation(_shader.getProgramIndex(), "m_normal");
-	_uniformLocation[ShaderUniformType::L_POS] = glGetUniformLocation(_shader.getProgramIndex(), "l_pos");
-
-	_uniformLocation[ShaderUniformType::TEXT_MAP] = glGetUniformLocation(_shader.getProgramIndex(), "texmap");
-	_uniformLocation[ShaderUniformType::TEXT_MAP_1] = glGetUniformLocation(_shader.getProgramIndex(), "texmap1");
-	_uniformLocation[ShaderUniformType::TEXT_MAP_2] = glGetUniformLocation(_shader.getProgramIndex(), "texmap2");
 
 	std::cout << "InfoLog for Per Fragment Phong Lightning Shader\n" << _shader.getAllInfoLogs().c_str()  << "\n\n";
 
