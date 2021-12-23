@@ -60,6 +60,15 @@
     <ClCompile Include="src\MicroMachines3D\common\materials.h">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\renderer\modules\meshRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\renderer\modules\lightRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\renderer\modules\cameraRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\math\AVTmathLib.h">

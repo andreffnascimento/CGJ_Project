@@ -2,8 +2,12 @@
 #define __engine_renderer_renderer__
 
 
+#include <unordered_map>
+
 #include "engine/renderer/geometry.h"
 #include "engine/renderer/vsShaderLib.h"
+#include "engine/renderer/VertexAttrDef.h"
+#include "engine/math/AVTmathLib.h"
 #include "engine/scene/ecsRegistry.h"
 #include "engine/scene/scene.h"
 #include "engine/scene/components.h"
@@ -49,15 +53,14 @@ public:
 
 public:
 	void init();
+	void updateViewport(CameraComponent& camera, int width, int height) const;
+	void initSceneRendering() const;
 
 
 public:
-	void updateViewport(CameraComponent& camera, int width, int height) const;
-
-	void initSceneRendering() const;
 	void renderCamera(const CameraEntity& camera) const;
 	void renderLights(const Scene& scene) const;
-	void renderObjects(const Scene& scene) const;
+	void renderMeshes(const Scene& scene) const;
 
 
 private:

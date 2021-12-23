@@ -3,17 +3,10 @@
 #include <iostream>
 #include <unordered_map>
 
-#include "engine/math/AVTmathLib.h"
-#include "engine/renderer/VertexAttrDef.h"
 #include "engine/text/avtFreeType.h"
-
 
 #include <GL/glew.h>
 #include <IL/il.h>
-
-
-extern float mCompMatrix[COUNT_COMPUTED_MATRICES][16];
-extern float mNormal3x3[9];
 
 
 
@@ -53,8 +46,6 @@ void Renderer::init()
 }
 
 
-
-
 void Renderer::updateViewport(CameraComponent& camera, int width, int height) const
 {
 	if (camera.cameraProjection() == CameraComponent::CameraProjection::ORTHOGRAPHIC)
@@ -64,91 +55,12 @@ void Renderer::updateViewport(CameraComponent& camera, int width, int height) co
 }
 
 
-
 void Renderer::initSceneRendering() const
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glUseProgram(_shader.getProgramIndex());
 }
 
-
-void Renderer::renderCamera(const CameraEntity& camera) const
-{
-	TransformComponent& transform = camera.getComponent<TransformComponent>();
-	CameraComponent& cameraSettings = camera.getComponent<CameraComponent>();
-
-	const Coords3f& cameraCoords = transform.translation();
-	const Coords3f& targetCoords = cameraSettings.targetCoords();
-
-	Coords3f up = { 0.0f, 1.0f, 0.0f };
-	if (cameraCoords.x == 0.0f && cameraCoords.y != 0.0f && cameraCoords.z == 0.0f)
-		up = { 0.0f, 0.0f, 1.0f };
-
-	loadIdentity(VIEW);
-	loadIdentity(MODEL);
-	lookAt(cameraCoords.x, cameraCoords.y, cameraCoords.z,	// camera position
-		   targetCoords.x, targetCoords.y, targetCoords.z,	// target position
-		   up.x, up.y, up.z);								// up vector
-}
-
-
-void Renderer::renderLights(const Scene& scene) const
-{
-	_initializeLightRendering();
-	
-	size_t nLights = 0;
-	size_t lightTypes[Renderer::MAX_LIGHTS] = {};
-	Coords4f lightPositions[Renderer::MAX_LIGHTS] = {};
-	Coords4f lightDirections[Renderer::MAX_LIGHTS] = {};
-	float lightCutOffs[Renderer::MAX_LIGHTS] = {};
-
-	const auto& lightComponents = scene.getSceneComponents<LightComponent>();
-	if (lightComponents.size() > Renderer::MAX_LIGHTS)
-		throw std::string("The renderer is not able to process all the game lights");
-
-	for (const auto& iterator : lightComponents)
-	{
-		const LightComponent& light = iterator.second;
-		if (!light.isEnabled())
-			continue;
-
-		switch (light.lightType())
-		{
-		case LightComponent::LightType::DIRECTIONAL:
-			_formatDirectionalLight(light, nLights, lightTypes, lightDirections);
-			break;
-
-		case LightComponent::LightType::POINT:
-			_formatPointLight(light, nLights, lightTypes, lightPositions);
-			break;
-
-		case LightComponent::LightType::SPOT:
-			_formatSpotLight(light, nLights, lightTypes, lightPositions, lightDirections, lightCutOffs);
-			break;
-		}
-
-		nLights++;
-	}
-
-	_submitLightData(nLights, lightTypes, lightPositions, lightDirections, lightCutOffs);
-}
-
-
-void Renderer::renderObjects(const Scene& scene) const
-{
-	const auto& meshComponents = scene.getSceneComponents<MeshComponent>();
-	for (const auto& iterator : meshComponents)
-	{
-		const MeshComponent& mesh = iterator.second;
-		if (!mesh.enabled())
-			continue;
-
-		const TransformComponent& transform = scene.getEntityById(iterator.first).transform();
-		_loadMesh(mesh);
-		_applyTransform(transform);
-		_renderMesh(mesh);
-	}
-}
 
 
 
@@ -188,131 +100,4 @@ GLuint Renderer::_setupShaders()
 	std::cout << "InfoLog for Text Rendering Shader\n" << _shaderText.getAllInfoLogs().c_str() << "\n\n";
 
 	return _shader.isProgramLinked() && _shaderText.isProgramLinked();
-}
-
-
-
-
-void Renderer::_setOrthographicViewport(CameraComponent& camera, int width, int height) const
-{
-	camera.setOrthographicCamera(camera.clippingPlanes(), camera.viewportRect().right);
-
-	float left = camera.viewportRect().left;
-	float right = camera.viewportRect().right;
-	float bottom = camera.viewportRect().bottom;
-	float top = camera.viewportRect().top;
-	float near = camera.clippingPlanes().near;
-	float far = camera.clippingPlanes().far;
-
-	glViewport(0, 0, width, height);	// set the viewport to be the entire window
-
-	// set the projection matrix
-	loadIdentity(PROJECTION);
-	ortho(left, right, bottom, top, near, far);
-}
-
-
-void Renderer::_setPerspectiveViewport(CameraComponent& camera, int width, int height) const
-{
-	if (height == 0)					// prevent a divide by zero, when window is too small
-		height = 1;
-
-	glViewport(0, 0, width, height);	// set the viewport to be the entire window
-
-	// set the projection matrix
-	float ratio = (float)width / (float)height;
-	loadIdentity(PROJECTION);
-	perspective(camera.fov(), ratio, camera.clippingPlanes().near, camera.clippingPlanes().far);
-}
-
-
-
-void Renderer::_loadMesh(const MeshComponent& mesh) const
-{
-	const MyMesh& meshData = mesh.meshData();
-	GLint loc;
-	loc = glGetUniformLocation(_shader.getProgramIndex(), "mat.ambient");
-	glUniform4fv(loc, 1, meshData.mat.ambient);
-	loc = glGetUniformLocation(_shader.getProgramIndex(), "mat.diffuse");
-	glUniform4fv(loc, 1, meshData.mat.diffuse);
-	loc = glGetUniformLocation(_shader.getProgramIndex(), "mat.specular");
-	glUniform4fv(loc, 1, meshData.mat.specular);
-	loc = glGetUniformLocation(_shader.getProgramIndex(), "mat.shininess");
-	glUniform1f(loc, meshData.mat.shininess);
-}
-
-
-void Renderer::_applyTransform(const TransformComponent& transform) const
-{
-	pushMatrix(MODEL);
-	translate(MODEL, transform.translation().x, transform.translation().y, transform.translation().z);
-	
-	// avoid rotate operation if it is not needed (the other two are very common)
-	if (transform.rotation().x != 0.0f)
-		rotate(MODEL, transform.rotation().x, 1, 0, 0);
-
-	if (transform.rotation().y != 0.0f)
-		rotate(MODEL, transform.rotation().y, 0, 1, 0);
-
-	if (transform.rotation().z != 0.0f)
-		rotate(MODEL, transform.rotation().z, 0, 0, 1);
-
-	scale(MODEL, transform.scale().x, transform.scale().y, transform.scale().z);
-}
-
-
-void Renderer::_renderMesh(const MeshComponent& mesh) const
-{
-	const MyMesh& meshData = mesh.meshData();
-
-	computeDerivedMatrix(PROJ_VIEW_MODEL);
-	glUniformMatrix4fv(_uniformLocation[Renderer::ShaderUniformType::VM], 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
-	glUniformMatrix4fv(_uniformLocation[Renderer::ShaderUniformType::PVM], 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
-	computeNormalMatrix3x3();
-	glUniformMatrix3fv(_uniformLocation[Renderer::ShaderUniformType::NORMAL], 1, GL_FALSE, mNormal3x3);
-
-	glBindVertexArray(meshData.vao);	// render mesh
-
-	if (!_shader.isProgramValid())
-		throw std::string("Invalid shader program!");
-
-	glDrawElements(meshData.type, meshData.numIndexes, GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
-	
-	popMatrix(MODEL);
-}
-
-
-
-
-void Renderer::_initializeLightRendering() const
-{
-	float lightPos[4] = { 30.0f, 30.0f, 15.0f, 1.0f };
-	float res[4];
-	multMatrixPoint(VIEW, lightPos, res);
-	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::L_POS], 1, res);
-}
-
-
-void Renderer::_formatDirectionalLight(const LightComponent& light, size_t id, size_t types[], Coords4f directions[]) const
-{
-
-}
-
-
-void Renderer::_formatPointLight(const LightComponent& light, size_t id, size_t types[], Coords4f positions[]) const
-{
-
-}
-
-
-void Renderer::_formatSpotLight(const LightComponent& light, size_t id, size_t types[], Coords4f positions[], Coords4f directions[], float spotCutOffs[]) const
-{
-
-}
-
-
-void Renderer::_submitLightData(size_t nLights, size_t types[], Coords4f positions[], Coords4f directions[], float spotCutOffs[]) const
-{
-
 }

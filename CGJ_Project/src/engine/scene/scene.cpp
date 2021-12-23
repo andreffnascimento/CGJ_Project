@@ -108,7 +108,7 @@ void Scene::onUpdate(float ts)
 	renderer.initSceneRendering();
 	renderer.renderCamera(_activeCamera);
 	renderer.renderLights(*this);
-	renderer.renderObjects(*this);
+	renderer.renderMeshes(*this);
 }
 
 
