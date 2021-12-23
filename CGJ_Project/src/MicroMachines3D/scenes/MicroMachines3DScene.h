@@ -23,7 +23,7 @@ public:
 private:
 	void setupScene() override
 	{
-		setReflectionCoefficients(0.3f, 1.0f, 1.0f);
+		setReflectionCoefficients(0.5f, 1.0f, 1.0f);
 		
 		CameraManager cameraManager = CameraManager(this);
 
@@ -36,10 +36,10 @@ private:
 		Transform::rotate(car, { 0.0f, 90.0f, 0.0f });
 
 		// Temporary point light
-		Entity light = createEntity("pointlight");
-		Transform::translate(light, { -50.0f, 15.0f, 20.0f });
-		LightComponent& lightComponent = light.addComponent<LightComponent>();
-		lightComponent.setPointLight(40.0f);
+		//Entity light = createEntity("pointlight");
+		//Transform::translate(light, { -50.0f, 15.0f, 20.0f });
+		//LightComponent& lightComponent = light.addComponent<LightComponent>();
+		//lightComponent.setPointLight(40.0f);
 	}
 };
 
