@@ -18,11 +18,6 @@ extern float mNormal3x3[9];
 
 
 
-const char* Renderer::FONT_NAME = "fonts/arial.ttf";					// font name
-
-
-
-
 void Renderer::init()
 {
 	// init GLEW
@@ -97,24 +92,59 @@ void Renderer::renderCamera(const CameraEntity& camera) const
 }
 
 
+void Renderer::renderLights(const Scene& scene) const
+{
+	_initializeLightRendering();
+	
+	size_t nLights = 0;
+	size_t lightTypes[Renderer::MAX_LIGHTS] = {};
+	Coords4f lightPositions[Renderer::MAX_LIGHTS] = {};
+	Coords4f lightDirections[Renderer::MAX_LIGHTS] = {};
+	float lightCutOffs[Renderer::MAX_LIGHTS] = {};
+
+	const auto& lightComponents = scene.getSceneComponents<LightComponent>();
+	if (lightComponents.size() > Renderer::MAX_LIGHTS)
+		throw std::string("The renderer is not able to process all the game lights");
+
+	for (const auto& iterator : lightComponents)
+	{
+		const LightComponent& light = iterator.second;
+		if (!light.isEnabled())
+			continue;
+
+		switch (light.lightType())
+		{
+		case LightComponent::LightType::DIRECTIONAL:
+			_formatDirectionalLight(light, nLights, lightTypes, lightDirections);
+			break;
+
+		case LightComponent::LightType::POINT:
+			_formatPointLight(light, nLights, lightTypes, lightPositions);
+			break;
+
+		case LightComponent::LightType::SPOT:
+			_formatSpotLight(light, nLights, lightTypes, lightPositions, lightDirections, lightCutOffs);
+			break;
+		}
+
+		nLights++;
+	}
+
+	_submitLightData(nLights, lightTypes, lightPositions, lightDirections, lightCutOffs);
+}
+
+
 void Renderer::renderObjects(const Scene& scene) const
 {
-	// temp light code
-	float lightPos[4] = { 30.0f, 30.0f, 15.0f, 1.0f };		// allow light position to be set in the scene???
-	float res[4];
-	multMatrixPoint(VIEW, lightPos, res);   //lightPos definido em World Coord so is converted to eye space
-	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::L_POS], 1, res);
-	// temp light code end
-
 	const auto& meshComponents = scene.getSceneComponents<MeshComponent>();
-	for (auto& iterator : meshComponents)
+	for (const auto& iterator : meshComponents)
 	{
 		const MeshComponent& mesh = iterator.second;
-		if (!mesh.isEnabled())
+		if (!mesh.enabled())
 			continue;
 
 		const TransformComponent& transform = scene.getEntityById(iterator.first).transform();
-		_loadMesh(mesh);				// this might require some optimization to stop loading meshes when they are already there
+		_loadMesh(mesh);
 		_applyTransform(transform);
 		_renderMesh(mesh);
 	}
@@ -162,6 +192,7 @@ GLuint Renderer::_setupShaders()
 
 
 
+
 void Renderer::_setOrthographicViewport(CameraComponent& camera, int width, int height) const
 {
 	camera.setOrthographicCamera(camera.clippingPlanes(), camera.viewportRect().right);
@@ -198,7 +229,7 @@ void Renderer::_setPerspectiveViewport(CameraComponent& camera, int width, int h
 
 void Renderer::_loadMesh(const MeshComponent& mesh) const
 {
-	const MyMesh& meshData = mesh.getMeshData();
+	const MyMesh& meshData = mesh.meshData();
 	GLint loc;
 	loc = glGetUniformLocation(_shader.getProgramIndex(), "mat.ambient");
 	glUniform4fv(loc, 1, meshData.mat.ambient);
@@ -232,7 +263,7 @@ void Renderer::_applyTransform(const TransformComponent& transform) const
 
 void Renderer::_renderMesh(const MeshComponent& mesh) const
 {
-	const MyMesh& meshData = mesh.getMeshData();
+	const MyMesh& meshData = mesh.meshData();
 
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
 	glUniformMatrix4fv(_uniformLocation[Renderer::ShaderUniformType::VM], 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
@@ -249,4 +280,39 @@ void Renderer::_renderMesh(const MeshComponent& mesh) const
 	glBindVertexArray(0);
 	
 	popMatrix(MODEL);
+}
+
+
+
+
+void Renderer::_initializeLightRendering() const
+{
+	float lightPos[4] = { 30.0f, 30.0f, 15.0f, 1.0f };
+	float res[4];
+	multMatrixPoint(VIEW, lightPos, res);
+	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::L_POS], 1, res);
+}
+
+
+void Renderer::_formatDirectionalLight(const LightComponent& light, size_t id, size_t types[], Coords4f directions[]) const
+{
+
+}
+
+
+void Renderer::_formatPointLight(const LightComponent& light, size_t id, size_t types[], Coords4f positions[]) const
+{
+
+}
+
+
+void Renderer::_formatSpotLight(const LightComponent& light, size_t id, size_t types[], Coords4f positions[], Coords4f directions[], float spotCutOffs[]) const
+{
+
+}
+
+
+void Renderer::_submitLightData(size_t nLights, size_t types[], Coords4f positions[], Coords4f directions[], float spotCutOffs[]) const
+{
+
 }

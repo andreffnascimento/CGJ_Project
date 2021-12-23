@@ -74,6 +74,9 @@ std::unordered_set<Entity> Scene::getEntitiesByTag(const std::regex& regex) cons
 	return entities;
 }
 
+
+
+
 void Scene::setActiveCamera(const CameraEntity& camera)
 {
 	_activeCamera = camera;
@@ -90,7 +93,7 @@ void Scene::onCreate()
 {
 	// initialize all the script components
 	for (auto& script : _registry.getComponents<ScriptComponent>())
-		script.second.getScript()->onCreate();
+		script.second.script()->onCreate();
 }
 
 
@@ -98,12 +101,13 @@ void Scene::onUpdate(float ts)
 {
 	// update entity scripts
 	for (auto& script : _registry.getComponents<ScriptComponent>())
-		script.second.getScript()->onUpdate(ts);
+		script.second.script()->onUpdate(ts);
 
 	// render objects to the screen
 	Renderer& renderer = Application::getRenderer();
 	renderer.initSceneRendering();
 	renderer.renderCamera(_activeCamera);
+	renderer.renderLights(*this);
 	renderer.renderObjects(*this);
 }
 

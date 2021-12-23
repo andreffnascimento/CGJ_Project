@@ -29,8 +29,9 @@ public:
 
 
 
-public:
-	static const char* FONT_NAME;
+private:
+	constexpr static size_t MAX_LIGHTS = 32;
+	constexpr static const char* FONT_NAME = "fonts/arial.ttf";
 
 
 private:
@@ -55,19 +56,31 @@ public:
 
 	void initSceneRendering() const;
 	void renderCamera(const CameraEntity& camera) const;
+	void renderLights(const Scene& scene) const;
 	void renderObjects(const Scene& scene) const;
 
 
 private:
 	GLuint _setupShaders();
 
+
+private:
 	void _setOrthographicViewport(CameraComponent& camera, int width, int height) const;
 	void _setPerspectiveViewport(CameraComponent& camera, int width, int height) const;
+
 
 private:
 	void _loadMesh(const MeshComponent& mesh) const;
 	void _applyTransform(const TransformComponent& transform) const;
 	void _renderMesh(const MeshComponent& mesh) const;
+
+
+private:
+	void _initializeLightRendering() const;
+	void _formatDirectionalLight(const LightComponent& light, size_t id, size_t types[], Coords4f directions[]) const;
+	void _formatPointLight(const LightComponent& light, size_t id, size_t typess[], Coords4f positions[]) const;
+	void _formatSpotLight(const LightComponent& light, size_t id, size_t types[], Coords4f positions[], Coords4f directions[], float spotCutOffs[]) const;
+	void _submitLightData(size_t nLights, size_t types[], Coords4f positions[], Coords4f directions[], float spotCutOffs[]) const;
 
 };
 

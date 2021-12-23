@@ -15,7 +15,7 @@ Entity GroupComponent::addNewEntity(Scene* scene, const Entity& parentEntity)
 
 Entity GroupComponent::addNewEntity(Scene* scene, const Entity& parentEntity, const std::string& tag)
 {
-	Entity entity = scene->createEntity(parentEntity.tag().getTag() + ":" + tag);
+	Entity entity = scene->createEntity(parentEntity.tag().tag() + ":" + tag);
 	_group.emplace(entity);
 	return entity;
 }
@@ -83,9 +83,9 @@ void LightComponent::setPointLight()
 }
 
 
-void LightComponent::setSpotLight(const Coords3f& direction, float angleCutOff)
+void LightComponent::setSpotLight(const Coords3f& direction, float cutOff)
 {
 	_lightType = LightComponent::LightType::SPOT;
 	_direction = direction;
-	_angleCutOff = angleCutOff;
+	_cutOff = cutOff;
 }
