@@ -205,6 +205,8 @@ public:
 	~LightComponent() = default;
 
 	inline const LightType& lightType() const { return _lightType; }
+	inline const Coords3f& direction()  const { return _direction; }
+	inline float cutOff()				const { return _cutOff; }
 
 	inline bool isEnabled()	const { return _enabled; }
 	inline void setEnabled(bool enabled) { _enabled = enabled; }

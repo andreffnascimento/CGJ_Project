@@ -20,21 +20,22 @@ void Renderer::renderLights(const Scene& scene) const
 	for (const auto& iterator : lightComponents)
 	{
 		const LightComponent& light = iterator.second;
+		const TransformComponent& transform = scene.getEntityById(iterator.first).getComponent<TransformComponent>();
 		if (!light.isEnabled())
 			continue;
 
 		switch (light.lightType())
 		{
 		case LightComponent::LightType::DIRECTIONAL:
-			_formatDirectionalLight(light, nLights, lightTypes, lightDirections);
+			_formatDirectionalLight(light, transform, nLights, lightTypes, lightDirections);
 			break;
 
 		case LightComponent::LightType::POINT:
-			_formatPointLight(light, nLights, lightTypes, lightPositions);
+			_formatPointLight(light, transform, nLights, lightTypes, lightPositions);
 			break;
 
 		case LightComponent::LightType::SPOT:
-			_formatSpotLight(light, nLights, lightTypes, lightPositions, lightDirections, lightCutOffs);
+			_formatSpotLight(light, transform, nLights, lightTypes, lightPositions, lightDirections, lightCutOffs);
 			break;
 		}
 
@@ -56,21 +57,29 @@ void Renderer::_initializeLightRendering() const
 }
 
 
-void Renderer::_formatDirectionalLight(const LightComponent& light, size_t id, size_t types[], Coords4f directions[]) const
+void Renderer::_formatDirectionalLight(const LightComponent& light, const TransformComponent& transform, 
+	size_t id, size_t types[], Coords4f directions[]) const
 {
-
+	types[id] = Renderer::DIRECTIONAL_LIGHT_TYPE;
+	directions[id] = { light.direction().x, light.direction().y, light.direction().z, 0.0f };
 }
 
 
-void Renderer::_formatPointLight(const LightComponent& light, size_t id, size_t types[], Coords4f positions[]) const
+void Renderer::_formatPointLight(const LightComponent& light, const TransformComponent& transform, 
+	size_t id, size_t types[], Coords4f positions[]) const
 {
-
+	types[id] = Renderer::POINT_LIGHT_TYPE;
+	positions[id] = { transform.translation().x, transform.translation().y, transform.translation().z, 1.0f };
 }
 
 
-void Renderer::_formatSpotLight(const LightComponent& light, size_t id, size_t types[], Coords4f positions[], Coords4f directions[], float spotCutOffs[]) const
+void Renderer::_formatSpotLight(const LightComponent& light, const TransformComponent& transform, 
+	size_t id, size_t types[], Coords4f positions[], Coords4f directions[], float spotCutOffs[]) const
 {
-
+	types[id] = Renderer::SPOT_LIGHT_TYPE;
+	positions[id] = { transform.translation().x, transform.translation().y, transform.translation().z, 1.0f };
+	directions[id] = { light.direction().x, light.direction().y, light.direction().z, 0.0f };
+	spotCutOffs[id] = light.cutOff();
 }
 
 
