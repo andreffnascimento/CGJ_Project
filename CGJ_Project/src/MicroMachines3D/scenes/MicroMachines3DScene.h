@@ -36,10 +36,9 @@ private:
 		Transform::rotate(car, { 0.0f, 90.0f, 0.0f });
 
 		// Temporary point light
-		//Entity light = createEntity("pointlight");
-		//Transform::translate(light, { -50.0f, 15.0f, 20.0f });
-		//LightComponent& lightComponent = light.addComponent<LightComponent>();
-		//lightComponent.setPointLight(40.0f);
+		Entity light = createEntity("dirlight");
+		LightComponent& lightComponent = light.addComponent<LightComponent>();
+		lightComponent.setDirectionalLight({1.0f, -1.0f, -1.0f}, 2.0f);
 	}
 };
 

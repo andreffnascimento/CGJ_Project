@@ -64,6 +64,17 @@ out vec4 colorOut;
 
 
 FragLightingData processDirectionalLight(FragLightingData fragLighting, uint index, vec3 normal, vec3 eye) {
+	vec3 direction = normalize(-lighting.lightDirections[index].xyz);
+	float attenuation = lighting.lightIntensities[index];
+
+	float diffuseIntensity = max(dot(normal, direction), 0.0);
+	if (diffuseIntensity > 0.0) {
+		vec3 h = (direction + eye) / 2.0;
+		float specularIntensity = pow(max(dot(normal, h), 0.0), material.shininess);
+		fragLighting.diffuse += material.diffuse * diffuseIntensity * attenuation;
+		fragLighting.specular += material.specular * specularIntensity * attenuation;
+	}
+
 	return fragLighting;
 }
 
@@ -74,10 +85,10 @@ FragLightingData processPointLight(FragLightingData fragLighting, uint index, ve
 	float attenuation = lighting.lightIntensities[index] / (1.0 + 0.9 * distance + 0.09 * distance * distance);
 	lightDir = normalize(lightDir);
 
-	float diffuseIntensity = max(dot(normal, lightDir), 0);
+	float diffuseIntensity = max(dot(normal, lightDir), 0.0);
 	if (diffuseIntensity > 0.0) {
 		vec3 h = (lightDir + eye) / 2.0;
-		float specularIntensity = max(pow(dot(normal, h), material.shininess), 0.0f);
+		float specularIntensity = pow(max(dot(normal, h), 0.0), material.shininess);
 		fragLighting.diffuse += material.diffuse * diffuseIntensity * attenuation;
 		fragLighting.specular += material.specular * specularIntensity * attenuation;
 	}
@@ -87,6 +98,24 @@ FragLightingData processPointLight(FragLightingData fragLighting, uint index, ve
 
 
 FragLightingData processSpotLight(FragLightingData fragLighting, uint index, vec3 normal, vec3 eye) {
+	vec3 direction = normalize(-lighting.lightDirections[index].xyz);
+
+	vec3 lightDir = vec3(lighting.lightPositions[index].xyz - dataIn.position.xyz);
+	float distance = length(lightDir);
+	float attenuation = lighting.lightIntensities[index] / (1.0 + 0.9 * distance + 0.09 * distance * distance);
+	lightDir = normalize(lightDir);
+	
+	float diffuseIntensity = max(dot(normal, lightDir), 0.0);
+	if (diffuseIntensity > 0.0) {
+		float lightAngleDot = dot(direction, lightDir);
+		if (lightAngleDot > lighting.lightCutOffs[index]) {
+			vec3 h = (lightDir + eye) / 2.0;
+			float specularIntensity = pow(max(dot(normal, h), 0.0), material.shininess);
+			fragLighting.diffuse += material.diffuse * diffuseIntensity * attenuation;
+			fragLighting.specular += material.specular * specularIntensity * attenuation;
+		}
+	}
+
 	return fragLighting;
 }
 
@@ -125,5 +154,7 @@ void main() {
 		}
 	}
 
-	colorOut = (lighting.ambientCoefficient * material.ambient) + (lighting.diffuseCoefficient * fragLighting.diffuse) + (lighting.specularCoefficient * fragLighting.specular);
+	vec4 ambientColor = lighting.ambientCoefficient * material.ambient;
+	vec4 lightingColor = lighting.diffuseCoefficient * fragLighting.diffuse + lighting.specularCoefficient * fragLighting.specular;
+	colorOut = max(ambientColor, lightingColor);
 }

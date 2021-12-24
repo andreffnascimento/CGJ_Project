@@ -220,8 +220,6 @@
     <None Include="Dependencies.exe" />
     <None Include="shaders\gouraud.frag" />
     <None Include="shaders\gouraud.vert" />
-    <None Include="shaders\phong-blinn.frag" />
-    <None Include="shaders\phong-blinn.vert" />
     <None Include="shaders\pointlight.frag" />
     <None Include="shaders\pointlight.vert" />
     <None Include="shaders\text.frag" />

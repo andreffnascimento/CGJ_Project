@@ -22,7 +22,7 @@ constexpr Material CAR_BODY_MATERIAL = {
 	{ 0.4f, 0.4f, 0.4f, 1.0f },
 	{ 1.0f, 1.0f, 1.0f, 1.0f, },
 	{ 0.0f, 0.0f, 0.0f, 0.0f },
-	50.0f,
+	100.0f,
 	0
 };
 
