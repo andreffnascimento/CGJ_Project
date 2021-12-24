@@ -78,6 +78,8 @@ public:
 		_decayOrbitalValuesToOriginal(ts);
 		_updateCameraTransform();
 		_setCameraTarget();
+
+		Transform::rotate(_car, { 0.2f, 0.2f, 0.0f });
 	}
 
 
