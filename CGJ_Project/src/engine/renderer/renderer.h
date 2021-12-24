@@ -2,8 +2,12 @@
 #define __engine_renderer_renderer__
 
 
+#include <unordered_map>
+
 #include "engine/renderer/geometry.h"
 #include "engine/renderer/vsShaderLib.h"
+#include "engine/renderer/VertexAttrDef.h"
+#include "engine/math/AVTmathLib.h"
 #include "engine/scene/ecsRegistry.h"
 #include "engine/scene/scene.h"
 #include "engine/scene/components.h"
@@ -29,8 +33,33 @@ public:
 
 
 
-public:
-	static const char* FONT_NAME;
+private:
+	constexpr static size_t MAX_LIGHTS = 32;
+	constexpr static size_t DIRECTIONAL_LIGHT_TYPE = 1;
+	constexpr static size_t POINT_LIGHT_TYPE = 2;
+	constexpr static size_t SPOT_LIGHT_TYPE = 3;
+
+	constexpr static const char* FONT_NAME = "fonts/arial.ttf";
+
+
+
+
+private:
+	struct LightData
+	{
+		GLuint nLights = 0;
+		GLuint lightTypes[Renderer::MAX_LIGHTS] = {};
+		GLfloat lightPositions[4 * Renderer::MAX_LIGHTS] = {};
+		GLfloat lightDirections[4 * Renderer::MAX_LIGHTS] = {};
+		GLfloat lightIntensities[Renderer::MAX_LIGHTS] = {};
+		GLfloat lightCutOffs[Renderer::MAX_LIGHTS] = {};
+
+		GLfloat ambientCoefficient = 1.0f;
+		GLfloat diffuseCoefficient = 1.0f;
+		GLfloat specularCoefficient = 1.0f;
+	};
+
+
 
 
 private:
@@ -48,21 +77,31 @@ public:
 
 public:
 	void init();
+	void updateViewport(CameraComponent& camera, int width, int height) const;
+	void initSceneRendering() const;
 
 
 public:
-	void updateViewport(CameraComponent& camera, int width, int height) const;
-
-	void initSceneRendering() const;
-	void renderCamera(const CameraEntity& camera) const;
-	void renderObjects(const Scene& scene) const;
+	void renderCamera(const Scene& scene) const;
+	void renderLights(const Scene& scene) const;
+	void renderMeshes(const Scene& scene) const;
 
 
 private:
 	GLuint _setupShaders();
 
+
+private:
 	void _setOrthographicViewport(CameraComponent& camera, int width, int height) const;
 	void _setPerspectiveViewport(CameraComponent& camera, int width, int height) const;
+
+
+private:
+	void _formatDirectionalLight(const LightComponent& light, const TransformComponent& transform, Renderer::LightData& lightData) const;
+	void _formatPointLight(const LightComponent& light, const TransformComponent& transform, Renderer::LightData& lightData) const;
+	void _formatSpotLight(const LightComponent& light, const TransformComponent& transform, Renderer::LightData& lightData) const;
+	void _submitLightData(const Renderer::LightData& lightData) const;
+
 
 private:
 	void _loadMesh(const MeshComponent& mesh) const;

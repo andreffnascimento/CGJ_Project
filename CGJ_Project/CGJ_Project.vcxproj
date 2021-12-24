@@ -168,6 +168,9 @@
     <ClCompile Include="src\engine\app\application.cpp" />
     <ClCompile Include="src\engine\app\inputHandler.cpp" />
     <ClCompile Include="src\engine\math\transform.cpp" />
+    <ClCompile Include="src\engine\renderer\modules\cameraRenderer.cpp" />
+    <ClCompile Include="src\engine\renderer\modules\lightRenderer.cpp" />
+    <ClCompile Include="src\engine\renderer\modules\meshRenderer.cpp" />
     <ClCompile Include="src\engine\scene\components.cpp" />
     <ClCompile Include="src\engine\scene\ecsRegistry.cpp" />
     <ClCompile Include="src\engine\scene\scene.cpp" />
@@ -217,8 +220,6 @@
     <None Include="Dependencies.exe" />
     <None Include="shaders\gouraud.frag" />
     <None Include="shaders\gouraud.vert" />
-    <None Include="shaders\phong-blinn.frag" />
-    <None Include="shaders\phong-blinn.vert" />
     <None Include="shaders\pointlight.frag" />
     <None Include="shaders\pointlight.vert" />
     <None Include="shaders\text.frag" />

@@ -74,6 +74,9 @@ std::unordered_set<Entity> Scene::getEntitiesByTag(const std::regex& regex) cons
 	return entities;
 }
 
+
+
+
 void Scene::setActiveCamera(const CameraEntity& camera)
 {
 	_activeCamera = camera;
@@ -84,13 +87,28 @@ void Scene::setActiveCamera(const CameraEntity& camera)
 }
 
 
+void Scene::setReflectionCoefficients(float ambient, float diffuse, float specular)
+{
+	if (ambient < 0.0f || ambient > 1.0f)
+		throw std::string("Ambient coefficient must be a float value between 0.0f and 1.0f");
+
+	if (diffuse < 0.0f || diffuse > 1.0f)
+		throw std::string("Diffuse coefficient must be a float value between 0.0f and 1.0f");
+
+	if (specular < 0.0f || specular > 1.0f)
+		throw std::string("Specular coefficient must be a float value between 0.0f and 1.0f");
+
+	_reflectionCoefficients = { ambient, diffuse, specular };
+}
+
+
 
 
 void Scene::onCreate()
 {
 	// initialize all the script components
 	for (auto& script : _registry.getComponents<ScriptComponent>())
-		script.second.getScript()->onCreate();
+		script.second.script()->onCreate();
 }
 
 
@@ -98,13 +116,14 @@ void Scene::onUpdate(float ts)
 {
 	// update entity scripts
 	for (auto& script : _registry.getComponents<ScriptComponent>())
-		script.second.getScript()->onUpdate(ts);
+		script.second.script()->onUpdate(ts);
 
 	// render objects to the screen
 	Renderer& renderer = Application::getRenderer();
 	renderer.initSceneRendering();
-	renderer.renderCamera(_activeCamera);
-	renderer.renderObjects(*this);
+	renderer.renderCamera(*this);
+	renderer.renderLights(*this);
+	renderer.renderMeshes(*this);
 }
 
 

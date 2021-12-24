@@ -38,6 +38,32 @@ struct Coords3f
 };
 
 
+struct Coords4f
+{
+	float x = 0.0f;
+	float y = 0.0f;
+	float z = 0.0f;
+	float w = 0.0f;
+
+	Coords4f() = default;
+	Coords4f(const Coords4f&) = default;
+	~Coords4f() = default;
+
+	void operator+=(const Coords4f& other) { x += other.x; y += other.y; z += other.z; w += other.w; }
+	void operator-=(const Coords4f& other) { x -= other.x; y -= other.y; z -= other.z; w -= other.w; }
+	void operator*=(const Coords4f& other) { x *= other.x; y *= other.y; z *= other.z; w *= other.w; }
+	void operator/=(const Coords4f& other) { x /= other.x; y /= other.y; z /= other.z; w /= other.w; }
+
+	bool operator==(const Coords4f& other) const { return x == other.x && y == other.y && z == other.z && w == other.w; }
+	bool operator!=(const Coords4f& other) const { return x != other.x || y != other.y || z != other.z || w != other.w; }
+
+	friend Coords4f operator+(const Coords4f& c1, const Coords4f c2) { return Coords4f({ c1.x + c2.x, c1.y + c2.y, c1.z + c2.z, c1.w + c2.w }); }
+	friend Coords4f operator-(const Coords4f& c1, const Coords4f c2) { return Coords4f({ c1.x - c2.x, c1.y - c2.y, c1.z - c2.z, c1.w - c2.w }); }
+	friend Coords4f operator*(const Coords4f& c1, const Coords4f c2) { return Coords4f({ c1.x * c2.x, c1.y * c2.y, c1.z * c2.z, c1.w * c2.w }); }
+	friend Coords4f operator/(const Coords4f& c1, const Coords4f c2) { return Coords4f({ c1.x / c2.x, c1.y / c2.y, c1.z / c2.z, c1.w / c2.w }); }
+};
+
+
 
 
 struct ClippingPlanes
@@ -78,8 +104,26 @@ struct SphericalCoords
 	float beta = 0.0f;
 	float r = 1.0f;
 
+	SphericalCoords() = default;
+	SphericalCoords(const SphericalCoords&) = default;
+	~SphericalCoords() = default;
+
 	bool operator==(const SphericalCoords& other) const { return alpha == other.alpha && beta == other.beta && r == other.r; }
 	bool operator!=(const SphericalCoords& other) const { return alpha != other.alpha && beta != other.beta && r != other.r; }
+};
+
+
+
+
+struct ReflectionCoefficients
+{
+	float ambient = 1.0f;
+	float diffuse = 1.0f;
+	float specular = 1.0f;
+
+	ReflectionCoefficients() = default;
+	ReflectionCoefficients(const ReflectionCoefficients&) = default;
+	~ReflectionCoefficients() = default;
 };
 
 

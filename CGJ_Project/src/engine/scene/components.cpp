@@ -15,7 +15,7 @@ Entity GroupComponent::addNewEntity(Scene* scene, const Entity& parentEntity)
 
 Entity GroupComponent::addNewEntity(Scene* scene, const Entity& parentEntity, const std::string& tag)
 {
-	Entity entity = scene->createEntity(parentEntity.tag().getTag() + ":" + tag);
+	Entity entity = scene->createEntity(parentEntity.tag().tag() + ":" + tag);
 	_group.emplace(entity);
 	return entity;
 }
@@ -65,4 +65,30 @@ void MeshComponent::setMaterial(MyMesh& mesh, const Material& material)
 	memcpy(mesh.mat.emissive, material.emissive, 4 * sizeof(float));
 	mesh.mat.shininess = material.shininess;
 	mesh.mat.texCount = material.texCount;
+}
+
+
+
+
+void LightComponent::setDirectionalLight(const Coords3f& direction, float intensity)
+{
+	_lightType = LightComponent::LightType::DIRECTIONAL;
+	_direction = direction;
+	_intensity = intensity;
+}
+
+
+void LightComponent::setPointLight(float intensity)
+{
+	_lightType = LightComponent::LightType::POINT;
+	_intensity = intensity;
+}
+
+
+void LightComponent::setSpotLight(const Coords3f& direction, float intensity, float cutOff)
+{
+	_lightType = LightComponent::LightType::SPOT;
+	_direction = direction;
+	_intensity = intensity;
+	_cutOff = cutOff;
 }

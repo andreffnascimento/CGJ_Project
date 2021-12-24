@@ -20,6 +20,7 @@ class Scene
 private:
 	ECSRegistry _registry = ECSRegistry();
 	CameraEntity _activeCamera = CameraEntity();
+	ReflectionCoefficients _reflectionCoefficients = ReflectionCoefficients();
 
 
 
@@ -55,7 +56,13 @@ public:
 
 
 public:
+	inline const CameraEntity& activeCamera() const						{ return _activeCamera; }
+	inline const ReflectionCoefficients& reflectionCoefficients() const { return _reflectionCoefficients; }
+
+
+public:
 	void setActiveCamera(const CameraEntity& camera);
+	void setReflectionCoefficients(float ambient, float diffuse, float specular);
 
 
 public:
