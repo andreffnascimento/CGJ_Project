@@ -36,6 +36,8 @@ public:
 
 
 public:
+	inline const float* operator[](size_t index) const { return (const float*)_matrix[index]; }
+	inline float* operator[](size_t index) { return (float*)_matrix[index]; }
 	inline operator const float* () const { return (const float*)_matrix; }
 
 

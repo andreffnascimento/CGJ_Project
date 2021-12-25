@@ -113,10 +113,10 @@ TransformMatrix operator*(const TransformMatrix& m1, const TransformMatrix& m2)
 	{
 		for (int j = 0; j < 4; j++)
 		{
-			res._matrix[j][i] =  m1._matrix[0][i] * m2._matrix[j][0];
-			res._matrix[j][i] += m1._matrix[1][i] * m2._matrix[j][1];
-			res._matrix[j][i] += m1._matrix[2][i] * m2._matrix[j][2];
-			res._matrix[j][i] += m1._matrix[3][i] * m2._matrix[j][3];
+			res[j][i] =  m1[0][i] * m2[j][0];
+			res[j][i] += m1[1][i] * m2[j][1];
+			res[j][i] += m1[2][i] * m2[j][2];
+			res[j][i] += m1[3][i] * m2[j][3];
 		}
 	}
 

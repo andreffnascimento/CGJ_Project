@@ -32,6 +32,7 @@ public:
 
 public:
 	static const TransformMatrix& calculateTransformMatrix(const Entity& entity);
+	static Coords3f calculateWorldTranslation(const Entity& entity);
 
 
 private:

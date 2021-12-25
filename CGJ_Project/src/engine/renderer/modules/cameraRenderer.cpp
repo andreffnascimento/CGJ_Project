@@ -1,15 +1,16 @@
 #include "engine/renderer/renderer.h"
 
+#include "engine/math/transform.h"
+
 
 
 
 void Renderer::renderCamera(const Scene& scene) const
 {
 	const CameraEntity& camera = scene.activeCamera();
-	TransformComponent& transform = camera.getComponent<TransformComponent>();
 	CameraComponent& cameraSettings = camera.getComponent<CameraComponent>();
 
-	const Coords3f& cameraCoords = transform.translation();
+	const Coords3f& cameraCoords = Transform::calculateWorldTranslation(camera);
 	const Coords3f& targetCoords = cameraSettings.targetCoords();
 
 	Coords3f up = { 0.0f, 1.0f, 0.0f };

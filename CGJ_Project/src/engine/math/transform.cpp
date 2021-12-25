@@ -64,6 +64,14 @@ const TransformMatrix& Transform::calculateTransformMatrix(const Entity& entity)
 }
 
 
+Coords3f Transform::calculateWorldTranslation(const Entity& entity)
+{
+	const TransformMatrix& transformMatrix = Transform::calculateTransformMatrix(entity);
+	Coords3f worldTranslation = { transformMatrix[3][0], transformMatrix[3][1], transformMatrix[3][2] };
+	return worldTranslation;
+}
+
+
 
 
 void Transform::_localUpdate(const Entity& entity, const Coords3f& transform, transform_func_t transformFunc)
