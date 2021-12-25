@@ -38,6 +38,7 @@ public:
 
 
 public:
+	void operator*=(const Quaternion& other);
 	friend Quaternion operator*(const Quaternion& q1, const Quaternion& q2);
 
 };

@@ -72,6 +72,17 @@ Coords3f Quaternion::up() const
 
 
 
+void Quaternion::operator*=(const Quaternion& other)
+{
+	Quaternion curr = *this;
+	_x = curr._x * other._w + curr._w * other._x + curr._y * other._z - curr._z * other._y;
+	_y = curr._y * other._w + curr._w * other._y + curr._z * other._x - curr._x * other._z;
+	_z = curr._z * other._w + curr._w * other._z + curr._x * other._y - curr._y * other._x;
+	_w = curr._w * other._w - curr._x * other._x - curr._y * other._y - curr._z * other._z;
+	normalize();
+}
+
+
 Quaternion operator*(const Quaternion& q1, const Quaternion& q2)
 {
 	Quaternion quaternion = Quaternion();
