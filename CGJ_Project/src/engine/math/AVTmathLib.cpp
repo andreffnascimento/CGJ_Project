@@ -64,12 +64,12 @@ void loadIdentity(MatrixTypes aType)
 }
 
 // glMultMatrix implementation
-void multMatrix(MatrixTypes aType, float *aMatrix)
+void multMatrix(MatrixTypes aType, const float *aMatrix)
 {
 	
-	float *a, *b, res[16];
-	a = mMatrix[aType];
-	b = aMatrix;
+	float res[16];
+	float *a = mMatrix[aType];
+	const float *b = aMatrix;
 
 	for (int i = 0; i < 4; ++i) {
 		for (int j = 0; j < 4; ++j) {
@@ -83,12 +83,12 @@ void multMatrix(MatrixTypes aType, float *aMatrix)
 }
 
 // aux function resMat = resMat * aMatrix
-void multMatrix(float *resMat, float *aMatrix)
+void multMatrix(float *resMat, const float *aMatrix)
 {
 	
-	float *a, *b, res[16];
-	a = resMat;
-	b = aMatrix;
+	float res[16];
+	float *a = resMat;
+	const float *b = aMatrix;
 
 	for (int i = 0; i < 4; ++i) {
 		for (int j = 0; j < 4; ++j) {
@@ -103,7 +103,7 @@ void multMatrix(float *resMat, float *aMatrix)
 
 
 // glLoadMatrix implementation
-void loadMatrix(MatrixTypes aType, float *aMatrix)
+void loadMatrix(MatrixTypes aType, const float *aMatrix)
 {
 	memcpy(mMatrix[aType], aMatrix, 16 * sizeof(float));
 }

@@ -76,6 +76,12 @@ public:
 		return _getSceneRegistry().hasComponent<T>(_entityHandle);
 	}
 
+	template <typename T>
+	T* getComponentIfExists() const
+	{
+		return _getSceneRegistry().getComponentIfExists<T>(_entityHandle);
+	}
+
 
 
 

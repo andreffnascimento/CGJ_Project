@@ -9,6 +9,7 @@
 
 #include "engine/scene/entity.h"
 #include "engine/scene/script.h"
+#include "engine/math/transformMatrix.h"
 #include "engine/renderer/geometry.h"
 #include "engine/utils/coords.h"
 
@@ -52,14 +53,19 @@ private:
 	Coords3f _rotation = { 0.0f, 0.0f, 0.0f };
 	Coords3f _scale = { 1.0f, 1.0f, 1.0f };
 
+	TransformMatrix _localTransform;
+	TransformMatrix _worldTransform;
+	bool _locallyUpdated = false;
+	bool _globallyUpdated = false;
+
 public:
 	TransformComponent() = default;
 	TransformComponent(const TransformComponent&) = default;
 	~TransformComponent() = default;
 
-	inline const Coords3f& translation() const { return _translation; }
-	inline const Coords3f& rotation() const { return _rotation; }
-	inline const Coords3f& scale() const { return _scale; }
+	inline const Coords3f& translation() const	{ return _translation; }
+	inline const Coords3f& rotation() const		{ return _rotation; }
+	inline const Coords3f& scale() const		{ return _scale; }
 
 public:
 	friend class Transform;
@@ -90,13 +96,34 @@ public:
 	{
 		for (Entity entity : _group)
 		{
-			if (entity.hasComponent<GroupComponent>())
-				entity.getComponent<GroupComponent>().expandGroupToComponent(outExpandedGroup);
+			GroupComponent* groupComponent = entity.getComponentIfExists<GroupComponent>();
+			if (groupComponent != nullptr)
+				groupComponent->expandGroupToComponent(outExpandedGroup);
 
 			if (entity.hasComponent<T>())
 				outExpandedGroup.emplace(&entity.getComponent<T>());
 		}
 	}
+};
+
+
+
+
+struct ParentComponent
+{
+private:
+	Entity _parent = Entity();
+
+public:
+	ParentComponent() = default;
+	ParentComponent(const ParentComponent&) = default;
+	ParentComponent(const Entity& parent) : _parent(parent) {}
+	~ParentComponent() = default;
+
+	inline void setParent(const Entity& parent) { _parent = parent; }
+
+	inline const Entity& parent() const		{ return _parent; }
+	inline operator const Entity& () const	{ return parent(); }
 };
 
 

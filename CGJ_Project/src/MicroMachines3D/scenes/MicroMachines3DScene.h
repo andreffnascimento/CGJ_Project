@@ -27,18 +27,17 @@ private:
 		
 		CameraManager cameraManager = CameraManager(this);
 
-		//Table table = Table(this);
-		//Transform::translate(table, { 0.0f, -TABLE_SIZE.y, 0.0f });
+		Table table = Table(this);
+		Transform::translate(table, { 0.0f, -TABLE_SIZE.y, 0.0f });
 
 		Car car = Car(this);
 		Transform::translate(car, { -TABLE_SIZE.x / 2.2f, CAR_BOTTOM_SIZE.y / 2.0f + CAR_FLOOR_DISTANCE, TABLE_SIZE.z / 2.2f });
-		//Transform::rotate(car, { 0.0f, 90.0f, 0.0f });
+		Transform::rotate(car, { 0.0f, 90.0f, 0.0f });
 
 		// Temporary point light
 		Entity light = createEntity("dirlight");
 		LightComponent& lightComponent = light.addComponent<LightComponent>();
 		lightComponent.setDirectionalLight({1.0f, -1.0f, -1.0f}, 2.0f);
-		Transform::translate(car, { TABLE_SIZE.x / 2.2f, CAR_BOTTOM_SIZE.y / 2.0f + CAR_FLOOR_DISTANCE, -TABLE_SIZE.z / 2.2f });
 	}
 };
 

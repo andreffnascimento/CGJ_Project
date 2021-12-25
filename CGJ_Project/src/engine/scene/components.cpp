@@ -1,7 +1,7 @@
 #include "components.h"
 
-#include "engine/app/application.h"
 #include "engine/scene/scene.h"
+#include "engine/app/application.h"
 
 
 
@@ -9,6 +9,7 @@
 Entity GroupComponent::addNewEntity(Scene* scene, const Entity& parentEntity)
 {
 	Entity entity = scene->createEntity(parentEntity.tag(), true);
+	entity.addComponent<ParentComponent>(parentEntity);
 	_group.emplace(entity);
 	return entity;
 }
@@ -16,6 +17,7 @@ Entity GroupComponent::addNewEntity(Scene* scene, const Entity& parentEntity)
 Entity GroupComponent::addNewEntity(Scene* scene, const Entity& parentEntity, const std::string& tag)
 {
 	Entity entity = scene->createEntity(parentEntity.tag().tag() + ":" + tag);
+	entity.addComponent<ParentComponent>(parentEntity);
 	_group.emplace(entity);
 	return entity;
 }
@@ -25,15 +27,16 @@ void GroupComponent::expandGroup(std::unordered_set<Entity>& outExpandedGroup) c
 {
 	for (Entity entity : _group)
 	{
-		if (entity.hasComponent<GroupComponent>())
-			entity.getComponent<GroupComponent>().expandGroup(outExpandedGroup);
+		GroupComponent* groupComponent = entity.getComponentIfExists<GroupComponent>();
+		if (groupComponent != nullptr)
+			groupComponent->expandGroup(outExpandedGroup);
 
 		outExpandedGroup.emplace(entity);
 	}
 }
 
 
-#include <iostream>
+
 
 void CameraComponent::setOrthographicCamera(const ClippingPlanes& clippingPlanes, float viewportSize)
 {

@@ -78,8 +78,6 @@ public:
 		_decayOrbitalValuesToOriginal(ts);
 		_updateCameraTransform();
 		_setCameraTarget();
-
-		Transform::rotate(_car, { 0.2f, 0.2f, 0.0f });
 	}
 
 
@@ -190,9 +188,9 @@ private:
 	
 	void _updateCameraTransform()
 	{	
-		float orbitalCameraX = _rAux * sin(_alphaAux * (float)Transform::PI / 180.0f) * cos(_betaAux * (float)Transform::PI / 180.0f);
-		float orbitalCameraZ = _rAux * cos(_alphaAux * (float)Transform::PI / 180.0f) * cos(_betaAux * (float)Transform::PI / 180.0f);
-		float orbitalCameraY = _rAux * sin(_betaAux *  (float)Transform::PI / 180.0f);
+		float orbitalCameraX = _rAux * sin(toRadians(_alphaAux)) * cos(toRadians(_betaAux));
+		float orbitalCameraZ = _rAux * cos(toRadians(_alphaAux)) * cos(toRadians(_betaAux));
+		float orbitalCameraY = _rAux * sin(toRadians(_betaAux));
 
 		const Coords3f& carPosition = _car.transform().translation();
 		float cameraX = carPosition.x + orbitalCameraX;

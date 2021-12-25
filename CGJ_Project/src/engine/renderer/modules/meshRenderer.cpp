@@ -1,5 +1,7 @@
 #include "engine/renderer/renderer.h"
 
+#include "engine/math/transform.h"
+
 extern float mCompMatrix[COUNT_COMPUTED_MATRICES][16];
 extern float mNormal3x3[9];
 
@@ -15,9 +17,9 @@ void Renderer::renderMeshes(const Scene& scene) const
 		if (!mesh.enabled())
 			continue;
 
-		const TransformComponent& transform = scene.getEntityById(iterator.first).transform();
+		const Entity& entity = scene.getEntityById(iterator.first);
 		_loadMesh(mesh);
-		_applyTransform(transform);
+		_applyTransform(entity);
 		_renderMesh(mesh);
 	}
 }
@@ -40,22 +42,10 @@ void Renderer::_loadMesh(const MeshComponent& mesh) const
 }
 
 
-void Renderer::_applyTransform(const TransformComponent& transform) const
+void Renderer::_applyTransform(const Entity& entity) const
 {
 	pushMatrix(MODEL);
-	translate(MODEL, transform.translation().x, transform.translation().y, transform.translation().z);
-
-	// avoid rotate operation if it is not needed (the other two are very common)
-	if (transform.rotation().x != 0.0f)
-		rotate(MODEL, transform.rotation().x, 1, 0, 0);
-
-	if (transform.rotation().y != 0.0f)
-		rotate(MODEL, transform.rotation().y, 0, 1, 0);
-
-	if (transform.rotation().z != 0.0f)
-		rotate(MODEL, transform.rotation().z, 0, 0, 1);
-
-	scale(MODEL, transform.scale().x, transform.scale().y, transform.scale().z);
+	loadMatrix(MODEL, Transform::calculateTransformMatrix(entity));
 }
 
 
@@ -76,6 +66,5 @@ void Renderer::_renderMesh(const MeshComponent& mesh) const
 
 	glDrawElements(meshData.type, meshData.numIndexes, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
-
 	popMatrix(MODEL);
 }

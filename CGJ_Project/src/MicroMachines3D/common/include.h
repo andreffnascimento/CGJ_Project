@@ -12,6 +12,7 @@
 #include "engine/scene/components.h"
 #include "engine/scene/scene.h"
 
+#include "engine/math/angle.h"
 #include "engine/math/transform.h"
 
 #include "engine/renderer/geometry.h"

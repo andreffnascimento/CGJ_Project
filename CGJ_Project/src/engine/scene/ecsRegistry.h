@@ -92,6 +92,14 @@ public:
 		return iterator != componentMap.end();
 	}
 
+	template <typename T>
+	T* getComponentIfExists(EntityHandle entityHandle) const
+	{
+		auto& componentMap = getComponents<T>();
+		auto iterator = componentMap.find(entityHandle);
+		return iterator != componentMap.end() ? &iterator->second : nullptr;
+	}
+
 
 
 public:

@@ -67,10 +67,10 @@
 		  * \param aType any value from MatrixTypes
 		  * \param aMatrix matrix in column major order data, float[16]
 		*/
-		void multMatrix(MatrixTypes aType, float *aMatrix);
+		void multMatrix(MatrixTypes aType, const float *aMatrix);
 
 		//resMatrix = resMatrix * aMatrix
-		void multMatrix(float *resMatrix, float *aMatrix);
+		void multMatrix(float *resMatrix, const float *aMatrix);
 
 		/** Similar to gLoadMatrix.
 		  *
@@ -78,7 +78,7 @@
 		  * \param aMatrix matrix in column major order data, float[16]
 		*/
 
-		void loadMatrix(MatrixTypes aType, float *aMatrix);
+		void loadMatrix(MatrixTypes aType, const float *aMatrix);
 
 		/** Similar to glPushMatrix
 		  * 

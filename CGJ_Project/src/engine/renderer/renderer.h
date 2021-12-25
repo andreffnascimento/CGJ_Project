@@ -105,7 +105,7 @@ private:
 
 private:
 	void _loadMesh(const MeshComponent& mesh) const;
-	void _applyTransform(const TransformComponent& transform) const;
+	void _applyTransform(const Entity& entity) const;
 	void _renderMesh(const MeshComponent& mesh) const;
 
 };
