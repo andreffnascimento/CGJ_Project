@@ -246,4 +246,24 @@ public:
 };
 
 
+
+
+struct RigidbodyComponent
+{
+private:
+	float _mass = 1.0f;
+	float _drag = 0.0f;
+	bool _useGravity = false;
+
+public:
+	RigidbodyComponent() = default;
+	RigidbodyComponent(const RigidbodyComponent&) = default;
+	~RigidbodyComponent() = default;
+
+	inline float mass() const		{ return _mass; }
+	inline float drag() const		{ return _drag; }
+	inline bool usesGravity() const { return _useGravity; }
+};
+
+
 #endif // !__engine_scene_components__
