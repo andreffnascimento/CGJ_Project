@@ -75,6 +75,9 @@ void MeshComponent::setMaterial(MyMesh& mesh, const Material& material)
 
 void LightComponent::setDirectionalLight(const Coords3f& direction, float intensity)
 {
+	if (intensity < 0.0f)
+		throw std::string("The light intensity must be a value greater than 0!");
+
 	_lightType = LightComponent::LightType::DIRECTIONAL;
 	_direction = direction;
 	_intensity = intensity;
@@ -83,6 +86,9 @@ void LightComponent::setDirectionalLight(const Coords3f& direction, float intens
 
 void LightComponent::setPointLight(float intensity)
 {
+	if (intensity < 0.0f)
+		throw std::string("The light intensity must be a value greater than 0!");
+
 	_lightType = LightComponent::LightType::POINT;
 	_intensity = intensity;
 }
@@ -90,8 +96,34 @@ void LightComponent::setPointLight(float intensity)
 
 void LightComponent::setSpotLight(const Coords3f& direction, float intensity, float cutOff)
 {
+	if (intensity < 0.0f)
+		throw std::string("The light intensity must be a value greater than 0!");
+
+	if (cutOff < 0.0f || cutOff > 1.0f)
+		throw std::string("The cutoff must be a value between 0.0f and 1.0");
+
 	_lightType = LightComponent::LightType::SPOT;
 	_direction = direction;
 	_intensity = intensity;
 	_cutOff = cutOff;
+}
+
+
+
+
+RigidbodyComponent::RigidbodyComponent(float mass, float drag, float angularDrag, bool useGravity)
+{
+	if (mass < 0.0f)
+		throw std::string("The mass must be a value greater than 0!");
+
+	if (drag < 0.0f)
+		throw std::string("The drag must be a value greater than 0!");
+
+	if (angularDrag < 0.0f)
+		throw std::string("The angular drag must be a value greater than 0!");
+
+	_mass = mass;
+	_drag = drag;
+	_angularDrag = angularDrag;
+	_useGravity = useGravity;
 }

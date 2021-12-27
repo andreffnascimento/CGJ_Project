@@ -253,16 +253,25 @@ struct RigidbodyComponent
 private:
 	float _mass = 1.0f;
 	float _drag = 0.0f;
+	float _angularDrag = 0.0f;
 	bool _useGravity = false;
+
+	//std::unordered_set<Force*> _forces = std::unordered_set<Force*>();
 
 public:
 	RigidbodyComponent() = default;
 	RigidbodyComponent(const RigidbodyComponent&) = default;
+	RigidbodyComponent(float mass, float drag, float angularDrag, bool useGravity);
 	~RigidbodyComponent() = default;
 
-	inline float mass() const		{ return _mass; }
-	inline float drag() const		{ return _drag; }
-	inline bool usesGravity() const { return _useGravity; }
+	inline float mass() const			{ return _mass; }
+	inline float drag() const			{ return _drag; }
+	inline float angularDrag() const	{ return _angularDrag; }
+	inline bool usesGravity() const		{ return _useGravity; }
+
+
+public:
+	friend class PhysicsEngine;
 };
 
 
