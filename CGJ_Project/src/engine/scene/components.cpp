@@ -125,5 +125,5 @@ RigidbodyComponent::RigidbodyComponent(float mass, float drag, float angularDrag
 	_mass = mass;
 	_drag = drag;
 	_angularDrag = angularDrag;
-	_useGravity = useGravity;
+	_flags[0] = useGravity;
 }

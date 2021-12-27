@@ -167,6 +167,7 @@
   <ItemGroup>
     <ClCompile Include="src\engine\app\application.cpp" />
     <ClCompile Include="src\engine\app\inputHandler.cpp" />
+    <ClCompile Include="src\engine\math\force.cpp" />
     <ClCompile Include="src\engine\math\physicsEngine.cpp" />
     <ClCompile Include="src\engine\math\quaternion.cpp" />
     <ClCompile Include="src\engine\math\transform.cpp" />

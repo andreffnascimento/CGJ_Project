@@ -4,11 +4,14 @@
 
 #include <string>
 #include <regex>
+#include <list>
 #include <memory>
+#include <bitset>
 #include <unordered_set>
 
 #include "engine/scene/entity.h"
 #include "engine/scene/script.h"
+#include "engine/math/force.h"
 #include "engine/math/transformMatrix.h"
 #include "engine/renderer/geometry.h"
 #include "engine/utils/coords.h"
@@ -250,13 +253,23 @@ public:
 
 struct RigidbodyComponent
 {
+public:
+	static constexpr unsigned int GRAVITY_ENABLED_FLAG = 0;
+	static constexpr unsigned int BOUNDED_VELOCITY_X = 0;
+	static constexpr unsigned int BOUNDED_VELOCITY_Y = 0;
+	static constexpr unsigned int BOUNDED_VELOCITY_Z = 0;
+
 private:
 	float _mass = 1.0f;
 	float _drag = 0.0f;
 	float _angularDrag = 0.0f;
-	bool _useGravity = false;
 
-	//std::unordered_set<Force*> _forces = std::unordered_set<Force*>();
+	std::bitset<8> _flags = std::bitset<8>(0b1000000);
+	
+	Coords3f _maxVelocity = Coords3f();
+	Coords3f _velocity = Coords3f();
+
+	std::list<Force> _forces = std::list<Force>();
 
 public:
 	RigidbodyComponent() = default;
@@ -267,8 +280,14 @@ public:
 	inline float mass() const			{ return _mass; }
 	inline float drag() const			{ return _drag; }
 	inline float angularDrag() const	{ return _angularDrag; }
-	inline bool usesGravity() const		{ return _useGravity; }
+	inline bool gravityEnabled() const	{ return _flags[RigidbodyComponent::GRAVITY_ENABLED_FLAG]; }
 
+	inline void setMaxVelocityX() {}
+	inline void setMaxVelocityY() {}
+	inline void setMaxVelocityZ() {}
+
+	inline void addLinearForce(const Coords3f& force)	{ _forces.push_back(Force(force, Force::ForceType::LINEAR)); }
+	inline void addAngularForce(const Coords3f& force)	{ _forces.push_back(Force(force, Force::ForceType::ANGULAR)); }
 
 public:
 	friend class PhysicsEngine;

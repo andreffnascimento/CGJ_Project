@@ -78,6 +78,9 @@
     <ClCompile Include="src\engine\math\physicsEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\math\force.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\math\AVTmathLib.h">
