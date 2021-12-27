@@ -13,11 +13,12 @@ void Renderer::renderMeshes(const Scene& scene) const
 	const auto& meshComponents = scene.getSceneComponents<MeshComponent>();
 	for (const auto& iterator : meshComponents)
 	{
+		EntityHandle entityId = iterator.first;
 		const MeshComponent& mesh = iterator.second;
 		if (!mesh.enabled())
 			continue;
 
-		const Entity& entity = scene.getEntityById(iterator.first);
+		const Entity& entity = scene.getEntityById(entityId);
 		_loadMesh(mesh);
 		_applyTransform(entity);
 		_renderMesh(mesh);

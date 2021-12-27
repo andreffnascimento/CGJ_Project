@@ -3,6 +3,7 @@
 #include <unordered_map>
 
 #include "engine/app/application.h"
+#include "engine/math/physicsEngine.h"
 #include "engine/renderer/renderer.h"
 
 
@@ -118,7 +119,9 @@ void Scene::onUpdate(float ts)
 	for (auto& script : _registry.getComponents<ScriptComponent>())
 		script.second.script()->onUpdate(ts);
 
-	// render objects to the screen
+	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
+	physicsEngine.run(*this);
+	
 	Renderer& renderer = Application::getRenderer();
 	renderer.initSceneRendering();
 	renderer.renderCamera(*this);

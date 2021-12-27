@@ -5,6 +5,7 @@
 #include <string>
 
 #include "engine/app/inputHandler.h"
+#include "engine/math/physicsEngine.h"
 #include "engine/renderer/renderer.h"
 #include "engine/scene/scene.h"
 
@@ -42,6 +43,7 @@ private:
 
 	InputHandler _inputHandler = InputHandler();
 	Renderer _renderer = Renderer();
+	PhysicsEngine _physicsEngine = PhysicsEngine();
 	Scene* _scene;
 
 
@@ -65,6 +67,7 @@ public:
 	static Application& getInstance();
 	static InputHandler& getInputHandler();
 	static Renderer& getRenderer();
+	static PhysicsEngine& getPhysicsEngine();
 
 
 public:

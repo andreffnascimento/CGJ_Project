@@ -115,6 +115,13 @@ Renderer& Application::getRenderer()
 	return app._renderer;
 }
 
+PhysicsEngine& Application::getPhysicsEngine()
+{
+	Application& app = Application::getInstance();
+	return app._physicsEngine;
+}
+
+
 
 
 void Application::setScene(Scene* scene)

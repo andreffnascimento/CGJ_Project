@@ -22,7 +22,7 @@ TransformMatrix::TransformMatrix(const TransformMatrix& matrix)
 
 
 
-#include <iostream>
+
 const TransformMatrix& TransformMatrix::calculateTransformMatrix(const Coords3f& translation, const Coords3f& rotation, const Coords3f& scale)
 {
 	setIdentityMatrix();
