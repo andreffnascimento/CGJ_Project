@@ -75,6 +75,9 @@
     <ClCompile Include="src\engine\math\quaternion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\math\physicsEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\math\AVTmathLib.h">
@@ -161,7 +164,7 @@
     <ClInclude Include="src\MicroMachines3D\scripts\car\carHeadlightsScript.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\math\angle.h">
+    <ClInclude Include="src\engine\utils\angle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\MicroMachines3D\scenes\MicroMachines3DScene.h">
@@ -174,6 +177,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\math\quaternion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\math\physicsEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\math\force.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

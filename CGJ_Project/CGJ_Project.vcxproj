@@ -167,6 +167,7 @@
   <ItemGroup>
     <ClCompile Include="src\engine\app\application.cpp" />
     <ClCompile Include="src\engine\app\inputHandler.cpp" />
+    <ClCompile Include="src\engine\math\physicsEngine.cpp" />
     <ClCompile Include="src\engine\math\quaternion.cpp" />
     <ClCompile Include="src\engine\math\transform.cpp" />
     <ClCompile Include="src\engine\math\transformMatrix.cpp" />
@@ -190,13 +191,15 @@
     <ClInclude Include="src\engine\app\application.h" />
     <ClInclude Include="src\engine\app\callback.h" />
     <ClInclude Include="src\engine\app\inputHandler.h" />
+    <ClInclude Include="src\engine\math\force.h" />
+    <ClInclude Include="src\engine\math\physicsEngine.h" />
     <ClInclude Include="src\engine\math\quaternion.h" />
     <ClInclude Include="src\engine\math\transform.h" />
     <ClInclude Include="src\engine\math\transformMatrix.h" />
     <ClInclude Include="src\engine\scene\components.h" />
     <ClInclude Include="src\engine\scene\ecsRegistry.h" />
     <ClInclude Include="src\engine\scene\sceneEntity.h" />
-    <ClInclude Include="src\engine\math\angle.h" />
+    <ClInclude Include="src\engine\utils\angle.h" />
     <ClInclude Include="src\engine\utils\coords.h" />
     <ClInclude Include="src\engine\scene\cameraEntity.h" />
     <ClInclude Include="src\engine\scene\scene.h" />
