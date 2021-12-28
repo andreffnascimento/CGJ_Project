@@ -22,7 +22,7 @@ void PhysicsEngine::run(const Scene& scene, float ts) const
 
 
 
-
+#include <iostream>
 void PhysicsEngine::_processRigidbody(const Scene& scene, EntityHandle entityId, RigidbodyComponent& rigidbody, float ts) const
 {
 	if (rigidbody._type == RigidbodyComponent::RigidbodyType::DYNAMIC)
@@ -54,6 +54,7 @@ Coords3f PhysicsEngine::_calculateDragForce(const RigidbodyComponent& rigidbody)
 	else
 		dragForce *= PhysicsEngine::DRAG_SLOW_CONSTANT;
 
+	dragForce *= rigidbody._velocity.normalized();
 	return dragForce;
 }
 
@@ -77,7 +78,7 @@ void PhysicsEngine::_processVelocityConstraints(RigidbodyComponent& rigidbody) c
 
 void PhysicsEngine::_processSleepThreshold(RigidbodyComponent& rigidbody) const
 {
-	if (rigidbody._velocity.sum() > rigidbody._sleepThreshold)
+	if (rigidbody._velocity.length() > rigidbody._sleepThreshold)
 		return;
 
 	rigidbody._velocity = Coords3f();

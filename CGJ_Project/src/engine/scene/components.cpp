@@ -140,14 +140,14 @@ RigidbodyComponent::RigidbodyComponent(RigidbodyComponent::RigidbodyType type, f
 	_drag = drag;
 }
 
-#include <iostream>
+
 void RigidbodyComponent::setVelocity(const Coords3f& velocity)
 {
 	if (_type != RigidbodyComponent::RigidbodyType::KINEMATIC)
 		throw std::string("Only kinematic objects can have their velocity set!");
 
 	_velocity = velocity;
-	_sleeping = false;
+	_sleeping = (_velocity == Coords3f({ 0.0f, 0.0f, 0.0f }));
 }
 
 void RigidbodyComponent::addForce(const Coords3f& force)
@@ -156,5 +156,5 @@ void RigidbodyComponent::addForce(const Coords3f& force)
 		throw std::string("Forces can only be applied to dynamic objects!");
 
 	_force += force;
-	_sleeping = false;
+	_sleeping = (_force == Coords3f({ 0.0f, 0.0f, 0.0f }));
 }
