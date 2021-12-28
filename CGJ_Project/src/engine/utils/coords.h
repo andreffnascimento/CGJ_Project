@@ -28,6 +28,9 @@ struct Coords3f
 	void operator*=(const Coords3f& other) { x *= other.x; y *= other.y; z *= other.z; }
 	void operator/=(const Coords3f& other) { x /= other.x; y /= other.y; z /= other.z; }
 
+	void operator*=(float value) { x *= value; y *= value; z *= value; }
+	void operator/=(float value) { x /= value; y /= value; z /= value; }
+
 	bool operator==(const Coords3f &other) const { return x == other.x && y == other.y && z == other.z; }
 	bool operator!=(const Coords3f &other) const { return x != other.x || y != other.y || z != other.z; }
 
@@ -56,6 +59,9 @@ struct Coords4f
 
 	bool operator==(const Coords4f& other) const { return x == other.x && y == other.y && z == other.z && w == other.w; }
 	bool operator!=(const Coords4f& other) const { return x != other.x || y != other.y || z != other.z || w != other.w; }
+
+	void operator*=(float value) { x *= value; y *= value; z *= value; w *= value; }
+	void operator/=(float value) { x /= value; y /= value; z /= value; w /= value; }
 
 	friend Coords4f operator+(const Coords4f& c1, const Coords4f c2) { return Coords4f({ c1.x + c2.x, c1.y + c2.y, c1.z + c2.z, c1.w + c2.w }); }
 	friend Coords4f operator-(const Coords4f& c1, const Coords4f c2) { return Coords4f({ c1.x - c2.x, c1.y - c2.y, c1.z - c2.z, c1.w - c2.w }); }

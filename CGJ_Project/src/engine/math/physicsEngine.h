@@ -16,12 +16,7 @@ class PhysicsEngine
 
 public:
 	static constexpr float GRAVITY = 9.8f;
-	
-
-
-
-private:
-	
+	static constexpr float AIR_DENSITY = 1.225f;
 
 
 
@@ -33,18 +28,18 @@ public:
 
 
 public:
-	void run(const Scene& scene) const;
+	void run(const Scene& scene, float ts) const;
 
 
 
 
 private:
-	void processRigidbody(EntityHandle entityId, RigidbodyComponent& rigidbody) const;
+	void _processRigidbody(EntityHandle entityId, RigidbodyComponent& rigidbody, float ts) const;
 
 
 private:
-	void combineForces(RigidbodyComponent& rigidbody, Coords3f& linearForce, Coords3f& angularForce) const;
-	void addGravityForce(const RigidbodyComponent& rigidbody, Coords3f& linearForce) const;
+	void _calculateExpectedVelocity(RigidbodyComponent& rigidbody, float ts) const;
+	Coords3f _calculateDragForce(const RigidbodyComponent& rigidbody) const;
 
 };
 

@@ -8,49 +8,47 @@
 
 
 
-void PhysicsEngine::run(const Scene& scene) const
+void PhysicsEngine::run(const Scene& scene, float ts) const
 {
 	std::unordered_map<EntityHandle, RigidbodyComponent> _rigidbodyComponents = scene.getSceneComponents<RigidbodyComponent>();
 	for (auto& iterator : _rigidbodyComponents)
 	{
 		EntityHandle entityId = iterator.first;
 		RigidbodyComponent& rigidbody = iterator.second;
-		
-		if (!rigidbody._forces.empty())				// ignore rigidbodies that haven't been modified by a force
-			processRigidbody(entityId, rigidbody);
+
+		if (!rigidbody._sleeping)	// ignore rigidbodies that haven't move
+			_processRigidbody(entityId, rigidbody, ts);	
 	}
 }
 
 
 
 
-void PhysicsEngine::processRigidbody(EntityHandle entityId, RigidbodyComponent& rigidbody) const
+void PhysicsEngine::_processRigidbody(EntityHandle entityId, RigidbodyComponent& rigidbody, float ts) const
 {
-	Coords3f linearForce = Coords3f();
-	Coords3f angularForce = Coords3f();
-	combineForces(rigidbody, linearForce, angularForce);
-	addGravityForce(rigidbody, linearForce);
+	if (rigidbody._type == RigidbodyComponent::RigidbodyType::DYNAMIC)
+		_calculateExpectedVelocity(rigidbody, ts);
+
+
 }
 
 
 
 
-void PhysicsEngine::combineForces(RigidbodyComponent& rigidbody, Coords3f& linearForce, Coords3f& angularForce) const
+void PhysicsEngine::_calculateExpectedVelocity(RigidbodyComponent& rigidbody, float ts) const
 {
-	for (const auto& force : rigidbody._forces)
-	{
-		if (force.type() == Force::ForceType::LINEAR)
-			linearForce += force.force();
-		else
-			angularForce += force.force();
-	}
-
-	rigidbody._forces.clear();
+	Coords3f dragForce = _calculateDragForce(rigidbody);
+	rigidbody._force += dragForce;
+	rigidbody._force *= (ts / rigidbody._mass);
+	rigidbody._velocity += rigidbody._force;
 }
 
 
-void PhysicsEngine::addGravityForce(const RigidbodyComponent& rigidbody, Coords3f& linearForce) const
+Coords3f PhysicsEngine::_calculateDragForce(const RigidbodyComponent& rigidbody) const
 {
-	if (rigidbody.gravityEnabled())
-		linearForce.y -= PhysicsEngine::GRAVITY;
+	// we ignore the contact surface area for this calculations for performance reasons
+	Coords3f dragForce = rigidbody._velocity;
+	dragForce *= rigidbody._velocity;
+	dragForce *= PhysicsEngine::AIR_DENSITY * rigidbody._drag;
+	return dragForce;
 }

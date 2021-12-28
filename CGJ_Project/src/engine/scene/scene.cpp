@@ -120,7 +120,7 @@ void Scene::onUpdate(float ts)
 		script.second.script()->onUpdate(ts);
 
 	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
-	physicsEngine.run(*this);
+	physicsEngine.run(*this, ts);
 	
 	Renderer& renderer = Application::getRenderer();
 	renderer.initSceneRendering();

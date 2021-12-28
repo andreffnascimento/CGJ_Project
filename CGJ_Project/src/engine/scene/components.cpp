@@ -111,7 +111,7 @@ void LightComponent::setSpotLight(const Coords3f& direction, float intensity, fl
 
 
 
-RigidbodyComponent::RigidbodyComponent(float mass, float drag, float angularDrag, bool useGravity)
+RigidbodyComponent::RigidbodyComponent(RigidbodyComponent::RigidbodyType type, float mass, float drag)
 {
 	if (mass < 0.0f)
 		throw std::string("The mass must be a value greater than 0!");
@@ -119,11 +119,25 @@ RigidbodyComponent::RigidbodyComponent(float mass, float drag, float angularDrag
 	if (drag < 0.0f)
 		throw std::string("The drag must be a value greater than 0!");
 
-	if (angularDrag < 0.0f)
-		throw std::string("The angular drag must be a value greater than 0!");
-
+	_type = type;
 	_mass = mass;
 	_drag = drag;
-	_angularDrag = angularDrag;
-	_flags[0] = useGravity;
+}
+
+void RigidbodyComponent::setVelocity(const Coords3f& velocity)
+{
+	if (_type != RigidbodyComponent::RigidbodyType::KINEMATIC)
+		throw std::string("Only kinematic objects can have their velocity set!");
+
+	_velocity = velocity;
+	_sleeping = false;
+}
+
+void RigidbodyComponent::addForce(const Coords3f& force)
+{
+	if (_type != RigidbodyComponent::RigidbodyType::DYNAMIC)
+		throw std::string("Forces can only be applied to dynamic objects!");
+
+	_force += force;
+	_sleeping = false;
 }
