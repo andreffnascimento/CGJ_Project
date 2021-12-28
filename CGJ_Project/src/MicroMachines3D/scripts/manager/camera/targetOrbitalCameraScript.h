@@ -1,5 +1,5 @@
-#ifndef __mm3d_scripts_camera_targetOrbitalCameraScript__
-#define __mm3d_scripts_camera_targetOrbitalCameraScript__
+#ifndef __mm3d_scripts_manager_camera_targetOrbitalCameraScript__
+#define __mm3d_scripts_manager_camera_targetOrbitalCameraScript__
 
 
 #include "MicroMachines3D/common/include.h"
@@ -29,7 +29,7 @@ private:
 
 
 private:
-	const InputHandler* _inputHandler = nullptr;
+	const EventHandler* _eventHandler = nullptr;
 
 	Entity _car = Entity();
 
@@ -59,7 +59,7 @@ public:
 public:
 	void onCreate() override
 	{
-		_inputHandler = &Application::getInputHandler();
+		_eventHandler = &Application::getEventHandler();
 		_car = _scene->getEntityByTag("Car");
 		_camera = _scene->getEntityByTag("Camera3");
 		_updateCameraTransform();
@@ -71,7 +71,7 @@ public:
 
 	void onUpdate(float ts) override
 	{
-		const InputHandler::MouseInfo& mouseInfo = _inputHandler->getMouseInfo();
+		const EventHandler::MouseInfo& mouseInfo = _eventHandler->getMouseInfo();
 		_processMouseClick(mouseInfo);
 		_processMouseMovement(mouseInfo);
 		_processMouseWheel(mouseInfo);
@@ -79,6 +79,8 @@ public:
 		_updateCameraTransform();
 		_setCameraTarget();
 	}
+
+
 
 
 private:
@@ -89,24 +91,24 @@ private:
 	}
 
 
-	void _processMouseClick(const InputHandler::MouseInfo& mouseInfo)
+	void _processMouseClick(const EventHandler::MouseInfo& mouseInfo)
 	{
 		switch (mouseInfo.status)
 		{
 
-		case InputHandler::MouseStatus::LEFT_DOWN:
+		case EventHandler::MouseStatus::LEFT_DOWN:
 			_startX = mouseInfo.coords.x;
 			_startY = mouseInfo.coords.y;
 			_trackingStatus = TargetOrbitalCameraScript::TrackingStatus::MOVE;
 			break;
 
-		case InputHandler::MouseStatus::RIGHT_DOWN:
+		case EventHandler::MouseStatus::RIGHT_DOWN:
 			_startX = mouseInfo.coords.x;
 			_startY = mouseInfo.coords.y;
 			_trackingStatus = TargetOrbitalCameraScript::TrackingStatus::ZOOM;
 			break;
 
-		case InputHandler::MouseStatus::MOUSE_UP:
+		case EventHandler::MouseStatus::MOUSE_UP:
 			if (_trackingStatus == TargetOrbitalCameraScript::TrackingStatus::MOVE)
 			{
 				_alpha += -(int)mouseInfo.coords.x + _startX;
@@ -125,9 +127,9 @@ private:
 	}
 
 
-	void _processMouseMovement(const InputHandler::MouseInfo& mouseInfo)
+	void _processMouseMovement(const EventHandler::MouseInfo& mouseInfo)
 	{
-		if (mouseInfo.status != InputHandler::MouseStatus::MOVE)
+		if (mouseInfo.status != EventHandler::MouseStatus::MOVE)
 			return;
 
 		_alphaAux = _alpha;
@@ -158,9 +160,9 @@ private:
 	}
 
 
-	void _processMouseWheel(const InputHandler::MouseInfo& mouseInfo)
+	void _processMouseWheel(const EventHandler::MouseInfo& mouseInfo)
 	{
-		if (mouseInfo.status != InputHandler::MouseStatus::SCROL)
+		if (mouseInfo.status != EventHandler::MouseStatus::SCROL)
 			return;
 
 		_rAux -= mouseInfo.wheelDirection * 1.0f;
@@ -206,4 +208,4 @@ private:
 };
 
 
-#endif // !__mm3d_scripts_camera_targetOrbitalCameraScript__
+#endif // !__mm3d_scripts_manager_camera_targetOrbitalCameraScript__

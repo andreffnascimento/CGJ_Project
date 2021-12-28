@@ -1,5 +1,5 @@
-#ifndef __mm3d_scripts_camera_cameraManagerScript_h__
-#define __mm3d_scripts_camera_cameraManagerScript_h__
+#ifndef __mm3d_scripts_manager_camera_cameraManagerScript__
+#define __mm3d_scripts_manager_camera_cameraManagerScript__
 
 
 #include "MicroMachines3D/common/include.h"
@@ -11,7 +11,7 @@ class CameraManagerScript : public Script
 {
 
 private:
-	const InputHandler* _inputHandler = nullptr;
+	const EventHandler* _eventHandler = nullptr;
 
 	CameraEntity _camera1 = CameraEntity();
 	CameraEntity _camera2 = CameraEntity();
@@ -30,7 +30,7 @@ public:
 public:
 	void onCreate() override
 	{
-		_inputHandler = &Application::getInputHandler();
+		_eventHandler = &Application::getEventHandler();
 		_camera1 = _scene->getEntityByTag("Camera1");
 		_camera2 = _scene->getEntityByTag("Camera2");
 		_camera3 = _scene->getEntityByTag("Camera3");
@@ -40,17 +40,17 @@ public:
 
 	void onUpdate(float ts) override
 	{
-		if (_inputHandler->keyPressed('1'))
+		if (_eventHandler->keyState('1').pressed())
 			_scene->setActiveCamera(_camera1);
 
-		if (_inputHandler->keyPressed('2'))
+		if (_eventHandler->keyState('2').pressed())
 			_scene->setActiveCamera(_camera2);
 
-		if (_inputHandler->keyPressed('3'))
+		if (_eventHandler->keyState('3').pressed())
 			_scene->setActiveCamera(_camera3);
 	}
 
 };
 
 
-#endif // !__mm3d_scripts_camera_cameraManagerScript_h__
+#endif // !__mm3d_scripts_manager_camera_cameraManagerScript__

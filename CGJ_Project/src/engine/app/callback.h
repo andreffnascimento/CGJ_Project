@@ -77,7 +77,7 @@ void displayScene()
 
 	app._frameCount++;
 	app._scene->onUpdate(app._ts);
-	app._inputHandler.reset();
+	app._eventHandler.reset();
 
 	glutSwapBuffers();
 }
@@ -88,56 +88,56 @@ void displayScene()
 // Keyboard down callback function
 void processKeysDown(unsigned char key, int x, int y)
 {
-	InputHandler& input = Application::getInputHandler();
-	input.pressKey(key);
+	EventHandler& eventHandler = Application::getEventHandler();
+	eventHandler.pressKey(key);
 }
 
 
 // Keyboard up callback function
 void processKeysUp(unsigned char key, int x, int y)
 {
-	InputHandler& input = Application::getInputHandler();
-	input.releaseKey(key);
+	EventHandler& eventHandler = Application::getEventHandler();
+	eventHandler.releaseKey(key);
 }
 
 
 // Mouse click callback function
 void processMouseButtons(int button, int state, int x, int y)
 {
-	InputHandler& input = Application::getInputHandler();
-	InputHandler::MouseStatus status = InputHandler::MouseStatus::NONE;
+	EventHandler& eventHandler = Application::getEventHandler();
+	EventHandler::MouseStatus status = EventHandler::MouseStatus::NONE;
 
 	if (state == GLUT_DOWN)
 	{
 		if (button == GLUT_LEFT_BUTTON)
-			status = InputHandler::MouseStatus::LEFT_DOWN;
+			status = EventHandler::MouseStatus::LEFT_DOWN;
 		else if (button == GLUT_RIGHT_BUTTON)
-			status = InputHandler::MouseStatus::RIGHT_DOWN;
+			status = EventHandler::MouseStatus::RIGHT_DOWN;
 	}
 	else if (state == GLUT_UP)
-		status = InputHandler::MouseStatus::MOUSE_UP;
+		status = EventHandler::MouseStatus::MOUSE_UP;
 
-	input.updateMouse(x, y);
-	input.updateMouseStatus(status);
+	eventHandler.updateMouse(x, y);
+	eventHandler.updateMouseStatus(status);
 }
 
 
 // Mouse motion callback function
 void processMouseMotion(int x, int y)
 {
-	InputHandler& input = Application::getInputHandler();
-	input.updateMouse(x, y);
-	input.updateMouseStatus(InputHandler::MouseStatus::MOVE);
+	EventHandler& eventHandler = Application::getEventHandler();
+	eventHandler.updateMouse(x, y);
+	eventHandler.updateMouseStatus(EventHandler::MouseStatus::MOVE);
 }
 
 
 // Mouse wheel callback function
 void mouseWheel(int wheel, int direction, int x, int y)
 {
-	InputHandler& input = Application::getInputHandler();
-	input.updateMouse(x, y);
-	input.updateMouseWeel(direction);
-	input.updateMouseStatus(InputHandler::MouseStatus::SCROL);
+	EventHandler& eventHandler = Application::getEventHandler();
+	eventHandler.updateMouse(x, y);
+	eventHandler.updateMouseWeel(direction);
+	eventHandler.updateMouseStatus(EventHandler::MouseStatus::SCROL);
 }
 
 

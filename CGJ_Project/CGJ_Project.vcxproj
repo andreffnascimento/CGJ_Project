@@ -166,7 +166,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\engine\app\application.cpp" />
-    <ClCompile Include="src\engine\app\inputHandler.cpp" />
+    <ClCompile Include="src\engine\app\eventHandler.cpp" />
     <ClCompile Include="src\engine\math\physicsEngine.cpp" />
     <ClCompile Include="src\engine\math\quaternion.cpp" />
     <ClCompile Include="src\engine\math\transform.cpp" />
@@ -191,7 +191,7 @@
   <ItemGroup>
     <ClInclude Include="src\engine\app\application.h" />
     <ClInclude Include="src\engine\app\callback.h" />
-    <ClInclude Include="src\engine\app\inputHandler.h" />
+    <ClInclude Include="src\engine\app\eventHandler.h" />
     <ClInclude Include="src\engine\math\physicsEngine.h" />
     <ClInclude Include="src\engine\math\quaternion.h" />
     <ClInclude Include="src\engine\math\transform.h" />
@@ -208,14 +208,14 @@
     <ClInclude Include="src\engine\renderer\renderer.h" />
     <ClInclude Include="src\MicroMachines3D\common\constants.h" />
     <ClInclude Include="src\MicroMachines3D\common\include.h" />
+    <ClInclude Include="src\MicroMachines3D\entities\manager\gameManager.h" />
     <ClInclude Include="src\MicroMachines3D\scenes\MicroMachines3DScene.h" />
-    <ClInclude Include="src\MicroMachines3D\scripts\camera\cameraManagerScript.h" />
-    <ClInclude Include="src\MicroMachines3D\scripts\camera\targetOrbitalCameraScript.h" />
+    <ClInclude Include="src\MicroMachines3D\scripts\manager\camera\cameraManagerScript.h" />
+    <ClInclude Include="src\MicroMachines3D\scripts\manager\camera\targetOrbitalCameraScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\car\carHeadlightsScript.h" />
-    <ClInclude Include="src\MicroMachines3D\scripts\car\carMovementScript.h" />
-    <ClInclude Include="src\MicroMachines3D\world\cameraManager.h" />
-    <ClInclude Include="src\MicroMachines3D\world\car.h" />
-    <ClInclude Include="src\MicroMachines3D\world\table.h" />
+    <ClInclude Include="src\MicroMachines3D\entities\manager\cameraManager.h" />
+    <ClInclude Include="src\MicroMachines3D\entities\world\car.h" />
+    <ClInclude Include="src\MicroMachines3D\entities\world\table.h" />
     <ClInclude Include="src\engine\text\avtFreeType.h" />
     <ClInclude Include="src\engine\math\AVTmathLib.h" />
     <ClInclude Include="src\engine\renderer\cube.h" />
@@ -224,6 +224,7 @@
     <ClInclude Include="src\engine\renderer\Texture_Loader.h" />
     <ClInclude Include="src\engine\renderer\VertexAttrDef.h" />
     <ClInclude Include="src\engine\renderer\vsShaderLib.h" />
+    <ClInclude Include="src\MicroMachines3D\scripts\manager\game\globalLightScript.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />

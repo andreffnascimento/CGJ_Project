@@ -1,5 +1,5 @@
-#ifndef __mm3d_world_table__
-#define __mm3d_world_table__
+#ifndef __mm3d_entities_world_table__
+#define __mm3d_entities_world_table__
 
 
 #include "MicroMachines3D/common/include.h"
@@ -24,6 +24,8 @@ public:
 		createLeg(scene, group, mesh, -1.0f,  1.0f, "3");
 		createLeg(scene, group, mesh,  1.0f,  1.0f, "4");
 	}
+
+
 
 
 private:
@@ -51,4 +53,4 @@ private:
 };
 
 
-#endif // !__mm3d_world_table__
+#endif // !__mm3d_entities_world_table__

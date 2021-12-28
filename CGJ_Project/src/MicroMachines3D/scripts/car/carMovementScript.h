@@ -11,7 +11,7 @@ class CarMovementScript : public Script
 {
 
 private:
-	const InputHandler* _inputHandler = nullptr;
+	const EventHandler* _eventHandler = nullptr;
 
 	RigidbodyComponent* _rigidbody = nullptr;
 
@@ -30,14 +30,14 @@ public:
 public:
 	void onCreate() override
 	{
-		_inputHandler = &Application::getInputHandler();
+		_eventHandler = &Application::getEventHandler();
 		_rigidbody = &_scene->getEntityByTag("Car").getComponent<RigidbodyComponent>();
 	}
 
 
 	void onUpdate(float ts) override
 	{
-		if (_inputHandler->keyPressed('Q') || _inputHandler->keyPressed('q'))
+		if (_eventHandler->keyState('Q').down() || _eventHandler->keyState('q').down())
 		{	
 			_rigidbody->addForce({ _forwardForce, 0.0f, 0.0f });
 			_forwardForce *= 1.01f;

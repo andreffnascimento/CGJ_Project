@@ -70,6 +70,9 @@ Application& Application::init(const ApplicationData& applicationData, int argc,
 	glutMotionFunc(processMouseMotion);
 	glutMouseWheelFunc(mouseWheel);
 
+	// stop repeating keyboard events
+	glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
+
 	// return from main loop
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 
@@ -102,10 +105,10 @@ Application& Application::getInstance()
 		: throw std::string("Application hasn't been initialized yet!");
 }
 
-InputHandler& Application::getInputHandler()
+EventHandler& Application::getEventHandler()
 {
 	Application& app = Application::getInstance();
-	return app._inputHandler;
+	return app._eventHandler;
 }
 
 Renderer& Application::getRenderer()
