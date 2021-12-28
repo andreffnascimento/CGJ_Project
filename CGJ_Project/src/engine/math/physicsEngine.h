@@ -17,6 +17,7 @@ class PhysicsEngine
 public:
 	static constexpr float GRAVITY = 9.8f;
 	static constexpr float AIR_DENSITY = 1.225f;
+	static constexpr float DRAG_SLOW_CONSTANT = 100.0f;
 
 
 

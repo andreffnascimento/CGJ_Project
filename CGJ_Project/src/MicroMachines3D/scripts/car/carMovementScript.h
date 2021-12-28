@@ -15,7 +15,7 @@ private:
 
 	RigidbodyComponent* _rigidbody = nullptr;
 
-	float _forwardForce = 1000.0f;
+	float _forwardForce = 0.0f;
 
 
 
@@ -37,15 +37,11 @@ public:
 
 	void onUpdate(float ts) override
 	{
-		if (_eventHandler->keyState('Q').down() || _eventHandler->keyState('q').down())
-		{	
-			_rigidbody->addForce({ _forwardForce, 0.0f, 0.0f });
-			_forwardForce *= 1.01f;
-		}
-		else
-		{
+		if ((_eventHandler->keyState('Q').pressed() || _eventHandler->keyState('q').pressed()) && _forwardForce < 1000.0f)
 			_forwardForce = 1000.0f;
-		}
+
+		_forwardForce *= (_eventHandler->keyState('Q').down() || _eventHandler->keyState('q').down() ? 1.02f : 0.9f);
+		_rigidbody->addForce({ _forwardForce, 0.0f, 0.0f });
 	}
 
 };

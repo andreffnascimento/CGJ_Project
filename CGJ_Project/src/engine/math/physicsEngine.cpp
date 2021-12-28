@@ -49,8 +49,10 @@ Coords3f PhysicsEngine::_calculateDragForce(const RigidbodyComponent& rigidbody)
 {
 	Coords3f dragForce = rigidbody._velocity;
 	dragForce *= PhysicsEngine::AIR_DENSITY * rigidbody._drag;
-	if (rigidbody._velocity.sum() > rigidbody._dragThreshold)
+	if (rigidbody._velocity.length() > rigidbody._dragThreshold)
 		dragForce *= rigidbody._velocity;
+	else
+		dragForce *= PhysicsEngine::DRAG_SLOW_CONSTANT;
 
 	return dragForce;
 }
