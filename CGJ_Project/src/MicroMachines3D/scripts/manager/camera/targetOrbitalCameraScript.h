@@ -1,5 +1,5 @@
-#ifndef __mm3d_scripts_camera_targetOrbitalCameraScript__
-#define __mm3d_scripts_camera_targetOrbitalCameraScript__
+#ifndef __mm3d_scripts_manager_camera_targetOrbitalCameraScript__
+#define __mm3d_scripts_manager_camera_targetOrbitalCameraScript__
 
 
 #include "MicroMachines3D/common/include.h"
@@ -206,4 +206,4 @@ private:
 };
 
 
-#endif // !__mm3d_scripts_camera_targetOrbitalCameraScript__
+#endif // !__mm3d_scripts_manager_camera_targetOrbitalCameraScript__

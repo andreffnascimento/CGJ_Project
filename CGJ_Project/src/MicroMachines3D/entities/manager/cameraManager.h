@@ -1,11 +1,11 @@
-#ifndef __mm3d_world_cameraManager__
-#define __mm3d_world_cameraManager__
+#ifndef __mm3d_entities_manager_cameraManager__
+#define __mm3d_entities_manager_cameraManager__
 
 
 #include "MicroMachines3D/common/include.h"
 
-#include "MicroMachines3D/scripts/camera/cameraManagerScript.h"
-#include "MicroMachines3D/scripts/camera/targetOrbitalCameraScript.h"
+#include "MicroMachines3D/scripts/manager/camera/cameraManagerScript.h"
+#include "MicroMachines3D/scripts/manager/camera/targetOrbitalCameraScript.h"
 
 
 
@@ -60,4 +60,4 @@ private:
 };
 
 
-#endif // !__mm3d_world_cameraManager__
+#endif // !__mm3d_entities_manager_cameraManager__

@@ -131,7 +131,7 @@
     <ClInclude Include="src\MicroMachines3D\common\constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\MicroMachines3D\world\table.h">
+    <ClInclude Include="src\MicroMachines3D\entities\world\table.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\scene\components.h">
@@ -143,19 +143,19 @@
     <ClInclude Include="src\MicroMachines3D\common\include.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\MicroMachines3D\world\cameraManager.h">
+    <ClInclude Include="src\MicroMachines3D\entities\manager\cameraManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\scene\sceneEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\MicroMachines3D\scripts\camera\cameraManagerScript.h">
+    <ClInclude Include="src\MicroMachines3D\scripts\manager\camera\cameraManagerScript.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\MicroMachines3D\world\car.h">
+    <ClInclude Include="src\MicroMachines3D\entities\world\car.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\MicroMachines3D\scripts\camera\targetOrbitalCameraScript.h">
+    <ClInclude Include="src\MicroMachines3D\scripts\manager\camera\targetOrbitalCameraScript.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\MicroMachines3D\scripts\car\carHeadlightsScript.h">
@@ -174,6 +174,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\math\quaternion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MicroMachines3D\entities\manager\gameManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

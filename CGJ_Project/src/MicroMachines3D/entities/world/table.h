@@ -1,5 +1,5 @@
-#ifndef __mm3d_world_table__
-#define __mm3d_world_table__
+#ifndef __mm3d_entities_world_table__
+#define __mm3d_entities_world_table__
 
 
 #include "MicroMachines3D/common/include.h"
@@ -51,4 +51,4 @@ private:
 };
 
 
-#endif // !__mm3d_world_table__
+#endif // !__mm3d_entities_world_table__

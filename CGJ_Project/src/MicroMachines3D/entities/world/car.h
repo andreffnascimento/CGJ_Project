@@ -1,5 +1,5 @@
-#ifndef __mm3d_world_car__
-#define __mm3d_world_car__
+#ifndef __mm3d_entities_world_car__
+#define __mm3d_entities_world_car__
 
 
 #include "MicroMachines3D/common/include.h"
@@ -116,4 +116,4 @@ private:
 };
 
 
-#endif // !__mm3d_world_car__
+#endif // !__mm3d_entities_world_car__

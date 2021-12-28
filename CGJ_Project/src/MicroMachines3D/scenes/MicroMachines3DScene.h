@@ -4,9 +4,9 @@
 
 #include "MicroMachines3D/common/include.h"
 
-#include "MicroMachines3D/world/cameraManager.h"
-#include "MicroMachines3D/world/table.h"
-#include "MicroMachines3D/world/car.h"
+#include "MicroMachines3D/entities/manager/cameraManager.h"
+#include "MicroMachines3D/entities/world/table.h"
+#include "MicroMachines3D/entities/world/car.h"
 
 
 
