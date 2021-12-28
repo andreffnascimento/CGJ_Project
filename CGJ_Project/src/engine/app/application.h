@@ -44,7 +44,7 @@ private:
 	InputHandler _inputHandler = InputHandler();
 	Renderer _renderer = Renderer();
 	PhysicsEngine _physicsEngine = PhysicsEngine();
-	Scene* _scene;
+	Scene* _scene = nullptr;
 
 
 

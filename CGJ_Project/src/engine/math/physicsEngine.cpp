@@ -1,5 +1,6 @@
 #include "physicsEngine.h"
 
+#include "engine/math/transform.h"
 #include "engine/scene/scene.h"
 #include "engine/utils/coords.h"
 
@@ -8,7 +9,7 @@
 
 void PhysicsEngine::run(const Scene& scene, float ts) const
 {
-	std::unordered_map<EntityHandle, RigidbodyComponent> _rigidbodyComponents = scene.getSceneComponents<RigidbodyComponent>();
+	std::unordered_map<EntityHandle, RigidbodyComponent>& _rigidbodyComponents = scene.getSceneComponents<RigidbodyComponent>();
 	for (auto& iterator : _rigidbodyComponents)
 	{
 		EntityHandle entityId = iterator.first;
@@ -33,8 +34,12 @@ void PhysicsEngine::_processRigidbody(const Scene& scene, EntityHandle entityId,
 	if (rigidbody._sleeping)
 		return;
 
-	TransformComponent& transform = scene.getEntityById(entityId).transform();
-	Coords3f expectedPosition = transform.translation() + rigidbody._velocity * ts;
+	Entity entity = scene.getEntityById(entityId);
+	TransformComponent& transform = entity.transform();
+	Coords3f expectedPosition = transform.translation() + (rigidbody._velocity * ts);
+	Transform::translateTo(entity, expectedPosition);
+
+	rigidbody._force = Coords3f();
 }
 
 
@@ -42,10 +47,11 @@ void PhysicsEngine::_processRigidbody(const Scene& scene, EntityHandle entityId,
 
 Coords3f PhysicsEngine::_calculateDragForce(const RigidbodyComponent& rigidbody) const
 {
-	// we ignore the contact surface area for this calculations for performance reasons
 	Coords3f dragForce = rigidbody._velocity;
-	dragForce *= rigidbody._velocity;
 	dragForce *= PhysicsEngine::AIR_DENSITY * rigidbody._drag;
+	if (rigidbody._velocity.sum() > rigidbody._dragThreshold)
+		dragForce *= rigidbody._velocity;
+
 	return dragForce;
 }
 
@@ -53,7 +59,7 @@ Coords3f PhysicsEngine::_calculateDragForce(const RigidbodyComponent& rigidbody)
 void PhysicsEngine::_calculateExpectedVelocity(RigidbodyComponent& rigidbody, float ts) const
 {
 	Coords3f dragForce = _calculateDragForce(rigidbody);
-	rigidbody._force += dragForce;
+	rigidbody._force -= dragForce;
 	rigidbody._force *= (ts / rigidbody._mass);
 	rigidbody._velocity += rigidbody._force;
 }
@@ -66,9 +72,10 @@ void PhysicsEngine::_processVelocityConstraints(RigidbodyComponent& rigidbody) c
 	rigidbody._velocity.z = !rigidbody._constraints[2] ? rigidbody._velocity.z : 0.0f;
 }
 
+
 void PhysicsEngine::_processSleepThreshold(RigidbodyComponent& rigidbody) const
 {
-	if (rigidbody._velocity.length() > rigidbody._sleepThreshold)
+	if (rigidbody._velocity.sum() > rigidbody._sleepThreshold)
 		return;
 
 	rigidbody._velocity = Coords3f();

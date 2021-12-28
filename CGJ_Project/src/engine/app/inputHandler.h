@@ -48,16 +48,17 @@ public:
 
 
 public:
-	void reset();
+	void reset(bool resetKeyboard = false);
 
 
 public:
-	inline bool keyPressed(char keyCode) const						{ return _pressedKeys[(int)keyCode]; }
+	inline bool keyPressed(char keyCode) const						{ return _pressedKeys[(unsigned int)keyCode]; }
 	inline const InputHandler::MouseInfo& getMouseInfo() const		{ return _mouseInfo; }
 
 
 public:
-	inline void pressKey(char keyCode)								{ _pressedKeys[(int)keyCode] = true; }
+	inline void pressKey(char keyCode)								{ _pressedKeys[(unsigned int)keyCode] = true; }
+	inline void releaseKey(char keyCode)							{ _pressedKeys[(unsigned int)keyCode] = false; }
 	inline void updateMouse(unsigned int x, unsigned int y)			{ _mouseInfo.coords = { x, y }; }
 	inline void updateMouseStatus(InputHandler::MouseStatus status)	{ _mouseInfo.status = status; }
 	inline void updateMouseWeel(int direction)						{ _mouseInfo.wheelDirection = direction; }

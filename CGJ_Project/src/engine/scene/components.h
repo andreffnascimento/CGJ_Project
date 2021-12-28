@@ -197,16 +197,18 @@ public:
 struct ScriptComponent
 {
 private:
-	std::shared_ptr<Script> _script;
+	std::list<std::shared_ptr<Script>> _scripts = std::list<std::shared_ptr<Script>>();
 
 public:
 	ScriptComponent() = default;
 	ScriptComponent(const ScriptComponent&) = default;
-	ScriptComponent(const std::shared_ptr<Script>& script) : _script(script) {}
+	ScriptComponent(const std::shared_ptr<Script>& script) { _scripts.push_back(script); }
 	~ScriptComponent() = default;
 
-	inline Script* script()		const { return _script.get(); }
-	inline operator Script* ()	const { return script(); }
+	void addScriptInstance(const std::shared_ptr<Script>& script) { _scripts.push_back(script); }
+
+	void onCreate() const;
+	void onUpdate(float ts) const;
 };
 
 
@@ -268,6 +270,7 @@ private:
 	RigidbodyType _type = RigidbodyComponent::RigidbodyType::DYNAMIC;
 	float _mass = 1.0f;
 	float _drag = 0.0f;
+	float _dragThreshold = 1.0f;
 	std::bitset<8> _constraints = std::bitset<8>();
 
 	Coords3f _velocity = Coords3f();
@@ -283,6 +286,7 @@ public:
 	RigidbodyComponent(RigidbodyComponent::RigidbodyType type, float mass, float drag);
 	~RigidbodyComponent() = default;
 
+	inline void setDragThreshold(float dragThreshold)						{ _dragThreshold = dragThreshold; }
 	inline void setRigidbodyConstraints(const std::bitset<8>& constraints)	{ _constraints = constraints; }
 	inline void setSleepThreshold(float sleepThreshold)						{ _sleepThreshold = sleepThreshold; }
 

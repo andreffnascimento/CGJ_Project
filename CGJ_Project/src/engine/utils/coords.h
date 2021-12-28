@@ -2,6 +2,10 @@
 #define __engine_utils_coords__
 
 
+#include "engine/utils/mathUtils.h"
+
+
+
 struct WindowCoords
 {
 	unsigned int x = 0;
@@ -23,7 +27,10 @@ struct Coords3f
 	Coords3f(const Coords3f&) = default;
 	~Coords3f() = default;
 
-	float length() const { return x * x + y * y + z * z; }
+	float sum() const			{ return x + y + z; }
+	float length() const		{ return x * x + y * y + z * z; }
+
+	Coords3f normalized() const { float norm = invSqrt(length()); return Coords3f({ x * norm, y * norm, z * norm }); }
 
 	void operator+=(const Coords3f& other) { x += other.x; y += other.y; z += other.z; }
 	void operator-=(const Coords3f& other) { x -= other.x; y -= other.y; z -= other.z; }
@@ -57,7 +64,10 @@ struct Coords4f
 	Coords4f(const Coords4f&) = default;
 	~Coords4f() = default;
 
-	float length() const { return x * x + y * y + z * z + w * w; }
+	float sum()		const { return x + y + z + w; }
+	float length()	const { return x * x + y * y + z * z + w * w; }
+
+	Coords4f normalized() const { float norm = invSqrt(length()); return Coords4f({ x * norm, y * norm, z * norm, w * norm }); }
 
 	void operator+=(const Coords4f& other) { x += other.x; y += other.y; z += other.z; w += other.w; }
 	void operator-=(const Coords4f& other) { x -= other.x; y -= other.y; z -= other.z; w -= other.w; }

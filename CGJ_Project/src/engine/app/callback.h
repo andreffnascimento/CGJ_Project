@@ -85,11 +85,19 @@ void displayScene()
 
 
 
-// Keyboard callback function
-void processKeys(unsigned char key, int x, int y)
+// Keyboard down callback function
+void processKeysDown(unsigned char key, int x, int y)
 {
 	InputHandler& input = Application::getInputHandler();
 	input.pressKey(key);
+}
+
+
+// Keyboard up callback function
+void processKeysUp(unsigned char key, int x, int y)
+{
+	InputHandler& input = Application::getInputHandler();
+	input.releaseKey(key);
 }
 
 

@@ -1,7 +1,5 @@
 #include "application.h"
 
-#include <iostream>
-
 #include "engine/app/callback.h"
 
 #include <GL/freeglut.h>	// GLUT is the toolkit to interface with the OS
@@ -66,7 +64,8 @@ Application& Application::init(const ApplicationData& applicationData, int argc,
 		glutIdleFunc(displayScene);		// Use it for maximum performance
 
 	// mouse and Keyboard Callbacks
-	glutKeyboardFunc(processKeys);
+	glutKeyboardFunc(processKeysDown);
+	glutKeyboardUpFunc(processKeysUp);
 	glutMouseFunc(processMouseButtons);
 	glutMotionFunc(processMouseMotion);
 	glutMouseWheelFunc(mouseWheel);

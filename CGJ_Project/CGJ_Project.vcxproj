@@ -182,6 +182,7 @@
     <ClCompile Include="src\engine\text\avtFreeType.cpp" />
     <ClCompile Include="src\engine\math\AVTmathLib.cpp" />
     <ClCompile Include="src\engine\renderer\basic_geometry.cpp" />
+    <ClCompile Include="src\engine\utils\mathUtils.cpp" />
     <ClCompile Include="src\MicroMachines3D.cpp" />
     <ClCompile Include="src\engine\renderer\Texture_Loader.cpp" />
     <ClCompile Include="src\engine\renderer\vsShaderLib.cpp" />
@@ -198,7 +199,7 @@
     <ClInclude Include="src\engine\scene\components.h" />
     <ClInclude Include="src\engine\scene\ecsRegistry.h" />
     <ClInclude Include="src\engine\scene\sceneEntity.h" />
-    <ClInclude Include="src\engine\utils\angle.h" />
+    <ClInclude Include="src\engine\utils\mathUtils.h" />
     <ClInclude Include="src\engine\utils\coords.h" />
     <ClInclude Include="src\engine\scene\cameraEntity.h" />
     <ClInclude Include="src\engine\scene\scene.h" />
@@ -211,6 +212,7 @@
     <ClInclude Include="src\MicroMachines3D\scripts\camera\cameraManagerScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\camera\targetOrbitalCameraScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\car\carHeadlightsScript.h" />
+    <ClInclude Include="src\MicroMachines3D\scripts\car\carMovementScript.h" />
     <ClInclude Include="src\MicroMachines3D\world\cameraManager.h" />
     <ClInclude Include="src\MicroMachines3D\world\car.h" />
     <ClInclude Include="src\MicroMachines3D\world\table.h" />

@@ -7,15 +7,16 @@
 
 InputHandler::InputHandler()
 {
-	reset();
+	reset(true);
 }
 
 
 
 
-void InputHandler::reset()
+void InputHandler::reset(bool resetKeyboard)
 {
-	std::fill(std::begin(_pressedKeys), std::end(_pressedKeys), false);
+	if (resetKeyboard)
+		std::fill(std::begin(_pressedKeys), std::end(_pressedKeys), false);
 
 	_mouseInfo = MouseInfo();
 	_mouseInfo.coords = { 0, 0 };

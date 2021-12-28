@@ -73,6 +73,22 @@ void MeshComponent::setMaterial(MyMesh& mesh, const Material& material)
 
 
 
+void ScriptComponent::onCreate() const
+{
+	for (auto& script : _scripts)
+		script.get()->onCreate();
+}
+
+
+void ScriptComponent::onUpdate(float ts) const
+{
+	for (auto& script : _scripts)
+		script.get()->onUpdate(ts);
+}
+
+
+
+
 void LightComponent::setDirectionalLight(const Coords3f& direction, float intensity)
 {
 	if (intensity < 0.0f)
@@ -124,6 +140,7 @@ RigidbodyComponent::RigidbodyComponent(RigidbodyComponent::RigidbodyType type, f
 	_drag = drag;
 }
 
+#include <iostream>
 void RigidbodyComponent::setVelocity(const Coords3f& velocity)
 {
 	if (_type != RigidbodyComponent::RigidbodyType::KINEMATIC)

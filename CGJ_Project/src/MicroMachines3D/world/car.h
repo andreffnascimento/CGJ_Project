@@ -5,6 +5,7 @@
 #include "MicroMachines3D/common/include.h"
 
 #include "MicroMachines3D/scripts/car/carHeadlightsScript.h"
+#include "MicroMachines3D/scripts/car/carMovementScript.h"
 
 
 
@@ -22,8 +23,11 @@ public:
 		_initCarWheels(scene, group);
 		_initCarHeadlights(scene, group);
 
-		std::shared_ptr<Script> script = std::make_shared<CarHeadlightsScript>(scene);
-		ScriptComponent& scriptComponent = addComponent<ScriptComponent>(script);
+		RigidbodyComponent& rigidbody = addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::DYNAMIC, 100.0f, 10.0f);
+
+		ScriptComponent& script = addComponent<ScriptComponent>();
+		script.addScriptInstance(std::make_shared<CarHeadlightsScript>(scene));
+		script.addScriptInstance(std::make_shared<CarMovementScript>(scene));
 	}
 
 
