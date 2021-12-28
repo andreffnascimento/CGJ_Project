@@ -179,6 +179,9 @@
     <ClInclude Include="src\MicroMachines3D\entities\manager\gameManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\MicroMachines3D\scripts\manager\game\globalLightScript.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />

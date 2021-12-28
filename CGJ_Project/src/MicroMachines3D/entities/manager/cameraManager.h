@@ -26,6 +26,8 @@ public:
 	}
 
 
+
+
 private:
 	Entity _createCamera1(Entity entity)
 	{

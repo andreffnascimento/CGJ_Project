@@ -1,5 +1,5 @@
-#ifndef __mm3d_scripts_manager_camera_cameraManagerScript_h__
-#define __mm3d_scripts_manager_camera_cameraManagerScript_h__
+#ifndef __mm3d_scripts_manager_camera_cameraManagerScript__
+#define __mm3d_scripts_manager_camera_cameraManagerScript__
 
 
 #include "MicroMachines3D/common/include.h"
@@ -53,4 +53,4 @@ public:
 };
 
 
-#endif // !__mm3d_scripts_manager_camera_cameraManagerScript_h__
+#endif // !__mm3d_scripts_manager_camera_cameraManagerScript__
