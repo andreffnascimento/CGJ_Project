@@ -253,12 +253,9 @@ public:
 struct RigidbodyComponent
 {
 public:
-	static constexpr unsigned char FREEZE_POSITION_X = 0b10000000;
-	static constexpr unsigned char FREEZE_POSITION_Y = 0b01000000;
-	static constexpr unsigned char FREEZE_POSITION_Z = 0b00100000;
-	static constexpr unsigned char FREEZE_ROTATION_X = 0b00010000;
-	static constexpr unsigned char FREEZE_ROTATION_Y = 0b00001000;
-	static constexpr unsigned char FREEZE_ROTATION_Z = 0b00000100;
+	static constexpr unsigned char FREEZE_VELOCITY_X = 0b10000000;
+	static constexpr unsigned char FREEZE_VELOCITY_Y = 0b01000000;
+	static constexpr unsigned char FREEZE_VELOCITY_Z = 0b00100000;
 
 public:
 	enum class RigidbodyType

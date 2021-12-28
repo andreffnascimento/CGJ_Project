@@ -23,6 +23,8 @@ struct Coords3f
 	Coords3f(const Coords3f&) = default;
 	~Coords3f() = default;
 
+	float length() const { return x * x + y * y + z * z; }
+
 	void operator+=(const Coords3f& other) { x += other.x; y += other.y; z += other.z; }
 	void operator-=(const Coords3f& other) { x -= other.x; y -= other.y; z -= other.z; }
 	void operator*=(const Coords3f& other) { x *= other.x; y *= other.y; z *= other.z; }
@@ -38,6 +40,9 @@ struct Coords3f
 	friend Coords3f operator-(const Coords3f& c1, const Coords3f c2) { return Coords3f({ c1.x - c2.x, c1.y - c2.y, c1.z - c2.z }); }
 	friend Coords3f operator*(const Coords3f& c1, const Coords3f c2) { return Coords3f({ c1.x * c2.x, c1.y * c2.y, c1.z * c2.z }); }
 	friend Coords3f operator/(const Coords3f& c1, const Coords3f c2) { return Coords3f({ c1.x / c2.x, c1.y / c2.y, c1.z / c2.z }); }
+
+	friend Coords3f operator*(const Coords3f& c1, float value) { return Coords3f({ c1.x * value, c1.y * value, c1.z * value }); }
+	friend Coords3f operator/(const Coords3f& c1, float value) { return Coords3f({ c1.x / value, c1.y / value, c1.z / value }); }
 };
 
 
@@ -51,6 +56,8 @@ struct Coords4f
 	Coords4f() = default;
 	Coords4f(const Coords4f&) = default;
 	~Coords4f() = default;
+
+	float length() const { return x * x + y * y + z * z + w * w; }
 
 	void operator+=(const Coords4f& other) { x += other.x; y += other.y; z += other.z; w += other.w; }
 	void operator-=(const Coords4f& other) { x -= other.x; y -= other.y; z -= other.z; w -= other.w; }
@@ -67,6 +74,9 @@ struct Coords4f
 	friend Coords4f operator-(const Coords4f& c1, const Coords4f c2) { return Coords4f({ c1.x - c2.x, c1.y - c2.y, c1.z - c2.z, c1.w - c2.w }); }
 	friend Coords4f operator*(const Coords4f& c1, const Coords4f c2) { return Coords4f({ c1.x * c2.x, c1.y * c2.y, c1.z * c2.z, c1.w * c2.w }); }
 	friend Coords4f operator/(const Coords4f& c1, const Coords4f c2) { return Coords4f({ c1.x / c2.x, c1.y / c2.y, c1.z / c2.z, c1.w / c2.w }); }
+
+	friend Coords4f operator*(const Coords4f& c1, float value) { return Coords4f({ c1.x * value, c1.y * value, c1.z * value, c1.w * value }); }
+	friend Coords4f operator/(const Coords4f& c1, float value) { return Coords4f({ c1.x / value, c1.y / value, c1.z / value, c1.w / value }); }
 };
 
 

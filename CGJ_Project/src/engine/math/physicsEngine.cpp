@@ -1,7 +1,5 @@
 #include "physicsEngine.h"
 
-#include <unordered_map>
-
 #include "engine/scene/scene.h"
 #include "engine/utils/coords.h"
 
@@ -17,22 +15,39 @@ void PhysicsEngine::run(const Scene& scene, float ts) const
 		RigidbodyComponent& rigidbody = iterator.second;
 
 		if (!rigidbody._sleeping)	// ignore rigidbodies that haven't move
-			_processRigidbody(entityId, rigidbody, ts);	
+			_processRigidbody(scene, entityId, rigidbody, ts);	
 	}
 }
 
 
 
 
-void PhysicsEngine::_processRigidbody(EntityHandle entityId, RigidbodyComponent& rigidbody, float ts) const
+void PhysicsEngine::_processRigidbody(const Scene& scene, EntityHandle entityId, RigidbodyComponent& rigidbody, float ts) const
 {
 	if (rigidbody._type == RigidbodyComponent::RigidbodyType::DYNAMIC)
 		_calculateExpectedVelocity(rigidbody, ts);
 
+	_processVelocityConstraints(rigidbody);
+	_processSleepThreshold(rigidbody);
 
+	if (rigidbody._sleeping)
+		return;
+
+	TransformComponent& transform = scene.getEntityById(entityId).transform();
+	Coords3f expectedPosition = transform.translation() + rigidbody._velocity * ts;
 }
 
 
+
+
+Coords3f PhysicsEngine::_calculateDragForce(const RigidbodyComponent& rigidbody) const
+{
+	// we ignore the contact surface area for this calculations for performance reasons
+	Coords3f dragForce = rigidbody._velocity;
+	dragForce *= rigidbody._velocity;
+	dragForce *= PhysicsEngine::AIR_DENSITY * rigidbody._drag;
+	return dragForce;
+}
 
 
 void PhysicsEngine::_calculateExpectedVelocity(RigidbodyComponent& rigidbody, float ts) const
@@ -44,11 +59,18 @@ void PhysicsEngine::_calculateExpectedVelocity(RigidbodyComponent& rigidbody, fl
 }
 
 
-Coords3f PhysicsEngine::_calculateDragForce(const RigidbodyComponent& rigidbody) const
+void PhysicsEngine::_processVelocityConstraints(RigidbodyComponent& rigidbody) const
 {
-	// we ignore the contact surface area for this calculations for performance reasons
-	Coords3f dragForce = rigidbody._velocity;
-	dragForce *= rigidbody._velocity;
-	dragForce *= PhysicsEngine::AIR_DENSITY * rigidbody._drag;
-	return dragForce;
+	rigidbody._velocity.x = !rigidbody._constraints[0] ? rigidbody._velocity.x : 0.0f;
+	rigidbody._velocity.y = !rigidbody._constraints[1] ? rigidbody._velocity.y : 0.0f;
+	rigidbody._velocity.z = !rigidbody._constraints[2] ? rigidbody._velocity.z : 0.0f;
+}
+
+void PhysicsEngine::_processSleepThreshold(RigidbodyComponent& rigidbody) const
+{
+	if (rigidbody._velocity.length() > rigidbody._sleepThreshold)
+		return;
+
+	rigidbody._velocity = Coords3f();
+	rigidbody._sleeping = true;
 }

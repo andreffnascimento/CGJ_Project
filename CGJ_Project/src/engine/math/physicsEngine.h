@@ -34,12 +34,14 @@ public:
 
 
 private:
-	void _processRigidbody(EntityHandle entityId, RigidbodyComponent& rigidbody, float ts) const;
+	void _processRigidbody(const Scene& scene, EntityHandle entityId, RigidbodyComponent& rigidbody, float ts) const;
 
 
 private:
-	void _calculateExpectedVelocity(RigidbodyComponent& rigidbody, float ts) const;
 	Coords3f _calculateDragForce(const RigidbodyComponent& rigidbody) const;
+	void _calculateExpectedVelocity(RigidbodyComponent& rigidbody, float ts) const;
+	void _processVelocityConstraints(RigidbodyComponent& rigidbody) const;
+	void _processSleepThreshold(RigidbodyComponent& rigidbody) const;
 
 };
 
