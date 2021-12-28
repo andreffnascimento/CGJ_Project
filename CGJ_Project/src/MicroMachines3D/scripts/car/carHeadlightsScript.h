@@ -11,7 +11,7 @@ class CarHeadlightsScript : public Script
 {
 
 private:
-	const InputHandler* _inputHandler = nullptr;
+	const EventHandler* _eventHandler = nullptr;
 
 	MeshComponent* _frontMesh = nullptr;
 	MeshComponent* _backMesh  = nullptr;
@@ -31,7 +31,7 @@ public:
 public:
 	void onCreate() override
 	{
-		_inputHandler = &Application::getInputHandler();
+		_eventHandler = &Application::getEventHandler();
 		_frontMesh = &_scene->getEntityByTag("Car:headlight-frontLeft").getComponent<MeshComponent>();
 		_backMesh  = &_scene->getEntityByTag("Car:headlight-backLeft").getComponent<MeshComponent>();
 	}
@@ -39,7 +39,7 @@ public:
 
 	void onUpdate(float ts) override
 	{
-		if (_inputHandler->keyPressed('H') || _inputHandler->keyPressed('h'))
+		if (_eventHandler->keyPressed('H') || _eventHandler->keyPressed('h'))
 		{
 			_lightsOn = !_lightsOn;
 

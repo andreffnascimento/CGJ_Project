@@ -11,7 +11,7 @@ class CameraManagerScript : public Script
 {
 
 private:
-	const InputHandler* _inputHandler = nullptr;
+	const EventHandler* _eventHandler = nullptr;
 
 	CameraEntity _camera1 = CameraEntity();
 	CameraEntity _camera2 = CameraEntity();
@@ -30,7 +30,7 @@ public:
 public:
 	void onCreate() override
 	{
-		_inputHandler = &Application::getInputHandler();
+		_eventHandler = &Application::getEventHandler();
 		_camera1 = _scene->getEntityByTag("Camera1");
 		_camera2 = _scene->getEntityByTag("Camera2");
 		_camera3 = _scene->getEntityByTag("Camera3");
@@ -40,13 +40,13 @@ public:
 
 	void onUpdate(float ts) override
 	{
-		if (_inputHandler->keyPressed('1'))
+		if (_eventHandler->keyPressed('1'))
 			_scene->setActiveCamera(_camera1);
 
-		if (_inputHandler->keyPressed('2'))
+		if (_eventHandler->keyPressed('2'))
 			_scene->setActiveCamera(_camera2);
 
-		if (_inputHandler->keyPressed('3'))
+		if (_eventHandler->keyPressed('3'))
 			_scene->setActiveCamera(_camera3);
 	}
 

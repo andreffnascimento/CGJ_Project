@@ -103,10 +103,10 @@ Application& Application::getInstance()
 		: throw std::string("Application hasn't been initialized yet!");
 }
 
-InputHandler& Application::getInputHandler()
+EventHandler& Application::getEventHandler()
 {
 	Application& app = Application::getInstance();
-	return app._inputHandler;
+	return app._eventHandler;
 }
 
 Renderer& Application::getRenderer()

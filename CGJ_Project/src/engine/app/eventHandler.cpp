@@ -1,11 +1,11 @@
-#include "inputHandler.h"
+#include "eventHandler.h"
 
 #include <string>
 
 
 
 
-InputHandler::InputHandler()
+EventHandler::EventHandler()
 {
 	reset();
 }
@@ -13,7 +13,7 @@ InputHandler::InputHandler()
 
 
 
-void InputHandler::reset()
+void EventHandler::reset()
 {
 	std::fill(std::begin(_pressedKeys), std::end(_pressedKeys), false);
 

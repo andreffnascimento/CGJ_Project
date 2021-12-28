@@ -3,7 +3,7 @@
 
 
 #include "engine/app/application.h"
-#include "engine/app/inputHandler.h"
+#include "engine/app/eventHandler.h"
 
 #include "engine/scene/entity.h"
 #include "engine/scene/script.h"

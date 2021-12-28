@@ -36,7 +36,7 @@
     <ClCompile Include="src\engine\app\application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\app\inputHandler.cpp">
+    <ClCompile Include="src\engine\app\eventHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\engine\scene\scene.cpp">
@@ -107,7 +107,7 @@
     <ClInclude Include="src\engine\app\callback.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\app\inputHandler.h">
+    <ClInclude Include="src\engine\app\eventHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\scene\scene.h">

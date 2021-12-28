@@ -4,7 +4,7 @@
 
 #include <string>
 
-#include "engine/app/inputHandler.h"
+#include "engine/app/eventHandler.h"
 #include "engine/renderer/renderer.h"
 #include "engine/scene/scene.h"
 
@@ -40,7 +40,7 @@ private:
 	unsigned int _prevTime = 0;
 	float _ts = 0;
 
-	InputHandler _inputHandler = InputHandler();
+	EventHandler _eventHandler = EventHandler();
 	Renderer _renderer = Renderer();
 	Scene* _scene;
 
@@ -63,7 +63,7 @@ public:
 public:
 	static bool isRunning();
 	static Application& getInstance();
-	static InputHandler& getInputHandler();
+	static EventHandler& getEventHandler();
 	static Renderer& getRenderer();
 
 

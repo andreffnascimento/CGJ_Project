@@ -1,5 +1,5 @@
-#ifndef __engine_app_inputHandler__
-#define __engine_app_inputHandler__
+#ifndef __engine_app_eventHandler__
+#define __engine_app_eventHandler__
 
 
 #include "engine/utils/coords.h"
@@ -7,7 +7,7 @@
 
 
 
-class InputHandler
+class EventHandler
 {
 
 public:
@@ -24,7 +24,7 @@ public:
 
 	struct MouseInfo
 	{
-		InputHandler::MouseStatus status;
+		EventHandler::MouseStatus status;
 		WindowCoords coords;
 		int wheelDirection;
 	};
@@ -38,13 +38,13 @@ public:
 
 private:
 	bool _pressedKeys[N_KEYS];
-	InputHandler::MouseInfo _mouseInfo;
+	EventHandler::MouseInfo _mouseInfo;
 	
 
 
 
 public:
-	InputHandler();
+	EventHandler();
 
 
 public:
@@ -53,16 +53,16 @@ public:
 
 public:
 	inline bool keyPressed(char keyCode) const						{ return _pressedKeys[(int)keyCode]; }
-	inline const InputHandler::MouseInfo& getMouseInfo() const		{ return _mouseInfo; }
+	inline const EventHandler::MouseInfo& getMouseInfo() const		{ return _mouseInfo; }
 
 
 public:
 	inline void pressKey(char keyCode)								{ _pressedKeys[(int)keyCode] = true; }
 	inline void updateMouse(unsigned int x, unsigned int y)			{ _mouseInfo.coords = { x, y }; }
-	inline void updateMouseStatus(InputHandler::MouseStatus status)	{ _mouseInfo.status = status; }
+	inline void updateMouseStatus(EventHandler::MouseStatus status)	{ _mouseInfo.status = status; }
 	inline void updateMouseWeel(int direction)						{ _mouseInfo.wheelDirection = direction; }
 
 };
 
 
-#endif // !__engine_app_inputHandler__
+#endif // !__engine_app_eventHandler__
