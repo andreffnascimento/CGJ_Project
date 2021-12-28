@@ -2,6 +2,7 @@
 
 #include "engine/scene/scene.h"
 #include "engine/app/application.h"
+#include "engine/math/physicsEngine.h"
 
 
 
@@ -127,34 +128,55 @@ void LightComponent::setSpotLight(const Coords3f& direction, float intensity, fl
 
 
 
-RigidbodyComponent::RigidbodyComponent(RigidbodyComponent::RigidbodyType type, float mass, float drag)
+RigidbodyComponent::RigidbodyComponent(RigidbodyComponent::RigidbodyType type, float mass, float drag, float angularDrag)
+	: _type(type), _mass(mass), _drag(drag), _angularDrag(angularDrag)
 {
-	if (mass < 0.0f)
-		throw std::string("The mass must be a value greater than 0!");
+	if (_mass < 0.0f)
+		throw std::string("The mass must be a value greater or equal to 0!");
 
-	if (drag < 0.0f)
-		throw std::string("The drag must be a value greater than 0!");
+	if (_drag < 0.0f)
+		throw std::string("The drag must be a value greater or equal to 0!");
 
-	_type = type;
-	_mass = mass;
-	_drag = drag;
+	if (_angularDrag < 0.0f)
+		throw std::string("The angular drag must be a value greater or equal to 0!");
 }
 
 
 void RigidbodyComponent::setVelocity(const Coords3f& velocity)
 {
-	if (_type != RigidbodyComponent::RigidbodyType::KINEMATIC)
-		throw std::string("Only kinematic objects can have their velocity set!");
-
 	_velocity = velocity;
-	_sleeping = (_velocity == Coords3f({ 0.0f, 0.0f, 0.0f }));
+	if (_velocity != Coords3f({ 0.0f, 0.0f, 0.0f }))
+		_sleeping = false;
 }
 
-void RigidbodyComponent::addForce(const Coords3f& force)
+
+void RigidbodyComponent::setAngularVelocity(const Coords3f& angularVelocity)
+{
+	_angularVelocity = angularVelocity;
+	if (_angularVelocity != Coords3f({ 0.0f, 0.0f, 0.0f }))
+		_sleeping = false;
+}
+
+
+void RigidbodyComponent::addAbsoluteForce(const Force& force)
 {
 	if (_type != RigidbodyComponent::RigidbodyType::DYNAMIC)
 		throw std::string("Forces can only be applied to dynamic objects!");
 
-	_force += force;
-	_sleeping = (_force == Coords3f({ 0.0f, 0.0f, 0.0f }));
+	if (force.value() != Coords3f({ 0.0f, 0.0f, 0.0f }))
+	{
+		_forces.push_back(force);
+		_sleeping = false;
+	}
+}
+
+
+void RigidbodyComponent::addRelativeForce(const Force& force)
+{
+	if (force.value() != Coords3f({ 0.0f, 0.0f, 0.0f }))
+	{
+		Coords3f value = force.value();
+		PhysicsEngine::rotateVector(value, _rotation);
+		addAbsoluteForce(Force(Force::ForceType::LINEAR, value));
+	}
 }

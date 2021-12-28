@@ -50,6 +50,8 @@ struct Coords3f
 
 	friend Coords3f operator*(const Coords3f& c1, float value) { return Coords3f({ c1.x * value, c1.y * value, c1.z * value }); }
 	friend Coords3f operator/(const Coords3f& c1, float value) { return Coords3f({ c1.x / value, c1.y / value, c1.z / value }); }
+	friend Coords3f operator*(float value, const Coords3f& c1) { return Coords3f({ c1.x * value, c1.y * value, c1.z * value }); }
+	friend Coords3f operator/(float value, const Coords3f& c1) { return Coords3f({ c1.x / value, c1.y / value, c1.z / value }); }
 };
 
 
@@ -87,6 +89,8 @@ struct Coords4f
 
 	friend Coords4f operator*(const Coords4f& c1, float value) { return Coords4f({ c1.x * value, c1.y * value, c1.z * value, c1.w * value }); }
 	friend Coords4f operator/(const Coords4f& c1, float value) { return Coords4f({ c1.x / value, c1.y / value, c1.z / value, c1.w / value }); }
+	friend Coords4f operator*(float value, const Coords4f& c1) { return Coords4f({ c1.x * value, c1.y * value, c1.z * value, c1.w * value }); }
+	friend Coords4f operator/(float value, const Coords4f& c1) { return Coords4f({ c1.x / value, c1.y / value, c1.z / value, c1.w / value }); }
 };
 
 

@@ -11,6 +11,7 @@
 
 #include "engine/scene/entity.h"
 #include "engine/scene/script.h"
+#include "engine/math/force.h"
 #include "engine/math/transformMatrix.h"
 #include "engine/renderer/geometry.h"
 #include "engine/utils/coords.h"
@@ -255,9 +256,12 @@ public:
 struct RigidbodyComponent
 {
 public:
-	static constexpr unsigned char FREEZE_VELOCITY_X = 0b10000000;
-	static constexpr unsigned char FREEZE_VELOCITY_Y = 0b01000000;
-	static constexpr unsigned char FREEZE_VELOCITY_Z = 0b00100000;
+	static constexpr unsigned char FREEZE_POSITION_X = 0b10000000;
+	static constexpr unsigned char FREEZE_POSITION_Y = 0b01000000;
+	static constexpr unsigned char FREEZE_POSITION_Z = 0b00100000;
+	static constexpr unsigned char FREEZE_ROTATION_X = 0b00010000;
+	static constexpr unsigned char FREEZE_ROTATION_Y = 0b00001000;
+	static constexpr unsigned char FREEZE_ROTATION_Z = 0b00000100;
 
 public:
 	enum class RigidbodyType
@@ -270,28 +274,39 @@ private:
 	RigidbodyType _type = RigidbodyComponent::RigidbodyType::DYNAMIC;
 	float _mass = 1.0f;
 	float _drag = 0.0f;
+	float _angularDrag = 0.0f;
 	float _dragThreshold = 1.0f;
 	std::bitset<8> _constraints = std::bitset<8>();
 
+	Coords3f _rotation = Coords3f();
 	Coords3f _velocity = Coords3f();
-	Coords3f _force = Coords3f();			// all forces are linear
+	Coords3f _angularVelocity = Coords3f();
 
 	float _sleepThreshold = 0.1f;			// smallest velocity that makes the object go to sleep
 	bool _sleeping = true;					// doesn't process the objects if no changes occur
+
+	std::list<Force> _forces = std::list<Force>();
 
 
 public:
 	RigidbodyComponent() = default;
 	RigidbodyComponent(const RigidbodyComponent&) = default;
-	RigidbodyComponent(RigidbodyComponent::RigidbodyType type, float mass, float drag);
+	RigidbodyComponent(RigidbodyComponent::RigidbodyType type, float mass, float drag, float angularDrag);
 	~RigidbodyComponent() = default;
 
 	inline void setDragThreshold(float dragThreshold)						{ _dragThreshold = dragThreshold; }
 	inline void setRigidbodyConstraints(const std::bitset<8>& constraints)	{ _constraints = constraints; }
 	inline void setSleepThreshold(float sleepThreshold)						{ _sleepThreshold = sleepThreshold; }
+	inline void setRotation(const Coords3f& rotation)						{ _rotation = rotation; }
 
+	inline void addRelativeForce(const Coords3f& value)		{ addRelativeForce(Force(Force::ForceType::LINEAR, value)); }
+	inline void addAbsoluteForce(const Coords3f& value)		{ addAbsoluteForce(Force(Force::ForceType::LINEAR, value)); }
+	inline void addAngularForce(const Coords3f& value)		{ addAbsoluteForce(Force(Force::ForceType::ANGULAR, value)); }
+	
 	void setVelocity(const Coords3f& velocity);
-	void addForce(const Coords3f& force);
+	void setAngularVelocity(const Coords3f& angularVelocity);
+	void addAbsoluteForce(const Force& force);
+	void addRelativeForce(const Force& force);
 
 public:
 	friend class PhysicsEngine;

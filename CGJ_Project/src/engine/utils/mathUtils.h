@@ -1,7 +1,10 @@
 #ifndef __engine_math_mathUtils__
 #define __engine_math_mathUtils__
 
+
 #include <numeric>
+
+
 
 
 static constexpr double PI = 3.14159265358979323846;

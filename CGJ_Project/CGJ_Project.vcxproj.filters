@@ -23,6 +23,7 @@
     <ClCompile Include="src\engine\renderer\vsShaderLib.cpp" />
     <ClCompile Include="src\MicroMachines3D\common\materials.h" />
     <ClCompile Include="src\engine\math\physicsEngine.cpp" />
+    <ClCompile Include="src\engine\math\force.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\app\application.h" />
@@ -61,6 +62,8 @@
     <ClInclude Include="src\engine\renderer\vsShaderLib.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\manager\game\globalLightScript.h" />
     <ClInclude Include="src\engine\math\physicsEngine.h" />
+    <ClInclude Include="src\MicroMachines3D\scripts\car\carMovementScript.h" />
+    <ClInclude Include="src\engine\math\force.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />

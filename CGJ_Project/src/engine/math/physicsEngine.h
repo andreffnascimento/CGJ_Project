@@ -2,6 +2,7 @@
 #define __engine_math_physicsEngine__
 
 
+#include "engine/math/force.h"
 #include "engine/scene/entity.h"
 #include "engine/scene/components.h"
 
@@ -23,6 +24,14 @@ public:
 
 
 public:
+	static void rotateVector(Coords3f& vector, const Coords3f& rotation);
+	static void rotateVectorOnAxis(float& coord1, float& coord2, float angle);
+	static Coords3f calculateDragForce(const Coords3f& velocity, float drag, float dragThreshold);
+
+
+
+
+public:
 	PhysicsEngine() = default;
 	PhysicsEngine(const PhysicsEngine&) = default;
 	~PhysicsEngine() = default;
@@ -39,11 +48,11 @@ private:
 
 
 private:
-	Coords3f _calculateDragForce(const RigidbodyComponent& rigidbody) const;
-	void _calculateExpectedVelocity(RigidbodyComponent& rigidbody, float ts) const;
-	void _processVelocityConstraints(RigidbodyComponent& rigidbody) const;
+	Coords3f _calculateExpectedRotation(RigidbodyComponent& rigidbody, float ts) const;
+	void _combineForces(RigidbodyComponent& rigidbody, Coords3f& linearForce, Coords3f& angularForce) const;
+	void _calculateExpectedAngularVelocity(RigidbodyComponent& rigidbody, Coords3f& angularForce, float ts) const;
+	void _calculateExpectedVelocity(RigidbodyComponent& rigidbody, Coords3f& linearForce, float ts, const Coords3f& rotation) const;
 	void _processSleepThreshold(RigidbodyComponent& rigidbody) const;
-
 };
 
 
