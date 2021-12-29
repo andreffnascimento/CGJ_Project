@@ -79,15 +79,19 @@ void PhysicsEngine::simulate(const Scene& scene, float ts) const
 
 		if (!rigidbody._sleeping)
 			_processRigidbodyCollisions(scene, entityId, rigidbody, ts);
-	}
+	}*/
 
 	for (auto& iterator : _rigidbodyComponents)
 	{
 		EntityHandle entityId = iterator.first;
 		RigidbodyComponent& rigidbody = iterator.second;
-
-		
-	}*/
+		if (!rigidbody._sleeping)
+		{
+			Entity entity = scene.getEntityById(entityId);
+			Transform::translateTo(entity, rigidbody._position);
+			Transform::rotateTo(entity, rigidbody._rotation);
+		}				
+	}
 }
 
 
@@ -106,16 +110,8 @@ void PhysicsEngine::_processRigidbodyMovement(const Scene& scene, EntityHandle e
 		_calculateExpectedVelocity(rigidbody, linearForce, ts, rotation);
 	}
 
+	rigidbody._position += rigidbody._velocity * ts;
 	_processSleepThreshold(rigidbody);
-
-	if (rigidbody._sleeping)
-		return;
-	
-	Entity entity = scene.getEntityById(entityId);	
-	TransformComponent& transform = entity.transform();
-	Coords3f expectedPosition = transform.translation() + (rigidbody._velocity * ts);
-	Transform::translateTo(entity, expectedPosition);
-	Transform::rotateTo(entity, rigidbody._rotation);
 }
 
 
