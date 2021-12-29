@@ -278,6 +278,7 @@ private:
 	float _dragThreshold = 1.0f;
 	std::bitset<8> _constraints = std::bitset<8>();
 
+	Coords3f _position = Coords3f();
 	Coords3f _rotation = Coords3f();
 	Coords3f _velocity = Coords3f();
 	Coords3f _angularVelocity = Coords3f();
@@ -286,7 +287,6 @@ private:
 	bool _sleeping = true;					// doesn't process the objects if no changes occur
 
 	std::list<Force> _forces = std::list<Force>();
-
 
 public:
 	RigidbodyComponent() = default;
@@ -304,6 +304,7 @@ public:
 	inline void setDragThreshold(float dragThreshold)						{ _dragThreshold = dragThreshold; }
 	inline void setRigidbodyConstraints(const std::bitset<8>& constraints)	{ _constraints = constraints; }
 	inline void setSleepThreshold(float sleepThreshold)						{ _sleepThreshold = sleepThreshold; }
+	inline void setPosition(const Coords3f& position)						{ _position = position; }
 	inline void setRotation(const Coords3f& rotation)						{ _rotation = rotation; }
 
 	inline void addRelativeForce(const Coords3f& value)		{ addRelativeForce(Force(Force::ForceType::LINEAR, value)); }
@@ -314,6 +315,30 @@ public:
 	void setAngularVelocity(const Coords3f& angularVelocity);
 	void addAbsoluteForce(const Force& force);
 	void addRelativeForce(const Force& force);
+
+public:
+	friend class PhysicsEngine;
+};
+
+
+
+
+struct AABBColliderComponent
+{
+private:
+	RigidbodyComponent& _rigidbody;
+	Coords3f _size;
+
+public:
+	AABBColliderComponent() = delete;
+	AABBColliderComponent(const AABBColliderComponent&) = default;
+	AABBColliderComponent(RigidbodyComponent& rigidbody) : _rigidbody(rigidbody) {};
+	AABBColliderComponent(RigidbodyComponent& rigidbody, const Coords3f& initialSize) : _rigidbody(rigidbody), _size(initialSize) {};
+	~AABBColliderComponent() = default;
+
+	inline const Coords3f& size() const { return _size; }
+
+	inline void setInitialSize(const Coords3f& initialSize) { _size = initialSize; }
 
 public:
 	friend class PhysicsEngine;

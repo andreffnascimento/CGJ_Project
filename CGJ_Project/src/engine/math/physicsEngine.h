@@ -38,13 +38,14 @@ public:
 
 
 public:
-	void run(const Scene& scene, float ts) const;
+	void initialize(const Scene& scene) const;
+	void simulate(const Scene& scene, float ts) const;
 
 
 
 
 private:
-	void _processRigidbody(const Scene& scene, EntityHandle entityId, RigidbodyComponent& rigidbody, float ts) const;
+	void _processRigidbodyMovement(const Scene& scene, EntityHandle entityId, RigidbodyComponent& rigidbody, float ts) const;
 
 
 private:

@@ -12,11 +12,12 @@ class CarMovementScript : public Script
 
 public:
 	static constexpr float ENGINE_ACCELERATION = 63.0f;
-	static constexpr float MIN_FORWARD_FORCE = 2000.0f;
+	static constexpr float ENGINE_DEACCELERATION = 1 / 63.0f;
+	static constexpr float MIN_FORWARD_FORCE = 5000.0f;
 	static constexpr float MAX_FORWARD_FORCE = 50000.0f;
-	static constexpr float MIN_BACKWARDS_FORCE = -1000.0f;
+	static constexpr float MIN_BACKWARDS_FORCE = -2000.0f;
 	static constexpr float MAX_BACKWARDS_FORCE = -5000.0f;
-	static constexpr float STEERING_VELOCITY_MODIFIER = 95.0f;
+	static constexpr float STEERING_VELOCITY_MODIFIER = 2.0f;
 
 
 
@@ -45,7 +46,6 @@ public:
 		_eventHandler = &Application::getEventHandler();
 		_car = _scene->getEntityByTag("Car");
 		_rigidbody = &_car.getComponent<RigidbodyComponent>();
-		_rigidbody->setRotation({ 0.0f, 90.0f, 0.0f });
 	}
 
 
@@ -55,9 +55,9 @@ public:
 		_calculateBackwardsForce(ts);
 
 		float travelForce = _forwardForce + _backwardsForce;
-		float steeringForce = _calculateSteeringForce(ts);
+		float steeringForce = _calculateSteeringForce();
 
-		_rigidbody->addRelativeForce({ 0.0f, 0.0f, travelForce});
+		_rigidbody->addRelativeForce({ 0.0f, 0.0f, travelForce });
 		_rigidbody->addAngularForce({ 0.0f, steeringForce, 0.0f });
 	}
 
@@ -70,9 +70,9 @@ private:
 			_forwardForce = CarMovementScript::MIN_FORWARD_FORCE;
 
 		if (_eventHandler->keyState('Q').down() || _eventHandler->keyState('q').down())
-			_forwardForce *= CarMovementScript::ENGINE_ACCELERATION * ts;
+			_forwardForce *= std::max(CarMovementScript::ENGINE_ACCELERATION * ts, 1.01f);
 		else
-			_forwardForce /= CarMovementScript::ENGINE_ACCELERATION * ts;
+			_forwardForce *= std::min(CarMovementScript::ENGINE_DEACCELERATION * ts, 0.99f);
 
 		if (_forwardForce < CarMovementScript::MIN_FORWARD_FORCE)
 			_forwardForce = 0.0f;
@@ -87,9 +87,9 @@ private:
 			_backwardsForce = CarMovementScript::MIN_BACKWARDS_FORCE;
 
 		if (_eventHandler->keyState('A').down() || _eventHandler->keyState('a').down())
-			_backwardsForce *= CarMovementScript::ENGINE_ACCELERATION * ts;
+			_backwardsForce *= std::max(CarMovementScript::ENGINE_ACCELERATION * ts, 1.01f);
 		else
-			_backwardsForce /= CarMovementScript::ENGINE_ACCELERATION * ts;
+			_backwardsForce *= std::min(CarMovementScript::ENGINE_DEACCELERATION * ts, 0.9f);
 
 		if (_backwardsForce > CarMovementScript::MIN_BACKWARDS_FORCE)
 			_backwardsForce = 0.0f;
@@ -97,13 +97,13 @@ private:
 		_backwardsForce = std::max(_backwardsForce, CarMovementScript::MAX_BACKWARDS_FORCE);
 	}
 
-	float _calculateSteeringForce(float ts)
+	float _calculateSteeringForce()
 	{
 		if (_eventHandler->keyState('O').down() || _eventHandler->keyState('o').down())
-			return CarMovementScript::STEERING_VELOCITY_MODIFIER * _rigidbody->velocity().length() * ts;
+			return CarMovementScript::STEERING_VELOCITY_MODIFIER * _rigidbody->velocity().length();
 
 		if (_eventHandler->keyState('P').down() || _eventHandler->keyState('p').down())
-			return -CarMovementScript::STEERING_VELOCITY_MODIFIER * _rigidbody->velocity().length() * ts;
+			return -CarMovementScript::STEERING_VELOCITY_MODIFIER * _rigidbody->velocity().length();
 
 		return 0.0f;
 	}

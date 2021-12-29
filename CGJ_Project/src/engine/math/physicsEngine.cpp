@@ -45,7 +45,22 @@ Coords3f PhysicsEngine::calculateDragForce(const Coords3f& velocity, float drag,
 
 
 
-void PhysicsEngine::run(const Scene& scene, float ts) const
+void PhysicsEngine::initialize(const Scene& scene) const
+{
+	std::unordered_map<EntityHandle, RigidbodyComponent>& _rigidbodyComponents = scene.getSceneComponents<RigidbodyComponent>();
+	for (auto& iterator : _rigidbodyComponents)
+	{
+		EntityHandle entityId = iterator.first;
+		RigidbodyComponent& rigidbody = iterator.second;
+		const TransformComponent& transform = scene.getEntityById(entityId).transform();
+
+		rigidbody._position = transform.translation();
+		rigidbody._rotation = transform.rotation();
+	}
+}
+
+
+void PhysicsEngine::simulate(const Scene& scene, float ts) const
 {
 	std::unordered_map<EntityHandle, RigidbodyComponent>& _rigidbodyComponents = scene.getSceneComponents<RigidbodyComponent>();
 	for (auto& iterator : _rigidbodyComponents)
@@ -53,15 +68,32 @@ void PhysicsEngine::run(const Scene& scene, float ts) const
 		EntityHandle entityId = iterator.first;
 		RigidbodyComponent& rigidbody = iterator.second;
 
-		if (!rigidbody._sleeping)	// ignore rigidbodies that haven't move
-			_processRigidbody(scene, entityId, rigidbody, ts);	
+		if (!rigidbody._sleeping)
+			_processRigidbodyMovement(scene, entityId, rigidbody, ts);
 	}
+
+	/*for (auto& iterator : _rigidbodyComponents)
+	{
+		EntityHandle entityId = iterator.first;
+		RigidbodyComponent& rigidbody = iterator.second;
+
+		if (!rigidbody._sleeping)
+			_processRigidbodyCollisions(scene, entityId, rigidbody, ts);
+	}
+
+	for (auto& iterator : _rigidbodyComponents)
+	{
+		EntityHandle entityId = iterator.first;
+		RigidbodyComponent& rigidbody = iterator.second;
+
+		
+	}*/
 }
 
 
 
 
-void PhysicsEngine::_processRigidbody(const Scene& scene, EntityHandle entityId, RigidbodyComponent& rigidbody, float ts) const
+void PhysicsEngine::_processRigidbodyMovement(const Scene& scene, EntityHandle entityId, RigidbodyComponent& rigidbody, float ts) const
 {
 
 	if (rigidbody._type == RigidbodyComponent::RigidbodyType::DYNAMIC)

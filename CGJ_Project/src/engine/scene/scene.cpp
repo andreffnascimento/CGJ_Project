@@ -110,6 +110,9 @@ void Scene::onCreate()
 	// initialize all the script components
 	for (auto& script : _registry.getComponents<ScriptComponent>())
 		script.second.onCreate();
+
+	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
+	physicsEngine.initialize(*this);
 }
 
 
@@ -120,7 +123,7 @@ void Scene::onUpdate(float ts)
 		script.second.onUpdate(ts);
 
 	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
-	physicsEngine.run(*this, ts);
+	physicsEngine.simulate(*this, ts);
 	
 	Renderer& renderer = Application::getRenderer();
 	renderer.initSceneRendering();

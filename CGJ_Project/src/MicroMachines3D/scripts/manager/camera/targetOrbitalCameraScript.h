@@ -22,7 +22,6 @@ private:
 
 
 private:
-	static constexpr float DECAY_MODIFIER = 2.0f;
 	static constexpr float MAX_ALPHA = 360.0f;
 	static constexpr float ORIGINAL_BETA = 30.0f;
 	static constexpr float ORIGINAL_R = 15.0f;
@@ -151,7 +150,7 @@ private:
 			else if (_betaAux < -85.0f)
 				_betaAux = -85.0f;
 
-			_alphaAux = std::fmod(_alphaAux, TargetOrbitalCameraScript::MAX_ALPHA);
+			_alphaAux = std::fmod(_alphaAux + 360.0f, TargetOrbitalCameraScript::MAX_ALPHA);
 		}
 		else if (_trackingStatus == TargetOrbitalCameraScript::TrackingStatus::ZOOM)
 		{
@@ -180,12 +179,11 @@ private:
 		if (_trackingStatus != TargetOrbitalCameraScript::TrackingStatus::NONE && true)		// FIXME: check if car is moving
 			return;
 
-		float carVelocity = _carRigidbody->velocity().length2();
-		if (carVelocity > 0.0f)
+		if (_carRigidbody->velocity().length2() > 0.0f)
 		{
-			_alphaAux += (_getStaticAlpha() - _alphaAux) * TargetOrbitalCameraScript::DECAY_MODIFIER * ts;
-			_betaAux += (TargetOrbitalCameraScript::ORIGINAL_BETA - _betaAux) * TargetOrbitalCameraScript::DECAY_MODIFIER * ts;
-			_rAux += (TargetOrbitalCameraScript::ORIGINAL_R - _rAux) * TargetOrbitalCameraScript::DECAY_MODIFIER * ts;
+			_alphaAux = _getStaticAlpha();
+			_betaAux = TargetOrbitalCameraScript::ORIGINAL_BETA;
+			_rAux = TargetOrbitalCameraScript::ORIGINAL_R;
 		}
 
 		_alpha = _alphaAux;

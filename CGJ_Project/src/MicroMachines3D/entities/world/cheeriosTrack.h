@@ -34,13 +34,15 @@ private:
 	void _createCheerio(Scene* scene, GroupComponent& group, const std::shared_ptr<MyMesh>& mesh, unsigned int id, float xPos, float yPos)
 	{
 		constexpr RigidbodyComponent::RigidbodyType rigidbodyType = RigidbodyComponent::RigidbodyType::DYNAMIC;
-		constexpr float mass = 50.0f;
+		constexpr float mass = 500.0f;
 		constexpr float drag = 100.0f;
 		constexpr float angularDrag = 1000.0f;
 
 		Entity cheerio = group.addNewEntity(scene, *this, "cheerio_" + std::to_string(id));
 		cheerio.addComponent<MeshComponent>(mesh);
-		cheerio.addComponent<RigidbodyComponent>(rigidbodyType, mass, drag, angularDrag);
+
+		RigidbodyComponent& rigidbody = cheerio.addComponent<RigidbodyComponent>(rigidbodyType, mass, drag, angularDrag);
+		AABBColliderComponent& collider = addComponent<AABBColliderComponent>(rigidbody, CHEERIO_SIZE);
 
 		Transform::scaleTo(cheerio, CHEERIO_SIZE);
 		Transform::translate(cheerio, { xPos, CHEERIO_SIZE.y / 5.0f, yPos });
