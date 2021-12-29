@@ -35,14 +35,10 @@ void PhysicsEngine::rotateVectorOnAxis(float& coord1, float& coord2, float angle
 
 Coords3f PhysicsEngine::calculateDragForce(const Coords3f& velocity, float drag, float dragThreshold)
 {
-	Coords3f dragForce = velocity;
-	dragForce *= PhysicsEngine::AIR_DENSITY * drag;
-	if (velocity.length() > dragThreshold)
-		dragForce *= velocity;
-	else
-		dragForce *= PhysicsEngine::DRAG_SLOW_CONSTANT;
-
-	dragForce *= velocity.normalized();
+	float velocityLength = velocity.length();
+	float dragLength = -PhysicsEngine::AIR_DENSITY * drag * velocityLength * (velocityLength > dragThreshold ? velocityLength : PhysicsEngine::DRAG_SLOW_CONSTANT);
+	Coords3f dragForce = velocity.normalized();
+	dragForce *= dragLength;
 	return dragForce;
 }
 
@@ -120,7 +116,7 @@ void PhysicsEngine::_combineForces(RigidbodyComponent& rigidbody, Coords3f& line
 
 void PhysicsEngine::_calculateExpectedAngularVelocity(RigidbodyComponent& rigidbody, Coords3f& angularForce, float ts) const
 {
-	angularForce -= PhysicsEngine::calculateDragForce(rigidbody._angularVelocity, rigidbody._angularDrag, rigidbody._dragThreshold);
+	angularForce += PhysicsEngine::calculateDragForce(rigidbody._angularVelocity, rigidbody._angularDrag, rigidbody._dragThreshold);
 	angularForce *= (ts / rigidbody._mass);
 	rigidbody._angularVelocity += angularForce;
 }
@@ -128,7 +124,7 @@ void PhysicsEngine::_calculateExpectedAngularVelocity(RigidbodyComponent& rigidb
 
 void PhysicsEngine::_calculateExpectedVelocity(RigidbodyComponent& rigidbody, Coords3f& linearForce, float ts, const Coords3f& rotation) const
 {
-	linearForce -= PhysicsEngine::calculateDragForce(rigidbody._velocity, rigidbody._drag, rigidbody._dragThreshold);
+	linearForce += PhysicsEngine::calculateDragForce(rigidbody._velocity, rigidbody._drag, rigidbody._dragThreshold);
 	linearForce *= (ts / rigidbody._mass);
 	PhysicsEngine::rotateVector(linearForce, rotation);
 	PhysicsEngine::rotateVector(rigidbody._velocity, rotation);
@@ -138,7 +134,7 @@ void PhysicsEngine::_calculateExpectedVelocity(RigidbodyComponent& rigidbody, Co
 
 void PhysicsEngine::_processSleepThreshold(RigidbodyComponent& rigidbody) const
 {
-	if (rigidbody._velocity.length() > rigidbody._sleepThreshold)
+	if (rigidbody._velocity.length2() > rigidbody._sleepThreshold || rigidbody._angularVelocity.length2() > rigidbody._sleepThreshold)
 		return;
 
 	rigidbody._velocity = Coords3f();

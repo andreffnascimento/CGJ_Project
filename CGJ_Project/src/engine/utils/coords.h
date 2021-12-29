@@ -2,7 +2,10 @@
 #define __engine_utils_coords__
 
 
+#include <cmath>
+
 #include "engine/utils/mathUtils.h"
+
 
 
 
@@ -28,7 +31,8 @@ struct Coords3f
 	~Coords3f() = default;
 
 	float sum() const			{ return x + y + z; }
-	float length() const		{ return x * x + y * y + z * z; }
+	float length() const		{ return std::sqrt(length2()); }
+	float length2() const		{ return x * x + y * y + z * z; }
 
 	Coords3f normalized() const { float norm = invSqrt(length()); return Coords3f({ x * norm, y * norm, z * norm }); }
 
@@ -67,7 +71,8 @@ struct Coords4f
 	~Coords4f() = default;
 
 	float sum()		const { return x + y + z + w; }
-	float length()	const { return x * x + y * y + z * z + w * w; }
+	float length()	const { return std::sqrt(length2()); }
+	float length2() const { return x * x + y * y + z * z + w * w; }
 
 	Coords4f normalized() const { float norm = invSqrt(length()); return Coords4f({ x * norm, y * norm, z * norm, w * norm }); }
 

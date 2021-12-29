@@ -294,6 +294,13 @@ public:
 	RigidbodyComponent(RigidbodyComponent::RigidbodyType type, float mass, float drag, float angularDrag);
 	~RigidbodyComponent() = default;
 
+	inline float mass() const						{ return _mass; }
+	inline float drag() const						{ return _drag; }
+	inline float angularDrag() const				{ return _angularDrag; }
+	inline float dragThreshold() const				{ return _dragThreshold; }
+	inline const Coords3f& velocity() const			{ return _velocity; }
+	inline const Coords3f& angularVelocity() const	{ return _angularVelocity; }
+
 	inline void setDragThreshold(float dragThreshold)						{ _dragThreshold = dragThreshold; }
 	inline void setRigidbodyConstraints(const std::bitset<8>& constraints)	{ _constraints = constraints; }
 	inline void setSleepThreshold(float sleepThreshold)						{ _sleepThreshold = sleepThreshold; }

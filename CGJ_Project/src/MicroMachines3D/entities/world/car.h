@@ -23,7 +23,8 @@ public:
 		_initCarWheels(scene, group);
 		_initCarHeadlights(scene, group);
 
-		RigidbodyComponent& rigidbody = addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::DYNAMIC, 100.0f, 10.0f, 0.0f);
+		RigidbodyComponent& rigidbody = addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::DYNAMIC, 100.0f, 3.0f, 50.0f);
+		rigidbody.setDragThreshold(2.0f);
 
 		ScriptComponent& script = addComponent<ScriptComponent>();
 		script.addScriptInstance(std::make_shared<CarHeadlightsScript>(scene));
