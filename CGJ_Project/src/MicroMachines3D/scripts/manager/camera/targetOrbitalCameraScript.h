@@ -22,7 +22,7 @@ private:
 
 
 private:
-	static constexpr float DECAY_SPEED = 1.0f;
+	static constexpr float DECAY_MODIFIER = 2.0f;
 	static constexpr float MAX_ALPHA = 360.0f;
 	static constexpr float ORIGINAL_BETA = 30.0f;
 	static constexpr float ORIGINAL_R = 15.0f;
@@ -32,6 +32,7 @@ private:
 	const EventHandler* _eventHandler = nullptr;
 
 	Entity _car = Entity();
+	const RigidbodyComponent* _carRigidbody = nullptr;
 
 	CameraEntity _camera = CameraEntity();
 	TargetOrbitalCameraScript::TrackingStatus _trackingStatus = TargetOrbitalCameraScript::TrackingStatus::NONE;
@@ -62,6 +63,7 @@ public:
 		_eventHandler = &Application::getEventHandler();
 		_car = _scene->getEntityByTag("Car");
 		_camera = _scene->getEntityByTag("Camera3");
+		_carRigidbody = &_car.getComponent<RigidbodyComponent>();
 		_updateCameraTransform();
 		_setCameraTarget();
 
@@ -178,9 +180,13 @@ private:
 		if (_trackingStatus != TargetOrbitalCameraScript::TrackingStatus::NONE && true)		// FIXME: check if car is moving
 			return;
 
-		_alphaAux += (_getStaticAlpha() - _alphaAux) * TargetOrbitalCameraScript::DECAY_SPEED * ts;
-		_betaAux += (TargetOrbitalCameraScript::ORIGINAL_BETA - _betaAux) * TargetOrbitalCameraScript::DECAY_SPEED * ts;
-		_rAux += (TargetOrbitalCameraScript::ORIGINAL_R - _rAux) * TargetOrbitalCameraScript::DECAY_SPEED * ts;
+		float carVelocity = _carRigidbody->velocity().length2();
+		if (carVelocity > 0.0f)
+		{
+			_alphaAux += (_getStaticAlpha() - _alphaAux) * TargetOrbitalCameraScript::DECAY_MODIFIER * ts;
+			_betaAux += (TargetOrbitalCameraScript::ORIGINAL_BETA - _betaAux) * TargetOrbitalCameraScript::DECAY_MODIFIER * ts;
+			_rAux += (TargetOrbitalCameraScript::ORIGINAL_R - _rAux) * TargetOrbitalCameraScript::DECAY_MODIFIER * ts;
+		}
 
 		_alpha = _alphaAux;
 		_beta = _betaAux;
