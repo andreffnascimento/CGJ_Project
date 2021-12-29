@@ -33,6 +33,12 @@ void PhysicsEngine::rotateVectorOnAxis(float& coord1, float& coord2, float angle
 }
 
 
+void PhysicsEngine::rotateBoundingBox(Coords3f& boundingBox, const Coords3f& rotation)
+{
+	
+}
+
+
 Coords3f PhysicsEngine::calculateDragForce(const Coords3f& velocity, float drag, float dragThreshold)
 {
 	float velocityLength = velocity.length();
@@ -52,10 +58,20 @@ void PhysicsEngine::initialize(const Scene& scene) const
 	{
 		EntityHandle entityId = iterator.first;
 		RigidbodyComponent& rigidbody = iterator.second;
-		const TransformComponent& transform = scene.getEntityById(entityId).transform();
+
+		Entity entity = scene.getEntityById(entityId);
+		const TransformComponent& transform = entity.transform();
 
 		rigidbody._position = transform.translation();
 		rigidbody._rotation = transform.rotation();
+
+		AABBColliderComponent* collider = entity.getComponentIfExists<AABBColliderComponent>();
+		if (collider != nullptr)
+		{
+			PhysicsEngine::rotateBoundingBox(collider->_boundingBox, rigidbody._rotation);
+			collider->_rigidbody = &rigidbody;
+			collider->_transform = &transform;
+		}
 	}
 }
 
@@ -69,17 +85,17 @@ void PhysicsEngine::simulate(const Scene& scene, float ts) const
 		RigidbodyComponent& rigidbody = iterator.second;
 
 		if (!rigidbody._sleeping)
-			_processRigidbodyMovement(scene, entityId, rigidbody, ts);
+			_processRigidbodyMovement(scene, rigidbody, ts);
 	}
 
-	/*for (auto& iterator : _rigidbodyComponents)
+	for (auto& iterator : _rigidbodyComponents)
 	{
 		EntityHandle entityId = iterator.first;
 		RigidbodyComponent& rigidbody = iterator.second;
 
 		if (!rigidbody._sleeping)
-			_processRigidbodyCollisions(scene, entityId, rigidbody, ts);
-	}*/
+			_processRigidbodyCollisions(scene, rigidbody, ts);
+	}
 
 	for (auto& iterator : _rigidbodyComponents)
 	{
@@ -97,7 +113,7 @@ void PhysicsEngine::simulate(const Scene& scene, float ts) const
 
 
 
-void PhysicsEngine::_processRigidbodyMovement(const Scene& scene, EntityHandle entityId, RigidbodyComponent& rigidbody, float ts) const
+void PhysicsEngine::_processRigidbodyMovement(const Scene& scene, RigidbodyComponent& rigidbody, float ts) const
 {
 
 	if (rigidbody._type == RigidbodyComponent::RigidbodyType::DYNAMIC)
@@ -112,6 +128,12 @@ void PhysicsEngine::_processRigidbodyMovement(const Scene& scene, EntityHandle e
 
 	rigidbody._position += rigidbody._velocity * ts;
 	_processSleepThreshold(rigidbody);
+}
+
+
+void PhysicsEngine::_processRigidbodyCollisions(const Scene& scene, RigidbodyComponent& rigidbody, float ts) const
+{
+
 }
 
 

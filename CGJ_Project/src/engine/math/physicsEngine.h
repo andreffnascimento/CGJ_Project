@@ -26,6 +26,7 @@ public:
 public:
 	static void rotateVector(Coords3f& vector, const Coords3f& rotation);
 	static void rotateVectorOnAxis(float& coord1, float& coord2, float angle);
+	static void rotateBoundingBox(Coords3f& boundingBox, const Coords3f& rotation);
 	static Coords3f calculateDragForce(const Coords3f& velocity, float drag, float dragThreshold);
 
 
@@ -45,7 +46,8 @@ public:
 
 
 private:
-	void _processRigidbodyMovement(const Scene& scene, EntityHandle entityId, RigidbodyComponent& rigidbody, float ts) const;
+	void _processRigidbodyMovement(const Scene& scene, RigidbodyComponent& rigidbody, float ts) const;
+	void _processRigidbodyCollisions(const Scene& scene, RigidbodyComponent& rigidbody, float ts) const;
 
 
 private:

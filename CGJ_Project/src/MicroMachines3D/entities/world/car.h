@@ -27,7 +27,7 @@ public:
 		rigidbody.setDragThreshold(2.0f);
 
 		Coords3f carSize = { CAR_BOTTOM_SIZE.x, CAR_BOTTOM_SIZE.y, CAR_BOTTOM_SIZE.z + CAR_BUMPER_SIZE.z };
-		AABBColliderComponent& collider = addComponent<AABBColliderComponent>(rigidbody, carSize);
+		AABBColliderComponent& collider = addComponent<AABBColliderComponent>(carSize);
 		
 		ScriptComponent& script = addComponent<ScriptComponent>();
 		script.addScriptInstance(std::make_shared<CarHeadlightsScript>(scene));
