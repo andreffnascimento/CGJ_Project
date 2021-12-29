@@ -52,8 +52,8 @@ public:
 		_calculateForwardForce(ts);
 		_calculateBackwardsForce(ts);
 
-		float steeringVelocity = _calculateSteeringVelocity(ts);
 		float travelForce = _forwardForce + _backwardsForce;
+		float steeringVelocity = _calculateSteeringVelocity(ts);
 
 		_rigidbody->addRelativeForce({ 0.0f, 0.0f, travelForce});
 		_rigidbody->setAngularVelocity({ 0.0f, steeringVelocity, 0.0f });
@@ -85,7 +85,7 @@ private:
 			_backwardsForce = MIN_BACKWARDS_FORCE;
 
 		if (_eventHandler->keyState('A').down() || _eventHandler->keyState('a').down())
-			_backwardsForce *= 62.0f * ts;
+			_backwardsForce *= 63.0f * ts;
 		else
 			_backwardsForce /= 65.0f * ts;
 
