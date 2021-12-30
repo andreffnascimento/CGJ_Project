@@ -4,16 +4,17 @@
 
 
 float invSqrt(float number) {
-    union {
-        float f;
-        uint32_t i;
-    } conv;
+	long i;
+	float x2, y;
+	const float threehalfs = 1.5F;
 
-    float x2 = number * 0.5F;
-    const float threehalfs = 1.5F;
+	x2 = number * 0.5F;
+	y = number;
+	i = *(long*)&y;
+	i = 0x5f3759df - (i >> 1);
+	y = *(float*)&i;
+	y = y * (threehalfs - (x2 * y * y));
 
-    conv.f = number;
-    conv.i = 0x5f3759df - (conv.i >> 1);
-    conv.f = conv.f * (threehalfs - (x2 * conv.f * conv.f));
-    return conv.f;
+	return y;
 }
+

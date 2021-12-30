@@ -83,9 +83,9 @@ void PhysicsEngine::initialize(const Scene& scene) const
 		AABBColliderComponent* collider = entity.getComponentIfExists<AABBColliderComponent>();
 		if (collider != nullptr)
 		{
-			PhysicsEngine::rotateBoundingBox(*collider, rigidbody._rotation);
+			collider->_boundingBox = collider->_initialSize;
 			collider->_rigidbody = &rigidbody;
-			collider->_transform = &transform;
+			PhysicsEngine::rotateBoundingBox(*collider, rigidbody._rotation);
 		}
 	}
 }
@@ -127,7 +127,7 @@ void PhysicsEngine::simulate(const Scene& scene, float ts) const
 			Entity entity = scene.getEntityById(entityId);
 			Transform::translateTo(entity, rigidbody._position);
 			Transform::rotateTo(entity, rigidbody._rotation);
-		}				
+		}
 	}
 }
 
@@ -154,6 +154,7 @@ void PhysicsEngine::_processRigidbodyMovement(const Scene& scene, RigidbodyCompo
 
 void PhysicsEngine::_detectRigidbodyCollisions(const Scene& scene, EntityHandle entityId, AABBColliderComponent& entityCollider, float ts) const
 {
+	entityCollider._collided = false;
 	std::unordered_map<EntityHandle, AABBColliderComponent>& _colliderComponents = scene.getSceneComponents<AABBColliderComponent>();
 	for (auto& iterator : _colliderComponents)
 	{
@@ -180,8 +181,8 @@ void PhysicsEngine::_detectRigidbodyCollisions(const Scene& scene, EntityHandle 
 						 (entityMinY <= otherMaxY && entityMaxY >= otherMinY) && 
 						 (entityMinZ <= otherMaxZ && entityMaxZ >= otherMinZ);
 
-		//if (collision)
-			//_processRigidbodyCollisions()
+		if (collision)
+			_resolveCollision(entityCollider, otherCollider, ts);
 	}
 }
 
@@ -192,9 +193,9 @@ Coords3f PhysicsEngine::_calculateExpectedRotation(RigidbodyComponent& rigidbody
 {
 	Coords3f rotation = rigidbody._angularVelocity / ts;
 	rigidbody._rotation += rotation;
-	rigidbody._rotation.x = std::fmod(rigidbody._rotation.x, 360.0f);
-	rigidbody._rotation.y = std::fmod(rigidbody._rotation.y, 360.0f);
-	rigidbody._rotation.z = std::fmod(rigidbody._rotation.z, 360.0f);
+	rigidbody._rotation.x = std::fmod(rigidbody._rotation.x + 360.0f, 360.0f);
+	rigidbody._rotation.y = std::fmod(rigidbody._rotation.y + 360.0f, 360.0f);
+	rigidbody._rotation.z = std::fmod(rigidbody._rotation.z + 360.0f, 360.0f);
 	return rotation;
 }
 
@@ -239,4 +240,35 @@ void PhysicsEngine::_processSleepThreshold(RigidbodyComponent& rigidbody) const
 	rigidbody._velocity = Coords3f();
 	rigidbody._angularVelocity = Coords3f();
 	rigidbody._sleeping = true;
+}
+
+
+
+
+void PhysicsEngine::_resolveCollision(AABBColliderComponent& firstCollider, AABBColliderComponent& secondCollider, float ts) const
+{
+	RigidbodyComponent& firstRigidbody = *firstCollider._rigidbody;
+	RigidbodyComponent& secondRigidbody = *secondCollider._rigidbody;
+
+	Coords3f relativeVelocity = firstRigidbody._velocity - secondRigidbody._velocity;
+	Coords3f collisionNormal = -firstRigidbody._velocity.normalized();
+
+	float collisionSpeed = relativeVelocity.dot(collisionNormal);
+	float restitutionCocoefficient = std::min(firstCollider._restitutionCocoefficient, secondCollider._restitutionCocoefficient);
+	float firstInvMass = 1 / firstRigidbody._mass;
+	float secondInvMass = 1 / secondRigidbody._mass;
+	float impulseSpeed = -(1 + restitutionCocoefficient) * collisionSpeed;
+	float impulse = impulseSpeed / (firstInvMass + secondInvMass);
+	
+	firstCollider._collided = true;
+	firstRigidbody._position -= firstRigidbody._velocity * ts;		// revert position update
+	firstRigidbody._velocity += impulse * firstInvMass * collisionNormal;
+	firstRigidbody._position += firstRigidbody._velocity * ts;
+	firstRigidbody._sleeping = false;
+
+	firstCollider._collided = false;
+	secondRigidbody._position -= secondRigidbody._velocity * ts;	// revert position update
+	secondRigidbody._velocity -= impulse * secondInvMass * collisionNormal;
+	secondRigidbody._position += secondRigidbody._velocity * ts;
+	secondRigidbody._sleeping = false;
 }

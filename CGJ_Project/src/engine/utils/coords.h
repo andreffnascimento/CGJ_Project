@@ -30,11 +30,13 @@ struct Coords3f
 	Coords3f(const Coords3f&) = default;
 	~Coords3f() = default;
 
-	float sum() const			{ return x + y + z; }
-	float length() const		{ return std::sqrt(length2()); }
-	float length2() const		{ return x * x + y * y + z * z; }
+	float sum() const						{ return x + y + z; }
+	float length() const					{ return std::sqrt(length2()); }
+	float length2() const					{ return x * x + y * y + z * z; }
+	float dot(const Coords3f& other) const	{ return x * other.x + y * other.y + z * other.z; }
+	Coords3f& normalize()					{ float invNorm = invSqrt(length2()); x *= invNorm; y *= invNorm; z *= invNorm; return *this; }
 
-	Coords3f normalized() const { float norm = invSqrt(length()); return Coords3f({ x * norm, y * norm, z * norm }); }
+	Coords3f normalized() const				{ float invNorm = invSqrt(length2()); return Coords3f({ x * invNorm, y * invNorm, z * invNorm }); }
 
 	void operator+=(const Coords3f& other) { x += other.x; y += other.y; z += other.z; }
 	void operator-=(const Coords3f& other) { x -= other.x; y -= other.y; z -= other.z; }
@@ -46,6 +48,8 @@ struct Coords3f
 
 	bool operator==(const Coords3f &other) const { return x == other.x && y == other.y && z == other.z; }
 	bool operator!=(const Coords3f &other) const { return x != other.x || y != other.y || z != other.z; }
+
+	friend Coords3f operator-(const Coords3f& c) { return Coords3f({ -c.x, -c.y, -c.z }); }
 
 	friend Coords3f operator+(const Coords3f& c1, const Coords3f c2) { return Coords3f({ c1.x + c2.x, c1.y + c2.y, c1.z + c2.z }); }
 	friend Coords3f operator-(const Coords3f& c1, const Coords3f c2) { return Coords3f({ c1.x - c2.x, c1.y - c2.y, c1.z - c2.z }); }
@@ -70,11 +74,13 @@ struct Coords4f
 	Coords4f(const Coords4f&) = default;
 	~Coords4f() = default;
 
-	float sum()		const { return x + y + z + w; }
-	float length()	const { return std::sqrt(length2()); }
-	float length2() const { return x * x + y * y + z * z + w * w; }
+	float sum()	const						{ return x + y + z + w; }
+	float length() const					{ return std::sqrt(length2()); }
+	float length2() const					{ return x * x + y * y + z * z + w * w; }
+	float dot(const Coords4f& other) const	{ return x * other.x + y * other.y + z * other.z + w * other.w; }
+	Coords4f& normalize()					{ float invNorm = invSqrt(length2()); x *= invNorm; y *= invNorm; z *= invNorm; w *= invNorm; return *this; }
 
-	Coords4f normalized() const { float norm = invSqrt(length()); return Coords4f({ x * norm, y * norm, z * norm, w * norm }); }
+	Coords4f normalized() const				{ float invNorm = invSqrt(length2()); return Coords4f({ x * invNorm, y * invNorm, z * invNorm, w * invNorm }); }
 
 	void operator+=(const Coords4f& other) { x += other.x; y += other.y; z += other.z; w += other.w; }
 	void operator-=(const Coords4f& other) { x -= other.x; y -= other.y; z -= other.z; w -= other.w; }
@@ -86,6 +92,8 @@ struct Coords4f
 
 	void operator*=(float value) { x *= value; y *= value; z *= value; w *= value; }
 	void operator/=(float value) { x /= value; y /= value; z /= value; w /= value; }
+
+	friend Coords4f operator-(const Coords4f& c) { return Coords4f({ -c.x, -c.y, -c.z, -c.w }); }
 
 	friend Coords4f operator+(const Coords4f& c1, const Coords4f c2) { return Coords4f({ c1.x + c2.x, c1.y + c2.y, c1.z + c2.z, c1.w + c2.w }); }
 	friend Coords4f operator-(const Coords4f& c1, const Coords4f c2) { return Coords4f({ c1.x - c2.x, c1.y - c2.y, c1.z - c2.z, c1.w - c2.w }); }

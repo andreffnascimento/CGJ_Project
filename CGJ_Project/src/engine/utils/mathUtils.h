@@ -17,6 +17,11 @@ inline float toRadians(float degrees)
 	return (float)(degrees * (PI / 180.0)); 
 }
 
+inline float toDegrees(float radians)
+{
+	return (float)(radians * (180.0 / PI));
+}
+
 
 
 

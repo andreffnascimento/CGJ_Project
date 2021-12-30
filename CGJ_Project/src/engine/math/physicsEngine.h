@@ -48,7 +48,6 @@ public:
 private:
 	void _processRigidbodyMovement(const Scene& scene, RigidbodyComponent& rigidbody, float ts) const;
 	void _detectRigidbodyCollisions(const Scene& scene, EntityHandle entityId, AABBColliderComponent& collider, float ts) const;
-	void _processRigidbodyCollisions() const;
 
 
 private:
@@ -57,6 +56,11 @@ private:
 	void _calculateExpectedAngularVelocity(RigidbodyComponent& rigidbody, Coords3f& angularForce, float ts) const;
 	void _calculateExpectedVelocity(RigidbodyComponent& rigidbody, Coords3f& linearForce, float ts, const Coords3f& rotation) const;
 	void _processSleepThreshold(RigidbodyComponent& rigidbody) const;
+
+
+private:
+	void _resolveCollision(AABBColliderComponent& firstCollider, AABBColliderComponent& secondCollider, float ts) const;
+
 };
 
 
