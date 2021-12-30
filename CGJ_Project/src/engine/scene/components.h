@@ -327,6 +327,7 @@ struct AABBColliderComponent
 {
 private:
 	Coords3f _boundingBox;
+	Coords3f _initialSize;
 
 	RigidbodyComponent* _rigidbody = nullptr;
 	const TransformComponent* _transform = nullptr;
@@ -334,12 +335,12 @@ private:
 public:
 	AABBColliderComponent() = delete;
 	AABBColliderComponent(const AABBColliderComponent&) = default;
-	AABBColliderComponent(const Coords3f& initialBoundingBox) : _boundingBox(initialBoundingBox) {};
+	AABBColliderComponent(const Coords3f& initialSize) : _initialSize(initialSize / 2.0f) {};
 	~AABBColliderComponent() = default;
 
 	inline const Coords3f& boundingBox() const { return _boundingBox; }
 
-	inline void setInitialSize(const Coords3f& initialBoundingBox) { _boundingBox = initialBoundingBox; }
+	inline void setInitialSize(const Coords3f& initialSize) { _initialSize = initialSize / 2.0f; }
 
 public:
 	friend class PhysicsEngine;
