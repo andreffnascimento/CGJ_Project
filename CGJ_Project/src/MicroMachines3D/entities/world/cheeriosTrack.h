@@ -43,6 +43,7 @@ private:
 
 		RigidbodyComponent& rigidbody = cheerio.addComponent<RigidbodyComponent>(rigidbodyType, mass, drag, angularDrag);
 		AABBColliderComponent& collider = cheerio.addComponent<AABBColliderComponent>(CHEERIO_SIZE * 2.0f);
+		collider.setFixedBoundingBox(true);
 
 		Transform::scaleTo(cheerio, CHEERIO_SIZE);
 		Transform::translate(cheerio, { xPos, CHEERIO_SIZE.y / 5.0f, yPos });

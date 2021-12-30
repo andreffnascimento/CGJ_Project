@@ -12,7 +12,7 @@ class CarMovementScript : public Script
 
 public:
 	static constexpr float ENGINE_ACCELERATION = 63.0f;
-	static constexpr float ENGINE_DEACCELERATION = 1 / 63.0f;
+	static constexpr float ENGINE_DEACCELERATION = 60.0f;
 	static constexpr float MIN_FORWARD_FORCE = 5000.0f;
 	static constexpr float MAX_FORWARD_FORCE = 50000.0f;
 	static constexpr float MIN_BACKWARDS_FORCE = -2000.0f;

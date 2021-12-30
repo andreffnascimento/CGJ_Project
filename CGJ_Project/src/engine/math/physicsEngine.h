@@ -48,6 +48,7 @@ public:
 private:
 	void _processRigidbodyMovement(const Scene& scene, RigidbodyComponent& rigidbody, float ts) const;
 	void _detectRigidbodyCollisions(const Scene& scene, EntityHandle entityId, AABBColliderComponent& collider, float ts) const;
+	void _processRigidbodyCollisions() const;
 
 
 private:

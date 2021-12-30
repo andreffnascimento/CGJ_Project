@@ -35,6 +35,9 @@ void PhysicsEngine::rotateVectorOnAxis(float& coord1, float& coord2, float angle
 
 void PhysicsEngine::rotateBoundingBox(AABBColliderComponent& collider, const Coords3f& rotation)
 {
+	if (collider._fixedBoundingBox)
+		return;
+
 	Coords3f p1 = Coords3f({ -collider._initialSize.x, -collider._initialSize.y,  collider._initialSize.z });
 	Coords3f p2 = Coords3f({ -collider._initialSize.x,  collider._initialSize.y,  collider._initialSize.z });
 	Coords3f p3 = Coords3f({  collider._initialSize.x, -collider._initialSize.y,  collider._initialSize.z });
@@ -148,7 +151,7 @@ void PhysicsEngine::_processRigidbodyMovement(const Scene& scene, RigidbodyCompo
 	_processSleepThreshold(rigidbody);
 }
 
-#include <iostream>
+
 void PhysicsEngine::_detectRigidbodyCollisions(const Scene& scene, EntityHandle entityId, AABBColliderComponent& entityCollider, float ts) const
 {
 	std::unordered_map<EntityHandle, AABBColliderComponent>& _colliderComponents = scene.getSceneComponents<AABBColliderComponent>();
@@ -176,6 +179,9 @@ void PhysicsEngine::_detectRigidbodyCollisions(const Scene& scene, EntityHandle 
 		bool collision = (entityMinX <= otherMaxX && entityMaxX >= otherMinX) && 
 						 (entityMinY <= otherMaxY && entityMaxY >= otherMinY) && 
 						 (entityMinZ <= otherMaxZ && entityMaxZ >= otherMinZ);
+
+		//if (collision)
+			//_processRigidbodyCollisions()
 	}
 }
 
