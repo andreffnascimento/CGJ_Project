@@ -66,6 +66,15 @@ Coords3f PhysicsEngine::calculateDragForce(const Coords3f& velocity, float drag,
 
 
 
+PhysicsEngine::PhysicsEngine(unsigned int collisionIterations)
+	:_collisionIterations(collisionIterations)
+{
+	// empty
+}
+
+
+
+
 void PhysicsEngine::initialize(const Scene& scene) const
 {
 	std::unordered_map<EntityHandle, RigidbodyComponent>& _rigidbodyComponents = scene.getSceneComponents<RigidbodyComponent>();
@@ -110,12 +119,15 @@ void PhysicsEngine::simulate(const Scene& scene, float ts) const
 			PhysicsEngine::rotateBoundingBox(collider, collider._rigidbody->_rotation);
 	}
 
-	for (auto& iterator : _colliderComponents)
+	for (unsigned int i = 0; i < _collisionIterations; i++)
 	{
-		EntityHandle entityId = iterator.first;
-		AABBColliderComponent& collider = iterator.second;
-		if (!collider._rigidbody->_sleeping)
-			_detectRigidbodyCollisions(scene, entityId, collider, ts);
+		for (auto& iterator : _colliderComponents)
+		{
+			EntityHandle entityId = iterator.first;
+			AABBColliderComponent& collider = iterator.second;
+			if (!collider._rigidbody->_sleeping)
+				_detectRigidbodyCollisions(scene, entityId, collider, ts);
+		}
 	}
 
 	for (auto& iterator : _rigidbodyComponents)

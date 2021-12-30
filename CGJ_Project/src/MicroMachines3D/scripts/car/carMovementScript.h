@@ -11,13 +11,13 @@ class CarMovementScript : public Script
 {
 
 public:
-	static constexpr float ENGINE_ACCELERATION = 63.0f;
-	static constexpr float ENGINE_DEACCELERATION = 60.0f;
+	static constexpr float ENGINE_ACCELERATION = 1.1f;
+	static constexpr float ENGINE_DEACCELERATION = 0.9f;
 	static constexpr float MIN_FORWARD_FORCE = 2000.0f;
 	static constexpr float MAX_FORWARD_FORCE = 10000.0f;
 	static constexpr float MIN_BACKWARDS_FORCE = -2000.0f;
-	static constexpr float MAX_BACKWARDS_FORCE = -5000.0f;
-	static constexpr float STEERING_VELOCITY_MODIFIER = 12.0f;
+	static constexpr float MAX_BACKWARDS_FORCE = -4000.0f;
+	static constexpr float STEERING_VELOCITY_MODIFIER = 10.0f;
 
 
 
@@ -70,9 +70,9 @@ private:
 			_forwardForce = CarMovementScript::MIN_FORWARD_FORCE;
 
 		if (_eventHandler->keyState('Q').down() || _eventHandler->keyState('q').down())
-			_forwardForce *= std::max(CarMovementScript::ENGINE_ACCELERATION * ts, 1.01f);
+			_forwardForce *= CarMovementScript::ENGINE_ACCELERATION * (1.0f + ts);
 		else
-			_forwardForce *= std::min(CarMovementScript::ENGINE_DEACCELERATION * ts, 0.99f);
+			_forwardForce *= CarMovementScript::ENGINE_DEACCELERATION * (1.0f + ts);
 
 		if (_forwardForce < CarMovementScript::MIN_FORWARD_FORCE)
 			_forwardForce = 0.0f;
@@ -87,9 +87,9 @@ private:
 			_backwardsForce = CarMovementScript::MIN_BACKWARDS_FORCE;
 
 		if (_eventHandler->keyState('A').down() || _eventHandler->keyState('a').down())
-			_backwardsForce *= std::max(CarMovementScript::ENGINE_ACCELERATION * ts, 1.01f);
+			_backwardsForce *= CarMovementScript::ENGINE_ACCELERATION * (1.0f + ts);
 		else
-			_backwardsForce *= std::min(CarMovementScript::ENGINE_DEACCELERATION * ts, 0.9f);
+			_backwardsForce *= CarMovementScript::ENGINE_DEACCELERATION * (1.0f + ts);
 
 		if (_backwardsForce > CarMovementScript::MIN_BACKWARDS_FORCE)
 			_backwardsForce = 0.0f;

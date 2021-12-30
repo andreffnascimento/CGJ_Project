@@ -23,6 +23,12 @@ public:
 
 
 
+private:
+	unsigned int _collisionIterations = 2;
+
+
+
+
 public:
 	static void rotateVector(Coords3f& vector, const Coords3f& rotation);
 	static void rotateVectorOnAxis(float& coord1, float& coord2, float angle);
@@ -35,6 +41,7 @@ public:
 public:
 	PhysicsEngine() = default;
 	PhysicsEngine(const PhysicsEngine&) = default;
+	PhysicsEngine(unsigned int collisionIterations);
 	~PhysicsEngine() = default;
 
 

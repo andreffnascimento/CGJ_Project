@@ -50,6 +50,7 @@ private:
 
 private:
 	Application() = default;		// application is a singleton
+	Application(const Application& application) = delete;
 
 
 public:
