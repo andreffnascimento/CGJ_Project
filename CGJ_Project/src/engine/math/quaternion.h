@@ -27,23 +27,39 @@ public:
 
 
 public:
-	inline float length() const		{ return std::sqrt(length2()); }
-	inline float length2() const	{ return _x * _x + _y * _y + _z * _z + _w * _w; }
-
-	Quaternion& normalize();
-	Quaternion normalized() const;
-
-	Coords3f toEulerAngles() const;
-
+	inline float length() const							{ return std::sqrt(length2()); }
+	inline float length2() const						{ return _x * _x + _y * _y + _z * _z + _w * _w; }
+	inline float dot(const Quaternion& other) const		{ return _x * other._x + _y * other._y + _z * other._z + _w * other._w; }
+	
 
 public:
 	Coords3f forward() const;
 	Coords3f right() const;
 	Coords3f up() const;
 
+	Coords3f toEulerAngles() const;
+
 
 public:
+	Quaternion& normalize();
+	Quaternion normalized() const;
+
+
+public:
+	Quaternion& operator=(const Quaternion& other);
+	Quaternion& operator=(const Coords3f& rotation);
+
+	void operator+=(const Quaternion& other);
+	void operator+=(const Coords3f& rotation);
+
+	void operator-=(const Quaternion& other);
+	void operator-=(const Coords3f& rotation);
+
 	void operator*=(const Quaternion& other);
+	void operator*=(const Coords3f& rotation);
+
+	friend Quaternion operator+(const Quaternion& q1, const Quaternion& q2);
+	friend Quaternion operator-(const Quaternion& q1, const Quaternion& q2);
 	friend Quaternion operator*(const Quaternion& q1, const Quaternion& q2);
 
 };

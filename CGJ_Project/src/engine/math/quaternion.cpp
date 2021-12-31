@@ -8,7 +8,7 @@
 Quaternion::Quaternion(const Coords4f& coords)
 	: _x(coords.x), _y(coords.y), _z(coords.z), _w(coords.w)
 {
-	// empty
+	normalize();
 }
 
 Quaternion::Quaternion(const Coords3f& axis, float angle)
@@ -42,6 +42,50 @@ Quaternion::Quaternion(const Coords3f& rotation)
 
 
 
+Coords3f Quaternion::forward() const
+{
+	return { 2.0f * (_x * _z - _w * _y), 2.0f * (_y * _z + _w * _x), 1.0f - 2.0f * (_x * _x + _y * _y) };
+}
+
+
+Coords3f Quaternion::right() const
+{
+	return { 1.0f - 2.0f * (_y * _y + _z * _z), 2.0f * (_x * _y - _w * _z), 2.0f * (_x * _z + _w * _y) };
+}
+
+
+Coords3f Quaternion::up() const
+{
+	return { 2.0f * (_x * _y + _w * _z), 1.0f - 2.0f * (_x * _x + _z * _z), 2.0f * (_y * _z - _w * _x) };
+}
+
+
+Coords3f Quaternion::toEulerAngles() const
+{
+	// Source: https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
+
+	Coords3f eulerAngles = Coords3f();
+
+	// roll (x-axis rotation)
+	float sinRoll = 2.0f * (_w * _x + _y * _z);
+	float cosRoll = 1.0f - 2.0f * (_x * _x + _y * _y);
+	eulerAngles.x = std::atan2(sinRoll, cosRoll);
+
+	// pitch (y-axis rotation)
+	float sinPitch = 2.0f * (_w * _y - _z * _x);
+	eulerAngles.y = std::abs(sinPitch) >= 1 ? (float)std::copysign(PI / 2.0, sinPitch) : std::asin(sinPitch);
+
+	// yaw (z-axis rotation)
+	float sinYaw = 2.0f * (_w * _z + _x * _y);
+	float cosYaw = 1.0f - 2.0f * (_y * _y + _z * _z);
+	eulerAngles.z = std::atan2(sinYaw, cosYaw);
+
+	return eulerAngles;
+}
+
+
+
+
 Quaternion& Quaternion::normalize()
 {
 	float invLength = invSqrt(length2());
@@ -62,49 +106,70 @@ Quaternion Quaternion::normalized() const
 
 
 
-Coords3f Quaternion::toEulerAngles() const
+Quaternion& Quaternion::operator=(const Quaternion& other)
+{
+	_x = other._x;
+	_y = other._y;
+	_z = other._z;
+	_w = other._w;
+
+	return *this;
+}
+
+Quaternion& Quaternion::operator=(const Coords3f& rotation)
 {
 	// Source: https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
 
-	Coords3f eulerAngles = Coords3f();
+	float halfCosRoll = std::cos(toRadians(rotation.x * 0.5f));
+	float halfSinRoll = std::sin(toRadians(rotation.x * 0.5f));
+	float halfCosPitch = std::cos(toRadians(rotation.y * 0.5f));
+	float halfSinPitch = std::sin(toRadians(rotation.y * 0.5f));
+	float halfCosYaw = std::cos(toRadians(rotation.z * 0.5f));
+	float halfSinYaw = std::sin(toRadians(rotation.z * 0.5f));
 
-	// roll (x-axis rotation)
-	float sinRoll = 2.0f * (_w * _x + _y * _z);
-	float cosRoll = 1.0f - 2.0f * (_x * _x + _y * _y);
-	eulerAngles.x = std::atan2(sinRoll, cosRoll);
+	_w = halfCosRoll * halfCosPitch * halfCosYaw + halfSinRoll * halfSinPitch * halfSinYaw;
+	_x = halfSinRoll * halfCosPitch * halfCosYaw - halfCosRoll * halfSinPitch * halfSinYaw;
+	_y = halfCosRoll * halfSinPitch * halfCosYaw + halfSinRoll * halfCosPitch * halfCosYaw;
+	_z = halfCosRoll * halfCosPitch * halfSinYaw - halfSinRoll * halfSinPitch * halfCosYaw;
 
-	// pitch (y-axis rotation)
-	float sinPitch = 2.0f * (_w * _y - _z * _x);
-	eulerAngles.y = std::abs(sinPitch) >= 1 ? std::copysign(PI / 2.0, sinPitch) : std::asin(sinPitch);
-
-	// yaw (z-axis rotation)
-	float sinYaw = 2.0f * (_w * _z + _x * _y);
-	float cosYaw = 1.0f - 2.0f * (_y * _y + _z * _z);
-	eulerAngles.z = std::atan2(sinYaw, cosYaw);
-
-	return eulerAngles;
+	return *this;
 }
 
 
 
-
-Coords3f Quaternion::forward() const
+void Quaternion::operator+=(const Quaternion& other)
 {
-	return { 2.0f * (_x * _z - _w * _y), 2.0f * (_y * _z + _w * _x), 1.0f - 2.0f * (_x * _x + _y * _y) };
+	_x += other._x;
+	_y += other._y;
+	_z += other._z;
+	_w += other._w;
+	normalize();
 }
 
-
-Coords3f Quaternion::right() const
+void Quaternion::operator+=(const Coords3f& rotation)
 {
-	return { 1.0f - 2.0f * (_y * _y + _z * _z), 2.0f * (_x * _y - _w * _z), 2.0f * (_x * _z + _w * _y) };
+	Coords3f eulerAngles = toEulerAngles();
+	eulerAngles += rotation;
+	*this = eulerAngles;
 }
 
 
-Coords3f Quaternion::up() const
+
+void Quaternion::operator-=(const Quaternion& other)
 {
-	return { 2.0f * (_x * _y + _w * _z), 1.0f - 2.0f * (_x * _x + _z * _z), 2.0f * (_y * _z - _w * _x) };
+	_x -= other._x;
+	_y -= other._y;
+	_z -= other._z;
+	_w -= other._w;
+	normalize();
 }
 
+void Quaternion::operator-=(const Coords3f& rotation)
+{
+	Coords3f eulerAngles = toEulerAngles();
+	eulerAngles -= rotation;
+	*this = eulerAngles;
+}
 
 
 
@@ -118,6 +183,24 @@ void Quaternion::operator*=(const Quaternion& other)
 	normalize();
 }
 
+void Quaternion::operator*=(const Coords3f& rotation)
+{
+	Coords3f eulerAngles = toEulerAngles();
+	eulerAngles *= rotation;
+	*this = eulerAngles;
+}
+
+
+
+Quaternion operator+(const Quaternion& q1, const Quaternion& q2)
+{
+	return Quaternion(Coords4f({ q1._x + q2._x, q1._y + q2._y, q1._z + q2._z, q1._w + q2._w }));
+}
+
+Quaternion operator-(const Quaternion& q1, const Quaternion& q2)
+{
+	return Quaternion(Coords4f({ q1._x - q2._x, q1._y - q2._y, q1._z - q2._z, q1._w - q2._w }));
+}
 
 Quaternion operator*(const Quaternion& q1, const Quaternion& q2)
 {
