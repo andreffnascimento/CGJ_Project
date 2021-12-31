@@ -65,25 +65,27 @@ TransformMatrix& TransformMatrix::setTranslationMatrix(const Coords3f& translati
 
 TransformMatrix& TransformMatrix::setRotationMatrix(const Coords3f& rotation)
 {
-	Quaternion rotationQuaternion = Quaternion();
+	Quaternion rotationQuaternion = Quaternion(rotation);
 
-	if (rotation.x != 0.0f)
-	{
-		Quaternion xQuaternion = Quaternion({ 1.0f, 0.0f, 0.0f }, rotation.x);
-		rotationQuaternion *= xQuaternion;
-	}
-
-	if (rotation.y != 0.0f)
-	{
-		Quaternion yQuaternion = Quaternion({ 0.0f, 1.0f, 0.0f }, rotation.y);
-		rotationQuaternion *= yQuaternion;
-	}
-
-	if (rotation.z != 0.0f)
-	{
-		Quaternion zQuaternion = Quaternion({ 0.0f, 0.0f, 1.0f }, rotation.z);
-		rotationQuaternion *= zQuaternion;
-	}
+	// ROTATION ORDER IS IMPORTANT
+	//if (rotation.z != 0.0f)
+	//{
+	//	Quaternion zQuaternion = Quaternion({ 0.0f, 0.0f, 1.0f }, rotation.z);
+	//	rotationQuaternion *= zQuaternion;
+	//}
+	//
+	//
+	//if (rotation.x != 0.0f)
+	//{
+	//	Quaternion xQuaternion = Quaternion({ 1.0f, 0.0f, 0.0f }, rotation.x);
+	//	rotationQuaternion *= xQuaternion;
+	//}
+	//
+	//if (rotation.y != 0.0f)
+	//{
+	//	Quaternion yQuaternion = Quaternion({ 0.0f, 1.0f, 0.0f }, rotation.y);
+	//	rotationQuaternion *= yQuaternion;
+	//}
 
 	Coords3f f = rotationQuaternion.forward();
 	Coords3f r = rotationQuaternion.right();

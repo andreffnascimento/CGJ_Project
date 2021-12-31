@@ -20,15 +20,20 @@ private:
 public:
 	Quaternion() = default;
 	Quaternion(const Quaternion&) = default;
-	Quaternion(float x, float y, float z, float w);
 	Quaternion(const Coords4f& coords);
 	Quaternion(const Coords3f& axis, float angle);
+	Quaternion(const Coords3f& rotation);
 	~Quaternion() = default;
 
 
 public:
-	float lenght() const;
+	inline float length() const		{ return std::sqrt(length2()); }
+	inline float length2() const	{ return _x * _x + _y * _y + _z * _z + _w * _w; }
+
 	Quaternion& normalize();
+	Quaternion normalized() const;
+
+	Coords3f toEulerAngles() const;
 
 
 public:

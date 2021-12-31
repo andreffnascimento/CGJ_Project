@@ -30,7 +30,6 @@ struct Coords3f
 	Coords3f(const Coords3f&) = default;
 	~Coords3f() = default;
 
-	float sum() const						{ return x + y + z; }
 	float length() const					{ return std::sqrt(length2()); }
 	float length2() const					{ return x * x + y * y + z * z; }
 	float dot(const Coords3f& other) const	{ return x * other.x + y * other.y + z * other.z; }
@@ -74,7 +73,6 @@ struct Coords4f
 	Coords4f(const Coords4f&) = default;
 	~Coords4f() = default;
 
-	float sum()	const						{ return x + y + z + w; }
 	float length() const					{ return std::sqrt(length2()); }
 	float length2() const					{ return x * x + y * y + z * z + w * w; }
 	float dot(const Coords4f& other) const	{ return x * other.x + y * other.y + z * other.z + w * other.w; }

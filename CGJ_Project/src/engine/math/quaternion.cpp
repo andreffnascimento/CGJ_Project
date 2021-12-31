@@ -1,17 +1,9 @@
 #include "quaternion.h"
 
-#include <cmath>
-
 #include "engine/utils/mathUtils.h"
 
 
 
-
-Quaternion::Quaternion(float x, float y, float z, float w)
-	: _x(x), _y(y), _z(z), _w(w)
-{
-	// empty
-}
 
 Quaternion::Quaternion(const Coords4f& coords)
 	: _x(coords.x), _y(coords.y), _z(coords.z), _w(coords.w)
@@ -30,23 +22,67 @@ Quaternion::Quaternion(const Coords3f& axis, float angle)
 	_w = cosHalfAngle;
 }
 
-
-
-
-float Quaternion::lenght() const
+Quaternion::Quaternion(const Coords3f& rotation)
 {
-	return (float)(std::sqrt(_x * _x + _y * _y + _z * _z + _w * _w));
+	// Source: https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
+
+	float halfCosRoll = std::cos(toRadians(rotation.x * 0.5f));
+	float halfSinRoll = std::sin(toRadians(rotation.x * 0.5f));
+	float halfCosPitch = std::cos(toRadians(rotation.y * 0.5f));
+	float halfSinPitch = std::sin(toRadians(rotation.y * 0.5f));
+	float halfCosYaw = std::cos(toRadians(rotation.z * 0.5f));
+	float halfSinYaw = std::sin(toRadians(rotation.z * 0.5f));
+
+	_w = halfCosRoll * halfCosPitch * halfCosYaw + halfSinRoll * halfSinPitch * halfSinYaw;
+	_x = halfSinRoll * halfCosPitch * halfCosYaw - halfCosRoll * halfSinPitch * halfSinYaw;
+	_y = halfCosRoll * halfSinPitch * halfCosYaw + halfSinRoll * halfCosPitch * halfCosYaw;
+	_z = halfCosRoll * halfCosPitch * halfSinYaw - halfSinRoll * halfSinPitch * halfCosYaw;
 }
+
+
 
 
 Quaternion& Quaternion::normalize()
 {
-	float lenght = this->lenght();
-	_x = _x / lenght;
-	_y = _y / lenght;
-	_z = _z / lenght;
-	_w = _w / lenght;
+	float invLength = invSqrt(length2());
+	_x = _x * invLength;
+	_y = _y * invLength;
+	_z = _z * invLength;
+	_w = _w * invLength;
 	return *this;
+}
+
+
+Quaternion Quaternion::normalized() const
+{
+	float invLength = invSqrt(length2());
+	return Quaternion(Coords4f({ _x * invLength, _y * invLength, _z * invLength, _w * invLength }));
+}
+
+
+
+
+Coords3f Quaternion::toEulerAngles() const
+{
+	// Source: https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
+
+	Coords3f eulerAngles = Coords3f();
+
+	// roll (x-axis rotation)
+	float sinRoll = 2.0f * (_w * _x + _y * _z);
+	float cosRoll = 1.0f - 2.0f * (_x * _x + _y * _y);
+	eulerAngles.x = std::atan2(sinRoll, cosRoll);
+
+	// pitch (y-axis rotation)
+	float sinPitch = 2.0f * (_w * _y - _z * _x);
+	eulerAngles.y = std::abs(sinPitch) >= 1 ? std::copysign(PI / 2.0, sinPitch) : std::asin(sinPitch);
+
+	// yaw (z-axis rotation)
+	float sinYaw = 2.0f * (_w * _z + _x * _y);
+	float cosYaw = 1.0f - 2.0f * (_y * _y + _z * _z);
+	eulerAngles.z = std::atan2(sinYaw, cosYaw);
+
+	return eulerAngles;
 }
 
 
