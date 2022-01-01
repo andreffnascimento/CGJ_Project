@@ -13,6 +13,7 @@
 #include "engine/scene/scene.h"
 
 #include "engine/math/transform.h"
+#include "engine/math/quaternion.h"
 
 #include "engine/renderer/geometry.h"
 

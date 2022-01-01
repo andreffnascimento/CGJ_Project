@@ -72,6 +72,9 @@ public:
 
 	void onUpdate(float ts) override
 	{
+		if (_scene->activeCamera() != _camera)
+			return;
+
 		const EventHandler::MouseInfo& mouseInfo = _eventHandler->getMouseInfo();
 		_processMouseClick(mouseInfo);
 		_processMouseMovement(mouseInfo);
@@ -207,7 +210,7 @@ private:
 	}
 
 
-	inline float _getStaticAlpha() { return _car.transform().rotation().y + 180.0f; }
+	inline float _getStaticAlpha() { return Quaternion(_car.transform().rotation()).toEulerAngles().y + 180.0f; }
 
 };
 

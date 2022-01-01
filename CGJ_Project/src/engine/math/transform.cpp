@@ -47,7 +47,7 @@ const TransformMatrix& Transform::calculateTransformMatrix(const Entity& entity)
 		return transform._worldTransform;
 
 	if (!transform._locallyUpdated)
-		transform._localTransform.calculateTransformMatrix(transform.translation(), transform.rotation(), transform.scale());
+		transform._localTransform.calculateTransformMatrix(transform.translation(), Quaternion(transform.rotation()), transform.scale());
 
 	ParentComponent* parent = entity.getComponentIfExists<ParentComponent>();
 	if (parent != nullptr)

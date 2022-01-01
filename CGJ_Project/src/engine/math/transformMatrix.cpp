@@ -1,10 +1,7 @@
 #include "transformMatrix.h"
 
-#include <cmath>
-#include <cstring>
 #include <algorithm>
 
-#include "engine/math/quaternion.h"
 #include "engine/utils/mathUtils.h"
 
 
@@ -23,7 +20,7 @@ TransformMatrix::TransformMatrix(const TransformMatrix& matrix)
 
 
 
-const TransformMatrix& TransformMatrix::calculateTransformMatrix(const Coords3f& translation, const Coords3f& rotation, const Coords3f& scale)
+const TransformMatrix& TransformMatrix::calculateTransformMatrix(const Coords3f& translation, const Quaternion& rotation, const Coords3f& scale)
 {
 	setIdentityMatrix();
 
@@ -63,38 +60,18 @@ TransformMatrix& TransformMatrix::setTranslationMatrix(const Coords3f& translati
 }
 
 
-TransformMatrix& TransformMatrix::setRotationMatrix(const Coords3f& rotation)
+TransformMatrix& TransformMatrix::setRotationMatrix(const Quaternion& rotation)
 {
-	Quaternion rotationQuaternion = Quaternion(rotation);
+	// Source: https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToMatrix/index.htm
 
-	// ROTATION ORDER IS IMPORTANT
-	//if (rotation.z != 0.0f)
-	//{
-	//	Quaternion zQuaternion = Quaternion({ 0.0f, 0.0f, 1.0f }, rotation.z);
-	//	rotationQuaternion *= zQuaternion;
-	//}
-	//
-	//
-	//if (rotation.x != 0.0f)
-	//{
-	//	Quaternion xQuaternion = Quaternion({ 1.0f, 0.0f, 0.0f }, rotation.x);
-	//	rotationQuaternion *= xQuaternion;
-	//}
-	//
-	//if (rotation.y != 0.0f)
-	//{
-	//	Quaternion yQuaternion = Quaternion({ 0.0f, 1.0f, 0.0f }, rotation.y);
-	//	rotationQuaternion *= yQuaternion;
-	//}
-
-	Coords3f f = rotationQuaternion.forward();
-	Coords3f r = rotationQuaternion.right();
-	Coords3f u = rotationQuaternion.up();
+	Coords3f f = rotation.forward();
+	Coords3f r = rotation.right();
+	Coords3f u = rotation.up();
 
 	_matrix[0][0] = r.x;	_matrix[0][1] = r.y;	_matrix[0][2] = r.z;
 	_matrix[1][0] = u.x;	_matrix[1][1] = u.y;	_matrix[1][2] = u.z;
 	_matrix[2][0] = f.x;	_matrix[2][1] = f.y;	_matrix[2][2] = f.z;
-	
+
 	return this->transpose();
 }
 

@@ -10,16 +10,17 @@
 class Quaternion
 {
 
-private:
-	float _x = 0.0f;
-	float _y = 0.0f;
-	float _z = 0.0f;
-	float _w = 1.0f;
+public:
+	float _x = 0.0;
+	float _y = 0.0;
+	float _z = 0.0;
+	float _w = 1.0;
 
 
 public:
 	Quaternion() = default;
 	Quaternion(const Quaternion&) = default;
+	Quaternion(float x, float y, float z, float w);
 	Quaternion(const Coords4f& coords);
 	Quaternion(const Coords3f& axis, float angle);
 	Quaternion(const Coords3f& rotation);

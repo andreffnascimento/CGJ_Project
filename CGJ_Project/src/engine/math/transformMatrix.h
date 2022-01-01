@@ -2,6 +2,7 @@
 #define __engine_math_transformMatrix__
 
 
+#include "engine/math/quaternion.h"
 #include "engine/utils/coords.h"
 
 
@@ -22,12 +23,12 @@ public:
 
 
 public:
-	const TransformMatrix& calculateTransformMatrix(const Coords3f& translation, const Coords3f& rotation, const Coords3f& scale);
+	const TransformMatrix& calculateTransformMatrix(const Coords3f& translation, const Quaternion& rotation, const Coords3f& scale);
 
 public:
 	TransformMatrix& setIdentityMatrix();
 	TransformMatrix& setTranslationMatrix(const Coords3f& translation);
-	TransformMatrix& setRotationMatrix(const Coords3f& rotation);
+	TransformMatrix& setRotationMatrix(const Quaternion& rotation);
 	TransformMatrix& setScaleMatrix(const Coords3f& scale);
 
 
