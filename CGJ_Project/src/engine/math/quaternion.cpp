@@ -5,7 +5,7 @@
 
 
 
-Quaternion::Quaternion(float x, float y, float z, float w)
+Quaternion::Quaternion(double x, double y, double z, double w)
 	: _x(x), _y(y), _z(z), _w(w)
 {
 	normalize();
@@ -21,8 +21,8 @@ Quaternion::Quaternion(const Coords3f& axis, float angle)
 {
 	// Source: https://www.euclideanspace.com/maths/geometry/rotations/conversions/angleToQuaternion/index.htm
 
-	float sinHalfAngle = std::sin(toRadians(angle) * 0.5f);
-	float cosHalfAngle = std::cos(toRadians(angle) * 0.5f);
+	double sinHalfAngle = std::sin(toRadians(angle) * 0.5);
+	double cosHalfAngle = std::cos(toRadians(angle) * 0.5);
 
 	_x = axis.x * sinHalfAngle;
 	_y = axis.y * sinHalfAngle;
@@ -34,15 +34,15 @@ Quaternion::Quaternion(const Coords3f& rotation)
 {
 	// Source: https://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToQuaternion/index.htm
 
-	float halfCosHeading = std::cos(toRadians(rotation.y) / 2.0f);
-	float halfSinHeading = std::sin(toRadians(rotation.y) / 2.0f);
-	float halfCosAttitude = std::cos(toRadians(rotation.z) / 2.0f);
-	float halfSinAttitude = std::sin(toRadians(rotation.z) / 2.0f);
-	float halfCosBank = std::cos(toRadians(rotation.x) / 2.0f);
-	float halfSinBank = std::sin(toRadians(rotation.x) / 2.0f);
+	double halfCosHeading = std::cos(toRadians(rotation.y) / 2.0);
+	double halfSinHeading = std::sin(toRadians(rotation.y) / 2.0);
+	double halfCosAttitude = std::cos(toRadians(rotation.z) / 2.0);
+	double halfSinAttitude = std::sin(toRadians(rotation.z) / 2.0);
+	double halfCosBank = std::cos(toRadians(rotation.x) / 2.0);
+	double halfSinBank = std::sin(toRadians(rotation.x) / 2.0);
 
-	float halfCosHeading_halfCosAttitude = halfCosHeading * halfCosAttitude;
-	float halfSinHeading_halfSinAttitude = halfSinHeading * halfSinAttitude;
+	double halfCosHeading_halfCosAttitude = halfCosHeading * halfCosAttitude;
+	double halfSinHeading_halfSinAttitude = halfSinHeading * halfSinAttitude;
 
 	_w = halfCosHeading_halfCosAttitude   * halfCosBank - halfSinHeading_halfSinAttitude   * halfSinBank;
 	_x = halfCosHeading_halfCosAttitude   * halfSinBank + halfSinHeading_halfSinAttitude   * halfCosBank;
@@ -56,21 +56,21 @@ Quaternion::Quaternion(const Coords3f& rotation)
 Coords3f Quaternion::forward() const
 {
 	// Source: https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToMatrix/index.htm
-	return { 2.0f * (_x * _z - _w * _y), 2.0f * (_y * _z + _w * _x), 1.0f - 2.0f * (_x * _x + _y * _y) };
+	return { (float)(2.0 * (_x * _z - _w * _y)),		(float)(2.0 * (_y * _z + _w * _x)),			(float)(1.0 - 2.0 * (_x * _x + _y * _y)) };
 }
 
 
 Coords3f Quaternion::right() const
 {
 	// Source: https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToMatrix/index.htm
-	return { 1.0f - 2.0f * (_y * _y + _z * _z), 2.0f * (_x * _y - _w * _z), 2.0f * (_x * _z + _w * _y) };
+	return { (float)(1.0 - 2.0 * (_y * _y + _z * _z)),	(float)(2.0 * (_x * _y - _w * _z)),			(float)(2.0 * (_x * _z + _w * _y)) };
 }
 
 
 Coords3f Quaternion::up() const
 {
 	// Source: https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToMatrix/index.htm
-	return { 2.0f * (_x * _y + _w * _z), 1.0f - 2.0f * (_x * _x + _z * _z), 2.0f * (_y * _z - _w * _x) };
+	return { (float)(2.0 * (_x * _y + _w * _z)),		(float)(1.0 - 2.0 * (_x * _x + _z * _z)),	(float)(2.0 * (_y * _z - _w * _x)) };
 }
 
 
@@ -78,22 +78,22 @@ Coords3f Quaternion::toEulerAngles() const
 {
 	// Source: https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToEuler/index.htm
 
-	float test = _x * _y + _z * _w;
+	double test = _x * _y + _z * _w;
 
-	if (test > 0.499f)	// singularity at north pole
-		return Coords3f({ toDegrees(2.0f * std::atan2(_x, _w)),		toDegrees((float)HALF_PI),		0.0f });
+	if (test > 0.499)	// singularity at north pole
+		return Coords3f({ (float)toDegrees(2.0 * std::atan2(_x, _w)),	(float)toDegrees(HALF_PI),	0.0f });
 
-	if (test < -0.499f) // singularity at south pole
-		return Coords3f({ toDegrees(-2.0f * std::atan2(_x, _w)),	toDegrees(-(float)HALF_PI),		0.0f });
+	if (test < -0.499) // singularity at south pole
+		return Coords3f({ (float)toDegrees(-2.0 * std::atan2(_x, _w)),	(float)toDegrees(HALF_PI),	0.0f });
 	
 	Coords3f eulerAngles = Coords3f();
-	float sqx = _x * _x;
-	float sqy = _y * _y;
-	float sqz = _z * _z;
+	double sqx = _x * _x;
+	double sqy = _y * _y;
+	double sqz = _z * _z;
 
-	eulerAngles.y = toDegrees(std::atan2(2.0f * (_y * _w - _x * _z), 1.0f - 2.0f * (sqy - sqz)));
-	eulerAngles.z = toDegrees(std::asin(2.0f * test));
-	eulerAngles.x = toDegrees(std::atan2(2.0f * (_x * _w - _y * _z), 1.0f - 2.0f * (sqx * sqz)));
+	eulerAngles.y = toDegrees((float)std::atan2(2.0 * (_y * _w - _x * _z), 1.0 - 2.0 * (sqy - sqz)));
+	eulerAngles.z = toDegrees((float)std::asin(2.0 * test));
+	eulerAngles.x = toDegrees((float)std::atan2(2.0 * (_x * _w - _y * _z), 1.0 - 2.0 * (sqx * sqz)));
 
 	return eulerAngles;
 }
@@ -135,18 +135,18 @@ Quaternion& Quaternion::operator=(const Coords3f& rotation)
 {
 	// Source: https://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToQuaternion/index.htm
 
-	float halfCosHeading = std::cos(toRadians(rotation.y) / 2.0f);
-	float halfSinHeading = std::sin(toRadians(rotation.y) / 2.0f);
-	float halfCosAttitude = std::cos(toRadians(rotation.z) / 2.0f);
-	float halfSinAttitude = std::sin(toRadians(rotation.z) / 2.0f);
-	float halfCosBank = std::cos(toRadians(rotation.x) / 2.0f);
-	float halfSinBank = std::sin(toRadians(rotation.x) / 2.0f);
+	double halfCosHeading = std::cos(toRadians(rotation.y) / 2.0f);
+	double halfSinHeading = std::sin(toRadians(rotation.y) / 2.0f);
+	double halfCosAttitude = std::cos(toRadians(rotation.z) / 2.0f);
+	double halfSinAttitude = std::sin(toRadians(rotation.z) / 2.0f);
+	double halfCosBank = std::cos(toRadians(rotation.x) / 2.0f);
+	double halfSinBank = std::sin(toRadians(rotation.x) / 2.0f);
 
-	float halfCosHeading_halfCosAttitude = halfCosHeading * halfCosAttitude;
-	float halfSinHeading_halfSinAttitude = halfSinHeading * halfSinAttitude;
+	double halfCosHeading_halfCosAttitude = halfCosHeading * halfCosAttitude;
+	double halfSinHeading_halfSinAttitude = halfSinHeading * halfSinAttitude;
 
-	_w = halfCosHeading_halfCosAttitude * halfCosBank - halfSinHeading_halfSinAttitude * halfSinBank;
-	_x = halfCosHeading_halfCosAttitude * halfSinBank + halfSinHeading_halfSinAttitude * halfCosBank;
+	_w = halfCosHeading_halfCosAttitude   * halfCosBank - halfSinHeading_halfSinAttitude   * halfSinBank;
+	_x = halfCosHeading_halfCosAttitude   * halfSinBank + halfSinHeading_halfSinAttitude   * halfCosBank;
 	_y = halfSinHeading * halfCosAttitude * halfCosBank + halfCosHeading * halfSinAttitude * halfSinBank;
 	_z = halfCosHeading * halfSinAttitude * halfCosBank - halfSinHeading * halfCosAttitude * halfSinBank;
 

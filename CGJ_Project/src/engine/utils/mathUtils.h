@@ -11,15 +11,11 @@ static constexpr double TWO_PI = 6.283185307179586476925286766559005768394338798
 
 
 
-inline float toRadians(float degrees) 
-{ 
-	return (float)(degrees * (PI / 180.0)); 
-}
+inline double toRadians(double degrees) { return degrees * (PI / 180.0); }
+inline float toRadians(float degrees)	{ return (float)(degrees * (PI / 180.0)); }
 
-inline float toDegrees(float radians)
-{
-	return (float)(radians * (180.0 / PI));
-}
+inline double toDegrees(double radians) { return radians * (180.0 / PI); }
+inline float toDegrees(float radians)	{ return (float)(radians * (180.0 / PI)); }
 
 
 
