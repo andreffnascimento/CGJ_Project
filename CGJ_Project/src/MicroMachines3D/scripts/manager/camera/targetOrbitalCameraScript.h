@@ -210,7 +210,7 @@ private:
 	}
 
 
-	inline float _getStaticAlpha() { return Quaternion(_car.transform().rotation()).toEulerAngles().y + 180.0f; }
+	inline float _getStaticAlpha() { return _car.transform().rotation().toEulerAngles().y + 180.0f; }
 
 };
 

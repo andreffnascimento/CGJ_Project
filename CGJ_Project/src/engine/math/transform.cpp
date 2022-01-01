@@ -58,7 +58,7 @@ const TransformMatrix& Transform::calculateTransformMatrix(const Entity& entity)
 		return transform._worldTransform;
 
 	if (!transform._locallyUpdated)
-		transform._localTransform.calculateTransformMatrix(transform.translation(), Quaternion(transform.rotation()), transform.scale());
+		transform._localTransform.calculateTransformMatrix(transform.translation(), transform.rotation(), transform.scale());
 
 	ParentComponent* parent = entity.getComponentIfExists<ParentComponent>();
 	if (parent != nullptr)
@@ -123,12 +123,12 @@ void Transform::_translateTo(TransformComponent& transform, const Coords3f& newT
 
 void Transform::_rotateTo(TransformComponent& transform, const Coords3f& newRotation)
 {
-	transform._rotation = newRotation;
+	transform._rotation = Quaternion(newRotation);
 }
 
 void Transform::_rotateTo(TransformComponent& transform, const Quaternion& newRotation)
 {
-	transform._rotation = newRotation.toEulerAngles();
+	transform._rotation = newRotation;
 }
 
 void Transform::_scaleTo(TransformComponent& transform, const Coords3f& newScale)
@@ -144,12 +144,12 @@ void Transform::_translate(TransformComponent& transform, const Coords3f& transl
 
 void Transform::_rotate(TransformComponent& transform, const Coords3f& rotation)
 {
-	transform._rotation += rotation;
+	transform._rotation.rotate(rotation);
 }
 
 void Transform::_rotate(TransformComponent& transform, const Quaternion& rotation)
 {
-	transform._rotation += rotation.toEulerAngles();
+	transform._rotation += rotation;
 }
 
 void Transform::_scale(TransformComponent& transform, const Coords3f& scale)

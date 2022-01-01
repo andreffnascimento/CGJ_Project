@@ -53,7 +53,7 @@ struct TransformComponent
 {
 private:
 	Coords3f _translation = { 0.0f, 0.0f, 0.0f };
-	Coords3f _rotation = { 0.0f, 0.0f, 0.0f };
+	Quaternion _rotation = Quaternion();
 	Coords3f _scale = { 1.0f, 1.0f, 1.0f };
 
 	TransformMatrix _localTransform;
@@ -67,7 +67,7 @@ public:
 	~TransformComponent() = default;
 
 	inline const Coords3f& translation() const	{ return _translation; }
-	inline const Coords3f& rotation() const		{ return _rotation; }
+	inline const Quaternion& rotation() const	{ return _rotation; }
 	inline const Coords3f& scale() const		{ return _scale; }
 
 public:
