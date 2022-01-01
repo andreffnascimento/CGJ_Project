@@ -1,7 +1,8 @@
 #include "transform.h"
 
 
-typedef Transform::transform_func_t transform_func_t;
+typedef Transform::transform_func_coords_t transform_func_coords_t;
+typedef Transform::transform_func_quaternion_t transform_func_quaternion_t;
 
 
 
@@ -12,6 +13,11 @@ void Transform::translateTo(const Entity& entity, const Coords3f& newTranslation
 }
 
 void Transform::rotateTo(const Entity& entity, const Coords3f& newRotation)
+{
+	_localUpdate(entity, newRotation, Transform::_rotateTo);
+}
+
+void Transform::rotateTo(const Entity& entity, const Quaternion& newRotation)
 {
 	_localUpdate(entity, newRotation, Transform::_rotateTo);
 }
@@ -28,6 +34,11 @@ void Transform::translate(const Entity& entity, const Coords3f& translation)
 }
 
 void Transform::rotate(const Entity& entity, const Coords3f& rotation)
+{
+	_localUpdate(entity, rotation, Transform::_rotate);
+}
+
+void Transform::rotate(const Entity& entity, const Quaternion& rotation)
 {
 	_localUpdate(entity, rotation, Transform::_rotate);
 }
@@ -74,7 +85,15 @@ Coords3f Transform::calculateWorldTranslation(const Entity& entity)
 
 
 
-void Transform::_localUpdate(const Entity& entity, const Coords3f& transform, transform_func_t transformFunc)
+void Transform::_localUpdate(const Entity& entity, const Coords3f& transform, transform_func_coords_t transformFunc)
+{
+	TransformComponent& transformComponent = entity.transform();
+	transformComponent._locallyUpdated = false;
+	transformFunc(transformComponent, transform);
+	_groupUpdate(entity);
+}
+
+void Transform::_localUpdate(const Entity& entity, const Quaternion& transform, transform_func_quaternion_t transformFunc)
 {
 	TransformComponent& transformComponent = entity.transform();
 	transformComponent._locallyUpdated = false;
@@ -107,6 +126,11 @@ void Transform::_rotateTo(TransformComponent& transform, const Coords3f& newRota
 	transform._rotation = newRotation;
 }
 
+void Transform::_rotateTo(TransformComponent& transform, const Quaternion& newRotation)
+{
+	transform._rotation = newRotation.toEulerAngles();
+}
+
 void Transform::_scaleTo(TransformComponent& transform, const Coords3f& newScale)
 {
 	transform._scale = newScale;
@@ -121,6 +145,11 @@ void Transform::_translate(TransformComponent& transform, const Coords3f& transl
 void Transform::_rotate(TransformComponent& transform, const Coords3f& rotation)
 {
 	transform._rotation += rotation;
+}
+
+void Transform::_rotate(TransformComponent& transform, const Quaternion& rotation)
+{
+	transform._rotation += rotation.toEulerAngles();
 }
 
 void Transform::_scale(TransformComponent& transform, const Coords3f& scale)

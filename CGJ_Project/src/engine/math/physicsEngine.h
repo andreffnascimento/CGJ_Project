@@ -32,7 +32,7 @@ private:
 public:
 	static void rotateVector(Coords3f& vector, const Coords3f& rotation);
 	static void rotateVectorOnAxis(float& coord1, float& coord2, float angle);
-	static void rotateBoundingBox(AABBColliderComponent& collider, const Coords3f& rotation);
+	static void rotateBoundingBox(AABBColliderComponent& collider, const Quaternion& rotation);
 	static Coords3f calculateDragForce(const Coords3f& velocity, float drag, float dragThreshold);
 
 
@@ -61,7 +61,7 @@ private:
 	Coords3f _calculateExpectedRotation(RigidbodyComponent& rigidbody, float ts) const;
 	void _combineForces(RigidbodyComponent& rigidbody, Coords3f& linearForce, Coords3f& angularForce) const;
 	void _calculateExpectedAngularVelocity(RigidbodyComponent& rigidbody, Coords3f& angularForce, float ts) const;
-	void _calculateExpectedVelocity(RigidbodyComponent& rigidbody, Coords3f& linearForce, float ts, const Coords3f& rotation) const;
+	void _calculateExpectedVelocity(RigidbodyComponent& rigidbody, Coords3f& linearForce, float ts, const Quaternion& rotation) const;
 	void _processSleepThreshold(RigidbodyComponent& rigidbody) const;
 
 

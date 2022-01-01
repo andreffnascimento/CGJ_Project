@@ -1,5 +1,6 @@
 #include "quaternion.h"
 
+#include "engine/math/transformMatrix.h"
 #include "engine/utils/mathUtils.h"
 
 
@@ -101,6 +102,20 @@ Coords3f Quaternion::toEulerAngles() const
 
 
 
+Quaternion& Quaternion::rotate(const Coords3f& eulerAngles)
+{
+	Coords3f quaternionEulerAngles = toEulerAngles();
+	quaternionEulerAngles += eulerAngles;
+	return (*this = quaternionEulerAngles);
+}
+
+Quaternion& Quaternion::rotate(const Quaternion& quaternion)
+{
+	*this *= quaternion;
+	return *this;
+}
+
+
 Quaternion& Quaternion::normalize()
 {
 	float invLength = invSqrt(length2());
@@ -112,10 +127,35 @@ Quaternion& Quaternion::normalize()
 }
 
 
+
 Quaternion Quaternion::normalized() const
 {
 	float invLength = invSqrt(length2());
 	return Quaternion(_x * invLength, _y * invLength, _z * invLength, _w * invLength);
+}
+
+
+Quaternion Quaternion::conjugated() const
+{
+	return Quaternion(-_x, -_y, -_z, _w);
+}
+
+
+
+Coords3f& Quaternion::rotatePoint(Coords3f& point) const
+{
+	Coords4f rotatedPoint = TransformMatrix().setRotationMatrix(*this) * Coords4f({ point.x, point.y, point.z, 0.0f });
+	point.x = rotatedPoint.x;
+	point.y = rotatedPoint.y;
+	point.z = rotatedPoint.z;
+	return point;
+}
+
+
+Coords3f Quaternion::calculatePointRotation(const Coords3f& point) const
+{
+	Coords4f rotatedPoint = TransformMatrix().setRotationMatrix(*this) * Coords4f({ point.x, point.y, point.z, 0.0f });
+	return Coords3f({ rotatedPoint.x, rotatedPoint.y, rotatedPoint.z });
 }
 
 
@@ -164,14 +204,6 @@ void Quaternion::operator+=(const Quaternion& other)
 	normalize();
 }
 
-void Quaternion::operator+=(const Coords3f& rotation)
-{
-	Coords3f eulerAngles = toEulerAngles();
-	eulerAngles += rotation;
-	*this = eulerAngles;
-}
-
-
 
 void Quaternion::operator-=(const Quaternion& other)
 {
@@ -182,14 +214,6 @@ void Quaternion::operator-=(const Quaternion& other)
 	normalize();
 }
 
-void Quaternion::operator-=(const Coords3f& rotation)
-{
-	Coords3f eulerAngles = toEulerAngles();
-	eulerAngles -= rotation;
-	*this = eulerAngles;
-}
-
-
 
 void Quaternion::operator*=(const Quaternion& other)
 {
@@ -199,13 +223,6 @@ void Quaternion::operator*=(const Quaternion& other)
 	_z = curr._z * other._w + curr._w * other._z + curr._x * other._y - curr._y * other._x;
 	_w = curr._w * other._w - curr._x * other._x - curr._y * other._y - curr._z * other._z;
 	normalize();
-}
-
-void Quaternion::operator*=(const Coords3f& rotation)
-{
-	Coords3f eulerAngles = toEulerAngles();
-	eulerAngles *= rotation;
-	*this = eulerAngles;
 }
 
 

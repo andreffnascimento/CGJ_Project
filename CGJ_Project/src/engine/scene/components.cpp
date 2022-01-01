@@ -175,8 +175,8 @@ void RigidbodyComponent::addRelativeForce(const Force& force)
 {
 	if (force.value() != Coords3f({ 0.0f, 0.0f, 0.0f }))
 	{
-		Coords3f value = force.value();
-		PhysicsEngine::rotateVector(value, _rotation);
-		addAbsoluteForce(Force(Force::ForceType::LINEAR, value));
+		Coords3f forceVector = force.value();
+		_rotation.rotatePoint(forceVector);
+		addAbsoluteForce(Force(Force::ForceType::LINEAR, forceVector));
 	}
 }

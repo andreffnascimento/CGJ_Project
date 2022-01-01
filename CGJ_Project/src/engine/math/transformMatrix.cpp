@@ -29,7 +29,7 @@ const TransformMatrix& TransformMatrix::calculateTransformMatrix(const Coords3f&
 	TransformMatrix scaleMatrix = TransformMatrix();
 
 	translationMatrix.setTranslationMatrix(translation);
-	rotationMatrix.setRotationMatrix(rotation);
+	rotationMatrix.setRotationMatrix(rotation).transpose();
 	scaleMatrix.setScaleMatrix(scale);
 	
 	*this = translationMatrix * rotationMatrix * scaleMatrix;
@@ -72,7 +72,7 @@ TransformMatrix& TransformMatrix::setRotationMatrix(const Quaternion& rotation)
 	_matrix[1][0] = u.x;	_matrix[1][1] = u.y;	_matrix[1][2] = u.z;
 	_matrix[2][0] = f.x;	_matrix[2][1] = f.y;	_matrix[2][2] = f.z;
 
-	return this->transpose();
+	return *this;
 }
 
 
@@ -113,6 +113,17 @@ TransformMatrix operator*(const TransformMatrix& m1, const TransformMatrix& m2)
 			res[j][i] += m1[3][i] * m2[j][3];
 		}
 	}
+
+	return res;
+}
+
+Coords4f operator*(const TransformMatrix& m, const Coords4f& p)
+{
+	Coords4f res = Coords4f();
+
+	res.x = m[0][0] * p.x + m[0][1] * p.y + m[0][2] * p.z;
+	res.y = m[1][0] * p.x + m[1][1] * p.y + m[1][2] * p.z;
+	res.z = m[2][0] * p.x + m[2][1] * p.y + m[2][2] * p.z;
 
 	return res;
 }

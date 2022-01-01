@@ -33,7 +33,7 @@ void PhysicsEngine::rotateVectorOnAxis(float& coord1, float& coord2, float angle
 }
 
 
-void PhysicsEngine::rotateBoundingBox(AABBColliderComponent& collider, const Coords3f& rotation)
+void PhysicsEngine::rotateBoundingBox(AABBColliderComponent& collider, const Quaternion& rotation)
 {
 	if (collider._fixedBoundingBox)
 		return;
@@ -42,9 +42,9 @@ void PhysicsEngine::rotateBoundingBox(AABBColliderComponent& collider, const Coo
 	Coords3f p2 = Coords3f({ -collider._initialSize.x,  collider._initialSize.y,  collider._initialSize.z });
 	Coords3f p3 = Coords3f({  collider._initialSize.x, -collider._initialSize.y,  collider._initialSize.z });
 
-	rotateVector(p1, rotation);
-	rotateVector(p2, rotation);
-	rotateVector(p3, rotation);
+	rotation.rotatePoint(p1);
+	rotation.rotatePoint(p2);
+	rotation.rotatePoint(p3);
 
 	float xMax = std::max(std::abs(p1.x), std::max(std::abs(p2.x), std::abs(p3.x)));
 	float yMax = std::max(std::abs(p1.y), std::max(std::abs(p2.y), std::abs(p3.y)));
@@ -204,10 +204,7 @@ void PhysicsEngine::_detectRigidbodyCollisions(const Scene& scene, EntityHandle 
 Coords3f PhysicsEngine::_calculateExpectedRotation(RigidbodyComponent& rigidbody, float ts) const
 {
 	Coords3f rotation = rigidbody._angularVelocity / ts;
-	rigidbody._rotation += rotation;
-	rigidbody._rotation.x = std::fmod(rigidbody._rotation.x + 360.0f, 360.0f);
-	rigidbody._rotation.y = std::fmod(rigidbody._rotation.y + 360.0f, 360.0f);
-	rigidbody._rotation.z = std::fmod(rigidbody._rotation.z + 360.0f, 360.0f);
+	rigidbody._rotation.rotate(rotation);
 	return rotation;
 }
 
@@ -234,12 +231,14 @@ void PhysicsEngine::_calculateExpectedAngularVelocity(RigidbodyComponent& rigidb
 }
 
 
-void PhysicsEngine::_calculateExpectedVelocity(RigidbodyComponent& rigidbody, Coords3f& linearForce, float ts, const Coords3f& rotation) const
+void PhysicsEngine::_calculateExpectedVelocity(RigidbodyComponent& rigidbody, Coords3f& linearForce, float ts, const Quaternion& rotation) const
 {
 	linearForce += PhysicsEngine::calculateDragForce(rigidbody._velocity, rigidbody._drag, rigidbody._dragThreshold);
 	linearForce *= (ts / rigidbody._mass);
-	PhysicsEngine::rotateVector(linearForce, rotation);
-	PhysicsEngine::rotateVector(rigidbody._velocity, rotation);
+
+	rotation.rotatePoint(linearForce);
+	rotation.rotatePoint(rigidbody._velocity);
+
 	rigidbody._velocity += linearForce;
 }
 

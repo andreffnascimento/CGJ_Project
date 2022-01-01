@@ -44,6 +44,7 @@ public:
 
 public:
 	friend TransformMatrix operator*(const TransformMatrix& m1, const TransformMatrix& m2);
+	friend Coords4f operator*(const TransformMatrix& m, const Coords4f& p);
 
 };
 

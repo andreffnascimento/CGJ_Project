@@ -42,8 +42,15 @@ public:
 
 
 public:
+	Quaternion& rotate(const Coords3f& eulerAngles);
+	Quaternion& rotate(const Quaternion& quaternion);
 	Quaternion& normalize();
+
 	Quaternion normalized() const;
+	Quaternion conjugated() const;
+
+	Coords3f& rotatePoint(Coords3f& point) const;
+	Coords3f calculatePointRotation(const Coords3f& point) const;
 
 
 public:
@@ -51,13 +58,8 @@ public:
 	Quaternion& operator=(const Coords3f& rotation);
 
 	void operator+=(const Quaternion& other);
-	void operator+=(const Coords3f& rotation);
-
 	void operator-=(const Quaternion& other);
-	void operator-=(const Coords3f& rotation);
-
 	void operator*=(const Quaternion& other);
-	void operator*=(const Coords3f& rotation);
 
 	friend Quaternion operator+(const Quaternion& q1, const Quaternion& q2);
 	friend Quaternion operator-(const Quaternion& q1, const Quaternion& q2);

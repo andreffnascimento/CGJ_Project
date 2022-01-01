@@ -1,5 +1,5 @@
-#ifndef __engine_math_mathUtils__
-#define __engine_math_mathUtils__
+#ifndef __engine_utils_mathUtils__
+#define __engine_utils_mathUtils__
 
 
 
@@ -23,4 +23,4 @@ inline float toDegrees(float radians)	{ return (float)(radians * (180.0 / PI)); 
 float invSqrt(float number);
 
 
-#endif // !__engine_math_mathUtils__
+#endif // !__engine_utils_mathUtils__

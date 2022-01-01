@@ -279,7 +279,7 @@ private:
 	std::bitset<8> _constraints = std::bitset<8>();
 
 	Coords3f _position = Coords3f();
-	Coords3f _rotation = Coords3f();
+	Quaternion _rotation = Coords3f();
 	Coords3f _velocity = Coords3f();
 	Coords3f _angularVelocity = Coords3f();
 
@@ -304,8 +304,6 @@ public:
 	inline void setDragThreshold(float dragThreshold)						{ _dragThreshold = dragThreshold; }
 	inline void setRigidbodyConstraints(const std::bitset<8>& constraints)	{ _constraints = constraints; }
 	inline void setSleepThreshold(float sleepThreshold)						{ _sleepThreshold = sleepThreshold; }
-	inline void setPosition(const Coords3f& position)						{ _position = position; }
-	inline void setRotation(const Coords3f& rotation)						{ _rotation = rotation; }
 
 	inline void addRelativeForce(const Coords3f& value)		{ addRelativeForce(Force(Force::ForceType::LINEAR, value)); }
 	inline void addAbsoluteForce(const Coords3f& value)		{ addAbsoluteForce(Force(Force::ForceType::LINEAR, value)); }
