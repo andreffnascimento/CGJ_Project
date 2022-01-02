@@ -20,6 +20,17 @@ TransformMatrix::TransformMatrix(const TransformMatrix& matrix)
 
 
 
+float TransformMatrix::determinant() const
+{
+	float det00 = _matrix[0][0] * (_matrix[1][1] * _matrix[2][2] - _matrix[1][2] * _matrix[2][1]);
+	float det01 = _matrix[0][1] * (_matrix[1][0] * _matrix[2][2] - _matrix[1][2] * _matrix[2][0]);
+	float det02 = _matrix[0][2] * (_matrix[1][0] * _matrix[2][1] - _matrix[1][1] * _matrix[2][0]);
+	return det00 - det01 + det02;
+}
+
+
+
+
 const TransformMatrix& TransformMatrix::calculateTransformMatrix(const Coords3f& translation, const Quaternion& rotation, const Coords3f& scale)
 {
 	setIdentityMatrix();

@@ -1,5 +1,7 @@
 #include "quaternion.h"
 
+#include <algorithm>
+
 #include "engine/math/transformMatrix.h"
 #include "engine/utils/mathUtils.h"
 
@@ -55,40 +57,14 @@ Quaternion::Quaternion(const TransformMatrix& rotationMatrix)
 {
 	// Source: https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
 
-	float trace = rotationMatrix[0][0] + rotationMatrix[1][1] + rotationMatrix[1][1];
+	_w = std::sqrt(std::max(0.0, 1.0 + rotationMatrix[0][0] + rotationMatrix[1][1] + rotationMatrix[2][2])) / 2.0;
+	_x = std::sqrt(std::max(0.0, 1.0 + rotationMatrix[0][0] - rotationMatrix[1][1] - rotationMatrix[2][2])) / 2.0;
+	_y = std::sqrt(std::max(0.0, 1.0 - rotationMatrix[0][0] + rotationMatrix[1][1] - rotationMatrix[2][2])) / 2.0;
+	_z = std::sqrt(std::max(0.0, 1.0 - rotationMatrix[0][0] - rotationMatrix[1][1] + rotationMatrix[2][2])) / 2.0;
 
-	if (trace > 0.0f) 
-	{
-		double s = std::sqrt(trace + 1.0) * 2;
-		_w = 0.25 * s;
-		_x = ((double)rotationMatrix[2][1] - (double)rotationMatrix[1][2]) / s;
-		_y = ((double)rotationMatrix[0][2] - (double)rotationMatrix[2][0]) / s;
-		_z = ((double)rotationMatrix[1][0] - (double)rotationMatrix[0][1]) / s;
-	}
-	else if ((rotationMatrix[0][0] > rotationMatrix[1][1]) & (rotationMatrix[0][0] > rotationMatrix[2][2])) 
-	{
-		double s = sqrt(1.0 + rotationMatrix[0][0] - rotationMatrix[1][1] - rotationMatrix[2][2]) * 2;
-		_w = ((double)rotationMatrix[2][1] - (double)rotationMatrix[1][2]) / s;
-		_x = 0.25 * s;
-		_y = ((double)rotationMatrix[0][1] + (double)rotationMatrix[1][0]) / s;
-		_z = ((double)rotationMatrix[0][2] + (double)rotationMatrix[2][0]) / s;
-	}
-	else if (rotationMatrix[1][1] > rotationMatrix[2][2]) 
-	{
-		double s = sqrt(1.0 + rotationMatrix[1][1] - rotationMatrix[0][0] - rotationMatrix[2][2]) * 2;
-		_w = ((double)rotationMatrix[0][2] - (double)rotationMatrix[2][0]) / s;
-		_x = ((double)rotationMatrix[0][1] + (double)rotationMatrix[1][0]) / s;
-		_y = 0.25 * s;
-		_z = ((double)rotationMatrix[1][2] + (double)rotationMatrix[2][1]) / s;
-	}
-	else 
-	{
-		double s = sqrt(1.0 + rotationMatrix[2][2] - rotationMatrix[0][0] - rotationMatrix[2][2]) * 2;
-		_w = ((double)rotationMatrix[1][0] - (double)rotationMatrix[0][1]) / s;
-		_x = ((double)rotationMatrix[0][2] + (double)rotationMatrix[2][0]) / s;
-		_y = ((double)rotationMatrix[1][2] + (double)rotationMatrix[2][1]) / s;
-		_z = 0.25 * s;
-	}
+	_x = std::copysign(_x, rotationMatrix[2][1] - rotationMatrix[1][2]);
+	_y = std::copysign(_y, rotationMatrix[0][2] - rotationMatrix[2][0]);
+	_z = std::copysign(_z, rotationMatrix[1][0] - rotationMatrix[0][1]);
 }
 
 
@@ -115,27 +91,29 @@ Coords3f Quaternion::up() const
 }
 
 
+
 Coords3f Quaternion::toEulerAngles() const
 {
 	// Source: https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToEuler/index.htm
 
-	double test = _x * _y + _z * _w;
-
-	if (test > 0.499)	// singularity at north pole
-		return Coords3f({ (float)toDegrees(2.0 * std::atan2(_x, _w)),	(float)toDegrees(HALF_PI),	0.0f });
-
-	if (test < -0.499) // singularity at south pole
-		return Coords3f({ (float)toDegrees(-2.0 * std::atan2(_x, _w)),	(float)toDegrees(HALF_PI),	0.0f });
-	
-	Coords3f eulerAngles = Coords3f();
 	double sqx = _x * _x;
 	double sqy = _y * _y;
 	double sqz = _z * _z;
+	double sqw = _w * _w;
 
-	eulerAngles.y = toDegrees((float)std::atan2(2.0 * (_y * _w - _x * _z), 1.0 - 2.0 * (sqy - sqz)));
-	eulerAngles.z = toDegrees((float)std::asin(2.0 * test));
-	eulerAngles.x = toDegrees((float)std::atan2(2.0 * (_x * _w - _y * _z), 1.0 - 2.0 * (sqx * sqz)));
+	double unit = sqx + sqy + sqz + sqw; // if normalised is one, otherwise is correction factor
+	double test = _x * _y + _z * _w;
 
+	if (test > 0.499 * unit)	// singularity at north pole
+		return Coords3f({ 0.0f,		(float)toDegrees(2.0 * std::atan2(_x, _w)),		(float)toDegrees(HALF_PI) });
+
+	if (test < -0.499 * unit)	// singularity at south pole
+		return Coords3f({ 0.0f,		(float)toDegrees(-2.0 * std::atan2(_x, _w)),	(float)toDegrees(-HALF_PI) });
+
+	Coords3f eulerAngles = Coords3f();
+	eulerAngles.x = (float)toDegrees(atan2(2.0 * _x * _w - 2.0 * _y * _z, -sqx + sqy - sqz + sqw));
+	eulerAngles.y = (float)toDegrees(atan2(2.0 * _y * _w - 2.0 * _x * _z,  sqx - sqy - sqz + sqw));
+	eulerAngles.z = (float)toDegrees(asin(2.0 * test / unit));
 	return eulerAngles;
 }
 

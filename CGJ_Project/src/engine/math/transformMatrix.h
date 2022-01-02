@@ -23,6 +23,10 @@ public:
 
 
 public:
+	float determinant() const;
+
+
+public:
 	const TransformMatrix& calculateTransformMatrix(const Coords3f& translation, const Quaternion& rotation, const Coords3f& scale);
 
 public:

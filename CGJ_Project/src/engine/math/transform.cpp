@@ -85,15 +85,15 @@ void Transform::decomposeTransformMatrix(const Entity& entity, Coords3f& outTran
 	outTranslation = { transformMatrix[0][3], transformMatrix[1][3], transformMatrix[2][3] };
 
 	// extract scale vector
-	transformMatrix[3][0] = transformMatrix[3][1] = transformMatrix[3][2] = 0.0f;
-	outScale.x = Coords3f({ transformMatrix[0][0], transformMatrix[0][1], transformMatrix[0][2] }).length();
-	outScale.y = Coords3f({ transformMatrix[1][0], transformMatrix[1][1], transformMatrix[1][2] }).length();
-	outScale.z = Coords3f({ transformMatrix[2][0], transformMatrix[2][1], transformMatrix[2][2] }).length();
+	transformMatrix[0][3] = transformMatrix[1][3] = transformMatrix[2][3] = 0.0f;
+	outScale.x = Coords3f({ transformMatrix[0][0], transformMatrix[1][0], transformMatrix[2][0] }).length();
+	outScale.y = Coords3f({ transformMatrix[0][1], transformMatrix[1][1], transformMatrix[2][1] }).length();
+	outScale.z = Coords3f({ transformMatrix[0][2], transformMatrix[1][2], transformMatrix[2][2] }).length();
 	
 	// extract the rotation vector
-	transformMatrix[0][0] /= outScale.x;	transformMatrix[0][1] /= outScale.x;	transformMatrix[0][2] /= outScale.x;
-	transformMatrix[1][0] /= outScale.y;	transformMatrix[1][1] /= outScale.y;	transformMatrix[1][2] /= outScale.y;
-	transformMatrix[1][0] /= outScale.z;	transformMatrix[2][1] /= outScale.z;	transformMatrix[2][2] /= outScale.z;
+	transformMatrix[0][0] /= outScale.x;	transformMatrix[0][1] /= outScale.y;	transformMatrix[0][2] /= outScale.z;
+	transformMatrix[1][0] /= outScale.x;	transformMatrix[1][1] /= outScale.y;	transformMatrix[1][2] /= outScale.z;
+	transformMatrix[2][0] /= outScale.x;	transformMatrix[2][1] /= outScale.y;	transformMatrix[2][2] /= outScale.z;
 	outRotation = Quaternion(transformMatrix);
 }
 
@@ -105,7 +105,7 @@ void Transform::_localUpdate(const Entity& entity, const Coords3f& transform, tr
 	TransformComponent& transformComponent = entity.transform();
 	transformComponent._locallyUpdated = false;
 	transformFunc(transformComponent, transform);
-	_groupUpdate(entity);
+	_groupUpdate(entity);	
 }
 
 void Transform::_localUpdate(const Entity& entity, const Quaternion& transform, transform_func_quaternion_t transformFunc)

@@ -12,7 +12,7 @@ class TransformMatrix;
 class Quaternion
 {
 
-public:
+private:
 	double _x = 0.0;
 	double _y = 0.0;
 	double _z = 0.0;
