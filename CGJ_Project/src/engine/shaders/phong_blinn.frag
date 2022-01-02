@@ -82,7 +82,7 @@ FragLightingData processDirectionalLight(FragLightingData fragLighting, uint ind
 FragLightingData processPointLight(FragLightingData fragLighting, uint index, vec3 normal, vec3 eye) {
 	vec3 lightDir = vec3(lighting.lightPositions[index].xyz - dataIn.position.xyz);
 	float distance = length(lightDir);
-	float attenuation = lighting.lightIntensities[index] / (1.0 + 0.9 * distance + 0.09 * distance * distance);
+	float attenuation = lighting.lightIntensities[index] * (10.0 / distance);
 	lightDir = normalize(lightDir);
 
 	float diffuseIntensity = max(dot(normal, lightDir), 0.0);
@@ -102,7 +102,7 @@ FragLightingData processSpotLight(FragLightingData fragLighting, uint index, vec
 
 	vec3 lightDir = vec3(lighting.lightPositions[index].xyz - dataIn.position.xyz);
 	float distance = length(lightDir);
-	float attenuation = lighting.lightIntensities[index] / (1.0 + 0.9 * distance + 0.09 * distance * distance);
+	float attenuation = lighting.lightIntensities[index] * (10.0 / distance);
 	lightDir = normalize(lightDir);
 	
 	float diffuseIntensity = max(dot(normal, lightDir), 0.0);

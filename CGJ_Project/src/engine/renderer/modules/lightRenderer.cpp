@@ -1,5 +1,7 @@
 #include "engine/renderer/renderer.h"
 
+#include "engine/math/transform.h"
+
 #include <GL/glew.h>
 
 
@@ -16,25 +18,31 @@ void Renderer::renderLights(const Scene& scene) const
 	if (lightComponents.size() > Renderer::MAX_LIGHTS)
 		throw std::string("The renderer is not able to process all the game lights");
 
-	for (const auto& iterator : lightComponents)
+	for (const auto& lightIterator : lightComponents)
 	{
-		const LightComponent& light = iterator.second;
-		const TransformComponent& transform = scene.getEntityById(iterator.first).getComponent<TransformComponent>();
+		Entity lightEntity = scene.getEntityById(lightIterator.first);
+		const LightComponent& light = lightIterator.second;
+
 		if (!light.isEnabled())
 			continue;
+
+		Coords3f translation;
+		Quaternion rotation;
+		Coords3f scale;
+		Transform::decomposeTransformMatrix(lightEntity, translation, rotation, scale);
 
 		switch (light.lightType())
 		{
 		case LightComponent::LightType::DIRECTIONAL:
-			_formatDirectionalLight(light, transform, lightData);
+			_formatDirectionalLight(light, rotation.rotatePoint(Coords3f({ 0.0f, 0.0f, 1.0f })), lightData);
 			break;
 
 		case LightComponent::LightType::POINT:
-			_formatPointLight(light, transform, lightData);
+			_formatPointLight(light, translation, lightData);
 			break;
 
 		case LightComponent::LightType::SPOT:
-			_formatSpotLight(light, transform, lightData);
+			_formatSpotLight(light, translation, rotation.rotatePoint(Coords3f({ 0.0f, 0.0f, 1.0f })), lightData);
 			break;
 		}
 
@@ -51,9 +59,9 @@ void Renderer::renderLights(const Scene& scene) const
 
 
 
-void Renderer::_formatDirectionalLight(const LightComponent& light, const TransformComponent& transform, Renderer::LightData& lightData) const
+void Renderer::_formatDirectionalLight(const LightComponent& light, const Coords3f& direction, Renderer::LightData& lightData) const
 {
-	float lightDirection[4] = { light.direction().x, light.direction().y, light.direction().z, 0.0f };
+	float lightDirection[4] = { direction.x, direction.y, direction.z, 0.0f };
 	float viewLightDirection[4] = {};
 	multMatrixPoint(VIEW, lightDirection, viewLightDirection);
 
@@ -63,9 +71,9 @@ void Renderer::_formatDirectionalLight(const LightComponent& light, const Transf
 }
 
 
-void Renderer::_formatPointLight(const LightComponent& light, const TransformComponent& transform, Renderer::LightData& lightData) const
+void Renderer::_formatPointLight(const LightComponent& light, const Coords3f& translation, Renderer::LightData& lightData) const
 {
-	float lightPosition[4] = { transform.translation().x, transform.translation().y, transform.translation().z, 1.0f };
+	float lightPosition[4] = { translation.x, translation.y, translation.z, 1.0f };
 	float viewLightPosition[4] = {};
 	multMatrixPoint(VIEW, lightPosition, viewLightPosition);
 
@@ -75,13 +83,13 @@ void Renderer::_formatPointLight(const LightComponent& light, const TransformCom
 }
 
 
-void Renderer::_formatSpotLight(const LightComponent& light, const TransformComponent& transform, Renderer::LightData& lightData) const
+void Renderer::_formatSpotLight(const LightComponent& light, const Coords3f& translation, const Coords3f& direction, Renderer::LightData& lightData) const
 {
-	float lightPosition[4] = { transform.translation().x, transform.translation().y, transform.translation().z, 1.0f };
+	float lightPosition[4] = { translation.x, translation.y, translation.z, 1.0f };
 	float viewLightPosition[4] = {};
 	multMatrixPoint(VIEW, lightPosition, viewLightPosition);
 
-	float lightDirection[4] = { light.direction().x, light.direction().y, light.direction().z, 0.0f };
+	float lightDirection[4] = { direction.x, direction.y, direction.z, 0.0f };
 	float viewLightDirection[4] = {};
 	multMatrixPoint(VIEW, lightDirection, viewLightDirection);
 

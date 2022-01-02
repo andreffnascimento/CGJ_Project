@@ -128,8 +128,9 @@ private:
 
 	void _addCarHeadlightLamp(Entity headlight)
 	{
-		LightComponent& lightComponent = headlight.addComponent<LightComponent>();
-		lightComponent.setSpotLight({ 0.0f, 0.0f, 1.0f }, 50.0f, 0.5f);
+		Transform::scale(headlight, Coords3f({ 1.0f, 1.0f, 1.2f }));
+		Transform::rotate(headlight, Coords3f({ 20.0f, 0.0f, 0.0f }));
+		LightComponent& lightComponent = headlight.addComponent<LightComponent>(LightComponent::LightType::SPOT, 10.0f, 0.8f);
 		lightComponent.setEnabled(false);
 	}
 };

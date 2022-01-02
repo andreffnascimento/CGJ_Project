@@ -63,10 +63,10 @@ public:
 		_car = _scene->getEntityByTag("Car");
 		_camera = _scene->getEntityByTag("Camera3");
 		_carRigidbody = &_car.getComponent<RigidbodyComponent>();
-		_updateCameraTransform();
-		_setCameraTarget();
 
 		_alpha = _alphaAux = _getStaticAlpha();
+		_updateCameraTransform();
+		_setCameraTarget();
 	}
 
 

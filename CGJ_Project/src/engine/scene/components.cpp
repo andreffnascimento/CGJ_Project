@@ -90,39 +90,14 @@ void ScriptComponent::onUpdate(float ts) const
 
 
 
-void LightComponent::setDirectionalLight(const Coords3f& direction, float intensity)
+LightComponent::LightComponent(LightComponent::LightType lightType, float intensity, float cutOff)
+	: _lightType(lightType), _intensity(intensity), _cutOff(cutOff)
 {
-	if (intensity < 0.0f)
+	if (_intensity < 0.0f)
 		throw std::string("The light intensity must be a value greater than 0!");
 
-	_lightType = LightComponent::LightType::DIRECTIONAL;
-	_direction = direction;
-	_intensity = intensity;
-}
-
-
-void LightComponent::setPointLight(float intensity)
-{
-	if (intensity < 0.0f)
-		throw std::string("The light intensity must be a value greater than 0!");
-
-	_lightType = LightComponent::LightType::POINT;
-	_intensity = intensity;
-}
-
-
-void LightComponent::setSpotLight(const Coords3f& direction, float intensity, float cutOff)
-{
-	if (intensity < 0.0f)
-		throw std::string("The light intensity must be a value greater than 0!");
-
-	if (cutOff < 0.0f || cutOff > 1.0f)
+	if (_cutOff < 0.0f || _cutOff > 1.0f)
 		throw std::string("The cutoff must be a value between 0.0f and 1.0");
-
-	_lightType = LightComponent::LightType::SPOT;
-	_direction = direction;
-	_intensity = intensity;
-	_cutOff = cutOff;
 }
 
 

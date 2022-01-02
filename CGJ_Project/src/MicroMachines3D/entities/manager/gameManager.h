@@ -28,9 +28,9 @@ public:
 private:
 	Entity _createGlobalLight(Entity entity)
 	{
-		LightComponent& lightComponent = entity.addComponent<LightComponent>();
-		lightComponent.setDirectionalLight({ 1.0f, -1.0f, -1.0f }, 2.0f);
-		return entity;
+		LightComponent& lightComponent = entity.addComponent<LightComponent>(LightComponent::LightType::DIRECTIONAL, 2.0f, 0.0f);
+		Transform::rotateTo(entity, Coords3f({ 90.0f, 0.0f, 0.0f }));
+		return entity;	
 	}
 };
 
