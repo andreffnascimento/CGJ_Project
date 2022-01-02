@@ -16,6 +16,9 @@ private:
 	MeshComponent* _frontMesh = nullptr;
 	MeshComponent* _backMesh  = nullptr;
 
+	LightComponent* _leftFrontLight = nullptr;
+	LightComponent* _rightFrontLight = nullptr;
+
 	bool _lightsOn = false;
 
 
@@ -34,6 +37,8 @@ public:
 		_eventHandler = &Application::getEventHandler();
 		_frontMesh = &_scene->getEntityByTag("Car:headlight-frontLeft").getComponent<MeshComponent>();
 		_backMesh  = &_scene->getEntityByTag("Car:headlight-backLeft").getComponent<MeshComponent>();
+		_leftFrontLight = &_scene->getEntityByTag("Car:headlight-frontLeft").getComponent<LightComponent>();
+		_rightFrontLight = &_scene->getEntityByTag("Car:headlight-frontRight").getComponent<LightComponent>();
 	}
 
 
@@ -47,11 +52,15 @@ public:
 			{
 				_frontMesh->setMaterial(CAR_HEADLIGHT_FRONT_ON_MATERIAL);
 				_backMesh->setMaterial(CAR_HEADLIGHT_BACK_ON_MATERIAL);
+				_leftFrontLight->setEnabled(true);
+				_rightFrontLight->setEnabled(true);
 			}
 			else
 			{
 				_frontMesh->setMaterial(CAR_HEADLIGHT_FRONT_OFF_MATERIAL);
 				_backMesh->setMaterial(CAR_HEADLIGHT_BACK_OFF_MATERIAL);
+				_leftFrontLight->setEnabled(false);
+				_rightFrontLight->setEnabled(false);
 			}
 		}
 	}

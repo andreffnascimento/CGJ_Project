@@ -92,7 +92,7 @@ void Renderer::_formatSpotLight(const LightComponent& light, const TransformComp
 	lightData.lightCutOffs[lightData.nLights] = light.cutOff();
 }
 
-#include <iostream>
+
 void Renderer::_submitLightData(const Renderer::LightData& lightData) const
 {
 	GLint loc;

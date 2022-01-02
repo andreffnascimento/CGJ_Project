@@ -242,8 +242,8 @@ public:
 	inline float intensity()			const { return _intensity; }
 	inline float cutOff()				const { return _cutOff; }
 
-	inline bool isEnabled()	const { return _enabled; }
-	inline void setEnabled(bool enabled) { _enabled = enabled; }
+	inline bool isEnabled()	const			{ return _enabled; }
+	inline void setEnabled(bool enabled)	{ _enabled = enabled; }
 
 	void setDirectionalLight(const Coords3f& direction, float intensity);
 	void setPointLight(float intensity);

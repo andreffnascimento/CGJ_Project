@@ -105,13 +105,14 @@ private:
 		std::shared_ptr<MyMesh> backMesh = std::make_shared<MyMesh>(createCube());
 		MeshComponent::setMaterial(*backMesh, CAR_HEADLIGHT_BACK_OFF_MATERIAL);
 
-		_initCarHeadlight(scene, group, frontMesh,  1.0f,  1.0f, "frontLeft");
-		_initCarHeadlight(scene, group, frontMesh, -1.0f,  1.0f, "frontRight");
+		_addCarHeadlightLamp(_initCarHeadlight(scene, group, frontMesh, 1.0f, 1.0f, "frontLeft"));
+		_addCarHeadlightLamp(_initCarHeadlight(scene, group, frontMesh, -1.0f, 1.0f, "frontRight"));
+
 		_initCarHeadlight(scene, group, backMesh,   1.0f, -1.0f, "backLeft");
 		_initCarHeadlight(scene, group, backMesh,  -1.0f, -1.0f, "backRight");
 	}
 
-	void _initCarHeadlight(Scene* scene, GroupComponent& group, const std::shared_ptr<MyMesh>& mesh, float xMod, float zMod, const char* headlightId)
+	Entity _initCarHeadlight(Scene* scene, GroupComponent& group, const std::shared_ptr<MyMesh>& mesh, float xMod, float zMod, const char* headlightId)
 	{
 		Entity headlight = group.addNewEntity(scene, *this, "headlight-" + std::string(headlightId));
 		headlight.addComponent<MeshComponent>(mesh);
@@ -122,8 +123,15 @@ private:
 		float yPos = CAR_HEADLIGHT_SIZE.y / 2.0f;
 		float zPos = (zMod * CAR_BOTTOM_SIZE.z / 2.0f) + (zMod * CAR_HEADLIGHT_SIZE.z / 2.0f);
 		Transform::translate(headlight, { xPos, yPos, zPos });
+		return headlight;
 	}
 
+	void _addCarHeadlightLamp(Entity headlight)
+	{
+		LightComponent& lightComponent = headlight.addComponent<LightComponent>();
+		lightComponent.setSpotLight({ 0.0f, 0.0f, 1.0f }, 50.0f, 0.5f);
+		lightComponent.setEnabled(false);
+	}
 };
 
 
