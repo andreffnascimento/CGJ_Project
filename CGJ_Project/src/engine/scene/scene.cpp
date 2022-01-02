@@ -3,6 +3,7 @@
 #include <unordered_map>
 
 #include "engine/app/application.h"
+#include "engine/math/transform.h"
 #include "engine/math/physicsEngine.h"
 #include "engine/renderer/renderer.h"
 
@@ -119,12 +120,18 @@ void Scene::onCreate()
 void Scene::onUpdate(float ts)
 {
 	// update entity scripts
-	for (auto& script : _registry.getComponents<ScriptComponent>())
-		script.second.onUpdate(ts);
+	for (auto& scriptIterator : _registry.getComponents<ScriptComponent>())
+		scriptIterator.second.onUpdate(ts);
 
+	// simulate physics
 	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
 	physicsEngine.simulate(*this, ts);
 	
+	// update entity transform matrixes
+	for (auto& transformIterator : _registry.getComponents<TransformComponent>())
+		Transform::calculateTransformMatrix(Entity(transformIterator.first, this));
+
+	// render to the screen
 	Renderer& renderer = Application::getRenderer();
 	renderer.initSceneRendering();
 	renderer.renderCamera(*this);

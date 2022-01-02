@@ -46,7 +46,7 @@ void Renderer::_loadMesh(const MeshComponent& mesh) const
 void Renderer::_applyTransform(const Entity& entity) const
 {
 	pushMatrix(MODEL);
-	loadMatrix(MODEL, Transform::calculateTransformMatrix(entity));
+	loadMatrix(MODEL, entity.transform().transformMatrix());
 }
 
 

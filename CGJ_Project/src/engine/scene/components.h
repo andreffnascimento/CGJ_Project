@@ -70,6 +70,8 @@ public:
 	inline const Quaternion& rotation() const	{ return _rotation; }
 	inline const Coords3f& scale() const		{ return _scale; }
 
+	inline const TransformMatrix& transformMatrix() const { return _worldTransform; }
+
 public:
 	friend class Transform;
 };
