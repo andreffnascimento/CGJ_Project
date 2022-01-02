@@ -35,6 +35,7 @@ public:
 
 public:
 	static const TransformMatrix& calculateTransformMatrix(const Entity& entity);
+	static void decomposeTransformMatrix(const Entity& entity, Coords3f& outTranslation, Quaternion& outRotation, Coords3f& outScale);
 
 
 private:

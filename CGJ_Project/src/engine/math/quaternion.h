@@ -4,6 +4,8 @@
 
 #include "engine/utils/coords.h"
 
+class TransformMatrix;
+
 
 
 
@@ -24,6 +26,7 @@ public:
 	Quaternion(const Coords4f& coords);
 	Quaternion(const Coords3f& axis, float angle);
 	Quaternion(const Coords3f& rotation);
+	Quaternion(const TransformMatrix& rotationMatrix);
 	~Quaternion() = default;
 
 

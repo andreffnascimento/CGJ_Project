@@ -1,5 +1,6 @@
 #include "transform.h"
 
+#include "quaternion.h"
 
 typedef Transform::transform_func_coords_t transform_func_coords_t;
 typedef Transform::transform_func_quaternion_t transform_func_quaternion_t;
@@ -72,6 +73,28 @@ const TransformMatrix& Transform::calculateTransformMatrix(const Entity& entity)
 	}
 
 	return transform._worldTransform;
+}
+
+
+void Transform::decomposeTransformMatrix(const Entity& entity, Coords3f& outTranslation, Quaternion& outRotation, Coords3f& outScale)
+{
+	TransformMatrix transformMatrix = entity.transform().transformMatrix();
+	transformMatrix.transpose();
+
+	// extract translation vector
+	outTranslation = { transformMatrix[0][3], transformMatrix[1][3], transformMatrix[2][3] };
+
+	// extract scale vector
+	transformMatrix[3][0] = transformMatrix[3][1] = transformMatrix[3][2] = 0.0f;
+	outScale.x = Coords3f({ transformMatrix[0][0], transformMatrix[0][1], transformMatrix[0][2] }).length();
+	outScale.y = Coords3f({ transformMatrix[1][0], transformMatrix[1][1], transformMatrix[1][2] }).length();
+	outScale.z = Coords3f({ transformMatrix[2][0], transformMatrix[2][1], transformMatrix[2][2] }).length();
+	
+	// extract the rotation vector
+	transformMatrix[0][0] /= outScale.x;	transformMatrix[0][1] /= outScale.x;	transformMatrix[0][2] /= outScale.x;
+	transformMatrix[1][0] /= outScale.y;	transformMatrix[1][1] /= outScale.y;	transformMatrix[1][2] /= outScale.y;
+	transformMatrix[1][0] /= outScale.z;	transformMatrix[2][1] /= outScale.z;	transformMatrix[2][2] /= outScale.z;
+	outRotation = Quaternion(transformMatrix);
 }
 
 

@@ -51,6 +51,46 @@ Quaternion::Quaternion(const Coords3f& rotation)
 	_z = halfCosHeading * halfSinAttitude * halfCosBank - halfSinHeading * halfCosAttitude * halfSinBank;
 }
 
+Quaternion::Quaternion(const TransformMatrix& rotationMatrix)
+{
+	// Source: https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
+
+	float trace = rotationMatrix[0][0] + rotationMatrix[1][1] + rotationMatrix[1][1];
+
+	if (trace > 0.0f) 
+	{
+		double s = std::sqrt(trace + 1.0) * 2;
+		_w = 0.25 * s;
+		_x = ((double)rotationMatrix[2][1] - (double)rotationMatrix[1][2]) / s;
+		_y = ((double)rotationMatrix[0][2] - (double)rotationMatrix[2][0]) / s;
+		_z = ((double)rotationMatrix[1][0] - (double)rotationMatrix[0][1]) / s;
+	}
+	else if ((rotationMatrix[0][0] > rotationMatrix[1][1]) & (rotationMatrix[0][0] > rotationMatrix[2][2])) 
+	{
+		double s = sqrt(1.0 + rotationMatrix[0][0] - rotationMatrix[1][1] - rotationMatrix[2][2]) * 2;
+		_w = ((double)rotationMatrix[2][1] - (double)rotationMatrix[1][2]) / s;
+		_x = 0.25 * s;
+		_y = ((double)rotationMatrix[0][1] + (double)rotationMatrix[1][0]) / s;
+		_z = ((double)rotationMatrix[0][2] + (double)rotationMatrix[2][0]) / s;
+	}
+	else if (rotationMatrix[1][1] > rotationMatrix[2][2]) 
+	{
+		double s = sqrt(1.0 + rotationMatrix[1][1] - rotationMatrix[0][0] - rotationMatrix[2][2]) * 2;
+		_w = ((double)rotationMatrix[0][2] - (double)rotationMatrix[2][0]) / s;
+		_x = ((double)rotationMatrix[0][1] + (double)rotationMatrix[1][0]) / s;
+		_y = 0.25 * s;
+		_z = ((double)rotationMatrix[1][2] + (double)rotationMatrix[2][1]) / s;
+	}
+	else 
+	{
+		double s = sqrt(1.0 + rotationMatrix[2][2] - rotationMatrix[0][0] - rotationMatrix[2][2]) * 2;
+		_w = ((double)rotationMatrix[1][0] - (double)rotationMatrix[0][1]) / s;
+		_x = ((double)rotationMatrix[0][2] + (double)rotationMatrix[2][0]) / s;
+		_y = ((double)rotationMatrix[1][2] + (double)rotationMatrix[2][1]) / s;
+		_z = 0.25 * s;
+	}
+}
+
 
 
 
