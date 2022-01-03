@@ -3,7 +3,6 @@
 
 
 #include <string>
-#include <unordered_set>
 
 #include "engine/scene/ecsRegistry.h"
 

@@ -1,11 +1,7 @@
 #include "engine/renderer/renderer.h"
 
+#include "engine/math/AVTmathLib.h"
 #include "engine/math/transform.h"
-
-#include <GL/glew.h>
-
-
-
 
 
 

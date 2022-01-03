@@ -2,7 +2,10 @@
 #define __engine_math_quaternion__
 
 
+#include <cmath>
+
 #include "engine/utils/coords.h"
+
 
 class TransformMatrix;
 

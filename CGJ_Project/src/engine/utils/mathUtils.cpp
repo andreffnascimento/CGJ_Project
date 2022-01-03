@@ -17,4 +17,3 @@ float invSqrt(float number) {
 
 	return y;
 }
-

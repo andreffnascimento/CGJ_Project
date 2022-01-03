@@ -111,16 +111,16 @@ EventHandler& Application::getEventHandler()
 	return app._eventHandler;
 }
 
-Renderer& Application::getRenderer()
-{
-	Application& app = Application::getInstance();
-	return app._renderer;
-}
-
 PhysicsEngine& Application::getPhysicsEngine()
 {
 	Application& app = Application::getInstance();
 	return app._physicsEngine;
+}
+
+Renderer& Application::getRenderer()
+{
+	Application& app = Application::getInstance();
+	return app._renderer;
 }
 
 

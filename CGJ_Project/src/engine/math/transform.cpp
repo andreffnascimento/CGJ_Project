@@ -1,7 +1,5 @@
 #include "transform.h"
 
-#include "quaternion.h"
-
 typedef Transform::transform_func_coords_t transform_func_coords_t;
 typedef Transform::transform_func_quaternion_t transform_func_quaternion_t;
 

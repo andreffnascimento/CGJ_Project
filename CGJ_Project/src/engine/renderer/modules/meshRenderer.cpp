@@ -1,6 +1,8 @@
 #include "engine/renderer/renderer.h"
 
+#include "engine/math/AVTmathLib.h"
 #include "engine/math/transform.h"
+
 
 extern float mCompMatrix[COUNT_COMPUTED_MATRICES][16];
 extern float mNormal3x3[9];

@@ -2,6 +2,8 @@
 
 #include <unordered_map>
 
+#include "engine/scene/components.h"
+
 #include "engine/app/application.h"
 #include "engine/math/transform.h"
 #include "engine/physics/physicsEngine.h"

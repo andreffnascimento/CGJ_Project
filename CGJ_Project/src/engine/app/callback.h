@@ -6,7 +6,9 @@
 #include <sstream>
 
 #include "engine/app/application.h"
-#include "engine/math/AVTmathLib.h"
+#include "engine/app/eventHandler.h"
+
+#include "engine/scene/scene.h"
 
 #include <GL/freeglut.h>
 
@@ -50,7 +52,7 @@ void refresh(int value)
 	glutPostRedisplay();
 }
 
-#include <iostream>
+
 // Reshape callback Function
 void viewportResize(int width, int height)
 {

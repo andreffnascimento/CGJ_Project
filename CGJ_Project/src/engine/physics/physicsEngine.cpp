@@ -1,10 +1,9 @@
 #include "physicsEngine.h"
 
-#include <cmath>
+#include <algorithm>
 
 #include "engine/math/transform.h"
 #include "engine/scene/scene.h"
-#include "engine/utils/coords.h"
 
 
 

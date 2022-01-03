@@ -2,7 +2,8 @@
 #define __engine_math_transform__
 
 
-#include <unordered_set>
+#include "engine/math/quaternion.h"
+#include "engine/math/transformMatrix.h"
 
 #include "engine/scene/entity.h"
 #include "engine/scene/components.h"

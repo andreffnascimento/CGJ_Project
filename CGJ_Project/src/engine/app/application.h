@@ -5,8 +5,11 @@
 #include <string>
 
 #include "engine/app/eventHandler.h"
+
+#include "engine/physics/physicsEngine.h"
 #include "engine/renderer/renderer.h"
 #include "engine/scene/scene.h"
+#include "engine/utils/coords.h"
 
 
 
@@ -41,8 +44,8 @@ private:
 	float _ts = 0;
 
 	EventHandler _eventHandler = EventHandler();
-	Renderer _renderer = Renderer();
 	PhysicsEngine _physicsEngine = PhysicsEngine();
+	Renderer _renderer = Renderer();
 	Scene* _scene = nullptr;
 
 
@@ -50,7 +53,7 @@ private:
 
 private:
 	Application() = default;		// application is a singleton
-	Application(const Application& application) = delete;
+	Application(const Application& application) = default;
 
 
 public:
@@ -66,8 +69,8 @@ public:
 	static bool isRunning();
 	static Application& getInstance();
 	static EventHandler& getEventHandler();
-	static Renderer& getRenderer();
 	static PhysicsEngine& getPhysicsEngine();
+	static Renderer& getRenderer();
 
 
 public:

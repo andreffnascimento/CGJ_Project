@@ -2,13 +2,9 @@
 #define __engine_renderer_renderer__
 
 
-#include <unordered_map>
-
-#include "engine/renderer/geometry.h"
 #include "engine/renderer/vsShaderLib.h"
-#include "engine/renderer/VertexAttrDef.h"
-#include "engine/math/AVTmathLib.h"
-#include "engine/scene/ecsRegistry.h"
+
+#include "engine/scene/entity.h"
 #include "engine/scene/scene.h"
 #include "engine/scene/components.h"
 #include "engine/utils/coords.h"
@@ -63,10 +59,10 @@ private:
 
 
 private:
-	VSShaderLib _shader;		//geometry
-	VSShaderLib _shaderText;	//render bitmap text
+	VSShaderLib _shader;
+	VSShaderLib _shaderText;
 
-	int _uniformLocation[ShaderUniformType::N_UNIFORMS];	// uniform locations
+	int _uniformLocation[ShaderUniformType::N_UNIFORMS] = {};
 
 
 

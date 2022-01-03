@@ -1,6 +1,5 @@
 #include "components.h"
 
-#include "engine/scene/scene.h"
 #include "engine/app/application.h"
 #include "engine/physics/physicsEngine.h"
 

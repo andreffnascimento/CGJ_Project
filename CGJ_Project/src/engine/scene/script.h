@@ -2,6 +2,9 @@
 #define __engine_scene_script__
 
 
+class Scene;
+
+
 
 
 class Script

@@ -1,7 +1,8 @@
 #include "renderer.h"
 
 #include <iostream>
-#include <unordered_map>
+
+#include "engine/renderer/VertexAttrDef.h"
 
 #include "engine/text/avtFreeType.h"
 
