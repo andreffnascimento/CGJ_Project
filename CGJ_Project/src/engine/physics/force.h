@@ -1,5 +1,5 @@
-#ifndef __engine_math_force__
-#define __engine_math_force__
+#ifndef __engine_physics_force__
+#define __engine_physics_force__
 
 
 #include "engine/utils/coords.h"
@@ -41,4 +41,4 @@ public:
 };
 
 
-#endif // !__engine_math_force__
+#endif // !__engine_physics_force__

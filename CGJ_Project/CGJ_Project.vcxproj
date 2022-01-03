@@ -167,8 +167,8 @@
   <ItemGroup>
     <ClCompile Include="src\engine\app\application.cpp" />
     <ClCompile Include="src\engine\app\eventHandler.cpp" />
-    <ClCompile Include="src\engine\math\force.cpp" />
-    <ClCompile Include="src\engine\math\physicsEngine.cpp" />
+    <ClCompile Include="src\engine\physics\force.cpp" />
+    <ClCompile Include="src\engine\physics\physicsEngine.cpp" />
     <ClCompile Include="src\engine\math\quaternion.cpp" />
     <ClCompile Include="src\engine\math\transform.cpp" />
     <ClCompile Include="src\engine\math\transformMatrix.cpp" />
@@ -193,8 +193,8 @@
     <ClInclude Include="src\engine\app\application.h" />
     <ClInclude Include="src\engine\app\callback.h" />
     <ClInclude Include="src\engine\app\eventHandler.h" />
-    <ClInclude Include="src\engine\math\force.h" />
-    <ClInclude Include="src\engine\math\physicsEngine.h" />
+    <ClInclude Include="src\engine\physics\force.h" />
+    <ClInclude Include="src\engine\physics\physicsEngine.h" />
     <ClInclude Include="src\engine\math\quaternion.h" />
     <ClInclude Include="src\engine\math\transform.h" />
     <ClInclude Include="src\engine\math\transformMatrix.h" />

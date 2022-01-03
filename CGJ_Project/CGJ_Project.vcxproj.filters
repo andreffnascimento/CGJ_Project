@@ -22,8 +22,8 @@
     <ClCompile Include="src\engine\renderer\Texture_Loader.cpp" />
     <ClCompile Include="src\engine\renderer\vsShaderLib.cpp" />
     <ClCompile Include="src\MicroMachines3D\common\materials.h" />
-    <ClCompile Include="src\engine\math\physicsEngine.cpp" />
-    <ClCompile Include="src\engine\math\force.cpp" />
+    <ClCompile Include="src\engine\physics\physicsEngine.cpp" />
+    <ClCompile Include="src\engine\physics\force.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\app\application.h" />
@@ -61,9 +61,9 @@
     <ClInclude Include="src\engine\renderer\VertexAttrDef.h" />
     <ClInclude Include="src\engine\renderer\vsShaderLib.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\manager\game\globalLightScript.h" />
-    <ClInclude Include="src\engine\math\physicsEngine.h" />
+    <ClInclude Include="src\engine\physics\physicsEngine.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\car\carMovementScript.h" />
-    <ClInclude Include="src\engine\math\force.h" />
+    <ClInclude Include="src\engine\physics\force.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\cheeriosTrack.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\candels.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\candels\candelsLightScript.h" />

@@ -1,8 +1,8 @@
-#ifndef __engine_math_physicsEngine__
-#define __engine_math_physicsEngine__
+#ifndef __engine_physics_physicsEngine__
+#define __engine_physics_physicsEngine__
 
 
-#include "engine/math/force.h"
+#include "engine/physics/force.h"
 #include "engine/scene/entity.h"
 #include "engine/scene/components.h"
 
@@ -71,4 +71,4 @@ private:
 };
 
 
-#endif // !__engine_math_physicsEngine__
+#endif // !__engine_physics_physicsEngine__

@@ -79,7 +79,7 @@ constexpr Material CAR_HEADLIGHT_BACK_ON_MATERIAL = {
 constexpr Material CHEERIO_MATERIAL = {
 	{ 0.34f, 0.29f, 0.11f, 1.0f },
 	{ 0.80f, 0.56f, 0.00f, 1.0f },
-	{ 0.90f, 0.70f, 0.4f, 1.0f },
+	{ 0.90f, 0.56f, 0.30f, 1.0f },
 	{ 0.00f, 0.00f, 0.00f, 0.0f },
 	10.0f,
 	0

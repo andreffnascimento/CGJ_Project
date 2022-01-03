@@ -10,8 +10,8 @@
 
 #include "engine/scene/entity.h"
 #include "engine/scene/script.h"
-#include "engine/math/force.h"
 #include "engine/math/transformMatrix.h"
+#include "engine/physics/force.h"
 #include "engine/renderer/geometry.h"
 #include "engine/utils/coords.h"
 
