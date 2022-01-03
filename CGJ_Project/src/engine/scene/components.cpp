@@ -119,6 +119,9 @@ RigidbodyComponent::RigidbodyComponent(RigidbodyComponent::RigidbodyType type, f
 
 void RigidbodyComponent::setVelocity(const Coords3f& velocity)
 {
+	if (_type == RigidbodyComponent::RigidbodyType::STATIC)
+		throw std::string("Static object don't react to velocities!");
+
 	_velocity = velocity;
 	if (_velocity != Coords3f({ 0.0f, 0.0f, 0.0f }))
 		_sleeping = false;
@@ -127,6 +130,9 @@ void RigidbodyComponent::setVelocity(const Coords3f& velocity)
 
 void RigidbodyComponent::setAngularVelocity(const Coords3f& angularVelocity)
 {
+	if (_type == RigidbodyComponent::RigidbodyType::STATIC)
+		throw std::string("Static object don't react to velocities!");
+
 	_angularVelocity = angularVelocity;
 	if (_angularVelocity != Coords3f({ 0.0f, 0.0f, 0.0f }))
 		_sleeping = false;

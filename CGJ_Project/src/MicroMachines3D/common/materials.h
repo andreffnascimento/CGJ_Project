@@ -86,4 +86,26 @@ constexpr Material CHEERIO_MATERIAL = {
 };
 
 
+
+
+constexpr Material CANDEL_OFF_MATERIAL = {
+	{ 0.4f, 0.1f, 0.0f, 1.0f },
+	{ 0.8f, 0.2f, 0.1f, 1.0f },
+	{ 0.0f, 0.0f, 0.0f, 1.0f },
+	{ 0.0f, 0.0f, 0.0f, 0.0f },
+	100.0f,
+	0
+};
+
+
+constexpr Material CANDEL_ON_MATERIAL = {
+	{ 1.0f, 0.4f, 0.4f, 1.0f },
+	{ 1.0f, 0.4f, 0.4f, 1.0f },
+	{ 1.0f, 0.4f, 0.4f, 1.0f },
+	{ 0.0f, 0.0f, 0.0f, 0.0f },
+	100.0f,
+	0
+};
+
+
 #endif // !__mm3d_common_materials__

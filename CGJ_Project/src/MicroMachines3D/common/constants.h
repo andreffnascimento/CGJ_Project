@@ -28,12 +28,22 @@ constexpr int   WHEEL_SIDES = 20;
 
 
 
-constexpr float CHEERIO_INNER_RADIUS = 0.55f;
-constexpr float CHEERIO_OUTER_RADIUS = 1.0f;
+constexpr float CHEERIO_INNER_RADIUS = 0.3f;
+constexpr float CHEERIO_OUTER_RADIUS = 0.5f;
 constexpr int   CHEERIO_RINGS = 20;
 constexpr int   CHEERIO_SIDES = 20;
 
-constexpr Coords3f CHEERIO_SIZE = { 2.0f, 3.0f, 2.0f };
+constexpr Coords3f CHEERIO_SIZE = { 4.0f, 6.0f, 4.0f };
+
+
+
+
+constexpr float CANDEL_HEIGHT = 1.0f;
+constexpr float CANDEL_RADIUS = 0.5f;
+constexpr int   CANDEL_SIDES = 20;
+
+constexpr Coords3f CANDEL_SIZE = { 4.0f, 5.0f, 4.0f };
+constexpr Coords3f CANDEL_TOP_SIZE = { 0.4f, 1.0f, 0.4f };
 
 
 #endif // !__mm3d_common_constants__

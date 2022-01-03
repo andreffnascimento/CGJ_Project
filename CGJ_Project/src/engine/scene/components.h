@@ -5,7 +5,6 @@
 #include <string>
 #include <regex>
 #include <list>
-#include <bitset>
 #include <memory>
 #include <unordered_set>
 
@@ -253,16 +252,9 @@ public:
 struct RigidbodyComponent
 {
 public:
-	static constexpr unsigned char FREEZE_POSITION_X = 0b10000000;
-	static constexpr unsigned char FREEZE_POSITION_Y = 0b01000000;
-	static constexpr unsigned char FREEZE_POSITION_Z = 0b00100000;
-	static constexpr unsigned char FREEZE_ROTATION_X = 0b00010000;
-	static constexpr unsigned char FREEZE_ROTATION_Y = 0b00001000;
-	static constexpr unsigned char FREEZE_ROTATION_Z = 0b00000100;
-
-public:
 	enum class RigidbodyType
 	{
+		STATIC,
 		KINEMATIC,
 		DYNAMIC
 	};
@@ -273,7 +265,6 @@ private:
 	float _drag = 0.0f;
 	float _angularDrag = 0.0f;
 	float _dragThreshold = 1.0f;
-	std::bitset<8> _constraints = std::bitset<8>();
 
 	Coords3f _position = Coords3f();
 	Quaternion _rotation = Coords3f();
@@ -299,7 +290,6 @@ public:
 	inline const Coords3f& angularVelocity() const	{ return _angularVelocity; }
 
 	inline void setDragThreshold(float dragThreshold)						{ _dragThreshold = dragThreshold; }
-	inline void setRigidbodyConstraints(const std::bitset<8>& constraints)	{ _constraints = constraints; }
 	inline void setSleepThreshold(float sleepThreshold)						{ _sleepThreshold = sleepThreshold; }
 
 	inline void addRelativeForce(const Coords3f& value)		{ addRelativeForce(Force(Force::ForceType::LINEAR, value)); }

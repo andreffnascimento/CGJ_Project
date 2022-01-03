@@ -65,6 +65,8 @@
     <ClInclude Include="src\MicroMachines3D\scripts\car\carMovementScript.h" />
     <ClInclude Include="src\engine\math\force.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\cheeriosTrack.h" />
+    <ClInclude Include="src\MicroMachines3D\entities\world\candels.h" />
+    <ClInclude Include="src\MicroMachines3D\scripts\candels\candelsLightScript.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />

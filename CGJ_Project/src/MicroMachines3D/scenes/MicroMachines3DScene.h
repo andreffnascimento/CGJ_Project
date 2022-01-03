@@ -9,6 +9,7 @@
 #include "MicroMachines3D/entities/world/table.h"
 #include "MicroMachines3D/entities/world/car.h"
 #include "MicroMachines3D/entities/world/cheeriosTrack.h"
+#include "MicroMachines3D/entities/world/candels.h"
 
 
 
@@ -38,6 +39,8 @@ private:
 		Transform::rotate(car, { 0.0f, 90.0f, 0.0f });
 
 		CheeriosTrack cheeriosTrack = CheeriosTrack(this);
+
+		Candels candels = Candels(this);
 	}
 };
 
