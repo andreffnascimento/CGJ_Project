@@ -102,38 +102,62 @@ void PhysicsEngine::initialize(const Scene& scene) const
 
 void PhysicsEngine::simulate(const Scene& scene, float ts) const
 {
-	std::unordered_map<EntityHandle, RigidbodyComponent>& _rigidbodyComponents = scene.getSceneComponents<RigidbodyComponent>();
-	std::unordered_map<EntityHandle, AABBColliderComponent>& _colliderComponents = scene.getSceneComponents<AABBColliderComponent>();
+	_simulateRigidbodyMovement(scene, ts);
+	_updateColliderBoundingBoxes(scene);
+	_simulateCollisions(scene, ts);
+	_updateRigidbodyTransform(scene);
+}
 
-	for (auto& iterator : _rigidbodyComponents)
+
+
+
+void PhysicsEngine::_simulateRigidbodyMovement(const Scene& scene, float ts) const
+{
+	std::unordered_map<EntityHandle, RigidbodyComponent>& rigidbodyComponents = scene.getSceneComponents<RigidbodyComponent>();
+	for (auto& rigidbodyIterator : rigidbodyComponents)
 	{
-		RigidbodyComponent& rigidbody = iterator.second;
+		RigidbodyComponent& rigidbody = rigidbodyIterator.second;
 		if (!rigidbody._sleeping)
 			_processRigidbodyMovement(scene, rigidbody, ts);
 	}
+}
 
-	for (auto& iterator : _colliderComponents)
+
+void PhysicsEngine::_updateColliderBoundingBoxes(const Scene& scene) const
+{
+	std::unordered_map<EntityHandle, AABBColliderComponent>& colliderComponents = scene.getSceneComponents<AABBColliderComponent>();
+	for (auto& colliderIterator : colliderComponents)
 	{
-		AABBColliderComponent& collider = iterator.second;
+		AABBColliderComponent& collider = colliderIterator.second;
 		if (!collider._rigidbody->_sleeping && !collider._fixedBoundingBox)
 			PhysicsEngine::rotateBoundingBox(collider, collider._rigidbody->_rotation);
 	}
+}
 
+
+void PhysicsEngine::_simulateCollisions(const Scene& scene, float ts) const
+{
+	std::unordered_map<EntityHandle, AABBColliderComponent>& colliderComponents = scene.getSceneComponents<AABBColliderComponent>();
 	for (unsigned int i = 0; i < _collisionIterations; i++)
 	{
-		for (auto& iterator : _colliderComponents)
+		for (auto& colliderIterator : colliderComponents)
 		{
-			EntityHandle entityId = iterator.first;
-			AABBColliderComponent& collider = iterator.second;
+			EntityHandle entityId = colliderIterator.first;
+			AABBColliderComponent& collider = colliderIterator.second;
 			if (!collider._rigidbody->_sleeping)
 				_detectRigidbodyCollisions(scene, entityId, collider, ts);
 		}
 	}
+}
 
-	for (auto& iterator : _rigidbodyComponents)
+
+void PhysicsEngine::_updateRigidbodyTransform(const Scene& scene) const
+{
+	std::unordered_map<EntityHandle, RigidbodyComponent>& rigidbodyComponents = scene.getSceneComponents<RigidbodyComponent>();
+	for (auto& rigidbodyIterator : rigidbodyComponents)
 	{
-		EntityHandle entityId = iterator.first;
-		RigidbodyComponent& rigidbody = iterator.second;
+		EntityHandle entityId = rigidbodyIterator.first;
+		RigidbodyComponent& rigidbody = rigidbodyIterator.second;
 		if (!rigidbody._sleeping)
 		{
 			Entity entity = scene.getEntityById(entityId);

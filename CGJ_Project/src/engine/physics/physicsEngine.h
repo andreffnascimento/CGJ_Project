@@ -55,6 +55,13 @@ public:
 
 
 private:
+	void _simulateRigidbodyMovement(const Scene& scene, float ts) const;
+	void _updateColliderBoundingBoxes(const Scene& scene) const;
+	void _simulateCollisions(const Scene& scene, float ts) const;
+	void _updateRigidbodyTransform(const Scene& scene) const;
+
+
+private:
 	void _processRigidbodyMovement(const Scene& scene, RigidbodyComponent& rigidbody, float ts) const;
 	void _detectRigidbodyCollisions(const Scene& scene, EntityHandle entityId, AABBColliderComponent& collider, float ts) const;
 
