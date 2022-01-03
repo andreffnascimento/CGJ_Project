@@ -24,6 +24,8 @@
     <ClCompile Include="src\MicroMachines3D\common\materials.h" />
     <ClCompile Include="src\engine\physics\physicsEngine.cpp" />
     <ClCompile Include="src\engine\physics\force.cpp" />
+    <ClCompile Include="src\engine\physics\collision.h" />
+    <ClCompile Include="src\engine\physics\collisionResolver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\app\application.h" />
@@ -67,6 +69,7 @@
     <ClInclude Include="src\MicroMachines3D\entities\world\cheeriosTrack.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\candels.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\candels\candelsLightScript.h" />
+    <ClInclude Include="src\engine\physics\collisionResolver.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />

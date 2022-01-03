@@ -18,6 +18,7 @@
 
 
 class Scene;
+class CollisionResolver;
 
 
 
@@ -173,7 +174,7 @@ public:
 struct MeshComponent
 {
 private:
-	std::shared_ptr<MyMesh> _mesh;
+	std::shared_ptr<MyMesh> _mesh = nullptr;
 	bool _enabled = true;
 
 public:
@@ -255,7 +256,6 @@ struct RigidbodyComponent
 public:
 	enum class RigidbodyType
 	{
-		STATIC,
 		KINEMATIC,
 		DYNAMIC
 	};
@@ -315,11 +315,10 @@ private:
 	Coords3f _initialSize = Coords3f();
 	Coords3f _boundingBox = Coords3f();
 	bool _fixedBoundingBox = false;
-	bool _collided = false;
-
 	float _restitutionCocoefficient = 1.0f;
 
 	RigidbodyComponent* _rigidbody = nullptr;
+	std::shared_ptr<CollisionResolver> _collisionResolver = nullptr;
 
 public:
 	AABBColliderComponent() = delete;
@@ -328,7 +327,6 @@ public:
 	~AABBColliderComponent() = default;
 
 	inline const Coords3f& boundingBox() const	{ return _boundingBox; }
-	inline bool collided() const				{ return _collided; }
 
 	inline void setInitialSize(const Coords3f& initialSize)					{ _initialSize = initialSize / 2.0f; }
 	inline void setFixedBoundingBox(bool fixedBoundingBox)					{ _fixedBoundingBox = fixedBoundingBox; }
