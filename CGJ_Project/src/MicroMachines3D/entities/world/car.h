@@ -105,8 +105,8 @@ private:
 		std::shared_ptr<MyMesh> backMesh = std::make_shared<MyMesh>(createCube());
 		MeshComponent::setMaterial(*backMesh, CAR_HEADLIGHT_BACK_OFF_MATERIAL);
 
-		_addCarHeadlightLamp(_initCarHeadlight(scene, group, frontMesh, 1.0f, 1.0f, "frontLeft"));
-		_addCarHeadlightLamp(_initCarHeadlight(scene, group, frontMesh, -1.0f, 1.0f, "frontRight"));
+		_addCarHeadlightLamp(_initCarHeadlight(scene, group, frontMesh, 1.0f, 1.0f, "frontLeft"), -1.0f);
+		_addCarHeadlightLamp(_initCarHeadlight(scene, group, frontMesh, -1.0f, 1.0f, "frontRight"), 1.0f);
 
 		_initCarHeadlight(scene, group, backMesh,   1.0f, -1.0f, "backLeft");
 		_initCarHeadlight(scene, group, backMesh,  -1.0f, -1.0f, "backRight");
@@ -126,11 +126,12 @@ private:
 		return headlight;
 	}
 
-	void _addCarHeadlightLamp(Entity headlight)
+	void _addCarHeadlightLamp(Entity headlight, float yMod)
 	{
-		Transform::scale(headlight, Coords3f({ 1.0f, 1.0f, 1.2f }));
-		Transform::rotate(headlight, Coords3f({ 20.0f, 0.0f, 0.0f }));
-		LightComponent& lightComponent = headlight.addComponent<LightComponent>(LightComponent::LightType::SPOT, 10.0f, 0.8f);
+		Transform::translate(headlight, Coords3f({ 0.0f, 0.0f, -0.05f }));
+		Transform::scale(headlight, Coords3f({ 1.0f, 1.0f, 1.3f }));
+		Transform::rotate(headlight, Coords3f({ 20.0f, 10.0f * yMod, 0.0f }));
+		LightComponent& lightComponent = headlight.addComponent<LightComponent>(LightComponent::LightType::SPOT, 20.0f, 0.7f);
 		lightComponent.setEnabled(false);
 	}
 };
