@@ -21,7 +21,7 @@ void CollisionResolver::addCollision(const AABBColliderComponent& otherCollider,
 void CollisionResolver::processCollisions(const AABBColliderComponent& collider)
 {
 	for (const auto& collision : _collisions)
-		if (collider.rigidbody()->type() != RigidbodyComponent::RigidbodyType::STATIC)
+		if (collider.rigidbody().type() != RigidbodyComponent::RigidbodyType::STATIC)
 			_processCollision(collider, collision);
 }
 
