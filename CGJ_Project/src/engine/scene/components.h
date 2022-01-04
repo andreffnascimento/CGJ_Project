@@ -121,7 +121,7 @@ private:
 	Entity _parent = Entity();
 
 public:
-	ParentComponent() = default;
+	ParentComponent() = delete;
 	ParentComponent(const ParentComponent&) = default;
 	ParentComponent(const Entity& parent) : _parent(parent) {}
 	~ParentComponent() = default;
@@ -152,8 +152,9 @@ private:
 	float _fov = 60.0f;
 
 public:
-	CameraComponent() = default;
+	CameraComponent() = delete;
 	CameraComponent(const CameraComponent&) = default;
+	CameraComponent(const CameraComponent::CameraProjection& cameraProjection, const ClippingPlanes& clippingPlanes, float viewSize);
 	~CameraComponent() = default;
 	
 	inline const CameraProjection& cameraProjection() const { return _cameraProjection; }
@@ -164,8 +165,12 @@ public:
 
 	inline void setTargetCoords(const Coords3f& targetCoords) { _targetCoords = targetCoords; }
 
-	void setOrthographicCamera(const ClippingPlanes& clippingPlanes, float viewportSize);
-	void setPerspectiveCamera(const ClippingPlanes& clippingPlanes, float fov);
+private:
+	void _setOrthographicCamera(float viewportSize);
+	void _setPerspectiveCamera(float fov);
+
+public:
+	friend class Renderer;
 };
 
 
@@ -178,7 +183,7 @@ private:
 	bool _enabled = true;
 
 public:
-	MeshComponent() = default;
+	MeshComponent() = delete;
 	MeshComponent(const MeshComponent&) = default;
 	MeshComponent(const std::shared_ptr<MyMesh>& mesh) : _mesh(mesh) {}
 	MeshComponent(const std::shared_ptr<MyMesh>& mesh, const Material& material) : _mesh(mesh) { setMaterial(material); }
@@ -235,9 +240,10 @@ private:
 	bool _enabled = true;
 
 public:
-	LightComponent() = default;
-	LightComponent(LightComponent::LightType lightType, float intensity, float cutOff);
+	LightComponent() = delete;
 	LightComponent(const LightComponent&) = default;
+	LightComponent(LightComponent::LightType lightType, float intensity);
+	LightComponent(LightComponent::LightType lightType, float intensity, float cutOff);
 	~LightComponent() = default;
 
 	inline const LightType& lightType() const { return _lightType; }
@@ -279,8 +285,9 @@ private:
 	std::list<Force> _forces = std::list<Force>();
 
 public:
-	RigidbodyComponent() = default;
+	RigidbodyComponent() = delete;
 	RigidbodyComponent(const RigidbodyComponent&) = default;
+	RigidbodyComponent(RigidbodyComponent::RigidbodyType type);
 	RigidbodyComponent(RigidbodyComponent::RigidbodyType type, float mass, float drag, float angularDrag);
 	~RigidbodyComponent() = default;
 
@@ -326,7 +333,7 @@ private:
 public:
 	AABBColliderComponent() = delete;
 	AABBColliderComponent(const AABBColliderComponent&) = default;
-	AABBColliderComponent(const Coords3f& initialSize) : _initialSize(initialSize / 2.0f) {};
+	AABBColliderComponent(RigidbodyComponent& rigidbody, const Coords3f& initialSize);
 	~AABBColliderComponent();
 
 	inline const Coords3f& boundingBox() const			{ return _boundingBox; }

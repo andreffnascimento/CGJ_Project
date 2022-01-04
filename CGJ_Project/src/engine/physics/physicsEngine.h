@@ -50,6 +50,13 @@ public:
 	void simulate(const Scene& scene, float ts) const;
 
 
+
+
+private:
+	void _initializeRigidbodies(const Scene& scene) const;
+	void _initializeColliders(const Scene& scene) const;
+
+
 private:
 	void _simulateRigidbodyMovement(const Scene& scene, float ts) const;
 	void _resetCollider(const Scene& scene) const;

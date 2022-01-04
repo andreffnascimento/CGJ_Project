@@ -42,9 +42,9 @@ private:
 		cheerio.addComponent<MeshComponent>(mesh);
 
 		RigidbodyComponent& rigidbody = cheerio.addComponent<RigidbodyComponent>(rigidbodyType, mass, drag, angularDrag);
-		AABBColliderComponent& collider = cheerio.addComponent<AABBColliderComponent>(CHEERIO_SIZE);
+		AABBColliderComponent& collider = cheerio.addComponent<AABBColliderComponent>(rigidbody, CHEERIO_SIZE);
 		collider.setFixedBoundingBox(true);
-		collider.setRestitutionCocoefficient(0.2f);
+		collider.setRestitutionCocoefficient(0.1f);
 
 		Transform::scaleTo(cheerio, CHEERIO_SIZE);
 		Transform::translate(cheerio, { xPos, CHEERIO_SIZE.y / 5.0f, yPos });

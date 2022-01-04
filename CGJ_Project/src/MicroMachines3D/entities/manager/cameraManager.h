@@ -31,8 +31,7 @@ public:
 private:
 	Entity _createCamera1(Entity entity)
 	{
-		CameraComponent& camera = entity.addComponent<CameraComponent>();
-		camera.setOrthographicCamera({ 0.01f, 1000.0f }, 80.0f);
+		CameraComponent& camera = entity.addComponent<CameraComponent>(CameraComponent::CameraProjection::ORTHOGRAPHIC, ClippingPlanes({ 0.01f, 1000.0f }), 80.0f);
 		camera.setTargetCoords({ 0.0f, 0.0f, 0.0f });
 		Transform::translateTo(entity, { 0.0f, 30.0f, 0.0f });
 		return entity;
@@ -41,8 +40,7 @@ private:
 
 	Entity _createCamera2(Entity entity)
 	{
-		CameraComponent& camera = entity.addComponent<CameraComponent>();
-		camera.setPerspectiveCamera({ 0.01f, 1000.0f }, 53.13f);
+		CameraComponent& camera = entity.addComponent<CameraComponent>(CameraComponent::CameraProjection::PERSPECTIVE, ClippingPlanes({ 0.01f, 1000.0f }), 53.13f);
 		camera.setTargetCoords({ 0.0f, 0.0f, 0.0f });
 		Transform::translateTo(entity, { 0.0f, 120.0f, 0.0f });
 		return entity;
@@ -51,12 +49,9 @@ private:
 
 	Entity _createCamera3(Entity entity, Scene* scene)
 	{
-		CameraComponent& camera = entity.addComponent<CameraComponent>();
-		camera.setPerspectiveCamera({ 0.01f, 1000.0f }, 70.0f);
-
+		CameraComponent& camera = entity.addComponent<CameraComponent>(CameraComponent::CameraProjection::PERSPECTIVE, ClippingPlanes({ 0.01f, 1000.0f }), 70.0f);
 		std::shared_ptr<Script> script = std::make_shared<TargetOrbitalCameraScript>(scene);
 		ScriptComponent& scriptComponent = entity.addComponent<ScriptComponent>(script);
-
 		return entity;
 	}
 };

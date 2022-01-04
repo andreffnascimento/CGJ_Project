@@ -35,7 +35,7 @@ void Renderer::renderCamera(const Scene& scene) const
 
 void Renderer::_setOrthographicViewport(CameraComponent& camera, int width, int height) const
 {
-	camera.setOrthographicCamera(camera.clippingPlanes(), camera.viewportRect().right);
+	camera._setOrthographicCamera(camera.viewportRect().right);
 
 	float left = camera.viewportRect().left;
 	float right = camera.viewportRect().right;

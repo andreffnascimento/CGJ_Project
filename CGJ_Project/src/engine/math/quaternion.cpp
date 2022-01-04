@@ -120,7 +120,6 @@ Coords3f Quaternion::toEulerAngles() const
 
 
 
-
 Quaternion& Quaternion::rotate(const Coords3f& eulerAngles)
 {
 	Coords3f quaternionEulerAngles = toEulerAngles();

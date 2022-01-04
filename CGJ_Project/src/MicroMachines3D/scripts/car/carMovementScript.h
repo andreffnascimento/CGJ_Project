@@ -17,7 +17,7 @@ public:
 	static constexpr float MAX_FORWARD_FORCE = 10000.0f;
 	static constexpr float MIN_BACKWARDS_FORCE = -2000.0f;
 	static constexpr float MAX_BACKWARDS_FORCE = -4000.0f;
-	static constexpr float STEERING_VELOCITY_MODIFIER = 10.0f;
+	static constexpr float STEERING_FORCE = 40000.0f;
 
 
 
@@ -55,7 +55,7 @@ public:
 		_calculateBackwardsForce(ts);
 
 		float travelForce = _forwardForce + _backwardsForce;
-		float steeringForce = _calculateSteeringForce();
+		float steeringForce = _calculateSteeringForce(ts);
 
 		_rigidbody->addRelativeForce({ 0.0f, 0.0f, travelForce });
 		_rigidbody->addAngularForce({ 0.0f, steeringForce, 0.0f });
@@ -97,15 +97,16 @@ private:
 		_backwardsForce = std::max(_backwardsForce, CarMovementScript::MAX_BACKWARDS_FORCE);
 	}
 
-	float _calculateSteeringForce()
+	float _calculateSteeringForce(float ts)
 	{
+		float steeringForce = 0.0f;
 		if (_eventHandler->keyState('O').down() || _eventHandler->keyState('o').down())
-			return CarMovementScript::STEERING_VELOCITY_MODIFIER * _rigidbody->velocity().length();
+			steeringForce += CarMovementScript::STEERING_FORCE * _rigidbody->velocity().length();
 
 		if (_eventHandler->keyState('P').down() || _eventHandler->keyState('p').down())
-			return -CarMovementScript::STEERING_VELOCITY_MODIFIER * _rigidbody->velocity().length();
+			steeringForce -= CarMovementScript::STEERING_FORCE * _rigidbody->velocity().length();
 
-		return 0.0f;
+		return steeringForce;
 	}
 
 };

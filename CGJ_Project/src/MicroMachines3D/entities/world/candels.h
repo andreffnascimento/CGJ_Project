@@ -51,8 +51,8 @@ private:
 		Entity candel = group.addNewEntity(scene, *this, candelId);
 		candel.addComponent<MeshComponent>(mesh);
 
-		RigidbodyComponent rigidbody = candel.addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::STATIC, 10000.0f, 0.0f, 0.0f);
-		AABBColliderComponent& collider = candel.addComponent<AABBColliderComponent>(CANDEL_SIZE);
+		RigidbodyComponent& rigidbody = candel.addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::STATIC);
+		AABBColliderComponent& collider = candel.addComponent<AABBColliderComponent>(rigidbody, CANDEL_SIZE);
 		collider.setFixedBoundingBox(true);
 
 		float xPos = (TABLE_SIZE.x - CANDEL_SIZE.x) * xMod / 2.0f;
@@ -69,7 +69,7 @@ private:
 		Entity candel = group.addNewEntity(scene, *this, candelId);
 		candel.addComponent<MeshComponent>(mesh);
 
-		LightComponent& light = candel.addComponent<LightComponent>(LightComponent::LightType::POINT, 30.0f, 0.0f);
+		LightComponent& light = candel.addComponent<LightComponent>(LightComponent::LightType::POINT, 30.0f);
 		light.setEnabled(false);
 
 		float xPos = (TABLE_SIZE.x - CANDEL_SIZE.x) * xMod / 2.0f;

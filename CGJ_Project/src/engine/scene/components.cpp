@@ -41,22 +41,28 @@ void GroupComponent::expandGroup(std::unordered_set<Entity>& outExpandedGroup) c
 
 
 
-void CameraComponent::setOrthographicCamera(const ClippingPlanes& clippingPlanes, float viewportSize)
+CameraComponent::CameraComponent(const CameraComponent::CameraProjection& cameraProjection, const ClippingPlanes& clippingPlanes, float viewSize)
+	: _cameraProjection(cameraProjection), _clippingPlanes(clippingPlanes)
+{
+	if (_cameraProjection == CameraComponent::CameraProjection::ORTHOGRAPHIC)
+		_setOrthographicCamera(viewSize);
+	else
+		_setPerspectiveCamera(viewSize);
+}
+
+
+void CameraComponent::_setOrthographicCamera(float viewportSize)
 {
 	Application& app = Application::getInstance();
 	WindowCoords windowCoords = app.getWindowSize();
 	float ratio = (float)windowCoords.y / (float)windowCoords.x;
 
-	_cameraProjection = CameraProjection::ORTHOGRAPHIC;
-	_clippingPlanes = clippingPlanes;
 	_viewportRect = { -viewportSize, viewportSize, -viewportSize * ratio, viewportSize * ratio };
 }
 
 
-void CameraComponent::setPerspectiveCamera(const ClippingPlanes& clippingPlanes, float fov)
+void CameraComponent::_setPerspectiveCamera(float fov)
 {
-	_cameraProjection = CameraProjection::PERSPECTIVE;
-	_clippingPlanes = clippingPlanes;
 	_fov = fov;
 }
 
@@ -92,6 +98,13 @@ void ScriptComponent::onUpdate(float ts) const
 
 
 
+LightComponent::LightComponent(LightComponent::LightType lightType, float intensity)
+	: _lightType(lightType), _intensity(intensity)
+{
+	if (_intensity < 0.0f)
+		throw std::string("The light intensity must be a value greater than 0!");
+}
+
 LightComponent::LightComponent(LightComponent::LightType lightType, float intensity, float cutOff)
 	: _lightType(lightType), _intensity(intensity), _cutOff(cutOff)
 {
@@ -104,6 +117,13 @@ LightComponent::LightComponent(LightComponent::LightType lightType, float intens
 
 
 
+
+RigidbodyComponent::RigidbodyComponent(RigidbodyComponent::RigidbodyType type)
+	: _type(type)
+{
+	if (_type == RigidbodyComponent::RigidbodyType::STATIC)
+		_mass = std::numeric_limits<float>::max();
+}
 
 RigidbodyComponent::RigidbodyComponent(RigidbodyComponent::RigidbodyType type, float mass, float drag, float angularDrag)
 	: _type(type), _mass(mass), _drag(drag), _angularDrag(angularDrag)
@@ -168,6 +188,13 @@ void RigidbodyComponent::addRelativeForce(const Force& force)
 }
 
 
+
+
+AABBColliderComponent::AABBColliderComponent(RigidbodyComponent& rigidbody, const Coords3f& initialSize)
+	: _rigidbody(&rigidbody), _initialSize(initialSize / 2.0f)
+{
+	// empty
+}
 
 
 AABBColliderComponent::~AABBColliderComponent()
