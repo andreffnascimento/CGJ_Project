@@ -1,5 +1,7 @@
 #include "engine/renderer/renderer.h"
 
+#include "engine/renderer/geometry.h"
+
 #include "engine/math/AVTmathLib.h"
 #include "engine/math/transform.h"
 
@@ -13,10 +15,10 @@ extern float mNormal3x3[9];
 void Renderer::renderMeshes(const Scene& scene) const
 {
 	const auto& meshComponents = scene.getSceneComponents<MeshComponent>();
-	for (const auto& iterator : meshComponents)
+	for (const auto& meshIterator : meshComponents)
 	{
-		EntityHandle entityId = iterator.first;
-		const MeshComponent& mesh = iterator.second;
+		EntityHandle entityId = meshIterator.first;
+		const MeshComponent& mesh = meshIterator.second;
 		if (!mesh.enabled())
 			continue;
 

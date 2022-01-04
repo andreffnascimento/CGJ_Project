@@ -26,6 +26,7 @@
     <ClCompile Include="src\engine\physics\force.cpp" />
     <ClCompile Include="src\engine\physics\collision.h" />
     <ClCompile Include="src\engine\physics\collisionResolver.cpp" />
+    <ClCompile Include="src\engine\renderer\modules\colliderRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\app\application.h" />

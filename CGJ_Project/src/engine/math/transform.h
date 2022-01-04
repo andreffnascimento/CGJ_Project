@@ -23,25 +23,41 @@ public:
 
 
 public:
-	static void translateTo(const Entity& entity, const Coords3f& newTranslation);
-	static void rotateTo(const Entity& entity, const Coords3f& newRotation);
-	static void rotateTo(const Entity& entity, const Quaternion& newRotation);
-	static void scaleTo(const Entity& entity, const Coords3f& newScale);
+	static inline void translateTo(const Entity& entity, const Coords3f& newTranslation)	{ _localUpdate(entity, newTranslation, Transform::_translateTo); }
+	static inline void rotateTo(const Entity& entity, const Coords3f& newRotation)			{ _localUpdate(entity, newRotation, Transform::_rotateTo); }
+	static inline void rotateTo(const Entity& entity, const Quaternion& newRotation)		{ _localUpdate(entity, newRotation, Transform::_rotateTo); }
+	static inline void scaleTo(const Entity& entity, const Coords3f& newScale)				{ _localUpdate(entity, newScale, Transform::_scaleTo); }
+		    
+	static inline void translate(const Entity& entity, const Coords3f& translation)			{ _localUpdate(entity, translation, Transform::_translate); }
+	static inline void rotate(const Entity& entity, const Coords3f& rotation)				{ _localUpdate(entity, rotation, Transform::_rotate); }
+	static inline void rotate(const Entity& entity, const Quaternion& rotation)				{ _localUpdate(entity, rotation, Transform::_rotate); }
+	static inline void scale(const Entity& entity, const Coords3f& scale)					{ _localUpdate(entity, scale, Transform::_scale); }
 
-	static void translate(const Entity& entity, const Coords3f& translation);
-	static void rotate(const Entity& entity, const Coords3f& rotation);
-	static void rotate(const Entity& entity, const Quaternion& rotation);
-	static void scale(const Entity& entity, const Coords3f& scale);
+
+public:
+	static inline void translateTo(TransformComponent& transform, const Coords3f& newTranslation)	{ _localUpdate(transform, newTranslation, Transform::_translateTo); }
+	static inline void rotateTo(TransformComponent& transform, const Coords3f& newRotation)			{ _localUpdate(transform, newRotation, Transform::_rotateTo); }
+	static inline void rotateTo(TransformComponent& transform, const Quaternion& newRotation)		{ _localUpdate(transform, newRotation, Transform::_rotateTo); }
+	static inline void scaleTo(TransformComponent& transform, const Coords3f& newScale)				{ _localUpdate(transform, newScale, Transform::_scaleTo); }
+
+	static inline void translate(TransformComponent& transform, const Coords3f& translation)		{ _localUpdate(transform, translation, Transform::_translate); }
+	static inline void rotate(TransformComponent& transform, const Coords3f& rotation)				{ _localUpdate(transform, rotation, Transform::_rotate); }
+	static inline void rotate(TransformComponent& transform, const Quaternion& rotation)			{ _localUpdate(transform, rotation, Transform::_rotate); }
+	static inline void scale(TransformComponent& transform, const Coords3f& scale)					{ _localUpdate(transform, scale, Transform::_scale); }
 
 
 public:
 	static const TransformMatrix& calculateTransformMatrix(const Entity& entity);
+	static const TransformMatrix& calculateTransformMatrix(TransformComponent& transform);	// only considers local transformations
 	static void decomposeTransformMatrix(const Entity& entity, Coords3f& outTranslation, Quaternion& outRotation, Coords3f& outScale);
+	static void decomposeTransformMatrix(const TransformComponent& transform, Coords3f& outTranslation, Quaternion& outRotation, Coords3f& outScale);
 
 
 private:
 	static void _localUpdate(const Entity& entity, const Coords3f& transform, transform_func_coords_t transformFunc);
 	static void _localUpdate(const Entity& entity, const Quaternion& transform, transform_func_quaternion_t transformFunc);
+	static void _localUpdate(TransformComponent& transformComponent, const Coords3f& transform, transform_func_coords_t transformFunc);
+	static void _localUpdate(TransformComponent& transformComponent, const Quaternion& transform, transform_func_quaternion_t transformFunc);
 	static void _groupUpdate(const Entity& entity);
 
 

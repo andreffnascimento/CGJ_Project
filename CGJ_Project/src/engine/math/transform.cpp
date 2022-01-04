@@ -6,50 +6,6 @@ typedef Transform::transform_func_quaternion_t transform_func_quaternion_t;
 
 
 
-void Transform::translateTo(const Entity& entity, const Coords3f& newTranslation)
-{
-	_localUpdate(entity, newTranslation, Transform::_translateTo);
-}
-
-void Transform::rotateTo(const Entity& entity, const Coords3f& newRotation)
-{
-	_localUpdate(entity, newRotation, Transform::_rotateTo);
-}
-
-void Transform::rotateTo(const Entity& entity, const Quaternion& newRotation)
-{
-	_localUpdate(entity, newRotation, Transform::_rotateTo);
-}
-
-void Transform::scaleTo(const Entity& entity, const Coords3f& newScale)
-{
-	_localUpdate(entity, newScale, Transform::_scaleTo);
-}
-
-
-void Transform::translate(const Entity& entity, const Coords3f& translation)
-{
-	_localUpdate(entity, translation, Transform::_translate);
-}
-
-void Transform::rotate(const Entity& entity, const Coords3f& rotation)
-{
-	_localUpdate(entity, rotation, Transform::_rotate);
-}
-
-void Transform::rotate(const Entity& entity, const Quaternion& rotation)
-{
-	_localUpdate(entity, rotation, Transform::_rotate);
-}
-
-void Transform::scale(const Entity& entity, const Coords3f& scale)
-{
-	_localUpdate(entity, scale, Transform::_scale);
-}
-
-
-
-
 const TransformMatrix& Transform::calculateTransformMatrix(const Entity& entity)
 {
 	TransformComponent& transform = entity.transform();
@@ -57,7 +13,10 @@ const TransformMatrix& Transform::calculateTransformMatrix(const Entity& entity)
 		return transform._worldTransform;
 
 	if (!transform._locallyUpdated)
+	{
 		transform._localTransform.calculateTransformMatrix(transform.translation(), transform.rotation(), transform.scale());
+		transform._locallyUpdated = true;
+	}
 
 	ParentComponent* parent = entity.getComponentIfExists<ParentComponent>();
 	if (parent != nullptr)
@@ -70,13 +29,29 @@ const TransformMatrix& Transform::calculateTransformMatrix(const Entity& entity)
 		transform._worldTransform = transform._localTransform;
 	}
 
+	transform._globallyUpdated = true;
 	return transform._worldTransform;
+}
+
+const TransformMatrix& Transform::calculateTransformMatrix(TransformComponent& transform)
+{
+	if (transform._locallyUpdated)
+		return transform._localTransform;
+
+	transform._localTransform.calculateTransformMatrix(transform.translation(), transform.rotation(), transform.scale());
+	transform._locallyUpdated = true;
+	return transform._localTransform;
 }
 
 
 void Transform::decomposeTransformMatrix(const Entity& entity, Coords3f& outTranslation, Quaternion& outRotation, Coords3f& outScale)
 {
-	TransformMatrix transformMatrix = entity.transform().transformMatrix();
+	return decomposeTransformMatrix(entity.transform(), outTranslation, outRotation, outScale);
+}
+
+void Transform::decomposeTransformMatrix(const TransformComponent& transform, Coords3f& outTranslation, Quaternion& outRotation, Coords3f& outScale)
+{
+	TransformMatrix transformMatrix = transform.transformMatrix();
 	transformMatrix.transpose();
 
 	// extract translation vector
@@ -87,7 +62,7 @@ void Transform::decomposeTransformMatrix(const Entity& entity, Coords3f& outTran
 	outScale.x = Coords3f({ transformMatrix[0][0], transformMatrix[1][0], transformMatrix[2][0] }).length();
 	outScale.y = Coords3f({ transformMatrix[0][1], transformMatrix[1][1], transformMatrix[2][1] }).length();
 	outScale.z = Coords3f({ transformMatrix[0][2], transformMatrix[1][2], transformMatrix[2][2] }).length();
-	
+
 	// extract the rotation vector
 	transformMatrix[0][0] /= outScale.x;	transformMatrix[0][1] /= outScale.y;	transformMatrix[0][2] /= outScale.z;
 	transformMatrix[1][0] /= outScale.x;	transformMatrix[1][1] /= outScale.y;	transformMatrix[1][2] /= outScale.z;
@@ -101,18 +76,29 @@ void Transform::decomposeTransformMatrix(const Entity& entity, Coords3f& outTran
 void Transform::_localUpdate(const Entity& entity, const Coords3f& transform, transform_func_coords_t transformFunc)
 {
 	TransformComponent& transformComponent = entity.transform();
-	transformComponent._locallyUpdated = false;
-	transformFunc(transformComponent, transform);
+	_localUpdate(transformComponent, transform, transformFunc);
 	_groupUpdate(entity);	
 }
 
 void Transform::_localUpdate(const Entity& entity, const Quaternion& transform, transform_func_quaternion_t transformFunc)
 {
 	TransformComponent& transformComponent = entity.transform();
-	transformComponent._locallyUpdated = false;
-	transformFunc(transformComponent, transform);
+	_localUpdate(transformComponent, transform, transformFunc);
 	_groupUpdate(entity);
 }
+
+void Transform::_localUpdate(TransformComponent& transformComponent, const Coords3f& transform, transform_func_coords_t transformFunc)
+{
+	transformComponent._locallyUpdated = false;
+	transformFunc(transformComponent, transform);
+}
+
+void Transform::_localUpdate(TransformComponent& transformComponent, const Quaternion& transform, transform_func_quaternion_t transformFunc)
+{
+	transformComponent._locallyUpdated = false;
+	transformFunc(transformComponent, transform);
+}
+
 
 void Transform::_groupUpdate(const Entity& entity)
 {

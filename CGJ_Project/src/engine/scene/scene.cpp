@@ -139,6 +139,7 @@ void Scene::onUpdate(float ts)
 	renderer.renderCamera(*this);
 	renderer.renderLights(*this);
 	renderer.renderMeshes(*this);
+	renderer.renderColliders(*this);
 }
 
 

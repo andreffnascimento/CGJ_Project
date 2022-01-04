@@ -81,6 +81,9 @@ public:
 	void renderCamera(const Scene& scene) const;
 	void renderLights(const Scene& scene) const;
 	void renderMeshes(const Scene& scene) const;
+	void renderColliders(const Scene& scene) const;
+
+
 
 
 private:
@@ -103,6 +106,11 @@ private:
 	void _loadMesh(const MeshComponent& mesh) const;
 	void _applyTransform(const Entity& entity) const;
 	void _renderMesh(const MeshComponent& mesh) const;
+
+
+private:
+	const MeshComponent& getColliderMesh() const;
+	void _applyColliderTransform(const AABBColliderComponent& collider) const;
 
 };
 

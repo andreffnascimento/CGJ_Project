@@ -175,6 +175,7 @@
     <ClCompile Include="src\engine\math\transform.cpp" />
     <ClCompile Include="src\engine\math\transformMatrix.cpp" />
     <ClCompile Include="src\engine\renderer\modules\cameraRenderer.cpp" />
+    <ClCompile Include="src\engine\renderer\modules\colliderRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\lightRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\meshRenderer.cpp" />
     <ClCompile Include="src\engine\scene\components.cpp" />

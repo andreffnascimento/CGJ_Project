@@ -296,6 +296,8 @@ public:
 	inline float drag() const									{ return _drag; }
 	inline float angularDrag() const							{ return _angularDrag; }
 	inline float dragThreshold() const							{ return _dragThreshold; }
+	inline const Coords3f& position() const						{ return _position; }
+	inline const Quaternion& rotation() const					{ return _rotation; }
 	inline const Coords3f& velocity() const						{ return _velocity; }
 	inline const Coords3f& angularVelocity() const				{ return _angularVelocity; }
 	inline bool sleeping() const								{ return _sleeping; }
@@ -337,7 +339,7 @@ public:
 	~AABBColliderComponent();
 
 	inline const Coords3f& boundingBox() const			{ return _boundingBox; }
-	inline const RigidbodyComponent* rigidbody() const	{ return _rigidbody; }
+	inline const RigidbodyComponent& rigidbody() const	{ return *_rigidbody; }
 	inline CollisionResolver* collisionResolver() const { return _collisionResolver; }
 
 	inline void setInitialSize(const Coords3f& initialSize)					{ _initialSize = initialSize / 2.0f; }

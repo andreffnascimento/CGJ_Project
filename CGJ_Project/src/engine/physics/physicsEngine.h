@@ -27,6 +27,7 @@ public:
 
 private:
 	unsigned int _collisionIterations = 2;
+	bool _showColliders = true;
 
 
 
@@ -43,6 +44,10 @@ public:
 	PhysicsEngine(const PhysicsEngine&) = default;
 	PhysicsEngine(unsigned int collisionIterations);
 	~PhysicsEngine() = default;
+
+
+public:
+	inline bool showColliders() const { return _showColliders; }
 
 
 public:
