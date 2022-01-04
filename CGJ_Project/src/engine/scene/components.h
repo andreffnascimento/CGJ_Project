@@ -293,8 +293,8 @@ public:
 	inline const Coords3f& angularVelocity() const				{ return _angularVelocity; }
 	inline bool sleeping() const								{ return _sleeping; }
 
-	inline void setDragThreshold(float dragThreshold)						{ _dragThreshold = dragThreshold; }
-	inline void setSleepThreshold(float sleepThreshold)						{ _sleepThreshold = sleepThreshold; }
+	inline void setDragThreshold(float dragThreshold)			{ _dragThreshold = dragThreshold; }
+	inline void setSleepThreshold(float sleepThreshold)			{ _sleepThreshold = sleepThreshold; }
 
 	inline void addRelativeForce(const Coords3f& value)		{ addRelativeForce(Force(Force::ForceType::LINEAR, value)); }
 	inline void addAbsoluteForce(const Coords3f& value)		{ addAbsoluteForce(Force(Force::ForceType::LINEAR, value)); }

@@ -26,7 +26,7 @@ public:
 
 
 private:
-	unsigned int _collisionIterations = 1;
+	unsigned int _collisionIterations = 2;
 
 
 

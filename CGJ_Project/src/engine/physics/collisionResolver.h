@@ -49,12 +49,6 @@ public:
 protected:
 	virtual void _processCollision(const AABBColliderComponent& collider, const Collision& collision);
 
-
-
-
-public:
-	static void defaultCollisionResolver(const AABBColliderComponent& collider, const Collision& collision);
-
 };
 
 

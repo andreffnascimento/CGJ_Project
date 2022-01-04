@@ -1,5 +1,7 @@
 #include "collisionResolver.h"
 
+#include "engine/scene/components.h"
+
 
 
 
@@ -42,15 +44,6 @@ bool CollisionResolver::ignoreCollision(const RigidbodyComponent& rigidbody)
 
 
 void CollisionResolver::_processCollision(const AABBColliderComponent& collider, const Collision& collision)
-{
-	// empty
-	CollisionResolver::defaultCollisionResolver(collider, collision);
-}
-
-
-
-
-void CollisionResolver::defaultCollisionResolver(const AABBColliderComponent& collider, const Collision& collision)
 {
 	collider.collisionResolver()->_impulseForces.emplace_back(Force::ForceType::LINEAR, collision.collisionNormal() * collision.impulse());
 }
