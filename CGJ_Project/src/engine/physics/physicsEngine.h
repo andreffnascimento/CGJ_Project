@@ -75,8 +75,8 @@ private:
 
 
 private:
-	void _checkCollision(AABBColliderComponent& entityCollider, AABBColliderComponent& otherCollider) const;
-	void _resolveCollision(AABBColliderComponent& entityCollider, AABBColliderComponent& otherCollider) const;
+	void _checkCollision(AABBColliderComponent& entityCollider, AABBColliderComponent& otherCollider, float ts) const;
+	void _resolveCollision(AABBColliderComponent& entityCollider, AABBColliderComponent& otherCollider, float ts) const;
 
 };
 

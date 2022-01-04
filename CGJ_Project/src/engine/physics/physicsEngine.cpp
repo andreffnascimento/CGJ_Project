@@ -32,7 +32,7 @@ void PhysicsEngine::rotateBoundingBox(AABBColliderComponent& collider, const Qua
 Coords3f PhysicsEngine::calculateDragForce(const Coords3f& velocity, float drag, float dragThreshold)
 {
 	float velocityLength = velocity.length();
-	float dragLength = -PhysicsEngine::AIR_DENSITY * drag * velocityLength * (velocityLength > dragThreshold ? velocityLength : PhysicsEngine::DRAG_SLOW_CONSTANT);
+	float dragLength = -PhysicsEngine::AIR_DENSITY * drag * velocityLength * (velocityLength * velocityLength > dragThreshold ? velocityLength : PhysicsEngine::DRAG_SLOW_CONSTANT);
 	Coords3f dragForce = velocity.normalized();
 	dragForce *= dragLength;
 	return dragForce;
@@ -125,7 +125,7 @@ void PhysicsEngine::_simulateCollisions(const Scene& scene, float ts) const
 			for (auto& otherColliderIterator = std::next(entityColliderIterator); otherColliderIterator != colliderComponents.end(); otherColliderIterator++)
 			{
 				AABBColliderComponent& otherCollider = otherColliderIterator->second;
-				_checkCollision(entityCollider, otherCollider);
+				_checkCollision(entityCollider, otherCollider, ts);
 			}
 		}
 		_resolveCollisions(scene, ts);
@@ -225,7 +225,7 @@ void PhysicsEngine::_combineForces(RigidbodyComponent& rigidbody, Coords3f& line
 	rigidbody._forces.clear();
 }
 
-#include <iostream>
+
 void PhysicsEngine::_calculateExpectedAngularVelocity(RigidbodyComponent& rigidbody, Coords3f& angularForce, float ts) const
 {
 	angularForce += PhysicsEngine::calculateDragForce(rigidbody._angularVelocity, rigidbody._angularDrag, rigidbody._dragThreshold);
@@ -258,8 +258,7 @@ void PhysicsEngine::_processSleepThreshold(RigidbodyComponent& rigidbody) const
 
 
 
-
-void PhysicsEngine::_checkCollision(AABBColliderComponent& entityCollider, AABBColliderComponent& otherCollider) const
+void PhysicsEngine::_checkCollision(AABBColliderComponent& entityCollider, AABBColliderComponent& otherCollider, float ts) const
 {
 	RigidbodyComponent& entityRigidbody = *entityCollider._rigidbody;
 	RigidbodyComponent& otherRigidbody = *otherCollider._rigidbody;
@@ -292,18 +291,22 @@ void PhysicsEngine::_checkCollision(AABBColliderComponent& entityCollider, AABBC
 	{
 		AABBColliderComponent& fixedEntityCollider = ignoreEntityCollider ? otherCollider : entityCollider;
 		AABBColliderComponent& fixedOtherCollider = ignoreEntityCollider ? entityCollider : otherCollider;
-		_resolveCollision(fixedEntityCollider, fixedOtherCollider);
+		_resolveCollision(fixedEntityCollider, fixedOtherCollider, ts);
 	}
 }
 
 
-void PhysicsEngine::_resolveCollision(AABBColliderComponent& entityCollider, AABBColliderComponent& otherCollider) const
+void PhysicsEngine::_resolveCollision(AABBColliderComponent& entityCollider, AABBColliderComponent& otherCollider, float ts) const
 {
 	RigidbodyComponent& entityRigidbody = *entityCollider._rigidbody;
 	RigidbodyComponent& otherRigidbody = *otherCollider._rigidbody;
 	
 	Coords3f collisionNormal = entityRigidbody._velocity.normalized();
 	Coords3f relativeVelocity = entityRigidbody._velocity - otherRigidbody._velocity;
+
+	Coords3f testPosition = entityRigidbody._position + entityRigidbody._velocity * ts;
+	if (otherRigidbody._position.distance(testPosition) > otherRigidbody._position.distance(entityRigidbody._position))
+		return;
 
 	float entityInvMass = 1.0f / entityRigidbody._mass;
 	float otherInvMass = 1.0f / otherRigidbody._mass;

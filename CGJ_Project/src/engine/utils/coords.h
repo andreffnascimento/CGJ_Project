@@ -30,8 +30,9 @@ struct Coords3f
 	Coords3f(const Coords3f&) = default;
 	~Coords3f() = default;
 
-	float length() const					{ return std::sqrt(dot(*this)); }
-	float dot(const Coords3f& other) const	{ return x * other.x + y * other.y + z * other.z; }
+	float length() const						{ return std::sqrt(dot(*this)); }
+	float dot(const Coords3f& other) const		{ return x * other.x + y * other.y + z * other.z; }
+	float distance(const Coords3f other) const	{ return std::sqrt(((other.x - x) * (other.x - x)) + ((other.y - y) * (other.y - y)) + ((other.z - z) * (other.z - z))); }
 	Coords3f& normalize()					{ float invNorm = invSqrt(dot(*this)); x *= invNorm; y *= invNorm; z *= invNorm; return *this; }
 
 	Coords3f normalized() const				{ float invNorm = invSqrt(dot(*this)); return Coords3f({ x * invNorm, y * invNorm, z * invNorm }); }
@@ -72,8 +73,9 @@ struct Coords4f
 	Coords4f(const Coords4f&) = default;
 	~Coords4f() = default;
 
-	float length() const					{ return std::sqrt(dot(*this)); }
-	float dot(const Coords4f& other) const	{ return x * other.x + y * other.y + z * other.z + w * other.w; }
+	float length() const						{ return std::sqrt(dot(*this)); }
+	float dot(const Coords4f& other) const		{ return x * other.x + y * other.y + z * other.z + w * other.w; }
+	float distance(const Coords4f other) const	{ return std::sqrt(((other.x - x) * (other.x - x)) + ((other.y - y) * (other.y - y)) + ((other.z - z) * (other.z - z)) + ((other.w - w) * (other.w - w))); }
 	Coords4f& normalize()					{ float invNorm = invSqrt(dot(*this)); x *= invNorm; y *= invNorm; z *= invNorm; w *= invNorm; return *this; }
 
 	Coords4f normalized() const				{ float invNorm = invSqrt(dot(*this)); return Coords4f({ x * invNorm, y * invNorm, z * invNorm, w * invNorm }); }
