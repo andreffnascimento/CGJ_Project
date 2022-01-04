@@ -30,12 +30,11 @@ struct Coords3f
 	Coords3f(const Coords3f&) = default;
 	~Coords3f() = default;
 
-	float length() const					{ return std::sqrt(length2()); }
-	float length2() const					{ return x * x + y * y + z * z; }
+	float length() const					{ return std::sqrt(dot(*this)); }
 	float dot(const Coords3f& other) const	{ return x * other.x + y * other.y + z * other.z; }
-	Coords3f& normalize()					{ float invNorm = invSqrt(length2()); x *= invNorm; y *= invNorm; z *= invNorm; return *this; }
+	Coords3f& normalize()					{ float invNorm = invSqrt(dot(*this)); x *= invNorm; y *= invNorm; z *= invNorm; return *this; }
 
-	Coords3f normalized() const				{ float invNorm = invSqrt(length2()); return Coords3f({ x * invNorm, y * invNorm, z * invNorm }); }
+	Coords3f normalized() const				{ float invNorm = invSqrt(dot(*this)); return Coords3f({ x * invNorm, y * invNorm, z * invNorm }); }
 
 	void operator+=(const Coords3f& other) { x += other.x; y += other.y; z += other.z; }
 	void operator-=(const Coords3f& other) { x -= other.x; y -= other.y; z -= other.z; }
@@ -73,12 +72,11 @@ struct Coords4f
 	Coords4f(const Coords4f&) = default;
 	~Coords4f() = default;
 
-	float length() const					{ return std::sqrt(length2()); }
-	float length2() const					{ return x * x + y * y + z * z + w * w; }
+	float length() const					{ return std::sqrt(dot(*this)); }
 	float dot(const Coords4f& other) const	{ return x * other.x + y * other.y + z * other.z + w * other.w; }
-	Coords4f& normalize()					{ float invNorm = invSqrt(length2()); x *= invNorm; y *= invNorm; z *= invNorm; w *= invNorm; return *this; }
+	Coords4f& normalize()					{ float invNorm = invSqrt(dot(*this)); x *= invNorm; y *= invNorm; z *= invNorm; w *= invNorm; return *this; }
 
-	Coords4f normalized() const				{ float invNorm = invSqrt(length2()); return Coords4f({ x * invNorm, y * invNorm, z * invNorm, w * invNorm }); }
+	Coords4f normalized() const				{ float invNorm = invSqrt(dot(*this)); return Coords4f({ x * invNorm, y * invNorm, z * invNorm, w * invNorm }); }
 
 	void operator+=(const Coords4f& other) { x += other.x; y += other.y; z += other.z; w += other.w; }
 	void operator-=(const Coords4f& other) { x -= other.x; y -= other.y; z -= other.z; w -= other.w; }

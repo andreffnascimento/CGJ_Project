@@ -1,6 +1,7 @@
 #include "components.h"
 
 #include "engine/app/application.h"
+#include "engine/physics/collisionResolver.h"
 #include "engine/physics/physicsEngine.h"
 
 
@@ -118,6 +119,9 @@ RigidbodyComponent::RigidbodyComponent(RigidbodyComponent::RigidbodyType type, f
 
 void RigidbodyComponent::setVelocity(const Coords3f& velocity)
 {
+	if (_type == RigidbodyComponent::RigidbodyType::STATIC)
+		throw std::string("Unable to change the velocity of static rigidbodies");
+
 	_velocity = velocity;
 	if (_velocity != Coords3f({ 0.0f, 0.0f, 0.0f }))
 		_sleeping = false;
@@ -126,6 +130,9 @@ void RigidbodyComponent::setVelocity(const Coords3f& velocity)
 
 void RigidbodyComponent::setAngularVelocity(const Coords3f& angularVelocity)
 {
+	if (_type == RigidbodyComponent::RigidbodyType::STATIC)
+		throw std::string("Unable to change the velocity of static rigidbodies");
+
 	_angularVelocity = angularVelocity;
 	if (_angularVelocity != Coords3f({ 0.0f, 0.0f, 0.0f }))
 		_sleeping = false;
@@ -153,4 +160,15 @@ void RigidbodyComponent::addRelativeForce(const Force& force)
 		_rotation.rotatePoint(forceVector);
 		addAbsoluteForce(Force(Force::ForceType::LINEAR, forceVector));
 	}
+}
+
+
+
+
+AABBColliderComponent::~AABBColliderComponent()
+{
+	if (_collisionResolver != nullptr)
+		delete _collisionResolver;
+
+	_collisionResolver = nullptr;
 }

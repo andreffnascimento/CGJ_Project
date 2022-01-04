@@ -256,6 +256,7 @@ struct RigidbodyComponent
 public:
 	enum class RigidbodyType
 	{
+		STATIC,
 		KINEMATIC,
 		DYNAMIC
 	};
@@ -283,12 +284,14 @@ public:
 	RigidbodyComponent(RigidbodyComponent::RigidbodyType type, float mass, float drag, float angularDrag);
 	~RigidbodyComponent() = default;
 
-	inline float mass() const						{ return _mass; }
-	inline float drag() const						{ return _drag; }
-	inline float angularDrag() const				{ return _angularDrag; }
-	inline float dragThreshold() const				{ return _dragThreshold; }
-	inline const Coords3f& velocity() const			{ return _velocity; }
-	inline const Coords3f& angularVelocity() const	{ return _angularVelocity; }
+	inline const RigidbodyComponent::RigidbodyType type() const { return _type; }
+	inline float mass() const									{ return _mass; }
+	inline float drag() const									{ return _drag; }
+	inline float angularDrag() const							{ return _angularDrag; }
+	inline float dragThreshold() const							{ return _dragThreshold; }
+	inline const Coords3f& velocity() const						{ return _velocity; }
+	inline const Coords3f& angularVelocity() const				{ return _angularVelocity; }
+	inline bool sleeping() const								{ return _sleeping; }
 
 	inline void setDragThreshold(float dragThreshold)						{ _dragThreshold = dragThreshold; }
 	inline void setSleepThreshold(float sleepThreshold)						{ _sleepThreshold = sleepThreshold; }
@@ -318,15 +321,17 @@ private:
 	float _restitutionCocoefficient = 1.0f;
 
 	RigidbodyComponent* _rigidbody = nullptr;
-	std::shared_ptr<CollisionResolver> _collisionResolver = nullptr;
+	CollisionResolver* _collisionResolver = nullptr;
 
 public:
 	AABBColliderComponent() = delete;
 	AABBColliderComponent(const AABBColliderComponent&) = default;
 	AABBColliderComponent(const Coords3f& initialSize) : _initialSize(initialSize / 2.0f) {};
-	~AABBColliderComponent() = default;
+	~AABBColliderComponent();
 
-	inline const Coords3f& boundingBox() const	{ return _boundingBox; }
+	inline const Coords3f& boundingBox() const			{ return _boundingBox; }
+	inline const RigidbodyComponent* rigidbody() const	{ return _rigidbody; }
+	inline CollisionResolver* collisionResolver() const { return _collisionResolver; }
 
 	inline void setInitialSize(const Coords3f& initialSize)					{ _initialSize = initialSize / 2.0f; }
 	inline void setFixedBoundingBox(bool fixedBoundingBox)					{ _fixedBoundingBox = fixedBoundingBox; }

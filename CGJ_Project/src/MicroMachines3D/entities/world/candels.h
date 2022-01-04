@@ -51,7 +51,7 @@ private:
 		Entity candel = group.addNewEntity(scene, *this, candelId);
 		candel.addComponent<MeshComponent>(mesh);
 
-		RigidbodyComponent rigidbody = candel.addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::DYNAMIC, 10000.0f, 0.0f, 0.0f);
+		RigidbodyComponent rigidbody = candel.addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::STATIC, 10000.0f, 0.0f, 0.0f);
 		AABBColliderComponent& collider = candel.addComponent<AABBColliderComponent>(CANDEL_SIZE);
 		collider.setFixedBoundingBox(true);
 

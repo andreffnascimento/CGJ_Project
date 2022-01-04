@@ -182,7 +182,7 @@ private:
 		if (_trackingStatus != TargetOrbitalCameraScript::TrackingStatus::NONE && true)		// FIXME: check if car is moving
 			return;
 
-		if (_carRigidbody->velocity().length2() > 0.0f)
+		if (_carRigidbody->velocity().length() > 0.0f)
 		{
 			_alphaAux = _getStaticAlpha();
 			_betaAux = TargetOrbitalCameraScript::ORIGINAL_BETA;

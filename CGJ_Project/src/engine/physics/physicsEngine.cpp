@@ -1,35 +1,14 @@
 #include "physicsEngine.h"
 
 #include <algorithm>
+#include <memory>
+
+#include "engine/physics/collisionResolver.h"
 
 #include "engine/math/transform.h"
 #include "engine/scene/scene.h"
 
 
-
-
-void PhysicsEngine::rotateVector(Coords3f& vector, const Coords3f& rotation)
-{
-	if (rotation.x != 0.0f)
-		PhysicsEngine::rotateVectorOnAxis(vector.z, vector.y, rotation.x);
-
-	if (rotation.y != 0.0f)
-		PhysicsEngine::rotateVectorOnAxis(vector.x, vector.z, rotation.y);
-
-	if (rotation.z != 0.0f)
-		PhysicsEngine::rotateVectorOnAxis(vector.y, vector.z, rotation.z);
-}
-
-
-void PhysicsEngine::rotateVectorOnAxis(float& coord1, float& coord2, float angle)
-{
-	float cosAngle = std::cos(toRadians(angle));
-	float sinAngle = std::sin(toRadians(angle));
-	float oldCoord1 = coord1;
-	float oldCoord2 = coord2;
-	coord1 = oldCoord1 * cosAngle + oldCoord2 * sinAngle;
-	coord2 = oldCoord2 * cosAngle - oldCoord1 * sinAngle;
-}
 
 
 void PhysicsEngine::rotateBoundingBox(AABBColliderComponent& collider, const Quaternion& rotation)
@@ -83,19 +62,19 @@ void PhysicsEngine::initialize(const Scene& scene) const
 
 		rigidbody._position = transform.translation();
 		rigidbody._rotation = transform.rotation();
-	}
 
-	std::unordered_map<EntityHandle, AABBColliderComponent>& _colliderComponents = scene.getSceneComponents<AABBColliderComponent>();
-	for (auto& colliderIterator : _colliderComponents)
-	{
-		EntityHandle entityId = colliderIterator.first;
-		AABBColliderComponent& collider = colliderIterator.second;
-		Entity entity = scene.getEntityById(entityId);
+		AABBColliderComponent* collider = entity.getComponentIfExists<AABBColliderComponent>();
+		if (collider != nullptr)
+		{
+			collider->_boundingBox = collider->_initialSize;
+			collider->_rigidbody = &rigidbody;
 
-		collider._boundingBox = collider._initialSize;
-		collider._rigidbody = entity.getComponentIfExists<RigidbodyComponent>();
-		if (collider._rigidbody && !collider._fixedBoundingBox)
-			PhysicsEngine::rotateBoundingBox(collider, collider._rigidbody->_rotation);
+			if (collider->_collisionResolver == nullptr)
+				collider->_collisionResolver = new CollisionResolver();
+
+			if (!collider->_fixedBoundingBox)
+				PhysicsEngine::rotateBoundingBox(*collider, collider->_rigidbody->_rotation);
+		}
 	}
 }
 
@@ -103,7 +82,6 @@ void PhysicsEngine::initialize(const Scene& scene) const
 void PhysicsEngine::simulate(const Scene& scene, float ts) const
 {
 	_simulateRigidbodyMovement(scene, ts);
-	_updateColliderBoundingBoxes(scene);
 	_simulateCollisions(scene, ts);
 	_updateRigidbodyTransform(scene);
 }
@@ -123,29 +101,56 @@ void PhysicsEngine::_simulateRigidbodyMovement(const Scene& scene, float ts) con
 }
 
 
-void PhysicsEngine::_updateColliderBoundingBoxes(const Scene& scene) const
+void PhysicsEngine::_simulateCollisions(const Scene& scene, float ts) const
+{
+	std::unordered_map<EntityHandle, AABBColliderComponent>& colliderComponents = scene.getSceneComponents<AABBColliderComponent>();
+	for (unsigned int i = 0; i < _collisionIterations; i++)
+	{
+		_resetCollider(scene);
+		for (auto& entityColliderIterator = colliderComponents.begin(); entityColliderIterator != colliderComponents.end(); entityColliderIterator++)
+		{
+			AABBColliderComponent& entityCollider = entityColliderIterator->second;
+			for (auto& otherColliderIterator = std::next(entityColliderIterator); otherColliderIterator != colliderComponents.end(); otherColliderIterator++)
+			{
+				AABBColliderComponent& otherCollider = otherColliderIterator->second;
+				_checkCollision(entityCollider, otherCollider);
+			}
+		}
+		_resolveCollisions(scene, ts);
+	}
+}
+
+
+void PhysicsEngine::_resetCollider(const Scene& scene) const
 {
 	std::unordered_map<EntityHandle, AABBColliderComponent>& colliderComponents = scene.getSceneComponents<AABBColliderComponent>();
 	for (auto& colliderIterator : colliderComponents)
 	{
 		AABBColliderComponent& collider = colliderIterator.second;
+		collider._collisionResolver->reset();
 		if (!collider._rigidbody->_sleeping && !collider._fixedBoundingBox)
 			PhysicsEngine::rotateBoundingBox(collider, collider._rigidbody->_rotation);
 	}
 }
 
 
-void PhysicsEngine::_simulateCollisions(const Scene& scene, float ts) const
+void PhysicsEngine::_resolveCollisions(const Scene& scene, float ts) const
 {
 	std::unordered_map<EntityHandle, AABBColliderComponent>& colliderComponents = scene.getSceneComponents<AABBColliderComponent>();
-	for (unsigned int i = 0; i < _collisionIterations; i++)
+	for (auto& colliderIterator : colliderComponents)
 	{
-		for (auto& colliderIterator : colliderComponents)
+		AABBColliderComponent& collider = colliderIterator.second;
+		if (!collider._collisionResolver->collided())
+			continue;
+
+		collider._collisionResolver->processCollisions(collider);
+		if (!collider._collisionResolver->updated())
 		{
-			EntityHandle entityId = colliderIterator.first;
-			AABBColliderComponent& collider = colliderIterator.second;
-			if (!collider._rigidbody->_sleeping)
-				_detectRigidbodyCollisions(scene, entityId, collider, ts);
+			RigidbodyComponent& rigidbody = *collider._rigidbody;
+			rigidbody._position -= rigidbody._velocity * ts;		// revert position update
+			collider._collisionResolver->updateVelocity(rigidbody._velocity);
+			rigidbody._position += rigidbody._velocity * ts;
+			rigidbody._sleeping = false;
 		}
 	}
 }
@@ -186,42 +191,6 @@ void PhysicsEngine::_processRigidbodyMovement(const Scene& scene, RigidbodyCompo
 	rigidbody._position += rigidbody._velocity * ts;
 	_processSleepThreshold(rigidbody);
 }
-
-
-void PhysicsEngine::_detectRigidbodyCollisions(const Scene& scene, EntityHandle entityId, AABBColliderComponent& entityCollider, float ts) const
-{
-	std::unordered_map<EntityHandle, AABBColliderComponent>& _colliderComponents = scene.getSceneComponents<AABBColliderComponent>();
-	for (auto& iterator : _colliderComponents)
-	{
-		EntityHandle otherId = iterator.first;
-		AABBColliderComponent& otherCollider = iterator.second;
-		if (entityId == otherId)
-			continue;
-
-		float entityMinX = entityCollider._rigidbody->_position.x - entityCollider._boundingBox.x;
-		float entityMaxX = entityCollider._rigidbody->_position.x + entityCollider._boundingBox.x;
-		float entityMinY = entityCollider._rigidbody->_position.y - entityCollider._boundingBox.y;
-		float entityMaxY = entityCollider._rigidbody->_position.y + entityCollider._boundingBox.y;
-		float entityMinZ = entityCollider._rigidbody->_position.z - entityCollider._boundingBox.z;
-		float entityMaxZ = entityCollider._rigidbody->_position.z + entityCollider._boundingBox.z;
-
-		float otherMinX = otherCollider._rigidbody->_position.x - otherCollider._boundingBox.x;
-		float otherMaxX = otherCollider._rigidbody->_position.x + otherCollider._boundingBox.x;
-		float otherMinY = otherCollider._rigidbody->_position.y - otherCollider._boundingBox.y;
-		float otherMaxY = otherCollider._rigidbody->_position.y + otherCollider._boundingBox.y;
-		float otherMinZ = otherCollider._rigidbody->_position.z - otherCollider._boundingBox.z;
-		float otherMaxZ = otherCollider._rigidbody->_position.z + otherCollider._boundingBox.z;
-
-		bool collision = (entityMinX <= otherMaxX && entityMaxX >= otherMinX) && 
-						 (entityMinY <= otherMaxY && entityMaxY >= otherMinY) && 
-						 (entityMinZ <= otherMaxZ && entityMaxZ >= otherMinZ);
-
-		if (collision)
-			_resolveCollision(entityCollider, otherCollider, ts);
-	}
-}
-
-
 
 
 Coords3f PhysicsEngine::_calculateExpectedRotation(RigidbodyComponent& rigidbody, float ts) const
@@ -268,7 +237,7 @@ void PhysicsEngine::_calculateExpectedVelocity(RigidbodyComponent& rigidbody, Co
 
 void PhysicsEngine::_processSleepThreshold(RigidbodyComponent& rigidbody) const
 {
-	if (rigidbody._velocity.length2() > rigidbody._sleepThreshold || rigidbody._angularVelocity.length2() > rigidbody._sleepThreshold)
+	if (rigidbody._velocity.length() > rigidbody._sleepThreshold || rigidbody._angularVelocity.length() > rigidbody._sleepThreshold)
 		return;
 
 	rigidbody._velocity = Coords3f();
@@ -279,28 +248,59 @@ void PhysicsEngine::_processSleepThreshold(RigidbodyComponent& rigidbody) const
 
 
 
-void PhysicsEngine::_resolveCollision(AABBColliderComponent& firstCollider, AABBColliderComponent& secondCollider, float ts) const
+void PhysicsEngine::_checkCollision(AABBColliderComponent& entityCollider, AABBColliderComponent& otherCollider) const
 {
-	RigidbodyComponent& firstRigidbody = *firstCollider._rigidbody;
-	RigidbodyComponent& secondRigidbody = *secondCollider._rigidbody;
+	RigidbodyComponent& entityRigidbody = *entityCollider._rigidbody;
+	RigidbodyComponent& otherRigidbody = *otherCollider._rigidbody;
 
-	Coords3f relativeVelocity = firstRigidbody._velocity - secondRigidbody._velocity;
-	Coords3f collisionNormal = -firstRigidbody._velocity.normalized();
+	bool ignoreEntityCollider = entityCollider._collisionResolver->ignoreCollision(entityRigidbody);
+	bool ignoreOtherCollider = otherCollider._collisionResolver->ignoreCollision(otherRigidbody);
 
-	float collisionSpeed = relativeVelocity.dot(collisionNormal);
-	float restitutionCocoefficient = std::min(firstCollider._restitutionCocoefficient, secondCollider._restitutionCocoefficient);
-	float firstInvMass = 1 / firstRigidbody._mass;
-	float secondInvMass = 1 / secondRigidbody._mass;
-	float impulseSpeed = -(1 + restitutionCocoefficient) * collisionSpeed;
-	float impulse = impulseSpeed / (firstInvMass + secondInvMass);
+	if (ignoreEntityCollider && ignoreOtherCollider)
+		return;
+
+	float entityMinX = entityRigidbody._position.x - entityCollider._boundingBox.x;
+	float entityMaxX = entityRigidbody._position.x + entityCollider._boundingBox.x;
+	float entityMinY = entityRigidbody._position.y - entityCollider._boundingBox.y;
+	float entityMaxY = entityRigidbody._position.y + entityCollider._boundingBox.y;
+	float entityMinZ = entityRigidbody._position.z - entityCollider._boundingBox.z;
+	float entityMaxZ = entityRigidbody._position.z + entityCollider._boundingBox.z;
+
+	float otherMinX = otherRigidbody._position.x - otherCollider._boundingBox.x;
+	float otherMaxX = otherRigidbody._position.x + otherCollider._boundingBox.x;
+	float otherMinY = otherRigidbody._position.y - otherCollider._boundingBox.y;
+	float otherMaxY = otherRigidbody._position.y + otherCollider._boundingBox.y;
+	float otherMinZ = otherRigidbody._position.z - otherCollider._boundingBox.z;
+	float otherMaxZ = otherRigidbody._position.z + otherCollider._boundingBox.z;
+
+	bool collision = (entityMinX <= otherMaxX && entityMaxX >= otherMinX) &&
+		(entityMinY <= otherMaxY && entityMaxY >= otherMinY) &&
+		(entityMinZ <= otherMaxZ && entityMaxZ >= otherMinZ);
+
+	if (collision)
+	{
+		AABBColliderComponent& fixedEntityCollider = ignoreEntityCollider ? otherCollider : entityCollider;
+		AABBColliderComponent& fixedOtherCollider = ignoreEntityCollider ? entityCollider : otherCollider;
+		_resolveCollision(fixedEntityCollider, fixedOtherCollider);
+	}
+}
+
+
+void PhysicsEngine::_resolveCollision(AABBColliderComponent& entityCollider, AABBColliderComponent& otherCollider) const
+{
+	RigidbodyComponent& entityRigidbody = *entityCollider._rigidbody;
+	RigidbodyComponent& otherRigidbody = *otherCollider._rigidbody;
 	
-	firstRigidbody._position -= firstRigidbody._velocity * ts;		// revert position update
-	firstRigidbody._velocity += impulse * firstInvMass * collisionNormal;
-	firstRigidbody._position += firstRigidbody._velocity * ts;
-	firstRigidbody._sleeping = false;
+	Coords3f collisionNormal = entityRigidbody._velocity.normalized();
+	Coords3f relativeVelocity = entityRigidbody._velocity - otherRigidbody._velocity;
 
-	secondRigidbody._position -= secondRigidbody._velocity * ts;	// revert position update
-	secondRigidbody._velocity -= impulse * secondInvMass * collisionNormal;
-	secondRigidbody._position += secondRigidbody._velocity * ts;
-	secondRigidbody._sleeping = false;
+	float entityInvMass = 1.0f / entityRigidbody._mass;
+	float otherInvMass = 1.0f / otherRigidbody._mass;
+	float collisionSpeed = relativeVelocity.dot(collisionNormal);
+	float restitutionCocoefficient = std::min(entityCollider._restitutionCocoefficient, otherCollider._restitutionCocoefficient);
+	float impulseSpeed = -(1 + restitutionCocoefficient) * collisionSpeed;
+	float impulse = impulseSpeed / (entityInvMass + otherInvMass);
+
+	entityCollider._collisionResolver->addCollision(otherCollider, collisionNormal, relativeVelocity,  impulse * entityInvMass);
+	otherCollider._collisionResolver->addCollision(entityCollider, collisionNormal, relativeVelocity, -impulse * otherInvMass);
 }

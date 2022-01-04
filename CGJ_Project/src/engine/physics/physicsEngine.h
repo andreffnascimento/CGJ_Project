@@ -26,14 +26,12 @@ public:
 
 
 private:
-	unsigned int _collisionIterations = 2;
+	unsigned int _collisionIterations = 1;
 
 
 
 
 public:
-	static void rotateVector(Coords3f& vector, const Coords3f& rotation);
-	static void rotateVectorOnAxis(float& coord1, float& coord2, float angle);
 	static void rotateBoundingBox(AABBColliderComponent& collider, const Quaternion& rotation);
 	static Coords3f calculateDragForce(const Coords3f& velocity, float drag, float dragThreshold);
 
@@ -52,21 +50,16 @@ public:
 	void simulate(const Scene& scene, float ts) const;
 
 
-
-
 private:
 	void _simulateRigidbodyMovement(const Scene& scene, float ts) const;
-	void _updateColliderBoundingBoxes(const Scene& scene) const;
+	void _resetCollider(const Scene& scene) const;
 	void _simulateCollisions(const Scene& scene, float ts) const;
+	void _resolveCollisions(const Scene& scene, float ts) const;
 	void _updateRigidbodyTransform(const Scene& scene) const;
 
 
 private:
 	void _processRigidbodyMovement(const Scene& scene, RigidbodyComponent& rigidbody, float ts) const;
-	void _detectRigidbodyCollisions(const Scene& scene, EntityHandle entityId, AABBColliderComponent& collider, float ts) const;
-
-
-private:
 	Coords3f _calculateExpectedRotation(RigidbodyComponent& rigidbody, float ts) const;
 	void _combineForces(RigidbodyComponent& rigidbody, Coords3f& linearForce, Coords3f& angularForce) const;
 	void _calculateExpectedAngularVelocity(RigidbodyComponent& rigidbody, Coords3f& angularForce, float ts) const;
@@ -75,7 +68,8 @@ private:
 
 
 private:
-	void _resolveCollision(AABBColliderComponent& firstCollider, AABBColliderComponent& secondCollider, float ts) const;
+	void _checkCollision(AABBColliderComponent& entityCollider, AABBColliderComponent& otherCollider) const;
+	void _resolveCollision(AABBColliderComponent& entityCollider, AABBColliderComponent& otherCollider) const;
 
 };
 

@@ -28,7 +28,7 @@ public:
 
 		Coords3f carSize = { CAR_BOTTOM_SIZE.x, CAR_BOTTOM_SIZE.y, CAR_BOTTOM_SIZE.z + CAR_BUMPER_SIZE.z };
 		AABBColliderComponent& collider = addComponent<AABBColliderComponent>(carSize);
-		collider.setRestitutionCocoefficient(0.8f);
+		collider.setRestitutionCocoefficient(0.5f);
 		
 		ScriptComponent& script = addComponent<ScriptComponent>();
 		script.addScriptInstance(std::make_shared<CarHeadlightsScript>(scene));

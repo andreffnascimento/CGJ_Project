@@ -137,7 +137,7 @@ Quaternion& Quaternion::rotate(const Quaternion& quaternion)
 
 Quaternion& Quaternion::normalize()
 {
-	float invLength = invSqrt(length2());
+	float invLength = invSqrt(dot(*this));
 	_x = _x * invLength;
 	_y = _y * invLength;
 	_z = _z * invLength;
@@ -149,7 +149,7 @@ Quaternion& Quaternion::normalize()
 
 Quaternion Quaternion::normalized() const
 {
-	float invLength = invSqrt(length2());
+	float invLength = invSqrt(dot(*this));
 	return Quaternion(_x * invLength, _y * invLength, _z * invLength, _w * invLength);
 }
 

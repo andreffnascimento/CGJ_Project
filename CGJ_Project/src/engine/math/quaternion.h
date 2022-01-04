@@ -34,8 +34,7 @@ public:
 
 
 public:
-	inline float length() const							{ return std::sqrt(length2()); }
-	inline float length2() const						{ return (float)(_x * _x + _y * _y + _z * _z + _w * _w); }
+	inline float length() const							{ return std::sqrt(dot(*this)); }
 	inline float dot(const Quaternion& other) const		{ return (float)(_x * other._x + _y * other._y + _z * other._z + _w * other._w); }
 	
 
