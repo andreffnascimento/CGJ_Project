@@ -27,7 +27,7 @@ public:
 
 private:
 	unsigned int _collisionIterations = 2;
-	bool _showColliders = true;
+	bool _showColliders = false;
 
 
 
