@@ -195,9 +195,11 @@ public:
 	inline const MyMesh* meshPtr()	const { return _mesh.get(); }
 	inline const MyMesh& meshData()	const { return *meshPtr(); } 
 
-	inline void setMaterial(const Material& material) { return MeshComponent::setMaterial(*_mesh, material); }
+	inline void setMaterial(const Material& material)	{ return MeshComponent::setMaterial(*_mesh, material); }
+	inline void setTexture(int textureId)				{ return MeshComponent::setTexture(*_mesh, textureId); }
 
 	static void setMaterial(MyMesh& mesh, const Material& material);
+	static void setTexture(MyMesh& mesh, int textureId);
 };
 
 

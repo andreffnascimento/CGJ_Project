@@ -35,6 +35,8 @@ private:
 	constexpr static size_t POINT_LIGHT_TYPE = 2;
 	constexpr static size_t SPOT_LIGHT_TYPE = 3;
 
+	constexpr static size_t MAX_TEXTURES = 2;
+
 	constexpr static const char* FONT_NAME = "fonts/arial.ttf";
 
 
@@ -59,10 +61,13 @@ private:
 
 
 private:
+	int _uniformLocation[ShaderUniformType::N_UNIFORMS] = {};
+	
 	VSShaderLib _shader;
 	VSShaderLib _shaderText;
 
-	int _uniformLocation[ShaderUniformType::N_UNIFORMS] = {};
+	GLuint textures[Renderer::MAX_TEXTURES] = {};
+	size_t nTextures = 0;
 
 
 
