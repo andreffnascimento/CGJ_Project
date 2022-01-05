@@ -81,9 +81,6 @@ void displayScene()
 	app._ts = (float)(currTime - app._prevTime) / 1000.0f;
 	app._prevTime = currTime;
 
-	if (app._ts > 0.5)		// HACK: when window is being moved, the ts goes to a very high value, breaking the physics engine
-		app._ts = 0.0f;
-
 	app._frameCount++;
 	app._scene->onUpdate(app._ts);
 	app._eventHandler.reset();
