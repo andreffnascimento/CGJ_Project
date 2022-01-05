@@ -25,8 +25,9 @@ public:
 
 		RigidbodyComponent& rigidbody = addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::DYNAMIC, 100.0f, 10.0f, 30.0f);
 		rigidbody.setDragThreshold(2.0f);
+		rigidbody.setUsesGravity(true);
 
-		Coords3f carSize = { CAR_BOTTOM_SIZE.x, CAR_BOTTOM_SIZE.y + CAR_TOP_SIZE.y + CAR_FLOOR_DISTANCE, CAR_BOTTOM_SIZE.z + CAR_BUMPER_SIZE.z };
+		Coords3f carSize = { CAR_BOTTOM_SIZE.x, CAR_BOTTOM_SIZE.y + CAR_TOP_SIZE.y + CAR_FLOOR_DISTANCE - 0.2f, CAR_BOTTOM_SIZE.z + CAR_BUMPER_SIZE.z };
 		AABBColliderComponent& collider = addComponent<AABBColliderComponent>(rigidbody, carSize);
 		collider.setRestitutionCocoefficient(0.3f);
 		

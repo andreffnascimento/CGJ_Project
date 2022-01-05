@@ -31,9 +31,10 @@ public:
 
 
 public:
-	inline const Coords3f& collisionNormal() const	{ return _collisionNormal; }
-	inline const Coords3f& relativeVelocity() const	{ return _relativeVelocity; }
-	inline float impulse()	const					{ return _impulse; }
+	inline const AABBColliderComponent& collider() const	{ return _collider; }
+	inline const Coords3f& collisionNormal() const			{ return _collisionNormal; }
+	inline const Coords3f& relativeVelocity() const			{ return _relativeVelocity; }
+	inline float impulse()	const							{ return _impulse; }
 
 };
 

@@ -35,6 +35,9 @@ private:
 		top.addComponent<MeshComponent>(mesh);
 		Transform::scale(top, TABLE_SIZE);
 		Transform::translate(top, { 0.0f, TABLE_SIZE.y / 2.0f, 0.0f });
+
+		RigidbodyComponent& rigidbody = top.addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::STATIC);
+		AABBColliderComponent& collider = top.addComponent<AABBColliderComponent>(rigidbody, TABLE_SIZE);
 	}
 
 

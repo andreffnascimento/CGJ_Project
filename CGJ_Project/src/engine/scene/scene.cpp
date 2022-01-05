@@ -114,6 +114,10 @@ void Scene::onCreate()
 	for (auto& script : _registry.getComponents<ScriptComponent>())
 		script.second.onCreate();
 
+	// initialize the transform matrices
+	for (auto& transformIterator : _registry.getComponents<TransformComponent>())
+		Transform::calculateTransformMatrix(Entity(transformIterator.first, this));
+
 	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
 	physicsEngine.initialize(*this);
 }

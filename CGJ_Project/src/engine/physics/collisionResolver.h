@@ -17,6 +17,8 @@ class CollisionResolver
 {
 
 protected:
+	AABBColliderComponent& _collider; 
+
 	std::list<Collision> _collisions = std::list<Collision>();
 	std::list<Force> _impulseForces = std::list<Force>();
 
@@ -24,8 +26,9 @@ protected:
 
 
 public:
-	CollisionResolver() = default;
+	CollisionResolver() = delete;
 	CollisionResolver(const CollisionResolver&) = default;
+	CollisionResolver(AABBColliderComponent& collider);
 	~CollisionResolver() = default;
 
 
@@ -38,8 +41,8 @@ public:
 public:
 	void reset();
 	void addCollision(const AABBColliderComponent& otherCollider, const Coords3f& collisionNormal, const Coords3f& relativeVelocity, float impulse);
-	void processCollisions(const AABBColliderComponent& collider);
-	void updateVelocity(Coords3f& velocity);
+	void processCollisions();
+	void updateVelocity(Coords3f& velocity) const;
 
 
 public:
@@ -47,7 +50,7 @@ public:
 
 
 protected:
-	virtual void _processCollision(const AABBColliderComponent& collider, const Collision& collision);
+	virtual void _processCollision(const Collision& collision);
 
 };
 

@@ -1,6 +1,16 @@
 #include "collisionResolver.h"
 
 #include "engine/scene/components.h"
+#include <iostream>
+
+
+
+
+CollisionResolver::CollisionResolver(AABBColliderComponent& collider)
+	: _collider(collider)
+{
+	// empty
+}
 
 
 
@@ -18,15 +28,17 @@ void CollisionResolver::addCollision(const AABBColliderComponent& otherCollider,
 }
 
 
-void CollisionResolver::processCollisions(const AABBColliderComponent& collider)
+void CollisionResolver::processCollisions()
 {
+	if (_collider.rigidbody().type() == RigidbodyComponent::RigidbodyType::STATIC)
+		return;
+
 	for (const auto& collision : _collisions)
-		if (collider.rigidbody().type() != RigidbodyComponent::RigidbodyType::STATIC)
-			_processCollision(collider, collision);
+			_processCollision(collision);
 }
 
 
-void CollisionResolver::updateVelocity(Coords3f& velocity)
+void CollisionResolver::updateVelocity(Coords3f& velocity) const
 {
 	for (const auto& force : _impulseForces)
 		velocity += force.value();
@@ -43,7 +55,8 @@ bool CollisionResolver::ignoreCollision(const RigidbodyComponent& rigidbody)
 
 
 
-void CollisionResolver::_processCollision(const AABBColliderComponent& collider, const Collision& collision)
+void CollisionResolver::_processCollision(const Collision& collision)
 {
-	collider.collisionResolver()->_impulseForces.emplace_back(Force::ForceType::LINEAR, collision.collisionNormal() * collision.impulse());
+	Coords3f impulseForce = collision.impulse() * _collider.rigidbody().invMass() * collision.collisionNormal();
+	_collider.collisionResolver()->_impulseForces.emplace_back(Force::ForceType::LINEAR, impulseForce);
 }

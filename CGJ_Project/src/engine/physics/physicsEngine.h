@@ -72,6 +72,7 @@ private:
 
 private:
 	void _processRigidbodyMovement(const Scene& scene, RigidbodyComponent& rigidbody, float ts) const;
+	void _addGravityForce(RigidbodyComponent& rigidbody, Coords3f& linearForce, float ts) const;
 	Coords3f _calculateExpectedRotation(RigidbodyComponent& rigidbody, float ts) const;
 	void _combineForces(RigidbodyComponent& rigidbody, Coords3f& linearForce, Coords3f& angularForce) const;
 	void _calculateExpectedAngularVelocity(RigidbodyComponent& rigidbody, Coords3f& angularForce, float ts) const;
@@ -81,7 +82,7 @@ private:
 
 private:
 	void _checkCollision(AABBColliderComponent& entityCollider, AABBColliderComponent& otherCollider, float ts) const;
-	void _resolveCollision(AABBColliderComponent& entityCollider, AABBColliderComponent& otherCollider, float ts) const;
+	void _resolveCollision(AABBColliderComponent& entityCollider, AABBColliderComponent& otherCollider, const bool* contained, float ts) const;
 
 };
 

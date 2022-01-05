@@ -273,6 +273,7 @@ private:
 	float _drag = 0.0f;
 	float _angularDrag = 0.0f;
 	float _dragThreshold = 1.0f;
+	bool _usesGravity = false;
 
 	Coords3f _position = Coords3f();
 	Quaternion _rotation = Coords3f();
@@ -292,10 +293,12 @@ public:
 	~RigidbodyComponent() = default;
 
 	inline const RigidbodyComponent::RigidbodyType type() const { return _type; }
-	inline float mass() const									{ return _mass; }
+	inline float mass() const									{ return  _mass == 0.0f ? std::numeric_limits<float>::max() : 1.0f / _mass; }
+	inline float invMass() const								{ return _mass; }
 	inline float drag() const									{ return _drag; }
 	inline float angularDrag() const							{ return _angularDrag; }
 	inline float dragThreshold() const							{ return _dragThreshold; }
+	inline bool usesGravity() const								{ return _usesGravity; }
 	inline const Coords3f& position() const						{ return _position; }
 	inline const Quaternion& rotation() const					{ return _rotation; }
 	inline const Coords3f& velocity() const						{ return _velocity; }
@@ -303,6 +306,7 @@ public:
 	inline bool sleeping() const								{ return _sleeping; }
 
 	inline void setDragThreshold(float dragThreshold)			{ _dragThreshold = dragThreshold; }
+	inline void setUsesGravity(bool usesGravity)				{ _usesGravity = usesGravity; }
 	inline void setSleepThreshold(float sleepThreshold)			{ _sleepThreshold = sleepThreshold; }
 
 	inline void addRelativeForce(const Coords3f& value)		{ addRelativeForce(Force(Force::ForceType::LINEAR, value)); }

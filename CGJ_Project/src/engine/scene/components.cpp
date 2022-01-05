@@ -1,7 +1,5 @@
 #include "components.h"
 
-#include <numeric>
-
 #include "engine/app/application.h"
 #include "engine/physics/collisionResolver.h"
 #include "engine/physics/physicsEngine.h"
@@ -122,11 +120,11 @@ RigidbodyComponent::RigidbodyComponent(RigidbodyComponent::RigidbodyType type)
 	: _type(type)
 {
 	if (_type == RigidbodyComponent::RigidbodyType::STATIC)
-		_mass = std::numeric_limits<float>::max();
+		_mass = 0.0f;
 }
 
 RigidbodyComponent::RigidbodyComponent(RigidbodyComponent::RigidbodyType type, float mass, float drag, float angularDrag)
-	: _type(type), _mass(mass), _drag(drag), _angularDrag(angularDrag)
+	: _type(type), _mass(1.0f / mass), _drag(drag), _angularDrag(angularDrag)
 {
 	if (_mass < 0.0f)
 		throw std::string("The mass must be a value greater or equal to 0!");
@@ -138,7 +136,7 @@ RigidbodyComponent::RigidbodyComponent(RigidbodyComponent::RigidbodyType type, f
 		throw std::string("The angular drag must be a value greater or equal to 0!");
 
 	if (_type == RigidbodyComponent::RigidbodyType::STATIC)
-		_mass = std::numeric_limits<float>::max();
+		_mass = 0.0f;
 }
 
 
