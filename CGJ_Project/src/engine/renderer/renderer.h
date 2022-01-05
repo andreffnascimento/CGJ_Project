@@ -41,7 +41,7 @@ private:
 	constexpr static size_t POINT_LIGHT_TYPE = 2;
 	constexpr static size_t SPOT_LIGHT_TYPE = 3;
 
-	constexpr static size_t MAX_TEXTURES = 2;
+	constexpr static size_t MAX_TEXTURES = 20;
 
 	constexpr static const char* FONT_NAME = "fonts/arial.ttf";
 
@@ -49,6 +49,14 @@ private:
 
 
 private:
+	struct TextureData
+	{
+		GLuint textureData[Renderer::MAX_TEXTURES] = {};
+		GLuint textureType[Renderer::MAX_TEXTURES] = {};
+		size_t nTextures = 0;
+	};
+
+
 	struct LightData
 	{
 		GLuint nLights = 0;
@@ -72,8 +80,7 @@ private:
 	VSShaderLib _shader;
 	VSShaderLib _shaderText;
 
-	GLuint _textures[Renderer::MAX_TEXTURES] = {};
-	int _nTextures = 0;
+	Renderer::TextureData _textures = Renderer::TextureData();
 
 
 
@@ -105,6 +112,7 @@ public:
 
 private:
 	GLuint _setupShaders();
+	void _activateTextures() const;
 
 
 private:

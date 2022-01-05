@@ -40,7 +40,7 @@ void Renderer::_loadMesh(const MeshComponent& mesh) const
 	glUniform4fv(_uniformLocation[ShaderUniformType::MATERIAL_SPECULAR], 1, meshData.mat.specular);
 	glUniform1f(_uniformLocation[ShaderUniformType::MATERIAL_SHININESS], meshData.mat.shininess);
 	glUniform4fv(_uniformLocation[ShaderUniformType::MATERIAL_EMISSIVE], 1, meshData.mat.emissive);
-	glUniform1f(_uniformLocation[ShaderUniformType::MATERIAL_TEXCOUNT], meshData.mat.texCount);
+	glUniform1ui(_uniformLocation[ShaderUniformType::MATERIAL_TEXCOUNT], meshData.mat.texCount);
 }
 
 

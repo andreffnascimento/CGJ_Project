@@ -37,7 +37,7 @@ void Renderer::init()
 	freeType_init(Renderer::FONT_NAME);
 
 	// generates the texture names
-	glGenTextures(Renderer::MAX_TEXTURES, _textures);
+	glGenTextures(Renderer::MAX_TEXTURES, _textures.textureData);
 
 	// some GL settings
 	glEnable(GL_DEPTH_TEST);
@@ -64,6 +64,7 @@ void Renderer::initSceneRendering() const
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glUseProgram(_shader.getProgramIndex());
+	_activateTextures();
 }
 
 
@@ -71,16 +72,24 @@ void Renderer::initSceneRendering() const
 
 int Renderer::create2dTexture(const char* texturePath)
 {
-	int textureId = _nTextures++;
-	Texture2D_Loader(_textures, texturePath, textureId);
+	if (_textures.nTextures >= Renderer::MAX_TEXTURES)
+		throw std::string("The renderer only supports up to " + std::to_string(Renderer::MAX_TEXTURES) + " textures!");
+
+	int textureId = (int)_textures.nTextures++;
+	Texture2D_Loader(_textures.textureData, texturePath, textureId);
+	_textures.textureType[textureId] = GL_TEXTURE_2D;
 	return textureId;
 }
 
 
 int Renderer::createCubeMapTexture(const char** texturePaths)
 {
-	int textureId = _nTextures++;
-	TextureCubeMap_Loader(_textures, texturePaths, textureId);
+	if (_textures.nTextures >= Renderer::MAX_TEXTURES)
+		throw std::string("The renderer only supports up to " + std::to_string(Renderer::MAX_TEXTURES) + " textures!");
+
+	int textureId = (int)_textures.nTextures++;
+	TextureCubeMap_Loader(_textures.textureData, texturePaths, textureId);
+	_textures.textureType[textureId] = GL_TEXTURE_CUBE_MAP;
 	return textureId;
 }
 
@@ -128,4 +137,14 @@ GLuint Renderer::_setupShaders()
 	std::cout << "InfoLog for Text Rendering Shader\n" << _shaderText.getAllInfoLogs().c_str() << "\n\n";
 
 	return _shader.isProgramLinked() && _shaderText.isProgramLinked();
+}
+
+
+void Renderer::_activateTextures() const
+{
+	for (unsigned int i = 0; i < _textures.nTextures; i++)
+	{
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(_textures.textureType[i], _textures.textureData[i]);
+	}
 }
