@@ -6,49 +6,37 @@
 #include <sstream>
 
 #include "engine/app/application.h"
-#include "engine/app/eventHandler.h"
-
-#include "engine/scene/scene.h"
 
 #include <GL/freeglut.h>
 
 
 
 
+// Application termination callback function
 void terminateApp()
 {
 	Application::terminate();
 }
 
 
-// FPS display callback function
-void timer(int value)
+// Overlay refesh timer callback function
+void overlayTimer(int value)
 {
 	if (!Application::isRunning())
 		return;
-
-	Application& app = Application::getInstance();
-	const Application::ApplicationData& appData = app._applicationData;
-
-	std::ostringstream oss;
-	oss << appData.caption << ": " << app._frameCount << " FPS @ (" << appData.width << "x" << appData.heigth << ")";
-	std::string s = oss.str();
-	glutSetWindow(app._windowHandle);
-	glutSetWindowTitle(s.c_str());
-	glutTimerFunc(1000, timer, 0);
-
-	app._frameCount = 0;
+	
+	glutTimerFunc(1000, overlayTimer, 0);
+	displayOverlay();
 }
 
 
-// Screen refresh callback function
-void refresh(int value)
+// Screen refresh timer callback function
+void refreshTimer(int value)
 {
 	if (!Application::isRunning())
 		return;
 
-	Application& app = Application::getInstance();
-	glutTimerFunc((unsigned int)(1000.0 / 60.0), refresh, 0);
+	glutTimerFunc((unsigned int)(1000.0 / 60.0), refreshTimer, 0);
 	glutPostRedisplay();
 }
 
@@ -66,6 +54,22 @@ void viewportResize(int width, int height)
 }
 
 
+// Overlay update callback function
+void displayOverlay()
+{
+	Application& app = Application::getInstance();
+	const Application::ApplicationData& appData = app._applicationData;
+
+	std::ostringstream oss;
+	oss << appData.caption << ": " << app._frameCount << " FPS @ (" << appData.width << "x" << appData.heigth << ")";
+	std::string s = oss.str();
+	glutSetWindow(app._windowHandle);
+	glutSetWindowTitle(s.c_str());
+
+	app._frameCount = 0;
+}
+
+
 // Render callback function
 void displayScene()
 {
@@ -76,6 +80,9 @@ void displayScene()
 	unsigned int currTime = glutGet(GLUT_ELAPSED_TIME);
 	app._ts = (float)(currTime - app._prevTime) / 1000.0f;
 	app._prevTime = currTime;
+
+	if (app._ts > 0.5)		// HACK: when window is being moved, the ts goes to a very high value, breaking the physics engine
+		app._ts = 0.0f;
 
 	app._frameCount++;
 	app._scene->onUpdate(app._ts);

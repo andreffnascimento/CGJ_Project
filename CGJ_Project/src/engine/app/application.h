@@ -85,9 +85,11 @@ public:
 
 
 public:
-	friend void timer(int value);
-	friend void refresh(int value);
+	friend void terminateApp();
+	friend void overlayTimer(int value);
+	friend void refreshTimer(int value);
 	friend void viewportResize(int width, int height);
+	friend void displayOverlay();
 	friend void displayScene();
 
 };

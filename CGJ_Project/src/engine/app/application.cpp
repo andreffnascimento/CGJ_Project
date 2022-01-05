@@ -52,18 +52,18 @@ Application& Application::init(const ApplicationData& applicationData, int argc,
 	glutInitWindowSize(appData.width, appData.heigth);
 	app._windowHandle = glutCreateWindow(appData.caption.c_str());
 
-	// callback Registration
+	// window and display callback registration
 	glutCloseFunc(terminateApp);
-	glutDisplayFunc(displayScene);
+	glutTimerFunc(0, overlayTimer, 0);
 	glutReshapeFunc(viewportResize);
-	glutTimerFunc(0, timer, 0);
+	glutDisplayFunc(displayScene);
 
 	if (appData.lockedFps)
-		glutTimerFunc(0, refresh, 0);   //use it to to get 60 FPS whatever
+		glutTimerFunc(0, refreshTimer, 0);
 	else
-		glutIdleFunc(displayScene);		// Use it for maximum performance
+		glutIdleFunc(displayScene);
 
-	// mouse and Keyboard Callbacks
+	// mouse and keyboard callback registration
 	glutKeyboardFunc(processKeysDown);
 	glutKeyboardUpFunc(processKeysUp);
 	glutMouseFunc(processMouseButtons);

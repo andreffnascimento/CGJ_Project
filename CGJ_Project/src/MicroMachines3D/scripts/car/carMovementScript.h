@@ -51,6 +51,9 @@ public:
 
 	void onUpdate(float ts) override
 	{
+		if (std::abs(_rigidbody->velocity().y) > 0.1f)	// car is not on top of the table
+			return;
+		
 		_calculateForwardForce(ts);
 		_calculateBackwardsForce(ts);
 
