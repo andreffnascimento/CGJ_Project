@@ -20,7 +20,7 @@ public:
 		VM,
 		NORMAL,
 		L_POS,
-		TEXT_MAP,
+		TEXT_MAP_0,
 		TEXT_MAP_1,
 		TEXT_MAP_2,
 		N_UNIFORMS
@@ -67,7 +67,7 @@ private:
 	VSShaderLib _shaderText;
 
 	GLuint _textures[Renderer::MAX_TEXTURES] = {};
-	size_t _nTextures = 0;
+	int _nTextures = 0;
 
 
 
