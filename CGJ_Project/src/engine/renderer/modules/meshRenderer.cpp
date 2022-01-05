@@ -35,15 +35,12 @@ void Renderer::renderMeshes(const Scene& scene) const
 void Renderer::_loadMesh(const MeshComponent& mesh) const
 {
 	const MyMesh& meshData = mesh.meshData();
-	GLint loc;
-	loc = glGetUniformLocation(_shader.getProgramIndex(), "material.ambient");
-	glUniform4fv(loc, 1, meshData.mat.ambient);
-	loc = glGetUniformLocation(_shader.getProgramIndex(), "material.diffuse");
-	glUniform4fv(loc, 1, meshData.mat.diffuse);
-	loc = glGetUniformLocation(_shader.getProgramIndex(), "material.specular");
-	glUniform4fv(loc, 1, meshData.mat.specular);
-	loc = glGetUniformLocation(_shader.getProgramIndex(), "material.shininess");
-	glUniform1f(loc, meshData.mat.shininess);
+	glUniform4fv(_uniformLocation[ShaderUniformType::MATERIAL_AMBIENT], 1, meshData.mat.ambient);
+	glUniform4fv(_uniformLocation[ShaderUniformType::MATERIAL_DIFFUSE], 1, meshData.mat.diffuse);
+	glUniform4fv(_uniformLocation[ShaderUniformType::MATERIAL_SPECULAR], 1, meshData.mat.specular);
+	glUniform1f(_uniformLocation[ShaderUniformType::MATERIAL_SHININESS], meshData.mat.shininess);
+	glUniform4fv(_uniformLocation[ShaderUniformType::MATERIAL_EMISSIVE], 1, meshData.mat.emissive);
+	glUniform1f(_uniformLocation[ShaderUniformType::MATERIAL_TEXCOUNT], meshData.mat.texCount);
 }
 
 

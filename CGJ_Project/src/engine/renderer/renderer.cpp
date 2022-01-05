@@ -106,6 +106,13 @@ GLuint Renderer::_setupShaders()
 	_uniformLocation[ShaderUniformType::VM] = glGetUniformLocation(_shader.getProgramIndex(), "m_viewModel");
 	_uniformLocation[ShaderUniformType::NORMAL] = glGetUniformLocation(_shader.getProgramIndex(), "m_normal");
 
+	_uniformLocation[ShaderUniformType::MATERIAL_AMBIENT] = glGetUniformLocation(_shader.getProgramIndex(), "material.ambient");
+	_uniformLocation[ShaderUniformType::MATERIAL_DIFFUSE] = glGetUniformLocation(_shader.getProgramIndex(), "material.diffuse");
+	_uniformLocation[ShaderUniformType::MATERIAL_SPECULAR] = glGetUniformLocation(_shader.getProgramIndex(), "material.specular");
+	_uniformLocation[ShaderUniformType::MATERIAL_SHININESS] = glGetUniformLocation(_shader.getProgramIndex(), "material.shininess");
+	_uniformLocation[ShaderUniformType::MATERIAL_EMISSIVE] = glGetUniformLocation(_shader.getProgramIndex(), "material.emissive");
+	_uniformLocation[ShaderUniformType::MATERIAL_TEXCOUNT] = glGetUniformLocation(_shader.getProgramIndex(), "material.texCount");
+
 	_uniformLocation[ShaderUniformType::TEXT_MAP_0] = glGetUniformLocation(_shader.getProgramIndex(), "texmap0");
 	_uniformLocation[ShaderUniformType::TEXT_MAP_1] = glGetUniformLocation(_shader.getProgramIndex(), "texmap1");
 	_uniformLocation[ShaderUniformType::TEXT_MAP_2] = glGetUniformLocation(_shader.getProgramIndex(), "texmap2");
