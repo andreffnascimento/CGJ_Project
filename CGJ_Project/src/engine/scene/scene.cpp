@@ -12,6 +12,54 @@
 
 
 
+void Scene::onCreate()
+{
+	// initialize all the script components
+	for (auto& script : _registry.getComponents<ScriptComponent>())
+		script.second.onCreate();
+
+	// initialize the transform matrices
+	for (auto& transformIterator : _registry.getComponents<TransformComponent>())
+		Transform::calculateTransformMatrix(Entity(transformIterator.first, this));
+
+	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
+	physicsEngine.initialize(*this);
+}
+
+
+void Scene::onUpdate(float ts)
+{
+	// update entity scripts
+	for (auto& scriptIterator : _registry.getComponents<ScriptComponent>())
+		scriptIterator.second.onUpdate(ts);
+
+	// simulate physics
+	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
+	physicsEngine.simulate(*this, ts);
+
+	// update entity transform matrixes
+	for (auto& transformIterator : _registry.getComponents<TransformComponent>())
+		Transform::calculateTransformMatrix(Entity(transformIterator.first, this));
+
+	// render to the screen
+	Renderer& renderer = Application::getRenderer();
+	renderer.initSceneRendering();
+	renderer.renderCamera(*this);
+	renderer.renderLights(*this);
+	renderer.renderMeshes(*this);
+	renderer.renderColliders(*this);
+}
+
+
+void Scene::onViewportResize(int width, int height)
+{
+	Renderer& renderer = Application::getRenderer();
+	renderer.updateViewport(_activeCamera, width, height);
+}
+
+
+
+
 Entity Scene::createEntity()
 {
 	std::string tag = "Entity$<" + std::to_string(_registry.getNextId()) + ">";
@@ -108,47 +156,15 @@ void Scene::setReflectionCoefficients(float ambient, float diffuse, float specul
 
 
 
-void Scene::onCreate()
+int Scene::create2dTexture(const char* texturePath) const
 {
-	// initialize all the script components
-	for (auto& script : _registry.getComponents<ScriptComponent>())
-		script.second.onCreate();
-
-	// initialize the transform matrices
-	for (auto& transformIterator : _registry.getComponents<TransformComponent>())
-		Transform::calculateTransformMatrix(Entity(transformIterator.first, this));
-
-	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
-	physicsEngine.initialize(*this);
+	Renderer& renderer = Application::getRenderer();
+	return renderer.create2dTexture(texturePath);
 }
 
 
-void Scene::onUpdate(float ts)
-{
-	// update entity scripts
-	for (auto& scriptIterator : _registry.getComponents<ScriptComponent>())
-		scriptIterator.second.onUpdate(ts);
-
-	// simulate physics
-	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
-	physicsEngine.simulate(*this, ts);
-	
-	// update entity transform matrixes
-	for (auto& transformIterator : _registry.getComponents<TransformComponent>())
-		Transform::calculateTransformMatrix(Entity(transformIterator.first, this));
-
-	// render to the screen
-	Renderer& renderer = Application::getRenderer();
-	renderer.initSceneRendering();
-	renderer.renderCamera(*this);
-	renderer.renderLights(*this);
-	renderer.renderMeshes(*this);
-	renderer.renderColliders(*this);
-}
-
-
-void Scene::onViewportResize(int width, int height)
+int Scene::createCubeMapTexture(const char** texturePaths) const
 {
 	Renderer& renderer = Application::getRenderer();
-	renderer.updateViewport(_activeCamera, width, height);
+	return renderer.createCubeMapTexture(texturePaths);
 }

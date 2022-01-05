@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "engine/renderer/VertexAttrDef.h"
+#include "engine/renderer/Texture_Loader.h"
 
 #include "engine/text/avtFreeType.h"
 
@@ -35,6 +36,9 @@ void Renderer::init()
 	// initialization of freetype library with font_name file
 	freeType_init(Renderer::FONT_NAME);
 
+	// generates the texture names
+	glGenTextures(Renderer::MAX_TEXTURES, _textures);
+
 	// some GL settings
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -62,6 +66,23 @@ void Renderer::initSceneRendering() const
 	glUseProgram(_shader.getProgramIndex());
 }
 
+
+
+
+int Renderer::create2dTexture(const char* texturePath)
+{
+	int textureId = _nTextures++;
+	Texture2D_Loader(_textures, texturePath, textureId);
+	return textureId;
+}
+
+
+int Renderer::createCubeMapTexture(const char** texturePaths)
+{
+	int textureId = _nTextures++;
+	TextureCubeMap_Loader(_textures, texturePaths, textureId);
+	return textureId;
+}
 
 
 

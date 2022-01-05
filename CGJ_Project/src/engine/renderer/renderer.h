@@ -66,8 +66,9 @@ private:
 	VSShaderLib _shader;
 	VSShaderLib _shaderText;
 
-	GLuint textures[Renderer::MAX_TEXTURES] = {};
-	size_t nTextures = 0;
+	GLuint _textures[Renderer::MAX_TEXTURES] = {};
+	size_t _nTextures = 0;
+
 
 
 
@@ -80,6 +81,11 @@ public:
 	void init();
 	void updateViewport(CameraComponent& camera, int width, int height) const;
 	void initSceneRendering() const;
+
+
+public:
+	int create2dTexture(const char* texturePath);
+	int createCubeMapTexture(const char** texturePaths);
 
 
 public:
