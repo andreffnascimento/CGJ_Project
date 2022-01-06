@@ -48,7 +48,6 @@ void Scene::onUpdate(float ts)
 		float fixedTs = std::min(ts, PhysicsEngine::PHYSICS_SIMULATION_MAX_INTERVAL);
 		_timeAccumulator -= fixedTs;
 		onFixedUpdate(fixedTs);
-
 	}
 
 	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();

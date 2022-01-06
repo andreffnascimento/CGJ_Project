@@ -34,7 +34,7 @@ constexpr int   CHEERIO_SIDES = 20;
 
 constexpr Coords3f CHEERIO_SIZE = { 3.45f, 6.0f, 3.45f };
 
-constexpr float CHEERIO_SPACING = 2.0 * CHEERIO_OUTER_RADIUS * CHEERIO_SIZE.x;
+constexpr float CHEERIO_SPACING = 2.0f * CHEERIO_OUTER_RADIUS * CHEERIO_SIZE.x;
 constexpr float TRACK_WIDTH = 6.0f * CHEERIO_SPACING;
 
 constexpr float CANDEL_HEIGHT = 1.0f;

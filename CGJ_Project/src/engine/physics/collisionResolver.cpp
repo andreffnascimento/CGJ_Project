@@ -40,7 +40,7 @@ void CollisionResolver::processCollisions()
 void CollisionResolver::updateVelocity(Coords3f& velocity) const
 {
 	for (const auto& impulse : _impulses)
-		velocity += impulse;
+		velocity += impulse / _impulses.size();
 }
 
 

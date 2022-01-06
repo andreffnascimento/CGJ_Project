@@ -132,13 +132,19 @@ void PhysicsEngine::_simulateCollisions(const Scene& scene, float ts) const
 	for (unsigned int i = 0; i < PhysicsEngine::COLLISION_ITERATIONS; i++)
 	{
 		_resetCollider(scene);
-		for (auto& entityColliderIterator = colliderComponents.begin(); entityColliderIterator != colliderComponents.end(); entityColliderIterator++)
+		for (auto& entityColliderIterator : colliderComponents)
 		{
-			AABBColliderComponent& entityCollider = entityColliderIterator->second;
-			for (auto& otherColliderIterator = std::next(entityColliderIterator); otherColliderIterator != colliderComponents.end(); otherColliderIterator++)
+			EntityHandle entityId = entityColliderIterator.first;
+			AABBColliderComponent& entityCollider = entityColliderIterator.second;
+			if (entityCollider._collisionResolver->ignoreCollision(*entityCollider._rigidbody))
+				continue;
+
+			for (auto& otherColliderIterator : colliderComponents)
 			{
-				AABBColliderComponent& otherCollider = otherColliderIterator->second;
-				_checkCollision(entityCollider, otherCollider, ts);
+				EntityHandle otherId = otherColliderIterator.first;
+				AABBColliderComponent& otherCollider = otherColliderIterator.second;
+				if (entityId != otherId)
+					_checkCollision(entityCollider, otherCollider, ts);
 			}
 		}
 		_resolveCollisions(scene, ts);
@@ -283,26 +289,8 @@ void PhysicsEngine::_checkCollision(AABBColliderComponent& entityCollider, AABBC
 	RigidbodyComponent& entityRigidbody = *entityCollider._rigidbody;
 	RigidbodyComponent& otherRigidbody = *otherCollider._rigidbody;
 
-	bool ignoreEntityCollider = entityCollider._collisionResolver->ignoreCollision(entityRigidbody);
-	bool ignoreOtherCollider = otherCollider._collisionResolver->ignoreCollision(otherRigidbody);
-	if (ignoreEntityCollider && ignoreOtherCollider)
-		return;
-
 	float entityCoords[6] = {};
 	float otherCoords[6] = {};
-
-	AABBColliderComponent* entityColliderPtr = &entityCollider;
-	AABBColliderComponent* otherColliderPtr = &otherCollider;
-	float* entityPtr = entityCoords;
-	float* otherPtr = otherCoords;
-
-	if (ignoreEntityCollider)
-	{
-		entityColliderPtr = &otherCollider;
-		otherColliderPtr = &entityCollider;
-		entityPtr = otherCoords;
-		otherPtr = entityCoords;
-	}
 
 	entityCoords[0] = entityRigidbody._position.x - entityCollider._boundingBox.x;
 	entityCoords[1] = entityRigidbody._position.x + entityCollider._boundingBox.x;
@@ -326,10 +314,10 @@ void PhysicsEngine::_checkCollision(AABBColliderComponent& entityCollider, AABBC
 		return;
 
 	bool contained[3] = {};
-	contained[0] = otherPtr[0] < entityPtr[0] && entityPtr[1] < otherPtr[1];
-	contained[1] = otherPtr[2] < entityPtr[2] && entityPtr[3] < otherPtr[3];
-	contained[2] = otherPtr[4] < entityPtr[4] && entityPtr[5] < otherPtr[5];
-	_resolveCollision(*entityColliderPtr, *otherColliderPtr, contained, ts);
+	contained[0] = otherCoords[0] < entityCoords[0] && entityCoords[1] < otherCoords[1];
+	contained[1] = otherCoords[2] < entityCoords[2] && entityCoords[3] < otherCoords[3];
+	contained[2] = otherCoords[4] < entityCoords[4] && entityCoords[5] < otherCoords[5];
+	_resolveCollision(entityCollider, otherCollider, contained, ts);
 }
 
 

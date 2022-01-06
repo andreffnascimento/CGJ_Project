@@ -88,7 +88,7 @@ private:
 	}
 
 	//void _createStraight(cenas, nCheerios, id, [x,y]L, [x,y]C)
-	void _createStraight(Scene* scene, GroupComponent& group, const MeshComponent& mesh, int& currentId, int nCheerios, int xModifier, int yModifier, int xInitial, int yInitial) {
+	void _createStraight(Scene* scene, GroupComponent& group, const MeshComponent& mesh, int& currentId, int nCheerios, int xModifier, int yModifier, float xInitial, float yInitial) {
 		for (int i = 0; i < nCheerios; i++) {
 			_createCheerio(scene, group, mesh, currentId++, -TABLE_SIZE.x / 2 + xInitial + xModifier * i * CHEERIO_SPACING, TABLE_SIZE.z / 2 + yInitial - yModifier * i * CHEERIO_SPACING);
 		}
@@ -97,17 +97,17 @@ private:
 	void _createCheerio(Scene* scene, GroupComponent& group, const MeshComponent& mesh, unsigned int id, float xPos, float yPos)
 	{
 		constexpr RigidbodyComponent::RigidbodyType rigidbodyType = RigidbodyComponent::RigidbodyType::DYNAMIC;
-		constexpr float mass = 2000.0f;
+		constexpr float mass = 500.0f;
 		constexpr float drag = 1000.0f;
 		constexpr float angularDrag = 1000.0f;
 
 		Entity cheerio = group.addNewEntity(scene, *this, "cheerio_" + std::to_string(id));
 		cheerio.addComponent<MeshComponent>(mesh, cheerio);
 
-		//RigidbodyComponent& rigidbody = cheerio.addComponent<RigidbodyComponent>(rigidbodyType, mass, drag, angularDrag);
-		//AABBColliderComponent& collider = cheerio.addComponent<AABBColliderComponent>(rigidbody, Coords3f({ CHEERIO_SIZE.x, CHEERIO_OUTER_RADIUS * 3.0f, CHEERIO_SIZE.z }));
-		//collider.setFixedBoundingBox(true);
-		//collider.setRestitutionCocoefficient(0.1f);
+		RigidbodyComponent& rigidbody = cheerio.addComponent<RigidbodyComponent>(rigidbodyType, mass, drag, angularDrag);
+		AABBColliderComponent& collider = cheerio.addComponent<AABBColliderComponent>(rigidbody, Coords3f({ CHEERIO_SIZE.x, CHEERIO_OUTER_RADIUS * 3.0f, CHEERIO_SIZE.z }));
+		collider.setFixedBoundingBox(true);
+		collider.setRestitutionCocoefficient(0.1f);
 
 		Transform::scaleTo(cheerio, CHEERIO_SIZE);
 		Transform::translate(cheerio, { xPos, CHEERIO_SIZE.y / 5.0f, yPos });
