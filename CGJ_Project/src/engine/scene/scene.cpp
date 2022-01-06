@@ -44,12 +44,7 @@ void Scene::onUpdate(float ts)
 
 	// render to the screen
 	Renderer& renderer = Application::getRenderer();
-	renderer.initSceneRendering();
-	renderer.renderCamera(*this);
-	renderer.renderLights(*this);
-	renderer.renderMeshes(*this);
-	renderer.renderColliders(*this);
-	renderer.terminateSceneRendering();
+	renderer.renderScene(*this);
 }
 
 

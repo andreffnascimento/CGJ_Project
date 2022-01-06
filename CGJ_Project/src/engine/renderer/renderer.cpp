@@ -133,6 +133,19 @@ void Renderer::updateViewport(CameraComponent& camera, int width, int height) co
 }
 
 
+
+
+void Renderer::renderScene(const Scene& scene) const
+{
+	initSceneRendering();
+	renderCamera(scene);
+	renderLights(scene);
+	renderMeshes(scene);
+	renderColliders(scene);
+	terminateSceneRendering();
+}
+
+
 void Renderer::initSceneRendering() const
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

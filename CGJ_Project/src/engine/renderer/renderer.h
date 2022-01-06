@@ -49,15 +49,19 @@ public:
 public:
 	void init();
 	void updateViewport(CameraComponent& camera, int width, int height) const;
-	void initSceneRendering() const;
-	void terminateSceneRendering() const;
 
 
 public:
+	void renderScene(const Scene& scene) const;
+	void initSceneRendering() const;
+	void terminateSceneRendering() const;
+
 	void renderCamera(const Scene& scene) const;
 	void renderLights(const Scene& scene) const;
 	void renderMeshes(const Scene& scene) const;
 	void renderColliders(const Scene& scene) const;
+
+
 
 
 private:
