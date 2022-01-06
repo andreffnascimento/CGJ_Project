@@ -26,7 +26,7 @@ public:
 private:
 	void setupScene() override
 	{
-		setReflectionCoefficients(0.5f, 1.0f, 1.0f, 0.1f);
+		Renderer::setReflectionCoefficients(0.5f, 1.0f, 1.0f, 0.1f);
 		
 		GameManager gameManager = GameManager(this);
 		CameraManager cameraManager = CameraManager(this);

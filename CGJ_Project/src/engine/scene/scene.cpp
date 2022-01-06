@@ -8,6 +8,7 @@
 #include "engine/math/transform.h"
 #include "engine/physics/physicsEngine.h"
 #include "engine/renderer/renderer.h"
+#include "engine/utils/coords.h"
 
 
 
@@ -137,38 +138,4 @@ void Scene::setActiveCamera(const CameraEntity& camera)
 	Application& application = Application::getInstance();
 	WindowCoords windowCoords = application.getWindowSize();
 	onViewportResize(windowCoords.x, windowCoords.y);
-}
-
-
-void Scene::setReflectionCoefficients(float ambient, float diffuse, float specular, float darkTexture)
-{
-	if (ambient < 0.0f || ambient > 1.0f)
-		throw std::string("The ambient coefficient must be a float value between 0.0f and 1.0f");
-
-	if (diffuse < 0.0f || diffuse > 1.0f)
-		throw std::string("The diffuse coefficient must be a float value between 0.0f and 1.0f");
-
-	if (specular < 0.0f || specular > 1.0f)
-		throw std::string("The specular coefficient must be a float value between 0.0f and 1.0f");
-
-	if (darkTexture < 0.0f || darkTexture > 1.0f)
-		throw std::string("The dark texture coefficient must be a float value between 0.0f and 1.0f");
-
-	_reflectionCoefficients = { ambient, diffuse, specular, darkTexture };
-}
-
-
-
-
-unsigned int Scene::create2dTexture(const char* texturePath) const
-{
-	Renderer& renderer = Application::getRenderer();
-	return renderer.create2dTexture(texturePath);
-}
-
-
-unsigned int Scene::createCubeMapTexture(const char** texturePaths) const
-{
-	Renderer& renderer = Application::getRenderer();
-	return renderer.createCubeMapTexture(texturePaths);
 }

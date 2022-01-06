@@ -5,10 +5,61 @@
 #include "engine/renderer/VertexAttrDef.h"
 #include "engine/renderer/Texture_Loader.h"
 
+#include "engine/app/application.h"
 #include "engine/text/avtFreeType.h"
 
 #include <GL/glew.h>
 #include <IL/il.h>
+
+
+
+
+unsigned int Renderer::create2dTexture(const char* texturePath)
+{
+	Renderer& renderer = Application::getRenderer();
+	if (renderer._textures.nTextures >= RendererSettings::MAX_TEXTURES)
+		throw std::string("The renderer only supports up to " + std::to_string(RendererSettings::MAX_TEXTURES) + " textures!");
+
+	unsigned int textureId = (unsigned int)renderer._textures.nTextures++;
+	Texture2D_Loader(renderer._textures.textureData, texturePath, textureId);
+	renderer._textures.textureType[textureId] = GL_TEXTURE_2D;
+	return textureId;
+}
+
+
+unsigned int Renderer::createCubeMapTexture(const char** texturePaths)
+{
+	Renderer& renderer = Application::getRenderer();
+	if (renderer._textures.nTextures >= RendererSettings::MAX_TEXTURES)
+		throw std::string("The renderer only supports up to " + std::to_string(RendererSettings::MAX_TEXTURES) + " textures!");
+
+	unsigned int textureId = (unsigned int)renderer._textures.nTextures++;
+	TextureCubeMap_Loader(renderer._textures.textureData, texturePaths, textureId);
+	renderer._textures.textureType[textureId] = GL_TEXTURE_CUBE_MAP;
+	return textureId;
+}
+
+
+
+
+void Renderer::setReflectionCoefficients(float ambient, float diffuse, float specular, float darkTexture)
+{
+	Renderer& renderer = Application::getRenderer();
+
+	if (ambient < 0.0f || ambient > 1.0f)
+		throw std::string("The ambient coefficient must be a float value between 0.0f and 1.0f");
+
+	if (diffuse < 0.0f || diffuse > 1.0f)
+		throw std::string("The diffuse coefficient must be a float value between 0.0f and 1.0f");
+
+	if (specular < 0.0f || specular > 1.0f)
+		throw std::string("The specular coefficient must be a float value between 0.0f and 1.0f");
+
+	if (darkTexture < 0.0f || darkTexture > 1.0f)
+		throw std::string("The dark texture coefficient must be a float value between 0.0f and 1.0f");
+
+	renderer._reflectionCoefficients = { ambient, diffuse, specular, darkTexture };
+}
 
 
 
@@ -34,10 +85,10 @@ void Renderer::init()
 	ilInit();
 
 	// initialization of freetype library with font_name file
-	freeType_init(Renderer::FONT_NAME);
+	freeType_init(RendererSettings::FONT_NAME);
 
 	// generates the texture names
-	glGenTextures(Renderer::MAX_TEXTURES, _textures.textureData);
+	glGenTextures(RendererSettings::MAX_TEXTURES, _textures.textureData);
 
 	// some GL settings
 	glEnable(GL_DEPTH_TEST);
@@ -77,32 +128,6 @@ void Renderer::terminateSceneRendering() const
 
 
 
-unsigned int Renderer::create2dTexture(const char* texturePath)
-{
-	if (_textures.nTextures >= Renderer::MAX_TEXTURES)
-		throw std::string("The renderer only supports up to " + std::to_string(Renderer::MAX_TEXTURES) + " textures!");
-
-	unsigned int textureId = (unsigned int)_textures.nTextures++;
-	Texture2D_Loader(_textures.textureData, texturePath, textureId);
-	_textures.textureType[textureId] = GL_TEXTURE_2D;
-	return textureId;
-}
-
-
-unsigned int Renderer::createCubeMapTexture(const char** texturePaths)
-{
-	if (_textures.nTextures >= Renderer::MAX_TEXTURES)
-		throw std::string("The renderer only supports up to " + std::to_string(Renderer::MAX_TEXTURES) + " textures!");
-
-	unsigned int textureId = (unsigned int)_textures.nTextures++;
-	TextureCubeMap_Loader(_textures.textureData, texturePaths, textureId);
-	_textures.textureType[textureId] = GL_TEXTURE_CUBE_MAP;
-	return textureId;
-}
-
-
-
-
 GLuint Renderer::_setupShaders() 
 {
 	// Shader for models
@@ -118,30 +143,30 @@ GLuint Renderer::_setupShaders()
 
 	glLinkProgram(_shader.getProgramIndex());
 
-	_uniformLocation[Renderer::ShaderUniformType::PVM]		= glGetUniformLocation(_shader.getProgramIndex(), "m_pvm");
-	_uniformLocation[Renderer::ShaderUniformType::VM]		= glGetUniformLocation(_shader.getProgramIndex(), "m_viewModel");
-	_uniformLocation[Renderer::ShaderUniformType::NORMAL]	= glGetUniformLocation(_shader.getProgramIndex(), "m_normal");
+	_uniformLocation[RendererData::ShaderUniformType::PVM]		= glGetUniformLocation(_shader.getProgramIndex(), "m_pvm");
+	_uniformLocation[RendererData::ShaderUniformType::VM]		= glGetUniformLocation(_shader.getProgramIndex(), "m_viewModel");
+	_uniformLocation[RendererData::ShaderUniformType::NORMAL]	= glGetUniformLocation(_shader.getProgramIndex(), "m_normal");
 
-	_uniformLocation[Renderer::ShaderUniformType::MATERIAL_AMBIENT]		= glGetUniformLocation(_shader.getProgramIndex(), "materialData.ambient");
-	_uniformLocation[Renderer::ShaderUniformType::MATERIAL_DIFFUSE]		= glGetUniformLocation(_shader.getProgramIndex(), "materialData.diffuse");
-	_uniformLocation[Renderer::ShaderUniformType::MATERIAL_SPECULAR]	= glGetUniformLocation(_shader.getProgramIndex(), "materialData.specular");
-	_uniformLocation[Renderer::ShaderUniformType::MATERIAL_SHININESS]	= glGetUniformLocation(_shader.getProgramIndex(), "materialData.shininess");
-	_uniformLocation[Renderer::ShaderUniformType::MATERIAL_EMISSIVE]	= glGetUniformLocation(_shader.getProgramIndex(), "materialData.emissive");
+	_uniformLocation[RendererData::ShaderUniformType::MATERIAL_AMBIENT]		= glGetUniformLocation(_shader.getProgramIndex(), "materialData.ambient");
+	_uniformLocation[RendererData::ShaderUniformType::MATERIAL_DIFFUSE]		= glGetUniformLocation(_shader.getProgramIndex(), "materialData.diffuse");
+	_uniformLocation[RendererData::ShaderUniformType::MATERIAL_SPECULAR]	= glGetUniformLocation(_shader.getProgramIndex(), "materialData.specular");
+	_uniformLocation[RendererData::ShaderUniformType::MATERIAL_SHININESS]	= glGetUniformLocation(_shader.getProgramIndex(), "materialData.shininess");
+	_uniformLocation[RendererData::ShaderUniformType::MATERIAL_EMISSIVE]	= glGetUniformLocation(_shader.getProgramIndex(), "materialData.emissive");
 
-	_uniformLocation[Renderer::ShaderUniformType::N_TEXTURES]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.nTextures");
-	_uniformLocation[Renderer::ShaderUniformType::TEXTURE_MODE]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.textureMode");
-	_uniformLocation[Renderer::ShaderUniformType::TEXTURE_MAPS]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.textureMaps");
+	_uniformLocation[RendererData::ShaderUniformType::N_TEXTURES]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.nTextures");
+	_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MODE]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.textureMode");
+	_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAPS]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.textureMaps");
 
-	_uniformLocation[Renderer::ShaderUniformType::N_LIGHTS]				= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.nLights");
-	_uniformLocation[Renderer::ShaderUniformType::LIGHT_TYPES]			= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.lightTypes");
-	_uniformLocation[Renderer::ShaderUniformType::LIGHT_POSITIONS]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.lightPositions");
-	_uniformLocation[Renderer::ShaderUniformType::LIGHT_DIRECTIONS]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.lightDirections");
-	_uniformLocation[Renderer::ShaderUniformType::LIGHT_INTENSITIES]	= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.lightIntensities");
-	_uniformLocation[Renderer::ShaderUniformType::LIGHT_CUTOFFS]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.lightCutOffs");
-	_uniformLocation[Renderer::ShaderUniformType::LIGHT_AMBIENT]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.ambientCoefficient");
-	_uniformLocation[Renderer::ShaderUniformType::LIGHT_DIFFUSE]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.diffuseCoefficient");
-	_uniformLocation[Renderer::ShaderUniformType::LIGHT_SPECULAR]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.specularCoefficient");
-	_uniformLocation[Renderer::ShaderUniformType::LIGHT_DARK_TEXTURE]	= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.darkTextureCoefficient");
+	_uniformLocation[RendererData::ShaderUniformType::N_LIGHTS]				= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.nLights");
+	_uniformLocation[RendererData::ShaderUniformType::LIGHT_TYPES]			= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.lightTypes");
+	_uniformLocation[RendererData::ShaderUniformType::LIGHT_POSITIONS]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.lightPositions");
+	_uniformLocation[RendererData::ShaderUniformType::LIGHT_DIRECTIONS]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.lightDirections");
+	_uniformLocation[RendererData::ShaderUniformType::LIGHT_INTENSITIES]	= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.lightIntensities");
+	_uniformLocation[RendererData::ShaderUniformType::LIGHT_CUTOFFS]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.lightCutOffs");
+	_uniformLocation[RendererData::ShaderUniformType::LIGHT_AMBIENT]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.ambientCoefficient");
+	_uniformLocation[RendererData::ShaderUniformType::LIGHT_DIFFUSE]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.diffuseCoefficient");
+	_uniformLocation[RendererData::ShaderUniformType::LIGHT_SPECULAR]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.specularCoefficient");
+	_uniformLocation[RendererData::ShaderUniformType::LIGHT_DARK_TEXTURE]	= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.darkTextureCoefficient");
 
 	std::cout << "InfoLog for Per Fragment Phong Lightning Shader\n" << _shader.getAllInfoLogs().c_str()  << "\n\n";
 

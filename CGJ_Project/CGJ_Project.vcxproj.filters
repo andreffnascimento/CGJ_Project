@@ -71,6 +71,8 @@
     <ClInclude Include="src\MicroMachines3D\entities\world\candels.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\candels\candelsLightScript.h" />
     <ClInclude Include="src\engine\physics\collisionResolver.h" />
+    <ClInclude Include="src\engine\renderer\rendererSettings.h" />
+    <ClInclude Include="src\engine\renderer\rendererData.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />

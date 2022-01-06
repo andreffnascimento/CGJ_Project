@@ -36,20 +36,20 @@ void Renderer::renderMeshes(const Scene& scene) const
 void Renderer::_loadMesh(const MeshComponent& mesh) const
 {
 	const Material& material = mesh.material();
-	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::MATERIAL_AMBIENT], 1, material.ambient);
-	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::MATERIAL_DIFFUSE], 1, material.diffuse);
-	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::MATERIAL_SPECULAR], 1, material.specular);
-	glUniform1f(_uniformLocation[Renderer::ShaderUniformType::MATERIAL_SHININESS], material.shininess);
-	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::MATERIAL_EMISSIVE], 1, material.emissive);
+	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::MATERIAL_AMBIENT], 1, material.ambient);
+	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::MATERIAL_DIFFUSE], 1, material.diffuse);
+	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::MATERIAL_SPECULAR], 1, material.specular);
+	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::MATERIAL_SHININESS], material.shininess);
+	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::MATERIAL_EMISSIVE], 1, material.emissive);
 }
 
 
 void Renderer::_loadTexture(const MeshComponent& mesh) const
 {
 	const MeshComponent::Texture& texture = mesh.texture();
-	glUniform1ui(_uniformLocation[Renderer::ShaderUniformType::N_TEXTURES], (unsigned int)texture.nTextures());
-	glUniform1ui(_uniformLocation[Renderer::ShaderUniformType::TEXTURE_MODE], (unsigned int)texture.textureMode());
-	glUniform1uiv(_uniformLocation[Renderer::ShaderUniformType::TEXTURE_MAPS], (unsigned int)texture.nTextures(), texture.textureIds());
+	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::N_TEXTURES], (unsigned int)texture.nTextures());
+	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MODE], (unsigned int)texture.textureMode());
+	glUniform1uiv(_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAPS], (unsigned int)texture.nTextures(), texture.textureIds());
 }
 
 
@@ -65,10 +65,10 @@ void Renderer::_renderMesh(const MeshComponent& mesh) const
 	const MyMesh& meshData = mesh.mesh();
 
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
-	glUniformMatrix4fv(_uniformLocation[Renderer::ShaderUniformType::VM], 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
-	glUniformMatrix4fv(_uniformLocation[Renderer::ShaderUniformType::PVM], 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
+	glUniformMatrix4fv(_uniformLocation[RendererData::ShaderUniformType::VM], 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
+	glUniformMatrix4fv(_uniformLocation[RendererData::ShaderUniformType::PVM], 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
 	computeNormalMatrix3x3();
-	glUniformMatrix3fv(_uniformLocation[Renderer::ShaderUniformType::NORMAL], 1, GL_FALSE, mNormal3x3);
+	glUniformMatrix3fv(_uniformLocation[RendererData::ShaderUniformType::NORMAL], 1, GL_FALSE, mNormal3x3);
 
 	glBindVertexArray(meshData.vao);
 

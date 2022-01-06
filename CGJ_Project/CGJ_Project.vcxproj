@@ -202,6 +202,8 @@
     <ClInclude Include="src\engine\math\quaternion.h" />
     <ClInclude Include="src\engine\math\transform.h" />
     <ClInclude Include="src\engine\math\transformMatrix.h" />
+    <ClInclude Include="src\engine\renderer\rendererData.h" />
+    <ClInclude Include="src\engine\renderer\rendererSettings.h" />
     <ClInclude Include="src\engine\scene\components.h" />
     <ClInclude Include="src\engine\scene\ecsRegistry.h" />
     <ClInclude Include="src\engine\scene\sceneEntity.h" />

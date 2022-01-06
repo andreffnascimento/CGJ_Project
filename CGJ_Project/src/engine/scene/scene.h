@@ -10,9 +10,6 @@
 #include "engine/scene/entity.h"
 #include "engine/scene/cameraEntity.h"
 
-#include "engine/utils/coords.h"
-
-
 
 
 class Scene
@@ -21,7 +18,6 @@ class Scene
 private:
 	ECSRegistry _registry = ECSRegistry();
 	CameraEntity _activeCamera = CameraEntity();
-	ReflectionCoefficients _reflectionCoefficients = ReflectionCoefficients();
 
 
 
@@ -64,17 +60,7 @@ public:
 
 public:
 	inline const CameraEntity& activeCamera() const						{ return _activeCamera; }
-	inline const ReflectionCoefficients& reflectionCoefficients() const { return _reflectionCoefficients; }
-
-
-public:
 	void setActiveCamera(const CameraEntity& camera);
-	void setReflectionCoefficients(float ambient, float diffuse, float specular, float darkTexture);
-
-
-public:
-	unsigned int create2dTexture(const char* texturePath) const;
-	unsigned int createCubeMapTexture(const char** texturePaths) const;
 
 
 

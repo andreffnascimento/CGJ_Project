@@ -3,6 +3,8 @@
 
 
 #include "engine/renderer/vsShaderLib.h"
+#include "engine/renderer/rendererData.h"
+#include "engine/renderer/rendererSettings.h"
 
 #include "engine/scene/entity.h"
 #include "engine/scene/scene.h"
@@ -14,87 +16,25 @@
 
 class Renderer {
 
-public:
-	enum ShaderUniformType {
-		PVM,
-		VM,
-		NORMAL,
-		L_POS,
-
-		MATERIAL_AMBIENT,
-		MATERIAL_DIFFUSE,
-		MATERIAL_SPECULAR,
-		MATERIAL_SHININESS,
-		MATERIAL_EMISSIVE,
-
-		N_TEXTURES,
-		TEXTURE_MODE,
-		TEXTURE_MAPS,
-
-		N_LIGHTS,
-		LIGHT_TYPES,
-		LIGHT_POSITIONS,
-		LIGHT_DIRECTIONS,
-		LIGHT_INTENSITIES,
-		LIGHT_CUTOFFS,
-		LIGHT_AMBIENT,
-		LIGHT_DIFFUSE,
-		LIGHT_SPECULAR,
-		LIGHT_DARK_TEXTURE,
-
-		N_UNIFORMS
-	};
-
-
-
-
 private:
-	constexpr static size_t MAX_LIGHTS = 32;
-	constexpr static size_t DIRECTIONAL_LIGHT_TYPE = 1;
-	constexpr static size_t POINT_LIGHT_TYPE = 2;
-	constexpr static size_t SPOT_LIGHT_TYPE = 3;
-
-	constexpr static size_t MAX_TEXTURES = 20;
-
-	constexpr static const char* FONT_NAME = "fonts/arial.ttf";
-
-
-
-
-private:
-	struct TextureData
-	{
-		GLuint nTextures = 0;
-		GLuint textureData[Renderer::MAX_TEXTURES] = {};
-		GLuint textureType[Renderer::MAX_TEXTURES] = {};
-	};
-
-
-	struct LightData
-	{
-		GLuint nLights = 0;
-		GLuint lightTypes[Renderer::MAX_LIGHTS] = {};
-		GLfloat lightPositions[4 * Renderer::MAX_LIGHTS] = {};
-		GLfloat lightDirections[4 * Renderer::MAX_LIGHTS] = {};
-		GLfloat lightIntensities[Renderer::MAX_LIGHTS] = {};
-		GLfloat lightCutOffs[Renderer::MAX_LIGHTS] = {};
-
-		GLfloat ambientCoefficient = 1.0f;
-		GLfloat diffuseCoefficient = 1.0f;
-		GLfloat specularCoefficient = 1.0f;
-		GLfloat darkTextureCoefficient = 0.1f;
-	};
-
-
-
-
-private:
-	int _uniformLocation[Renderer::ShaderUniformType::N_UNIFORMS] = {};
-	
 	VSShaderLib _shader;
 	VSShaderLib _shaderText;
+	int _uniformLocation[RendererData::ShaderUniformType::N_UNIFORMS] = {};
 
-	Renderer::TextureData _textures = Renderer::TextureData();
+	RendererData::TextureData _textures = RendererData::TextureData();
+
+	RendererSettings::ReflectionCoefficients _reflectionCoefficients = RendererSettings::ReflectionCoefficients();
+
+
+	
+
+public:
+	static unsigned int create2dTexture(const char* texturePath);
+	static unsigned int createCubeMapTexture(const char** texturePaths);
+
+
+public:
+	static void setReflectionCoefficients(float ambient, float diffuse, float specular, float darkTexture);
 
 
 
@@ -112,17 +52,10 @@ public:
 
 
 public:
-	unsigned int create2dTexture(const char* texturePath);
-	unsigned int createCubeMapTexture(const char** texturePaths);
-
-
-public:
 	void renderCamera(const Scene& scene) const;
 	void renderLights(const Scene& scene) const;
 	void renderMeshes(const Scene& scene) const;
 	void renderColliders(const Scene& scene) const;
-
-
 
 
 private:
@@ -136,10 +69,10 @@ private:
 
 
 private:
-	void _formatDirectionalLight(const LightComponent& light, const Coords3f& direction, Renderer::LightData& lightData) const;
-	void _formatPointLight(const LightComponent& light, const Coords3f& translation, Renderer::LightData& lightData) const;
-	void _formatSpotLight(const LightComponent& light, const Coords3f& translation, const Coords3f& direction, Renderer::LightData& lightData) const;
-	void _submitLightData(const Renderer::LightData& lightData) const;
+	void _formatDirectionalLight(const LightComponent& light, const Coords3f& direction, RendererData::LightData& lightData) const;
+	void _formatPointLight(const LightComponent& light, const Coords3f& translation, RendererData::LightData& lightData) const;
+	void _formatSpotLight(const LightComponent& light, const Coords3f& translation, const Coords3f& direction, RendererData::LightData& lightData) const;
+	void _submitLightData(const RendererData::LightData& lightData) const;
 
 
 private:
