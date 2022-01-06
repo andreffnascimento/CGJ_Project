@@ -107,8 +107,8 @@ GLuint Renderer::_setupShaders()
 {
 	// Shader for models
 	_shader.init();
-	_shader.loadShader(VSShaderLib::VERTEX_SHADER, "src/engine/shaders/phong_blinn.vert");
-	_shader.loadShader(VSShaderLib::FRAGMENT_SHADER, "src/engine/shaders/phong_blinn.frag");
+	_shader.loadShader(VSShaderLib::VERTEX_SHADER, "src/engine/renderer/shaders/phong_blinn.vert");
+	_shader.loadShader(VSShaderLib::FRAGMENT_SHADER, "src/engine/renderer/shaders/phong_blinn.frag");
 
 	// set semantics for the shader variables
 	glBindFragDataLocation(_shader.getProgramIndex(), 0, "colorOut");
@@ -147,8 +147,8 @@ GLuint Renderer::_setupShaders()
 
 	// Shader for bitmap Text
 	_shaderText.init();
-	_shaderText.loadShader(VSShaderLib::VERTEX_SHADER, "src/engine/shaders/text.vert");
-	_shaderText.loadShader(VSShaderLib::FRAGMENT_SHADER, "src/engine/shaders/text.frag");
+	_shaderText.loadShader(VSShaderLib::VERTEX_SHADER, "src/engine/renderer/shaders/text.vert");
+	_shaderText.loadShader(VSShaderLib::FRAGMENT_SHADER, "src/engine/renderer/shaders/text.frag");
 
 	glLinkProgram(_shaderText.getProgramIndex());
 	std::cout << "InfoLog for Text Rendering Shader\n" << _shaderText.getAllInfoLogs().c_str() << "\n\n";
