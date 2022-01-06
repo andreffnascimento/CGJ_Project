@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "engine/renderer/VertexAttrDef.h"
+#include "engine/renderer/Texture_Loader.h"
 
 #include "engine/text/avtFreeType.h"
 
@@ -35,6 +36,9 @@ void Renderer::init()
 	// initialization of freetype library with font_name file
 	freeType_init(Renderer::FONT_NAME);
 
+	// generates the texture names
+	glGenTextures(Renderer::MAX_TEXTURES, _textures.textureData);
+
 	// some GL settings
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -60,8 +64,41 @@ void Renderer::initSceneRendering() const
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glUseProgram(_shader.getProgramIndex());
+	_activateTextures();
 }
 
+
+void Renderer::terminateSceneRendering() const
+{
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+
+
+
+unsigned int Renderer::create2dTexture(const char* texturePath)
+{
+	if (_textures.nTextures >= Renderer::MAX_TEXTURES)
+		throw std::string("The renderer only supports up to " + std::to_string(Renderer::MAX_TEXTURES) + " textures!");
+
+	unsigned int textureId = (unsigned int)_textures.nTextures++;
+	Texture2D_Loader(_textures.textureData, texturePath, textureId);
+	_textures.textureType[textureId] = GL_TEXTURE_2D;
+	return textureId;
+}
+
+
+unsigned int Renderer::createCubeMapTexture(const char** texturePaths)
+{
+	if (_textures.nTextures >= Renderer::MAX_TEXTURES)
+		throw std::string("The renderer only supports up to " + std::to_string(Renderer::MAX_TEXTURES) + " textures!");
+
+	unsigned int textureId = (unsigned int)_textures.nTextures++;
+	TextureCubeMap_Loader(_textures.textureData, texturePaths, textureId);
+	_textures.textureType[textureId] = GL_TEXTURE_CUBE_MAP;
+	return textureId;
+}
 
 
 
@@ -81,9 +118,30 @@ GLuint Renderer::_setupShaders()
 
 	glLinkProgram(_shader.getProgramIndex());
 
-	_uniformLocation[ShaderUniformType::PVM] = glGetUniformLocation(_shader.getProgramIndex(), "m_pvm");
-	_uniformLocation[ShaderUniformType::VM] = glGetUniformLocation(_shader.getProgramIndex(), "m_viewModel");
-	_uniformLocation[ShaderUniformType::NORMAL] = glGetUniformLocation(_shader.getProgramIndex(), "m_normal");
+	_uniformLocation[Renderer::ShaderUniformType::PVM]		= glGetUniformLocation(_shader.getProgramIndex(), "m_pvm");
+	_uniformLocation[Renderer::ShaderUniformType::VM]		= glGetUniformLocation(_shader.getProgramIndex(), "m_viewModel");
+	_uniformLocation[Renderer::ShaderUniformType::NORMAL]	= glGetUniformLocation(_shader.getProgramIndex(), "m_normal");
+
+	_uniformLocation[Renderer::ShaderUniformType::MATERIAL_AMBIENT]		= glGetUniformLocation(_shader.getProgramIndex(), "materialData.ambient");
+	_uniformLocation[Renderer::ShaderUniformType::MATERIAL_DIFFUSE]		= glGetUniformLocation(_shader.getProgramIndex(), "materialData.diffuse");
+	_uniformLocation[Renderer::ShaderUniformType::MATERIAL_SPECULAR]	= glGetUniformLocation(_shader.getProgramIndex(), "materialData.specular");
+	_uniformLocation[Renderer::ShaderUniformType::MATERIAL_SHININESS]	= glGetUniformLocation(_shader.getProgramIndex(), "materialData.shininess");
+	_uniformLocation[Renderer::ShaderUniformType::MATERIAL_EMISSIVE]	= glGetUniformLocation(_shader.getProgramIndex(), "materialData.emissive");
+
+	_uniformLocation[Renderer::ShaderUniformType::N_TEXTURES]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.nTextures");
+	_uniformLocation[Renderer::ShaderUniformType::TEXTURE_MODE]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.textureMode");
+	_uniformLocation[Renderer::ShaderUniformType::TEXTURE_MAPS]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.textureMaps");
+
+	_uniformLocation[Renderer::ShaderUniformType::N_LIGHTS]				= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.nLights");
+	_uniformLocation[Renderer::ShaderUniformType::LIGHT_TYPES]			= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.lightTypes");
+	_uniformLocation[Renderer::ShaderUniformType::LIGHT_POSITIONS]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.lightPositions");
+	_uniformLocation[Renderer::ShaderUniformType::LIGHT_DIRECTIONS]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.lightDirections");
+	_uniformLocation[Renderer::ShaderUniformType::LIGHT_INTENSITIES]	= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.lightIntensities");
+	_uniformLocation[Renderer::ShaderUniformType::LIGHT_CUTOFFS]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.lightCutOffs");
+	_uniformLocation[Renderer::ShaderUniformType::LIGHT_AMBIENT]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.ambientCoefficient");
+	_uniformLocation[Renderer::ShaderUniformType::LIGHT_DIFFUSE]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.diffuseCoefficient");
+	_uniformLocation[Renderer::ShaderUniformType::LIGHT_SPECULAR]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.specularCoefficient");
+	_uniformLocation[Renderer::ShaderUniformType::LIGHT_DARK_TEXTURE]	= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.darkTextureCoefficient");
 
 	std::cout << "InfoLog for Per Fragment Phong Lightning Shader\n" << _shader.getAllInfoLogs().c_str()  << "\n\n";
 
@@ -96,4 +154,14 @@ GLuint Renderer::_setupShaders()
 	std::cout << "InfoLog for Text Rendering Shader\n" << _shaderText.getAllInfoLogs().c_str() << "\n\n";
 
 	return _shader.isProgramLinked() && _shaderText.isProgramLinked();
+}
+
+
+void Renderer::_activateTextures() const
+{
+	for (unsigned int i = 0; i < _textures.nTextures; i++)
+	{
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(_textures.textureType[i], _textures.textureData[i]);
+	}
 }

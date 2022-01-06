@@ -24,6 +24,7 @@ void Renderer::renderMeshes(const Scene& scene) const
 
 		const Entity& entity = scene.getEntityById(entityId);
 		_loadMesh(mesh);
+		_loadTexture(mesh);
 		_applyTransform(entity);
 		_renderMesh(mesh);
 	}
@@ -34,16 +35,21 @@ void Renderer::renderMeshes(const Scene& scene) const
 
 void Renderer::_loadMesh(const MeshComponent& mesh) const
 {
-	const MyMesh& meshData = mesh.meshData();
-	GLint loc;
-	loc = glGetUniformLocation(_shader.getProgramIndex(), "material.ambient");
-	glUniform4fv(loc, 1, meshData.mat.ambient);
-	loc = glGetUniformLocation(_shader.getProgramIndex(), "material.diffuse");
-	glUniform4fv(loc, 1, meshData.mat.diffuse);
-	loc = glGetUniformLocation(_shader.getProgramIndex(), "material.specular");
-	glUniform4fv(loc, 1, meshData.mat.specular);
-	loc = glGetUniformLocation(_shader.getProgramIndex(), "material.shininess");
-	glUniform1f(loc, meshData.mat.shininess);
+	const Material& material = mesh.material();
+	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::MATERIAL_AMBIENT], 1, material.ambient);
+	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::MATERIAL_DIFFUSE], 1, material.diffuse);
+	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::MATERIAL_SPECULAR], 1, material.specular);
+	glUniform1f(_uniformLocation[Renderer::ShaderUniformType::MATERIAL_SHININESS], material.shininess);
+	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::MATERIAL_EMISSIVE], 1, material.emissive);
+}
+
+
+void Renderer::_loadTexture(const MeshComponent& mesh) const
+{
+	const MeshComponent::Texture& texture = mesh.texture();
+	glUniform1ui(_uniformLocation[Renderer::ShaderUniformType::N_TEXTURES], (unsigned int)texture.nTextures());
+	glUniform1ui(_uniformLocation[Renderer::ShaderUniformType::TEXTURE_MODE], (unsigned int)texture.textureMode());
+	glUniform1uiv(_uniformLocation[Renderer::ShaderUniformType::TEXTURE_MAPS], (unsigned int)texture.nTextures(), texture.textureIds());
 }
 
 
@@ -56,7 +62,7 @@ void Renderer::_applyTransform(const Entity& entity) const
 
 void Renderer::_renderMesh(const MeshComponent& mesh) const
 {
-	const MyMesh& meshData = mesh.meshData();
+	const MyMesh& meshData = mesh.mesh();
 
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
 	glUniformMatrix4fv(_uniformLocation[Renderer::ShaderUniformType::VM], 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);

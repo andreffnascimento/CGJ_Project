@@ -42,8 +42,7 @@ public:
 private:
 	void _initCarBody(Scene* scene, GroupComponent& group)
 	{
-		std::shared_ptr<MyMesh> mesh = std::make_shared<MyMesh>(createCube());
-		MeshComponent::setMaterial(*mesh, CAR_BODY_MATERIAL);
+		MeshComponent mesh = MeshComponent(createCube(), CAR_BODY_MATERIAL);
 
 		Entity carBottom = group.addNewEntity(scene, *this, "bottom");
 		carBottom.addComponent<MeshComponent>(mesh);
@@ -74,9 +73,7 @@ private:
 
 	void _initCarWheels(Scene* scene, GroupComponent& group)
 	{
-		std::shared_ptr<MyMesh> mesh = std::make_shared<MyMesh>(createTorus(WHEEL_INNER_RADIUS, WHEEL_OUTER_RADIUS, WHEEL_RINGS, WHEEL_SIDES));
-		MeshComponent::setMaterial(*mesh, CAR_WHEEL_MATERIAL);
-
+		MeshComponent mesh = MeshComponent(createTorus(WHEEL_INNER_RADIUS, WHEEL_OUTER_RADIUS, WHEEL_RINGS, WHEEL_SIDES), CAR_WHEEL_MATERIAL);
 		_initCarWheel(scene, group, mesh,  1.0f,  1.0f, "1");
 		_initCarWheel(scene, group, mesh, -1.0f,  1.0f, "2");
 		_initCarWheel(scene, group, mesh, -1.0f, -1.0f, "3");
@@ -84,7 +81,7 @@ private:
 	}
 
 
-	void _initCarWheel(Scene* scene, GroupComponent& group, const std::shared_ptr<MyMesh>& mesh, float xMod, float zMod, const char* wheelId)
+	void _initCarWheel(Scene* scene, GroupComponent& group, const MeshComponent& mesh, float xMod, float zMod, const char* wheelId)
 	{
 		Entity wheel = group.addNewEntity(scene, *this, "wheel" + std::string(wheelId));
 		wheel.addComponent<MeshComponent>(mesh);
@@ -100,11 +97,8 @@ private:
 
 	void _initCarHeadlights(Scene* scene, GroupComponent& group)
 	{
-		std::shared_ptr<MyMesh> frontMesh = std::make_shared<MyMesh>(createCube());
-		MeshComponent::setMaterial(*frontMesh, CAR_HEADLIGHT_FRONT_OFF_MATERIAL);
-
-		std::shared_ptr<MyMesh> backMesh = std::make_shared<MyMesh>(createCube());
-		MeshComponent::setMaterial(*backMesh, CAR_HEADLIGHT_BACK_OFF_MATERIAL);
+		MeshComponent frontMesh = MeshComponent(createCube(), CAR_HEADLIGHT_FRONT_OFF_MATERIAL);
+		MeshComponent backMesh = MeshComponent(createCube(), CAR_HEADLIGHT_BACK_OFF_MATERIAL);
 
 		_addCarHeadlightLamp(_initCarHeadlight(scene, group, frontMesh, 1.0f, 1.0f, "frontLeft"), -1.0f);
 		_addCarHeadlightLamp(_initCarHeadlight(scene, group, frontMesh, -1.0f, 1.0f, "frontRight"), 1.0f);
@@ -113,7 +107,7 @@ private:
 		_initCarHeadlight(scene, group, backMesh,  -1.0f, -1.0f, "backRight");
 	}
 
-	Entity _initCarHeadlight(Scene* scene, GroupComponent& group, const std::shared_ptr<MyMesh>& mesh, float xMod, float zMod, const char* headlightId)
+	Entity _initCarHeadlight(Scene* scene, GroupComponent& group, const MeshComponent& mesh, float xMod, float zMod, const char* headlightId)
 	{
 		Entity headlight = group.addNewEntity(scene, *this, "headlight-" + std::string(headlightId));
 		headlight.addComponent<MeshComponent>(mesh);

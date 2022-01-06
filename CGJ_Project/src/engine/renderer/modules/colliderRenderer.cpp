@@ -47,12 +47,10 @@ const MeshComponent& Renderer::getColliderMesh() const
 		{ 0.0f, 0.0f, 0.9f, 1.0f, },
 		{ 0.0f, 0.0f, 0.0f, 0.0f },
 		100.0f,
-		0
 	};
 
-	static std::shared_ptr<MyMesh> mesh = std::make_shared<MyMesh>(createCube());
-	static MeshComponent meshComponent = MeshComponent(mesh, COLLIDER_MATERIAL);
-	return meshComponent;
+	static MeshComponent mesh = MeshComponent(createCube(), COLLIDER_MATERIAL);
+	return mesh;
 }
 
 

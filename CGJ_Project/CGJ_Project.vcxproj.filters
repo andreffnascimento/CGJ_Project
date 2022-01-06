@@ -89,4 +89,11 @@
     <None Include="src\engine\shaders\text.frag" />
     <None Include="src\engine\shaders\text.vert" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="src\MicroMachines3D\textures\lightwood.tga" />
+    <Image Include="src\MicroMachines3D\textures\stone.tga" />
+    <Image Include="src\MicroMachines3D\textures\table\checker.png" />
+    <Image Include="src\MicroMachines3D\textures\table\lightwood.tga" />
+    <Image Include="src\MicroMachines3D\textures\table\stone.tga" />
+  </ItemGroup>
 </Project>

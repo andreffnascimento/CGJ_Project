@@ -15,14 +15,33 @@
 class Renderer {
 
 public:
-	enum ShaderUniformType	{
+	enum ShaderUniformType {
 		PVM,
 		VM,
 		NORMAL,
 		L_POS,
-		TEXT_MAP,
-		TEXT_MAP_1,
-		TEXT_MAP_2,
+
+		MATERIAL_AMBIENT,
+		MATERIAL_DIFFUSE,
+		MATERIAL_SPECULAR,
+		MATERIAL_SHININESS,
+		MATERIAL_EMISSIVE,
+
+		N_TEXTURES,
+		TEXTURE_MODE,
+		TEXTURE_MAPS,
+
+		N_LIGHTS,
+		LIGHT_TYPES,
+		LIGHT_POSITIONS,
+		LIGHT_DIRECTIONS,
+		LIGHT_INTENSITIES,
+		LIGHT_CUTOFFS,
+		LIGHT_AMBIENT,
+		LIGHT_DIFFUSE,
+		LIGHT_SPECULAR,
+		LIGHT_DARK_TEXTURE,
+
 		N_UNIFORMS
 	};
 
@@ -35,12 +54,22 @@ private:
 	constexpr static size_t POINT_LIGHT_TYPE = 2;
 	constexpr static size_t SPOT_LIGHT_TYPE = 3;
 
+	constexpr static size_t MAX_TEXTURES = 20;
+
 	constexpr static const char* FONT_NAME = "fonts/arial.ttf";
 
 
 
 
 private:
+	struct TextureData
+	{
+		GLuint nTextures = 0;
+		GLuint textureData[Renderer::MAX_TEXTURES] = {};
+		GLuint textureType[Renderer::MAX_TEXTURES] = {};
+	};
+
+
 	struct LightData
 	{
 		GLuint nLights = 0;
@@ -53,16 +82,20 @@ private:
 		GLfloat ambientCoefficient = 1.0f;
 		GLfloat diffuseCoefficient = 1.0f;
 		GLfloat specularCoefficient = 1.0f;
+		GLfloat darkTextureCoefficient = 0.1f;
 	};
 
 
 
 
 private:
+	int _uniformLocation[Renderer::ShaderUniformType::N_UNIFORMS] = {};
+	
 	VSShaderLib _shader;
 	VSShaderLib _shaderText;
 
-	int _uniformLocation[ShaderUniformType::N_UNIFORMS] = {};
+	Renderer::TextureData _textures = Renderer::TextureData();
+
 
 
 
@@ -75,6 +108,12 @@ public:
 	void init();
 	void updateViewport(CameraComponent& camera, int width, int height) const;
 	void initSceneRendering() const;
+	void terminateSceneRendering() const;
+
+
+public:
+	unsigned int create2dTexture(const char* texturePath);
+	unsigned int createCubeMapTexture(const char** texturePaths);
 
 
 public:
@@ -88,6 +127,7 @@ public:
 
 private:
 	GLuint _setupShaders();
+	void _activateTextures() const;
 
 
 private:
@@ -104,6 +144,7 @@ private:
 
 private:
 	void _loadMesh(const MeshComponent& mesh) const;
+	void _loadTexture(const MeshComponent& mesh) const;
 	void _applyTransform(const Entity& entity) const;
 	void _renderMesh(const MeshComponent& mesh) const;
 

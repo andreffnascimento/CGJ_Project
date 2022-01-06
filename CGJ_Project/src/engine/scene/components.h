@@ -178,26 +178,57 @@ public:
 
 struct MeshComponent
 {
+public:
+	enum class TextureMode
+	{
+		MODULATE_DIFFUSE = 1,	// phong color is modulated with texel color
+		REPLACE_DIFFUSE = 2,	// diffuse color is replaced by texel color with specular area
+	};
+
+public:
+	struct Texture
+	{
+	public:
+		static constexpr size_t MAX_TEXTURES = 2;
+
+	private:
+		MeshComponent::TextureMode _textureMode = TextureMode::MODULATE_DIFFUSE;
+		unsigned int _textureIds[MAX_TEXTURES] = {};
+		size_t _nTextures = 0;
+
+	public:
+		inline const MeshComponent::TextureMode& textureMode() const	{ return _textureMode; }
+		inline const unsigned int* textureIds() const					{ return _textureIds; }
+		inline size_t nTextures() const									{ return _nTextures; }
+
+	public:
+		friend struct MeshComponent;
+	};
+
+
 private:
 	std::shared_ptr<MyMesh> _mesh = nullptr;
+	std::shared_ptr<MeshComponent::Texture> _texture = nullptr;
 	bool _enabled = true;
 
+	
 public:
 	MeshComponent() = delete;
 	MeshComponent(const MeshComponent&) = default;
-	MeshComponent(const std::shared_ptr<MyMesh>& mesh) : _mesh(mesh) {}
-	MeshComponent(const std::shared_ptr<MyMesh>& mesh, const Material& material) : _mesh(mesh) { setMaterial(material); }
+	MeshComponent(MyMesh&& mesh);
+	MeshComponent(MyMesh&& mesh, const Material& material);
 	~MeshComponent() = default;
 
-	inline bool enabled()	const			{ return _enabled; }
-	inline void setEnabled(bool enabled)	{ _enabled = enabled; }
+	inline const MyMesh& mesh()	const						{ return *_mesh; }
+	inline const Material& material() const					{ return _mesh->mat; }
+	inline const MeshComponent::Texture& texture() const	{ return *_texture; }
+	inline bool enabled() const								{ return _enabled; }
 
-	inline const MyMesh* meshPtr()	const { return _mesh.get(); }
-	inline const MyMesh& meshData()	const { return *meshPtr(); } 
+	inline void setEnabled(bool enabled)								{ _enabled = enabled; }
+	void setTextureMode(const MeshComponent::TextureMode& textureMode)	{ _texture->_textureMode = textureMode; }
+	void addTexture(int textureId)										{ _texture->_textureIds[_texture->_nTextures++] = textureId; }
 
-	inline void setMaterial(const Material& material) { return MeshComponent::setMaterial(*_mesh, material); }
-
-	static void setMaterial(MyMesh& mesh, const Material& material);
+	void setMaterial(const Material& material);
 };
 
 

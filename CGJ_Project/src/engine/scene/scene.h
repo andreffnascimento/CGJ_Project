@@ -55,6 +55,12 @@ public:
 	Entity getEntityByTag(const std::string& tag) const;
 	std::unordered_set<Entity> getEntitiesByTag(const std::regex& regex) const;
 
+	template <typename T>
+	std::unordered_map<EntityHandle, T>& getSceneComponents() const
+	{
+		return _registry.getComponents<T>();
+	}
+
 
 public:
 	inline const CameraEntity& activeCamera() const						{ return _activeCamera; }
@@ -63,15 +69,14 @@ public:
 
 public:
 	void setActiveCamera(const CameraEntity& camera);
-	void setReflectionCoefficients(float ambient, float diffuse, float specular);
+	void setReflectionCoefficients(float ambient, float diffuse, float specular, float darkTexture);
 
 
 public:
-	template <typename T>
-	std::unordered_map<EntityHandle, T>& getSceneComponents() const
-	{
-		return _registry.getComponents<T>();
-	}
+	unsigned int create2dTexture(const char* texturePath) const;
+	unsigned int createCubeMapTexture(const char** texturePaths) const;
+
+
 
 
 public:		

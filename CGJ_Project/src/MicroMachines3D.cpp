@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
 	appData.caption = "CGJ Project : Micro Machines 3D";
 	appData.width = 1024;
 	appData.heigth = 768;
-	appData.lockedFps = false;
+	appData.lockedFps = true;
 
 	try 
 	{

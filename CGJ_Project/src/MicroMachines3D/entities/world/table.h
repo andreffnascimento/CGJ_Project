@@ -14,8 +14,10 @@ public:
 	Table(Scene* scene)
 		: SceneEntity(scene->createEntity("Table"))
 	{	
-		std::shared_ptr<MyMesh> mesh = std::make_shared<MyMesh>(createCube());
-		MeshComponent::setMaterial(*mesh, TABLE_MATERIAL);
+		MeshComponent mesh = MeshComponent(createCube(), TABLE_MATERIAL);
+		mesh.setTextureMode(MeshComponent::TextureMode::MODULATE_DIFFUSE);
+		mesh.addTexture(scene->create2dTexture("src/MicroMachines3D/textures/table/lightwood.tga"));
+		mesh.addTexture(scene->create2dTexture("src/MicroMachines3D/textures/table/stone.tga"));
 
 		GroupComponent& group = addComponent<GroupComponent>();
 		createTop(scene, group, mesh);
@@ -29,7 +31,7 @@ public:
 
 
 private:
-	void createTop(Scene* scene, GroupComponent& group, const std::shared_ptr<MyMesh>& mesh)
+	void createTop(Scene* scene, GroupComponent& group, const MeshComponent& mesh)
 	{
 		Entity top = group.addNewEntity(scene, *this, "top");
 		top.addComponent<MeshComponent>(mesh);
@@ -41,7 +43,7 @@ private:
 	}
 
 
-	void createLeg(Scene* scene, GroupComponent& group, const std::shared_ptr<MyMesh>& mesh, float xMod, float zMod, const char *legId)
+	void createLeg(Scene* scene, GroupComponent& group, const MeshComponent& mesh, float xMod, float zMod, const char *legId)
 	{
 		Entity leg = group.addNewEntity(scene, *this, "leg" + std::string(legId));
 		leg.addComponent<MeshComponent>(mesh);

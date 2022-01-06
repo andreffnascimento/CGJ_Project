@@ -49,9 +49,9 @@ void Renderer::renderLights(const Scene& scene) const
 	lightData.ambientCoefficient = reflectionCoefficients.ambient;
 	lightData.diffuseCoefficient = reflectionCoefficients.diffuse;
 	lightData.specularCoefficient = reflectionCoefficients.specular;
+	lightData.darkTextureCoefficient = reflectionCoefficients.darkTexture;
 	_submitLightData(lightData);
 }
-
 
 
 
@@ -98,42 +98,15 @@ void Renderer::_formatSpotLight(const LightComponent& light, const Coords3f& tra
 
 
 void Renderer::_submitLightData(const Renderer::LightData& lightData) const
-{
-	GLint loc;
-	constexpr const char* N_LIGHTS_ADDRESS = "lighting.nLights";
-	constexpr const char* LIGHT_TYPES_ADDRESS = "lighting.lightTypes";
-	constexpr const char* LIGHT_POSITIONS_ADDRESS = "lighting.lightPositions";
-	constexpr const char* LIGHT_DIRECTIONS_ADDRESS = "lighting.lightDirections";
-	constexpr const char* LIGHT_INTENSITIES_ADDRESS = "lighting.lightIntensities";
-	constexpr const char* LIGHT_CUTOFFS_ADDRESS = "lighting.lightCutOffs";
-	constexpr const char* LIGHT_AMBIENT_ADDRESS = "lighting.ambientCoefficient";
-	constexpr const char* LIGHT_DIFFUSE_ADDRESS = "lighting.diffuseCoefficient";
-	constexpr const char* LIGHT_SPECULAR_ADDRESS = "lighting.specularCoefficient";
-
-	loc = glGetUniformLocation(_shader.getProgramIndex(), N_LIGHTS_ADDRESS);
-	glUniform1ui(loc, lightData.nLights);
-
-	loc = glGetUniformLocation(_shader.getProgramIndex(), LIGHT_TYPES_ADDRESS);
-	glUniform1uiv(loc, lightData.nLights, lightData.lightTypes);
-
-	loc = glGetUniformLocation(_shader.getProgramIndex(), LIGHT_POSITIONS_ADDRESS);
-	glUniform4fv(loc, lightData.nLights, lightData.lightPositions);
-
-	loc = glGetUniformLocation(_shader.getProgramIndex(), LIGHT_DIRECTIONS_ADDRESS);
-	glUniform4fv(loc, lightData.nLights, lightData.lightDirections);
-
-	loc = glGetUniformLocation(_shader.getProgramIndex(), LIGHT_INTENSITIES_ADDRESS);
-	glUniform1fv(loc, lightData.nLights, lightData.lightIntensities);
-
-	loc = glGetUniformLocation(_shader.getProgramIndex(), LIGHT_CUTOFFS_ADDRESS);
-	glUniform1fv(loc, lightData.nLights, lightData.lightCutOffs);
-
-	loc = glGetUniformLocation(_shader.getProgramIndex(), LIGHT_AMBIENT_ADDRESS);
-	glUniform1f(loc, lightData.ambientCoefficient);
-
-	loc = glGetUniformLocation(_shader.getProgramIndex(), LIGHT_DIFFUSE_ADDRESS);
-	glUniform1f(loc, lightData.diffuseCoefficient);
-
-	loc = glGetUniformLocation(_shader.getProgramIndex(), LIGHT_SPECULAR_ADDRESS);
-	glUniform1f(loc, lightData.specularCoefficient);
+{	
+	glUniform1ui(_uniformLocation[Renderer::ShaderUniformType::N_LIGHTS], lightData.nLights);
+	glUniform1uiv(_uniformLocation[Renderer::ShaderUniformType::LIGHT_TYPES], lightData.nLights, lightData.lightTypes);
+	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::LIGHT_POSITIONS], lightData.nLights, lightData.lightPositions);
+	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::LIGHT_DIRECTIONS], lightData.nLights, lightData.lightDirections);
+	glUniform1fv(_uniformLocation[Renderer::ShaderUniformType::LIGHT_INTENSITIES], lightData.nLights, lightData.lightIntensities);
+	glUniform1fv(_uniformLocation[Renderer::ShaderUniformType::LIGHT_CUTOFFS], lightData.nLights, lightData.lightCutOffs);
+	glUniform1f(_uniformLocation[Renderer::ShaderUniformType::LIGHT_AMBIENT], lightData.ambientCoefficient);
+	glUniform1f(_uniformLocation[Renderer::ShaderUniformType::LIGHT_DIFFUSE], lightData.diffuseCoefficient);
+	glUniform1f(_uniformLocation[Renderer::ShaderUniformType::LIGHT_SPECULAR], lightData.specularCoefficient);
+	glUniform1f(_uniformLocation[Renderer::ShaderUniformType::LIGHT_DARK_TEXTURE], lightData.darkTextureCoefficient);
 }

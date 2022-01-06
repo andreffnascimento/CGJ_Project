@@ -12,6 +12,55 @@
 
 
 
+void Scene::onCreate()
+{
+	// initialize all the script components
+	for (auto& script : _registry.getComponents<ScriptComponent>())
+		script.second.onCreate();
+
+	// initialize the transform matrices
+	for (auto& transformIterator : _registry.getComponents<TransformComponent>())
+		Transform::calculateTransformMatrix(Entity(transformIterator.first, this));
+
+	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
+	physicsEngine.initialize(*this);
+}
+
+
+void Scene::onUpdate(float ts)
+{
+	// update entity scripts
+	for (auto& scriptIterator : _registry.getComponents<ScriptComponent>())
+		scriptIterator.second.onUpdate(ts);
+
+	// simulate physics
+	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
+	physicsEngine.simulate(*this, ts);
+
+	// update entity transform matrixes
+	for (auto& transformIterator : _registry.getComponents<TransformComponent>())
+		Transform::calculateTransformMatrix(Entity(transformIterator.first, this));
+
+	// render to the screen
+	Renderer& renderer = Application::getRenderer();
+	renderer.initSceneRendering();
+	renderer.renderCamera(*this);
+	renderer.renderLights(*this);
+	renderer.renderMeshes(*this);
+	renderer.renderColliders(*this);
+	renderer.terminateSceneRendering();
+}
+
+
+void Scene::onViewportResize(int width, int height)
+{
+	Renderer& renderer = Application::getRenderer();
+	renderer.updateViewport(_activeCamera, width, height);
+}
+
+
+
+
 Entity Scene::createEntity()
 {
 	std::string tag = "Entity$<" + std::to_string(_registry.getNextId()) + ">";
@@ -91,64 +140,35 @@ void Scene::setActiveCamera(const CameraEntity& camera)
 }
 
 
-void Scene::setReflectionCoefficients(float ambient, float diffuse, float specular)
+void Scene::setReflectionCoefficients(float ambient, float diffuse, float specular, float darkTexture)
 {
 	if (ambient < 0.0f || ambient > 1.0f)
-		throw std::string("Ambient coefficient must be a float value between 0.0f and 1.0f");
+		throw std::string("The ambient coefficient must be a float value between 0.0f and 1.0f");
 
 	if (diffuse < 0.0f || diffuse > 1.0f)
-		throw std::string("Diffuse coefficient must be a float value between 0.0f and 1.0f");
+		throw std::string("The diffuse coefficient must be a float value between 0.0f and 1.0f");
 
 	if (specular < 0.0f || specular > 1.0f)
-		throw std::string("Specular coefficient must be a float value between 0.0f and 1.0f");
+		throw std::string("The specular coefficient must be a float value between 0.0f and 1.0f");
 
-	_reflectionCoefficients = { ambient, diffuse, specular };
+	if (darkTexture < 0.0f || darkTexture > 1.0f)
+		throw std::string("The dark texture coefficient must be a float value between 0.0f and 1.0f");
+
+	_reflectionCoefficients = { ambient, diffuse, specular, darkTexture };
 }
 
 
 
 
-void Scene::onCreate()
-{
-	// initialize all the script components
-	for (auto& script : _registry.getComponents<ScriptComponent>())
-		script.second.onCreate();
-
-	// initialize the transform matrices
-	for (auto& transformIterator : _registry.getComponents<TransformComponent>())
-		Transform::calculateTransformMatrix(Entity(transformIterator.first, this));
-
-	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
-	physicsEngine.initialize(*this);
-}
-
-
-void Scene::onUpdate(float ts)
-{
-	// update entity scripts
-	for (auto& scriptIterator : _registry.getComponents<ScriptComponent>())
-		scriptIterator.second.onUpdate(ts);
-
-	// simulate physics
-	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
-	physicsEngine.simulate(*this, ts);
-	
-	// update entity transform matrixes
-	for (auto& transformIterator : _registry.getComponents<TransformComponent>())
-		Transform::calculateTransformMatrix(Entity(transformIterator.first, this));
-
-	// render to the screen
-	Renderer& renderer = Application::getRenderer();
-	renderer.initSceneRendering();
-	renderer.renderCamera(*this);
-	renderer.renderLights(*this);
-	renderer.renderMeshes(*this);
-	renderer.renderColliders(*this);
-}
-
-
-void Scene::onViewportResize(int width, int height)
+unsigned int Scene::create2dTexture(const char* texturePath) const
 {
 	Renderer& renderer = Application::getRenderer();
-	renderer.updateViewport(_activeCamera, width, height);
+	return renderer.create2dTexture(texturePath);
+}
+
+
+unsigned int Scene::createCubeMapTexture(const char** texturePaths) const
+{
+	Renderer& renderer = Application::getRenderer();
+	return renderer.createCubeMapTexture(texturePaths);
 }
