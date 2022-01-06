@@ -44,21 +44,43 @@ unsigned int Renderer::createCubeMapTexture(const char** texturePaths)
 
 void Renderer::setReflectionCoefficients(float ambient, float diffuse, float specular, float darkTexture)
 {
-	Renderer& renderer = Application::getRenderer();
-
 	if (ambient < 0.0f || ambient > 1.0f)
-		throw std::string("The ambient coefficient must be a float value between 0.0f and 1.0f");
+		throw std::string("The ambient coefficient must be a float value between 0.0f and 1.0f!");
 
 	if (diffuse < 0.0f || diffuse > 1.0f)
-		throw std::string("The diffuse coefficient must be a float value between 0.0f and 1.0f");
+		throw std::string("The diffuse coefficient must be a float value between 0.0f and 1.0f!");
 
 	if (specular < 0.0f || specular > 1.0f)
-		throw std::string("The specular coefficient must be a float value between 0.0f and 1.0f");
+		throw std::string("The specular coefficient must be a float value between 0.0f and 1.0f!");
 
 	if (darkTexture < 0.0f || darkTexture > 1.0f)
-		throw std::string("The dark texture coefficient must be a float value between 0.0f and 1.0f");
+		throw std::string("The dark texture coefficient must be a float value between 0.0f and 1.0f!");
 
+	Renderer& renderer = Application::getRenderer();
 	renderer._reflectionCoefficients = { ambient, diffuse, specular, darkTexture };
+}
+
+
+void Renderer::setFog(const RendererSettings::Fog& fog)
+{
+	if (fog.density < 0.0f)
+		throw std::string("The fog density must be a float value greater or equal to 0.0f!");
+
+	if (fog.startDistance < 0.0f || fog.endDistance < 0.0f)
+		throw std::string("The fog distances must be a float value greater or equal to 0.0f!");
+
+	if (fog.startDistance >= fog.endDistance)
+		throw std::string("The fog start distance must be smaller than its end distance!");
+
+	Renderer& renderer = Application::getRenderer();
+	renderer._fog = { fog.mode, fog.color, fog.density, fog.startDistance, fog.endDistance, fog.active };
+}
+
+
+void Renderer::setFogActive(bool active)
+{
+	Renderer& renderer = Application::getRenderer();
+	renderer._fog.active = active;
 }
 
 

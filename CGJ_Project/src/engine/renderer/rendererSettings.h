@@ -29,6 +29,24 @@ private:
 	};
 
 
+	struct Fog
+	{
+		enum class FogMode
+		{
+			LINEAR,
+			EXP,
+			EXP2
+		};
+
+		Fog::FogMode mode = Fog::FogMode::LINEAR;
+		Coords4f color = Coords4f();
+		float density = 1.0f;
+		float startDistance = 0.0f;
+		float endDistance = 10.0f;
+		bool active = false;
+	};
+
+
 
 
 public:

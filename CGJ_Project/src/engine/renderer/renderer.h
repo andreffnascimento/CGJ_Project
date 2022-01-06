@@ -24,6 +24,7 @@ private:
 	RendererData::TextureData _textures = RendererData::TextureData();
 
 	RendererSettings::ReflectionCoefficients _reflectionCoefficients = RendererSettings::ReflectionCoefficients();
+	RendererSettings::Fog _fog = RendererSettings::Fog();
 
 
 	
@@ -35,7 +36,8 @@ public:
 
 public:
 	static void setReflectionCoefficients(float ambient, float diffuse, float specular, float darkTexture);
-
+	static void setFog(const RendererSettings::Fog& fog);
+	static void setFogActive(bool active);
 
 
 
