@@ -23,7 +23,7 @@ private:
 
 private:
 	static constexpr bool ENABLE_SMOOTH_MOVEMENT = true;
-	static constexpr float DECAY_SPEED = 5.0f;
+	static constexpr float DECAY_SPEED = 0.01f;
 	static constexpr float MAX_ALPHA = 360.0f;
 	static constexpr float ORIGINAL_BETA = 30.0f;
 	static constexpr float ORIGINAL_R = 15.0f;
@@ -183,9 +183,9 @@ private:
 		if (_trackingStatus != TargetOrbitalCameraScript::TrackingStatus::NONE && true)
 			return;
 
-		if (_carRigidbody->velocity().length() > 0.0f)
+		float carSpeed = _carRigidbody->velocity().dot(_carRigidbody->velocity());
+		if (carSpeed > 1.0f)
 		{
-
 			if (TargetOrbitalCameraScript::ENABLE_SMOOTH_MOVEMENT)
 			{
 				float desiredAlpha = _getDesiredAlpha();
@@ -193,13 +193,15 @@ private:
 				float normalAlphaChange = std::abs(alphaDiff);
 				float rotateAlphaChange = 360.0f - normalAlphaChange;
 
-				int alphaSign = (alphaDiff > 0.0f ? 1 : -1) * (std::abs(alphaDiff) > 180.0f ? -1 : 1);
+				int alphaSign = (alphaDiff > 0.0f ? 1 : -1) * (normalAlphaChange > 180.0f ? -1 : 1);
 				float alphaChange = std::min(normalAlphaChange, rotateAlphaChange);
 
-				_alphaAux += (float)alphaSign * alphaChange * TargetOrbitalCameraScript::DECAY_SPEED * ts;
+				float cameraChangeSpeed = carSpeed * TargetOrbitalCameraScript::DECAY_SPEED * ts;
+
+				_alphaAux += (float)alphaSign * alphaChange * cameraChangeSpeed;
+				_betaAux += (TargetOrbitalCameraScript::ORIGINAL_BETA - _betaAux) * cameraChangeSpeed;
+				_rAux += (TargetOrbitalCameraScript::ORIGINAL_R - _rAux) * cameraChangeSpeed;
 				_alphaAux = std::fmod(_alphaAux + 360.0f, TargetOrbitalCameraScript::MAX_ALPHA);
-				_betaAux += (TargetOrbitalCameraScript::ORIGINAL_BETA - _betaAux) * TargetOrbitalCameraScript::DECAY_SPEED * ts;
-				_rAux += (TargetOrbitalCameraScript::ORIGINAL_R - _rAux) * TargetOrbitalCameraScript::DECAY_SPEED * ts;
 			}
 			else
 			{
