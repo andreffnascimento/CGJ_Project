@@ -73,8 +73,8 @@ public:
 
 
 public:
-	int create2dTexture(const char* texturePath) const;
-	int createCubeMapTexture(const char** texturePaths) const;
+	unsigned int create2dTexture(const char* texturePath) const;
+	unsigned int createCubeMapTexture(const char** texturePaths) const;
 
 
 

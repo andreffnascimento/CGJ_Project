@@ -111,8 +111,8 @@ public:
 
 
 public:
-	int create2dTexture(const char* texturePath);
-	int createCubeMapTexture(const char** texturePaths);
+	unsigned int create2dTexture(const char* texturePath);
+	unsigned int createCubeMapTexture(const char** texturePaths);
 
 
 public:

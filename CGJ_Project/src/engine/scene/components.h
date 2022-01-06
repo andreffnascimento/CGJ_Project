@@ -193,12 +193,12 @@ public:
 	{
 	private:
 		MeshComponent::TextureMode _textureMode = TextureMode::TEXEL_COLOR;
-		int _textureIds[MeshComponent::MAX_TEXTURES] = {};
+		unsigned int _textureIds[MeshComponent::MAX_TEXTURES] = {};
 		size_t _nTextures = 0;
 
 	public:
 		inline const MeshComponent::TextureMode& textureMode() const	{ return _textureMode; }
-		inline const int* textureIds() const							{ return _textureIds; }
+		inline const unsigned int* textureIds() const					{ return _textureIds; }
 		inline size_t nTextures() const									{ return _nTextures; }
 
 	public:

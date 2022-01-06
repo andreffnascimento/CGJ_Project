@@ -70,24 +70,24 @@ void Renderer::initSceneRendering() const
 
 
 
-int Renderer::create2dTexture(const char* texturePath)
+unsigned int Renderer::create2dTexture(const char* texturePath)
 {
 	if (_textures.nTextures >= Renderer::MAX_TEXTURES)
 		throw std::string("The renderer only supports up to " + std::to_string(Renderer::MAX_TEXTURES) + " textures!");
 
-	int textureId = (int)_textures.nTextures++;
+	unsigned int textureId = _textures.nTextures++;
 	Texture2D_Loader(_textures.textureData, texturePath, textureId);
 	_textures.textureType[textureId] = GL_TEXTURE_2D;
 	return textureId;
 }
 
 
-int Renderer::createCubeMapTexture(const char** texturePaths)
+unsigned int Renderer::createCubeMapTexture(const char** texturePaths)
 {
 	if (_textures.nTextures >= Renderer::MAX_TEXTURES)
 		throw std::string("The renderer only supports up to " + std::to_string(Renderer::MAX_TEXTURES) + " textures!");
 
-	int textureId = (int)_textures.nTextures++;
+	unsigned int textureId = (int)_textures.nTextures++;
 	TextureCubeMap_Loader(_textures.textureData, texturePaths, textureId);
 	_textures.textureType[textureId] = GL_TEXTURE_CUBE_MAP;
 	return textureId;
@@ -122,10 +122,10 @@ GLuint Renderer::_setupShaders()
 	_uniformLocation[Renderer::ShaderUniformType::MATERIAL_EMISSIVE]	= glGetUniformLocation(_shader.getProgramIndex(), "materialData.emissive");
 	_uniformLocation[Renderer::ShaderUniformType::MATERIAL_TEXCOUNT]	= glGetUniformLocation(_shader.getProgramIndex(), "materialData.texCount");
 
-	_uniformLocation[Renderer::ShaderUniformType::TEX_MODE]		= glGetUniformLocation(_shader.getProgramIndex(), "texmode");
-	_uniformLocation[Renderer::ShaderUniformType::TEX_MAP_0]	= glGetUniformLocation(_shader.getProgramIndex(), "texmap0");
-	_uniformLocation[Renderer::ShaderUniformType::TEX_MAP_1]	= glGetUniformLocation(_shader.getProgramIndex(), "texmap1");
-	_uniformLocation[Renderer::ShaderUniformType::TEX_MAP_2]	= glGetUniformLocation(_shader.getProgramIndex(), "texmap2");
+	_uniformLocation[Renderer::ShaderUniformType::TEX_MODE]		= glGetUniformLocation(_shader.getProgramIndex(), "textureData.texmode");
+	_uniformLocation[Renderer::ShaderUniformType::TEX_MAP_0]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.texmap0");
+	_uniformLocation[Renderer::ShaderUniformType::TEX_MAP_1]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.texmap1");
+	_uniformLocation[Renderer::ShaderUniformType::TEX_MAP_2]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.texmap2");
 
 	_uniformLocation[Renderer::ShaderUniformType::N_LIGHTS]				= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.nLights");
 	_uniformLocation[Renderer::ShaderUniformType::LIGHT_TYPES]			= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.lightTypes");

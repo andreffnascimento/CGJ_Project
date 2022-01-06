@@ -2,6 +2,9 @@
 
 
 const uint MAX_LIGHTS = 32;
+const uint DIRECTIONAL_LIGHT = 1;
+const uint POINT_LIGHT = 2;
+const uint SPOT_LIGHT = 3;
 
 
 
@@ -25,7 +28,7 @@ struct MaterialData {
 
 
 struct TextureData {
-	int textMode;
+	uint texmode;
 	sampler2D texmap0;
 	sampler2D texmap1;
 	sampler2D texmap2;
@@ -149,21 +152,19 @@ void main() {
 	for (int i = 0; i < lightingData.nLights; i++) {
 		switch(lightingData.lightTypes[i])
 		{
-		case 1:		// directional light
+		case DIRECTIONAL_LIGHT:
 			fragLighting = processDirectionalLight(fragLighting, i, normal, eye);
 			break;
 
-		case 2:		// point light
+		case POINT_LIGHT:
 			fragLighting = processPointLight(fragLighting, i, normal, eye);
 			break;
 
-		case 3:		// spot light
+		case SPOT_LIGHT:
 			fragLighting = processSpotLight(fragLighting, i, normal, eye);
 			break;
 		}
 	}
-
-
 
 	vec4 ambientColor = lightingData.ambientCoefficient * materialData.ambient;
 	vec4 lightingDataColor = lightingData.diffuseCoefficient * fragLighting.diffuse + lightingData.specularCoefficient * fragLighting.specular;

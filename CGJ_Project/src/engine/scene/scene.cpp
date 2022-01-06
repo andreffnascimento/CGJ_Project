@@ -156,14 +156,14 @@ void Scene::setReflectionCoefficients(float ambient, float diffuse, float specul
 
 
 
-int Scene::create2dTexture(const char* texturePath) const
+unsigned int Scene::create2dTexture(const char* texturePath) const
 {
 	Renderer& renderer = Application::getRenderer();
 	return renderer.create2dTexture(texturePath);
 }
 
 
-int Scene::createCubeMapTexture(const char** texturePaths) const
+unsigned int Scene::createCubeMapTexture(const char** texturePaths) const
 {
 	Renderer& renderer = Application::getRenderer();
 	return renderer.createCubeMapTexture(texturePaths);
