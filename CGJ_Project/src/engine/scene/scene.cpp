@@ -48,6 +48,7 @@ void Scene::onUpdate(float ts)
 	renderer.renderLights(*this);
 	renderer.renderMeshes(*this);
 	renderer.renderColliders(*this);
+	renderer.terminateSceneRendering();
 }
 
 

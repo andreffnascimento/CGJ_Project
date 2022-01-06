@@ -184,15 +184,14 @@ public:
 public:
 	enum class TextureMode
 	{
-		TEXEL_COLOR = 0,		// phong color is modulated with texel color
-		MULTITEXTURE = 1,		// multitexturing
-		TEXEL_DIFFUSE = 2		// diffuse color is replaced by texel color with specular area
+		MODULATE_DIFFUSE = 1,	// phong color is modulated with texel color
+		REPLACE_DIFFUSE = 2,	// diffuse color is replaced by texel color with specular area
 	};
 
 	struct Texture
 	{
 	private:
-		MeshComponent::TextureMode _textureMode = TextureMode::TEXEL_COLOR;
+		MeshComponent::TextureMode _textureMode = TextureMode::MODULATE_DIFFUSE;
 		unsigned int _textureIds[MeshComponent::MAX_TEXTURES] = {};
 		size_t _nTextures = 0;
 

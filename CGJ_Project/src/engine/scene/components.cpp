@@ -74,7 +74,6 @@ void MeshComponent::setMaterial(MyMesh& mesh, const Material& material)
 	memcpy(mesh.mat.specular, material.specular, 4 * sizeof(float));
 	memcpy(mesh.mat.emissive, material.emissive, 4 * sizeof(float));
 	mesh.mat.shininess = material.shininess;
-	mesh.mat.texCount = material.texCount;
 }
 
 

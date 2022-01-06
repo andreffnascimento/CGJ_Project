@@ -15,7 +15,7 @@ public:
 		: SceneEntity(scene->createEntity("Table"))
 	{	
 		MeshComponent meshComponent = MeshComponent(std::make_shared<MyMesh>(createCube()), TABLE_MATERIAL);
-		meshComponent.initializeTexturing(MeshComponent::TextureMode::MULTITEXTURE);
+		meshComponent.initializeTexturing(MeshComponent::TextureMode::MODULATE_DIFFUSE);
 		meshComponent.addTexture(scene->create2dTexture("src/MicroMachines3D/textures/table/lightwood.tga"));
 		meshComponent.addTexture(scene->create2dTexture("src/MicroMachines3D/textures/table/stone.tga"));
 

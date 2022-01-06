@@ -26,12 +26,12 @@ public:
 		MATERIAL_SPECULAR,
 		MATERIAL_SHININESS,
 		MATERIAL_EMISSIVE,
-		MATERIAL_TEXCOUNT,
 
-		TEX_MODE,
-		TEX_MAP_0,
-		TEX_MAP_1,
-		TEX_MAP_2,
+		N_TEXTURES,
+		TEXTURE_MODE,
+		TEXTURE_MAP_0,
+		TEXTURE_MAP_1,
+		TEXTURE_MAP_2,
 
 		N_LIGHTS,
 		LIGHT_TYPES,
@@ -108,6 +108,7 @@ public:
 	void init();
 	void updateViewport(CameraComponent& camera, int width, int height) const;
 	void initSceneRendering() const;
+	void terminateSceneRendering() const;
 
 
 public:

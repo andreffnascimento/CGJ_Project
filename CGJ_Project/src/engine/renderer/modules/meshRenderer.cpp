@@ -41,28 +41,27 @@ void Renderer::_loadMesh(const MeshComponent& mesh) const
 	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::MATERIAL_SPECULAR], 1, meshData.mat.specular);
 	glUniform1f(_uniformLocation[Renderer::ShaderUniformType::MATERIAL_SHININESS], meshData.mat.shininess);
 	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::MATERIAL_EMISSIVE], 1, meshData.mat.emissive);
-	glUniform1ui(_uniformLocation[Renderer::ShaderUniformType::MATERIAL_TEXCOUNT], meshData.mat.texCount);
 }
 
 
 void Renderer::_loadTexture(const MeshComponent& mesh) const
 {
 	constexpr Renderer::ShaderUniformType textureMaps[] = {
-		ShaderUniformType::TEX_MAP_0,
-		ShaderUniformType::TEX_MAP_1,
-		ShaderUniformType::TEX_MAP_2
+		ShaderUniformType::TEXTURE_MAP_0,
+		ShaderUniformType::TEXTURE_MAP_1,
+		ShaderUniformType::TEXTURE_MAP_2
 	};
 
 	const MeshComponent::Texture* textureData = mesh.texturePtr();
 	if (textureData != nullptr)
 	{
-		glUniform1ui(_uniformLocation[Renderer::ShaderUniformType::TEX_MODE], (unsigned int)textureData->textureMode());
+		glUniform1ui(_uniformLocation[Renderer::ShaderUniformType::TEXTURE_MODE], (unsigned int)textureData->textureMode());
 		for (size_t i = 0; i < textureData->nTextures(); i++)
 			glUniform1ui(_uniformLocation[textureMaps[i]], textureData->textureIds()[i]);
 	}
 	else
 	{
-		glUniform1i(_uniformLocation[Renderer::ShaderUniformType::TEX_MODE], (int)MeshComponent::TextureMode::TEXEL_COLOR);
+		glUniform1i(_uniformLocation[Renderer::ShaderUniformType::TEXTURE_MODE], (int)MeshComponent::TextureMode::MODULATE_DIFFUSE);
 	}	
 }
 

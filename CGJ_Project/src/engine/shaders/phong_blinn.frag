@@ -2,9 +2,12 @@
 
 
 const uint MAX_LIGHTS = 32;
-const uint DIRECTIONAL_LIGHT = 1;
-const uint POINT_LIGHT = 2;
-const uint SPOT_LIGHT = 3;
+const uint LIGHT_TYPE_DIRECTIONAL = 1;
+const uint LIGHT_TYPE_POINT = 2;
+const uint LIGHT_TYPE_SPOT = 3;
+
+const uint TEXTURE_MODE_MODULATE_DIFFUSE = 1;
+const uint TEXTURE_MODE_REPLACE_DIFFUSE = 2;
 
 
 
@@ -23,15 +26,15 @@ struct MaterialData {
 	vec4 specular;
 	vec4 emissive;
 	float shininess;
-	int texCount;
 };
 
 
 struct TextureData {
-	uint texmode;
-	sampler2D texmap0;
-	sampler2D texmap1;
-	sampler2D texmap2;
+	uint textureMode;
+	uint nTextures;
+	sampler2D textureMap0;
+	sampler2D textureMap1;
+	sampler2D textureMap2;
 };
 
 
@@ -135,9 +138,7 @@ FragLightingData processSpotLight(FragLightingData fragLighting, uint index, vec
 
 
 void main() {
-
 	colorOut = vec4(0.0);
-
 	vec4 diffuse = vec4(0.0);
 	vec4 specular = vec4(0.0);
 
@@ -145,6 +146,7 @@ void main() {
 	vec3 eye = normalize(dataIn.eye);
 
 
+	// Process all the lights of the scene
 	FragLightingData fragLighting;
 	fragLighting.diffuse = vec4(0.0);
 	fragLighting.specular = vec4(0.0);
@@ -152,20 +154,31 @@ void main() {
 	for (int i = 0; i < lightingData.nLights; i++) {
 		switch(lightingData.lightTypes[i])
 		{
-		case DIRECTIONAL_LIGHT:
-			fragLighting = processDirectionalLight(fragLighting, i, normal, eye);
-			break;
+			case LIGHT_TYPE_DIRECTIONAL:
+				fragLighting = processDirectionalLight(fragLighting, i, normal, eye);
+				break;
 
-		case POINT_LIGHT:
-			fragLighting = processPointLight(fragLighting, i, normal, eye);
-			break;
+			case LIGHT_TYPE_POINT:
+				fragLighting = processPointLight(fragLighting, i, normal, eye);
+				break;
 
-		case SPOT_LIGHT:
-			fragLighting = processSpotLight(fragLighting, i, normal, eye);
-			break;
+			case LIGHT_TYPE_SPOT:
+				fragLighting = processSpotLight(fragLighting, i, normal, eye);
+				break;
 		}
 	}
 
+
+	// Generates the color of the fragment according to the texture mode
+	switch (textureData.textureMode)
+	{
+		case TEXTURE_MODE_MODULATE_DIFFUSE:
+			break;
+
+		case TEXTURE_MODE_REPLACE_DIFFUSE:
+			break;
+	}
+	
 	vec4 ambientColor = lightingData.ambientCoefficient * materialData.ambient;
 	vec4 lightingDataColor = lightingData.diffuseCoefficient * fragLighting.diffuse + lightingData.specularCoefficient * fragLighting.specular;
 	colorOut = max(ambientColor, lightingDataColor);

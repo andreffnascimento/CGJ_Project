@@ -11,7 +11,6 @@ constexpr Material TABLE_MATERIAL = {
 	{ 0.0f, 0.0f, 0.0f, 1.0f },
 	{ 0.0f, 0.0f, 0.0f, 0.0f },
 	100.0f,
-	0
 };
 
 
@@ -23,7 +22,6 @@ constexpr Material CAR_BODY_MATERIAL = {
 	{ 1.0f, 1.0f, 1.0f, 1.0f, },
 	{ 0.0f, 0.0f, 0.0f, 0.0f },
 	100.0f,
-	0
 };
 
 
@@ -33,7 +31,6 @@ constexpr Material CAR_WHEEL_MATERIAL = {
 	{ 0.4f, 0.4f, 0.4f, 1.0f },
 	{ 0.0f, 0.0f, 0.0f, 0.0f },
 	20.0f,
-	0
 };
 
 
@@ -43,7 +40,6 @@ constexpr Material CAR_HEADLIGHT_FRONT_OFF_MATERIAL = {
 	{ 0.8f, 0.8f, 0.3f, 1.0f },
 	{ 0.0f, 0.0f, 0.0f, 0.0f },
 	80.0f,
-	0
 };
 
 constexpr Material CAR_HEADLIGHT_BACK_OFF_MATERIAL = {
@@ -52,7 +48,6 @@ constexpr Material CAR_HEADLIGHT_BACK_OFF_MATERIAL = {
 	{ 0.8f, 0.3f, 0.3f, 1.0f },
 	{ 0.0f, 0.0f, 0.0f, 0.0f },
 	80.0f,
-	0
 };
 
 constexpr Material CAR_HEADLIGHT_FRONT_ON_MATERIAL = {
@@ -61,7 +56,6 @@ constexpr Material CAR_HEADLIGHT_FRONT_ON_MATERIAL = {
 	{ 0.9f, 0.9f, 0.3f, 1.0f },
 	{ 0.0f, 0.0f, 0.0f, 0.0f },
 	80.0f,
-	0
 };
 
 constexpr Material CAR_HEADLIGHT_BACK_ON_MATERIAL = {
@@ -70,7 +64,6 @@ constexpr Material CAR_HEADLIGHT_BACK_ON_MATERIAL = {
 	{ 0.9f, 0.3f, 0.3f, 1.0f },
 	{ 0.0f, 0.0f, 0.0f, 0.0f },
 	80.0f,
-	0
 };
 
 
@@ -82,7 +75,6 @@ constexpr Material CHEERIO_MATERIAL = {
 	{ 0.90f, 0.56f, 0.30f, 1.0f },
 	{ 0.00f, 0.00f, 0.00f, 0.0f },
 	10.0f,
-	0
 };
 
 
@@ -94,7 +86,6 @@ constexpr Material CANDEL_OFF_MATERIAL = {
 	{ 0.0f, 0.0f, 0.0f, 1.0f },
 	{ 0.0f, 0.0f, 0.0f, 0.0f },
 	100.0f,
-	0
 };
 
 
@@ -104,7 +95,6 @@ constexpr Material CANDEL_ON_MATERIAL = {
 	{ 1.0f, 0.4f, 0.4f, 1.0f },
 	{ 0.0f, 0.0f, 0.0f, 0.0f },
 	100.0f,
-	0
 };
 
 
