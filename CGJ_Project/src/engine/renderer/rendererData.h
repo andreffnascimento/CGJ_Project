@@ -7,6 +7,8 @@
 
 #include "engine/renderer/rendererSettings.h"
 
+#include "engine/scene/components.h"
+
 
 
 
@@ -14,7 +16,7 @@ class RendererData
 {
 
 private:
-	//typedef std::unordered_map<>
+	//typedef std::unordered_map<MeshComponent::MeshData*, int> meshInstances_t;
 
 
 

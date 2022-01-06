@@ -16,7 +16,7 @@
     <ClCompile Include="src\engine\renderer\renderer.cpp" />
     <ClCompile Include="src\engine\text\avtFreeType.cpp" />
     <ClCompile Include="src\engine\math\AVTmathLib.cpp" />
-    <ClCompile Include="src\engine\renderer\basic_geometry.cpp" />
+    <ClCompile Include="src\engine\renderer\mesh\basic_geometry.cpp" />
     <ClCompile Include="src\engine\utils\mathUtils.cpp" />
     <ClCompile Include="src\MicroMachines3D.cpp" />
     <ClCompile Include="src\engine\renderer\Texture_Loader.cpp" />
@@ -27,6 +27,7 @@
     <ClCompile Include="src\engine\physics\collision.h" />
     <ClCompile Include="src\engine\physics\collisionResolver.cpp" />
     <ClCompile Include="src\engine\renderer\modules\colliderRenderer.cpp" />
+    <ClCompile Include="src\engine\renderer\mesh\meshData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\app\application.h" />
@@ -57,9 +58,9 @@
     <ClInclude Include="src\MicroMachines3D\entities\world\table.h" />
     <ClInclude Include="src\engine\text\avtFreeType.h" />
     <ClInclude Include="src\engine\math\AVTmathLib.h" />
-    <ClInclude Include="src\engine\renderer\cube.h" />
+    <ClInclude Include="src\engine\renderer\mesh\cube.h" />
     <ClInclude Include="src\ft2build.h" />
-    <ClInclude Include="src\engine\renderer\geometry.h" />
+    <ClInclude Include="src\engine\renderer\mesh\geometry.h" />
     <ClInclude Include="src\engine\renderer\Texture_Loader.h" />
     <ClInclude Include="src\engine\renderer\VertexAttrDef.h" />
     <ClInclude Include="src\engine\renderer\vsShaderLib.h" />
@@ -74,7 +75,8 @@
     <ClInclude Include="src\engine\renderer\rendererSettings.h" />
     <ClInclude Include="src\engine\renderer\rendererData.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\manager\game\fogToggleScript.h" />
-    <ClInclude Include="src\engine\renderer\texture.h" />
+    <ClInclude Include="src\engine\renderer\mesh\texture.h" />
+    <ClInclude Include="src\engine\renderer\mesh\meshData.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />

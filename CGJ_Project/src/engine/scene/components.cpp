@@ -67,33 +67,6 @@ void CameraComponent::_setPerspectiveCamera(float fov)
 
 
 
-MeshComponent::MeshData::MeshData(MyMesh&& mesh)
-	: mesh(std::forward<MyMesh>(mesh))
-{
-	// empty
-}
-
-
-MeshComponent::MeshComponent(MyMesh&& mesh, const Material& material)
-	: _meshData(std::make_shared<MeshData>(std::forward<MyMesh>(mesh)))
-{
-	setMaterial(material);
-}
-
-
-void MeshComponent::setMaterial(const Material& material)
-{
-	Material& meshMaterial = _meshData->mesh.mat;
-	memcpy(meshMaterial.ambient, material.ambient, 4 * sizeof(float));
-	memcpy(meshMaterial.diffuse, material.diffuse, 4 * sizeof(float));
-	memcpy(meshMaterial.specular, material.specular, 4 * sizeof(float));
-	memcpy(meshMaterial.emissive, material.emissive, 4 * sizeof(float));
-	meshMaterial.shininess = material.shininess;
-}
-
-
-
-
 void ScriptComponent::onCreate() const
 {
 	for (auto& script : _scripts)

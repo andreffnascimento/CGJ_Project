@@ -2,7 +2,7 @@
 #define __mm3d_common_materials__
 
 
-#include "engine/renderer/geometry.h"
+#include "engine/renderer/mesh/geometry.h"
 
 
 constexpr Material TABLE_MATERIAL = {

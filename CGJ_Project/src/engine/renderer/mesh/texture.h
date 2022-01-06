@@ -1,5 +1,5 @@
-#ifndef __engine_renderer_texture__
-#define __engine_renderer_texture__
+#ifndef __engine_renderer_mesh_texture__
+#define __engine_renderer_mesh_texture__
 
 
 #include "engine/renderer/rendererSettings.h"
@@ -37,8 +37,9 @@ public:
 
 
 public:
-	friend struct MeshComponent;
+	friend class MeshData;
+
 };
 
 
-#endif // !__engine_renderer_texture__
+#endif // !__engine_renderer_mesh_texture__

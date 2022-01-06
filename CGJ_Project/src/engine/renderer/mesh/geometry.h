@@ -1,5 +1,5 @@
-#ifndef __engine_renderer_geometry__
-#define __engine_renderer_geometry__
+#ifndef __engine_renderer_mesh_geometry__
+#define __engine_renderer_mesh_geometry__
 
 
 #include "engine/renderer/vsShaderLib.h"
@@ -40,4 +40,4 @@ float *circularProfile(float minAngle, float maxAngle, float radius, int divisio
 void ComputeTangentArray(int vertexCount, float *vertex, float *normal, float *texcoord, GLuint indexesCount, GLuint *faceIndex, float *tangent);
 
 
-#endif // !__engine_renderer_geometry__
+#endif // !__engine_renderer_mesh_geometry__

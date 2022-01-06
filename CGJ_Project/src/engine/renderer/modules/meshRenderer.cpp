@@ -1,6 +1,7 @@
 #include "engine/renderer/renderer.h"
 
-#include "engine/renderer/geometry.h"
+#include "engine/renderer/mesh/geometry.h"
+#include "engine/renderer/mesh/texture.h"
 
 #include "engine/math/AVTmathLib.h"
 #include "engine/math/transform.h"

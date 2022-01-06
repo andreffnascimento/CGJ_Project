@@ -13,8 +13,7 @@
 
 #include "engine/math/transformMatrix.h"
 #include "engine/physics/force.h"
-#include "engine/renderer/geometry.h"
-#include "engine/renderer/texture.h"
+#include "engine/renderer/mesh/meshData.h"
 #include "engine/utils/coords.h"
 
 
@@ -179,41 +178,27 @@ public:
 
 struct MeshComponent
 {
-private:
-	struct MeshData
-	{
-	public:
-		MyMesh mesh;
-		Texture texture;
-
-	public:
-		MeshData() = delete;
-		MeshData(const MeshData& meshData) = delete;
-		MeshData(MyMesh&& mesh);
-		~MeshData() = default;
-	};
 
 private:
 	std::shared_ptr<MeshData> _meshData = nullptr;
 	bool _enabled = true;
-
 	
 public:
 	MeshComponent() = delete;
 	MeshComponent(const MeshComponent&) = default;
-	MeshComponent(MyMesh&& mesh, const Material& material);
+	MeshComponent(MyMesh&& mesh, const Material& material) : _meshData(std::make_shared<MeshData>(std::forward<MyMesh>(mesh), material)) {}
 	~MeshComponent() = default;
 
-	inline const MyMesh& mesh()	const						{ return _meshData->mesh; }
-	inline const Material& material() const					{ return _meshData->mesh.mat; }
-	inline const MeshComponent::Texture& texture() const	{ return _meshData->texture; }
+	inline const MyMesh& mesh()	const						{ return _meshData->mesh(); }
+	inline const Material& material() const					{ return _meshData->material(); }
+	inline const MeshComponent::Texture& texture() const	{ return _meshData->texture(); }
 	inline bool enabled() const								{ return _enabled; }
 
-	inline void setEnabled(bool enabled)							{ _enabled = enabled; }
-	void setTextureMode(const Texture::TextureMode& textureMode)	{ _meshData->texture._textureMode = textureMode; }
-	void addTexture(int textureId)									{ _meshData->texture._textureIds[_meshData->texture._nTextures++] = textureId; }
+	inline void setMaterial(const Material& material)					{ _meshData->setMaterial(material); }
+	inline void setEnabled(bool enabled)								{ _enabled = enabled; }
+	inline void setTextureMode(const Texture::TextureMode& textureMode)	{ _meshData->setTextureMode(textureMode); }
+	inline void addTexture(unsigned int textureId)						{ _meshData->addTexture(textureId); }
 
-	void setMaterial(const Material& material);
 };
 
 

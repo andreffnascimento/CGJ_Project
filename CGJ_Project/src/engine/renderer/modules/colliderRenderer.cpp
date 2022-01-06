@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "engine/renderer/geometry.h"
+#include "engine/renderer/mesh/geometry.h"
 
 #include "engine/app/application.h"
 #include "engine/math/AVTmathLib.h"
