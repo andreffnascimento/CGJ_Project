@@ -8,7 +8,7 @@
 
 void Renderer::renderLights(const Scene& scene) const
 {
-	RendererData::LightData lightData = RendererData::LightData();
+	RendererData::SubmitLightData lightData = RendererData::SubmitLightData();
 
 	const auto& lightComponents = scene.getSceneComponents<LightComponent>();
 	if (lightComponents.size() > RendererSettings::MAX_LIGHTS)
@@ -54,7 +54,7 @@ void Renderer::renderLights(const Scene& scene) const
 
 
 
-void Renderer::_formatDirectionalLight(const LightComponent& light, const Coords3f& direction, RendererData::LightData& lightData) const
+void Renderer::_formatDirectionalLight(const LightComponent& light, const Coords3f& direction, RendererData::SubmitLightData& lightData) const
 {
 	float lightDirection[4] = { direction.x, direction.y, direction.z, 0.0f };
 	float viewLightDirection[4] = {};
@@ -66,7 +66,7 @@ void Renderer::_formatDirectionalLight(const LightComponent& light, const Coords
 }
 
 
-void Renderer::_formatPointLight(const LightComponent& light, const Coords3f& translation, RendererData::LightData& lightData) const
+void Renderer::_formatPointLight(const LightComponent& light, const Coords3f& translation, RendererData::SubmitLightData& lightData) const
 {
 	float lightPosition[4] = { translation.x, translation.y, translation.z, 1.0f };
 	float viewLightPosition[4] = {};
@@ -78,7 +78,7 @@ void Renderer::_formatPointLight(const LightComponent& light, const Coords3f& tr
 }
 
 
-void Renderer::_formatSpotLight(const LightComponent& light, const Coords3f& translation, const Coords3f& direction, RendererData::LightData& lightData) const
+void Renderer::_formatSpotLight(const LightComponent& light, const Coords3f& translation, const Coords3f& direction, RendererData::SubmitLightData& lightData) const
 {
 	float lightPosition[4] = { translation.x, translation.y, translation.z, 1.0f };
 	float viewLightPosition[4] = {};
@@ -96,7 +96,7 @@ void Renderer::_formatSpotLight(const LightComponent& light, const Coords3f& tra
 }
 
 
-void Renderer::_submitLightData(const RendererData::LightData& lightData) const
+void Renderer::_submitLightData(const RendererData::SubmitLightData& lightData) const
 {	
 	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::N_LIGHTS], lightData.nLights);
 	glUniform1uiv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_TYPE], lightData.nLights, lightData.lightTypes);

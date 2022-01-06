@@ -14,6 +14,7 @@
 #include "engine/math/transformMatrix.h"
 #include "engine/physics/force.h"
 #include "engine/renderer/geometry.h"
+#include "engine/renderer/texture.h"
 #include "engine/utils/coords.h"
 
 
@@ -178,37 +179,22 @@ public:
 
 struct MeshComponent
 {
-public:
-	enum class TextureMode
-	{
-		MODULATE_DIFFUSE = 1,	// phong color is modulated with texel color
-		REPLACE_DIFFUSE = 2,	// diffuse color is replaced by texel color with specular area
-	};
-
-public:
-	struct Texture
+private:
+	struct MeshData
 	{
 	public:
-		static constexpr size_t MAX_TEXTURES = 2;
-
-	private:
-		MeshComponent::TextureMode _textureMode = TextureMode::MODULATE_DIFFUSE;
-		unsigned int _textureIds[MAX_TEXTURES] = {};
-		size_t _nTextures = 0;
+		MyMesh mesh;
+		Texture texture;
 
 	public:
-		inline const MeshComponent::TextureMode& textureMode() const	{ return _textureMode; }
-		inline const unsigned int* textureIds() const					{ return _textureIds; }
-		inline size_t nTextures() const									{ return _nTextures; }
-
-	public:
-		friend struct MeshComponent;
+		MeshData() = delete;
+		MeshData(const MeshData& meshData) = delete;
+		MeshData(MyMesh&& mesh);
+		~MeshData() = default;
 	};
-
 
 private:
-	std::shared_ptr<MyMesh> _mesh = nullptr;
-	std::shared_ptr<MeshComponent::Texture> _texture = nullptr;
+	std::shared_ptr<MeshData> _meshData = nullptr;
 	bool _enabled = true;
 
 	
@@ -218,14 +204,14 @@ public:
 	MeshComponent(MyMesh&& mesh, const Material& material);
 	~MeshComponent() = default;
 
-	inline const MyMesh& mesh()	const						{ return *_mesh; }
-	inline const Material& material() const					{ return _mesh->mat; }
-	inline const MeshComponent::Texture& texture() const	{ return *_texture; }
+	inline const MyMesh& mesh()	const						{ return _meshData->mesh; }
+	inline const Material& material() const					{ return _meshData->mesh.mat; }
+	inline const MeshComponent::Texture& texture() const	{ return _meshData->texture; }
 	inline bool enabled() const								{ return _enabled; }
 
-	inline void setEnabled(bool enabled)								{ _enabled = enabled; }
-	void setTextureMode(const MeshComponent::TextureMode& textureMode)	{ _texture->_textureMode = textureMode; }
-	void addTexture(int textureId)										{ _texture->_textureIds[_texture->_nTextures++] = textureId; }
+	inline void setEnabled(bool enabled)							{ _enabled = enabled; }
+	void setTextureMode(const Texture::TextureMode& textureMode)	{ _meshData->texture._textureMode = textureMode; }
+	void addTexture(int textureId)									{ _meshData->texture._textureIds[_meshData->texture._nTextures++] = textureId; }
 
 	void setMaterial(const Material& material);
 };

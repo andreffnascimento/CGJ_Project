@@ -15,7 +15,7 @@ public:
 		: SceneEntity(scene->createEntity("Table"))
 	{	
 		MeshComponent mesh = MeshComponent(createCube(), TABLE_MATERIAL);
-		mesh.setTextureMode(MeshComponent::TextureMode::MODULATE_DIFFUSE);
+		mesh.setTextureMode(Texture::TextureMode::MODULATE_DIFFUSE);
 		mesh.addTexture(Renderer::create2dTexture("src/MicroMachines3D/textures/table/lightwood.tga"));
 		mesh.addTexture(Renderer::create2dTexture("src/MicroMachines3D/textures/table/stone.tga"));
 

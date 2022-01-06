@@ -74,6 +74,7 @@
     <ClInclude Include="src\engine\renderer\rendererSettings.h" />
     <ClInclude Include="src\engine\renderer\rendererData.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\manager\game\fogToggleScript.h" />
+    <ClInclude Include="src\engine\renderer\texture.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />

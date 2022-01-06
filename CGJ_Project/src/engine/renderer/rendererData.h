@@ -2,6 +2,9 @@
 #define __engine_renderer_rendererData__
 
 
+#include <list>
+#include <unordered_map>
+
 #include "engine/renderer/rendererSettings.h"
 
 
@@ -9,6 +12,12 @@
 
 class RendererData
 {
+
+private:
+	//typedef std::unordered_map<>
+
+
+
 
 private:
 	enum ShaderUniformType {
@@ -60,7 +69,7 @@ private:
 	};
 
 
-	struct LightData
+	struct SubmitLightData
 	{
 		unsigned int nLights = 0;
 		unsigned int lightTypes[RendererSettings::MAX_LIGHTS] = {};

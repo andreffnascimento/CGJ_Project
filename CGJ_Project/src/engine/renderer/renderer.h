@@ -76,10 +76,10 @@ private:
 
 
 private:
-	void _formatDirectionalLight(const LightComponent& light, const Coords3f& direction, RendererData::LightData& lightData) const;
-	void _formatPointLight(const LightComponent& light, const Coords3f& translation, RendererData::LightData& lightData) const;
-	void _formatSpotLight(const LightComponent& light, const Coords3f& translation, const Coords3f& direction, RendererData::LightData& lightData) const;
-	void _submitLightData(const RendererData::LightData& lightData) const;
+	void _formatDirectionalLight(const LightComponent& light, const Coords3f& direction, RendererData::SubmitLightData& lightData) const;
+	void _formatPointLight(const LightComponent& light, const Coords3f& translation, RendererData::SubmitLightData& lightData) const;
+	void _formatSpotLight(const LightComponent& light, const Coords3f& translation, const Coords3f& direction, RendererData::SubmitLightData& lightData) const;
+	void _submitLightData(const RendererData::SubmitLightData& lightData) const;
 
 
 private:

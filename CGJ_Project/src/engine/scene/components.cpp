@@ -67,8 +67,15 @@ void CameraComponent::_setPerspectiveCamera(float fov)
 
 
 
+MeshComponent::MeshData::MeshData(MyMesh&& mesh)
+	: mesh(std::forward<MyMesh>(mesh))
+{
+	// empty
+}
+
+
 MeshComponent::MeshComponent(MyMesh&& mesh, const Material& material)
-	: _mesh(std::make_shared<MyMesh>(std::forward<MyMesh>(mesh))), _texture(std::make_shared<MeshComponent::Texture>())
+	: _meshData(std::make_shared<MeshData>(std::forward<MyMesh>(mesh)))
 {
 	setMaterial(material);
 }
@@ -76,11 +83,12 @@ MeshComponent::MeshComponent(MyMesh&& mesh, const Material& material)
 
 void MeshComponent::setMaterial(const Material& material)
 {
-	memcpy(_mesh->mat.ambient, material.ambient, 4 * sizeof(float));
-	memcpy(_mesh->mat.diffuse, material.diffuse, 4 * sizeof(float));
-	memcpy(_mesh->mat.specular, material.specular, 4 * sizeof(float));
-	memcpy(_mesh->mat.emissive, material.emissive, 4 * sizeof(float));
-	_mesh->mat.shininess = material.shininess;
+	Material& meshMaterial = _meshData->mesh.mat;
+	memcpy(meshMaterial.ambient, material.ambient, 4 * sizeof(float));
+	memcpy(meshMaterial.diffuse, material.diffuse, 4 * sizeof(float));
+	memcpy(meshMaterial.specular, material.specular, 4 * sizeof(float));
+	memcpy(meshMaterial.emissive, material.emissive, 4 * sizeof(float));
+	meshMaterial.shininess = material.shininess;
 }
 
 

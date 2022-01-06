@@ -10,11 +10,12 @@
 class RendererSettings
 {
 
-private:
+public:
 	constexpr static const char* FONT_NAME = "fonts/arial.ttf";
 
 	constexpr static size_t MAX_LIGHTS = 32;
 	constexpr static size_t MAX_TEXTURES = 20;
+	constexpr static size_t MAX_MESH_TEXTURES = 2;
 
 
 
@@ -46,12 +47,6 @@ public:
 		bool active = false;
 	};
 
-
-
-
-public:
-	friend class Renderer;
-	friend class RendererData;
 };
 
 

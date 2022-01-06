@@ -48,7 +48,7 @@ void Renderer::_loadMesh(const MeshComponent& mesh) const
 
 void Renderer::_loadTexture(const MeshComponent& mesh) const
 {
-	const MeshComponent::Texture& texture = mesh.texture();
+	const Texture& texture = mesh.texture();
 	unsigned int nMeshes = 1;
 	unsigned int nTextures[] = { (unsigned int)texture.nTextures() };
 	unsigned int textureMode[] = { (unsigned int)texture.textureMode() };
