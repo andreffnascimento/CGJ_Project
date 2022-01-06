@@ -161,6 +161,7 @@ struct ReflectionCoefficients
 	float ambient = 1.0f;
 	float diffuse = 1.0f;
 	float specular = 1.0f;
+	float darkTexture = 0.1f;
 
 	ReflectionCoefficients() = default;
 	ReflectionCoefficients(const ReflectionCoefficients&) = default;

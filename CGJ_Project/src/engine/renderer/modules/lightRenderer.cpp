@@ -49,9 +49,9 @@ void Renderer::renderLights(const Scene& scene) const
 	lightData.ambientCoefficient = reflectionCoefficients.ambient;
 	lightData.diffuseCoefficient = reflectionCoefficients.diffuse;
 	lightData.specularCoefficient = reflectionCoefficients.specular;
+	lightData.darkTextureCoefficient = reflectionCoefficients.darkTexture;
 	_submitLightData(lightData);
 }
-
 
 
 
@@ -108,4 +108,5 @@ void Renderer::_submitLightData(const Renderer::LightData& lightData) const
 	glUniform1f(_uniformLocation[Renderer::ShaderUniformType::LIGHT_AMBIENT], lightData.ambientCoefficient);
 	glUniform1f(_uniformLocation[Renderer::ShaderUniformType::LIGHT_DIFFUSE], lightData.diffuseCoefficient);
 	glUniform1f(_uniformLocation[Renderer::ShaderUniformType::LIGHT_SPECULAR], lightData.specularCoefficient);
+	glUniform1f(_uniformLocation[Renderer::ShaderUniformType::LIGHT_DARK_TEXTURE], lightData.darkTextureCoefficient);
 }

@@ -128,11 +128,9 @@ GLuint Renderer::_setupShaders()
 	_uniformLocation[Renderer::ShaderUniformType::MATERIAL_SHININESS]	= glGetUniformLocation(_shader.getProgramIndex(), "materialData.shininess");
 	_uniformLocation[Renderer::ShaderUniformType::MATERIAL_EMISSIVE]	= glGetUniformLocation(_shader.getProgramIndex(), "materialData.emissive");
 
-	_uniformLocation[Renderer::ShaderUniformType::N_TEXTURES]		= glGetUniformLocation(_shader.getProgramIndex(), "textureData.nTextures");
-	_uniformLocation[Renderer::ShaderUniformType::TEXTURE_MODE]		= glGetUniformLocation(_shader.getProgramIndex(), "textureData.textureMode");
-	_uniformLocation[Renderer::ShaderUniformType::TEXTURE_MAP_0]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.textureMap0");
-	_uniformLocation[Renderer::ShaderUniformType::TEXTURE_MAP_1]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.textureMap1");
-	_uniformLocation[Renderer::ShaderUniformType::TEXTURE_MAP_2]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.textureMap2");
+	_uniformLocation[Renderer::ShaderUniformType::N_TEXTURES]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.nTextures");
+	_uniformLocation[Renderer::ShaderUniformType::TEXTURE_MODE]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.textureMode");
+	_uniformLocation[Renderer::ShaderUniformType::TEXTURE_MAPS]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.textureMaps");
 
 	_uniformLocation[Renderer::ShaderUniformType::N_LIGHTS]				= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.nLights");
 	_uniformLocation[Renderer::ShaderUniformType::LIGHT_TYPES]			= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.lightTypes");
@@ -143,6 +141,7 @@ GLuint Renderer::_setupShaders()
 	_uniformLocation[Renderer::ShaderUniformType::LIGHT_AMBIENT]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.ambientCoefficient");
 	_uniformLocation[Renderer::ShaderUniformType::LIGHT_DIFFUSE]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.diffuseCoefficient");
 	_uniformLocation[Renderer::ShaderUniformType::LIGHT_SPECULAR]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.specularCoefficient");
+	_uniformLocation[Renderer::ShaderUniformType::LIGHT_DARK_TEXTURE]	= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.darkTextureCoefficient");
 
 	std::cout << "InfoLog for Per Fragment Phong Lightning Shader\n" << _shader.getAllInfoLogs().c_str()  << "\n\n";
 

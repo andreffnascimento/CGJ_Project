@@ -17,6 +17,7 @@ out Data {
 	vec3 normal;
 	vec3 eye;
 	vec3 eyeDir;
+	vec2 textureCoords;
 } dataOut;
 
 
@@ -28,6 +29,7 @@ void main () {
 	dataOut.normal = normalize(m_normal * normal.xyz);
 	dataOut.eye = vec3(-dataOut.position);
 	dataOut.eyeDir = -vec3(m_viewModel * position);
+	dataOut.textureCoords = textureCoords.st;
 	
 	gl_Position = m_pvm * position;
 }

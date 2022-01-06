@@ -140,18 +140,21 @@ void Scene::setActiveCamera(const CameraEntity& camera)
 }
 
 
-void Scene::setReflectionCoefficients(float ambient, float diffuse, float specular)
+void Scene::setReflectionCoefficients(float ambient, float diffuse, float specular, float darkTexture)
 {
 	if (ambient < 0.0f || ambient > 1.0f)
-		throw std::string("Ambient coefficient must be a float value between 0.0f and 1.0f");
+		throw std::string("The ambient coefficient must be a float value between 0.0f and 1.0f");
 
 	if (diffuse < 0.0f || diffuse > 1.0f)
-		throw std::string("Diffuse coefficient must be a float value between 0.0f and 1.0f");
+		throw std::string("The diffuse coefficient must be a float value between 0.0f and 1.0f");
 
 	if (specular < 0.0f || specular > 1.0f)
-		throw std::string("Specular coefficient must be a float value between 0.0f and 1.0f");
+		throw std::string("The specular coefficient must be a float value between 0.0f and 1.0f");
 
-	_reflectionCoefficients = { ambient, diffuse, specular };
+	if (darkTexture < 0.0f || darkTexture > 1.0f)
+		throw std::string("The dark texture coefficient must be a float value between 0.0f and 1.0f");
+
+	_reflectionCoefficients = { ambient, diffuse, specular, darkTexture };
 }
 
 

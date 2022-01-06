@@ -69,7 +69,7 @@ public:
 
 public:
 	void setActiveCamera(const CameraEntity& camera);
-	void setReflectionCoefficients(float ambient, float diffuse, float specular);
+	void setReflectionCoefficients(float ambient, float diffuse, float specular, float darkTexture);
 
 
 public:

@@ -189,7 +189,7 @@ public:
 	struct Texture
 	{
 	public:
-		static constexpr size_t MAX_TEXTURES = 3;
+		static constexpr size_t MAX_TEXTURES = 2;
 
 	private:
 		MeshComponent::TextureMode _textureMode = TextureMode::MODULATE_DIFFUSE;

@@ -46,17 +46,10 @@ void Renderer::_loadMesh(const MeshComponent& mesh) const
 
 void Renderer::_loadTexture(const MeshComponent& mesh) const
 {
-	constexpr Renderer::ShaderUniformType textureMaps[] = {
-		ShaderUniformType::TEXTURE_MAP_0,
-		ShaderUniformType::TEXTURE_MAP_1,
-		ShaderUniformType::TEXTURE_MAP_2
-	};
-
 	const MeshComponent::Texture& texture = mesh.texture();
 	glUniform1ui(_uniformLocation[Renderer::ShaderUniformType::N_TEXTURES], (unsigned int)texture.nTextures());
 	glUniform1ui(_uniformLocation[Renderer::ShaderUniformType::TEXTURE_MODE], (unsigned int)texture.textureMode());
-	for (size_t i = 0; i < texture.nTextures(); i++)
-		glUniform1ui(_uniformLocation[textureMaps[i]], texture.textureIds()[i]);
+	glUniform1uiv(_uniformLocation[Renderer::ShaderUniformType::TEXTURE_MAPS], (unsigned int)texture.nTextures(), texture.textureIds());
 }
 
 

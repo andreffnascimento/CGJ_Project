@@ -29,9 +29,7 @@ public:
 
 		N_TEXTURES,
 		TEXTURE_MODE,
-		TEXTURE_MAP_0,
-		TEXTURE_MAP_1,
-		TEXTURE_MAP_2,
+		TEXTURE_MAPS,
 
 		N_LIGHTS,
 		LIGHT_TYPES,
@@ -42,6 +40,7 @@ public:
 		LIGHT_AMBIENT,
 		LIGHT_DIFFUSE,
 		LIGHT_SPECULAR,
+		LIGHT_DARK_TEXTURE,
 
 		N_UNIFORMS
 	};
@@ -65,9 +64,9 @@ private:
 private:
 	struct TextureData
 	{
+		GLuint nTextures = 0;
 		GLuint textureData[Renderer::MAX_TEXTURES] = {};
 		GLuint textureType[Renderer::MAX_TEXTURES] = {};
-		size_t nTextures = 0;
 	};
 
 
@@ -83,6 +82,7 @@ private:
 		GLfloat ambientCoefficient = 1.0f;
 		GLfloat diffuseCoefficient = 1.0f;
 		GLfloat specularCoefficient = 1.0f;
+		GLfloat darkTextureCoefficient = 0.1f;
 	};
 
 
