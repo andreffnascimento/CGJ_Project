@@ -6,6 +6,7 @@
 #include <unordered_map>
 
 #include "engine/renderer/rendererSettings.h"
+#include "engine/renderer/mesh/meshData.h"
 
 #include "engine/scene/components.h"
 
@@ -16,7 +17,7 @@ class RendererData
 {
 
 private:
-	//typedef std::unordered_map<MeshComponent::MeshData*, int> meshInstances_t;
+	typedef std::unordered_map<MeshData*, std::list<const TransformComponent*>> meshInstances_t;
 
 
 

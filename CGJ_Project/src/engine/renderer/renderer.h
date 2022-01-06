@@ -22,6 +22,7 @@ private:
 	int _uniformLocation[RendererData::ShaderUniformType::N_UNIFORMS] = {};
 
 	RendererData::TextureData _textures = RendererData::TextureData();
+	RendererData::meshInstances_t _solidMeshInstances = RendererData::meshInstances_t();
 
 	RendererSettings::ReflectionCoefficients _reflectionCoefficients = RendererSettings::ReflectionCoefficients();
 	RendererSettings::Fog _fog = RendererSettings::Fog();

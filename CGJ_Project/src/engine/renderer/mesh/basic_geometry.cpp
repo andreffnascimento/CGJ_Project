@@ -18,7 +18,7 @@ Basic Revolution Geometry
 #include <GL/freeglut.h>
 #include "engine/math/AVTmathLib.h"
 
-#include "VertexAttrDef.h"
+#include "engine/renderer/VertexAttrDef.h"
 #include "geometry.h"
 #include "cube.h"
 

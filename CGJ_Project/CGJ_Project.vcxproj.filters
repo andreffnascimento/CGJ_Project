@@ -77,6 +77,16 @@
     <ClInclude Include="src\MicroMachines3D\scripts\manager\game\fogToggleScript.h" />
     <ClInclude Include="src\engine\renderer\mesh\texture.h" />
     <ClInclude Include="src\engine\renderer\mesh\meshData.h" />
+    <ClInclude Include="src\engine\scene\components\meshComponent.h" />
+    <ClInclude Include="src\engine\scene\components\tagComponent.h" />
+    <ClInclude Include="src\engine\scene\components\transformComponent.h" />
+    <ClInclude Include="src\engine\scene\components\groupComponent.h" />
+    <ClInclude Include="src\engine\scene\components\parentComponent.h" />
+    <ClInclude Include="src\engine\scene\components\cameraComponent.h" />
+    <ClInclude Include="src\engine\scene\components\scriptComponent.h" />
+    <ClInclude Include="src\engine\scene\components\lightComponent.h" />
+    <ClInclude Include="src\engine\scene\components\rigidbodyComponent.h" />
+    <ClInclude Include="src\engine\scene\components\aabbColliderComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />
