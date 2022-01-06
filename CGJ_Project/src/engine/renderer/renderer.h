@@ -86,10 +86,13 @@ private:
 
 
 private:
-	void _loadMesh(const MeshComponent& mesh) const;
-	void _loadTexture(const MeshComponent& mesh) const;
-	void _applyTransform(const Entity& entity) const;
-	void _renderMesh(const MeshComponent& mesh) const;
+	void _formatRenderableInstanceBuffer(RendererData::SubmitInstanceData& renderableInstanceBuffer, const TransformComponent* transform) const;
+	void _applyTransform(const TransformComponent& transform) const;
+
+	void _submitMeshData(const MeshData& meshData) const;
+	void _submitRenderableInstanceBuffer(const RendererData::SubmitInstanceData& renderableInstanceBuffer) const;
+	void _submitRenderableData(const MeshData& meshData, RendererData::SubmitInstanceData& renderableInstanceBuffer) const;
+	void _renderInstanceBuffer(const MeshData& mesh, RendererData::SubmitInstanceData& renderableInstanceBuffer) const;
 
 
 private:

@@ -135,13 +135,13 @@ void Renderer::updateViewport(CameraComponent& camera, int width, int height) co
 
 void Renderer::submitRenderableMesh(const MeshComponent& mesh)
 {
-	_solidMeshInstances.emplace(&mesh.meshData(), std::list<const TransformComponent*>());
+	_solidMeshInstances.emplace(&mesh.meshData(), std::unordered_set<const TransformComponent*>());
 }
 
 
 void Renderer::submitRenderableEntity(const MeshComponent& mesh, const Entity& entity)
 {
-	_solidMeshInstances[&mesh.meshData()].push_back(&entity.transform());
+	_solidMeshInstances[&mesh.meshData()].emplace(&entity.transform());
 }
 
 
@@ -194,7 +194,6 @@ GLuint Renderer::_setupShaders()
 	_uniformLocation[RendererData::ShaderUniformType::INSTANCE_PVM_MATRIX]		= glGetUniformLocation(_shader.getProgramIndex(), "instanceData.pvmMatrix");
 	_uniformLocation[RendererData::ShaderUniformType::INSTANCE_VM_MATRIX]		= glGetUniformLocation(_shader.getProgramIndex(), "instanceData.vmMatrix");
 	_uniformLocation[RendererData::ShaderUniformType::INSTANCE_NORMAL_MATRIX]	= glGetUniformLocation(_shader.getProgramIndex(), "instanceData.normalMatrix");
-	_uniformLocation[RendererData::ShaderUniformType::INSTANCE_MESH_INDEX]		= glGetUniformLocation(_shader.getProgramIndex(), "instanceData.meshIndex");
 
 	_uniformLocation[RendererData::ShaderUniformType::MATERIAL_AMBIENT]		= glGetUniformLocation(_shader.getProgramIndex(), "materialData.ambient");
 	_uniformLocation[RendererData::ShaderUniformType::MATERIAL_DIFFUSE]		= glGetUniformLocation(_shader.getProgramIndex(), "materialData.diffuse");

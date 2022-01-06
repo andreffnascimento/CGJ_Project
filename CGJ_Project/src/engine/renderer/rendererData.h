@@ -2,7 +2,7 @@
 #define __engine_renderer_rendererData__
 
 
-#include <list>
+#include <unordered_set>
 #include <unordered_map>
 
 #include "engine/renderer/rendererSettings.h"
@@ -17,7 +17,7 @@ class RendererData
 {
 
 private:
-	typedef std::unordered_map<const MeshData*, std::list<const TransformComponent*>> meshInstances_t;
+	typedef std::unordered_map<const MeshData*, std::unordered_set<const TransformComponent*>> meshInstances_t;
 
 
 
@@ -27,7 +27,6 @@ private:
 		INSTANCE_PVM_MATRIX,
 		INSTANCE_VM_MATRIX,
 		INSTANCE_NORMAL_MATRIX,
-		INSTANCE_MESH_INDEX,
 
 		MATERIAL_AMBIENT,
 		MATERIAL_DIFFUSE,
@@ -75,16 +74,25 @@ private:
 	struct SubmitLightData
 	{
 		unsigned int nLights = 0;
-		unsigned int lightTypes[RendererSettings::MAX_LIGHTS] = {};
-		float lightPositions[4 * RendererSettings::MAX_LIGHTS] = {};
-		float lightDirections[4 * RendererSettings::MAX_LIGHTS] = {};
-		float lightIntensities[RendererSettings::MAX_LIGHTS] = {};
-		float lightCutOffs[RendererSettings::MAX_LIGHTS] = {};
+		unsigned int lightType[RendererSettings::MAX_LIGHTS] = {};
+		float lightPosition[4 * RendererSettings::MAX_LIGHTS] = {};
+		float lightDirection[4 * RendererSettings::MAX_LIGHTS] = {};
+		float lightIntensity[RendererSettings::MAX_LIGHTS] = {};
+		float lightCutOff[RendererSettings::MAX_LIGHTS] = {};
 
 		float ambientCoefficient = 1.0f;
 		float diffuseCoefficient = 1.0f;
 		float specularCoefficient = 1.0f;
 		float darkTextureCoefficient = 0.1f;
+	};
+
+
+	struct SubmitInstanceData
+	{
+		unsigned int nRenderableInstances = 0;
+		float pvmMatrix[RendererSettings::MAX_RENDERABLE_INSTANCES_SUBMISSION][4][4] = {};
+		float vmMatrix[RendererSettings::MAX_RENDERABLE_INSTANCES_SUBMISSION][4][4] = {};
+		float normalMatrix[RendererSettings::MAX_RENDERABLE_INSTANCES_SUBMISSION][3][3] = {};
 	};
 
 

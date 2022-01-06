@@ -17,6 +17,8 @@ public:
 	constexpr static size_t MAX_TEXTURES = 20;
 	constexpr static size_t MAX_MESH_TEXTURES = 2;
 
+	constexpr static size_t MAX_RENDERABLE_INSTANCES_SUBMISSION = 50;
+
 
 
 

@@ -15,76 +15,100 @@ extern float mNormal3x3[9];
 
 void Renderer::renderMeshes(const Scene& scene) const
 {
-	const auto& meshComponents = scene.getSceneComponents<MeshComponent>();
-	for (const auto& meshIterator : meshComponents)
+	RendererData::SubmitInstanceData renderableInstanceBuffer = RendererData::SubmitInstanceData();
+	for (const auto& meshIterator : _solidMeshInstances)
 	{
-		EntityHandle entityId = meshIterator.first;
-		const MeshComponent& mesh = meshIterator.second;
-		if (!mesh.enabled())
+		const MeshData* meshData = meshIterator.first;
+		const std::unordered_set<const TransformComponent*> transformComponents = meshIterator.second;
+
+		if (!meshData->enabled())
 			continue;
 
-		const Entity& entity = scene.getEntityById(entityId);
-		_loadMesh(mesh);
-		_loadTexture(mesh);
-		_applyTransform(entity);
-		_renderMesh(mesh);
+		_submitMeshData(*meshData);
+
+		for (const auto& transform : transformComponents)
+		{
+			if (renderableInstanceBuffer.nRenderableInstances >= RendererSettings::MAX_RENDERABLE_INSTANCES_SUBMISSION)
+				_submitRenderableData(*meshData, renderableInstanceBuffer);
+
+			_formatRenderableInstanceBuffer(renderableInstanceBuffer, transform);
+		}	
+
+		_submitRenderableData(*meshData, renderableInstanceBuffer);
 	}
 }
 
 
 
 
-void Renderer::_loadMesh(const MeshComponent& mesh) const
+void Renderer::_formatRenderableInstanceBuffer(RendererData::SubmitInstanceData& renderableInstanceBuffer, const TransformComponent* transform) const
 {
-	const Material& material = mesh.material();
-	unsigned int nMeshes = 1;
-	float shininess[] = { material.shininess };
-	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::MATERIAL_AMBIENT], nMeshes, material.ambient);
-	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::MATERIAL_DIFFUSE], nMeshes, material.diffuse);
-	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::MATERIAL_SPECULAR], nMeshes, material.specular);
-	glUniform1fv(_uniformLocation[RendererData::ShaderUniformType::MATERIAL_SHININESS], nMeshes, shininess);
-	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::MATERIAL_EMISSIVE], nMeshes, material.emissive);
+	_applyTransform(*transform);
+
+	memcpy(renderableInstanceBuffer.pvmMatrix[renderableInstanceBuffer.nRenderableInstances], mCompMatrix[PROJ_VIEW_MODEL], 4 * 4 * sizeof(float));
+	memcpy(renderableInstanceBuffer.vmMatrix[renderableInstanceBuffer.nRenderableInstances], mCompMatrix[VIEW_MODEL], 4 * 4 * sizeof(float));
+	memcpy(renderableInstanceBuffer.normalMatrix[renderableInstanceBuffer.nRenderableInstances], mNormal3x3, 3 * 3 * sizeof(float));
+
+	renderableInstanceBuffer.nRenderableInstances++;
 }
 
 
-void Renderer::_loadTexture(const MeshComponent& mesh) const
-{
-	const Texture& texture = mesh.texture();
-	unsigned int nMeshes = 1;
-	unsigned int nTextures[] = { (unsigned int)texture.nTextures() };
-	unsigned int textureMode[] = { (unsigned int)texture.textureMode() };
-
-	glUniform1uiv(_uniformLocation[RendererData::ShaderUniformType::N_TEXTURES], nMeshes, nTextures);
-	glUniform1uiv(_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MODE], nMeshes, textureMode);
-	glUniform1uiv(_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAPS], nMeshes * (unsigned int)texture.nTextures(), texture.textureIds());
-}
-
-
-void Renderer::_applyTransform(const Entity& entity) const
+void Renderer::_applyTransform(const TransformComponent& transform) const
 {
 	pushMatrix(MODEL);
-	loadMatrix(MODEL, entity.transform().transformMatrix());
+	loadMatrix(MODEL, transform.transformMatrix());
+	computeDerivedMatrix(PROJ_VIEW_MODEL);
+	computeNormalMatrix3x3();
 }
 
 
-void Renderer::_renderMesh(const MeshComponent& mesh) const
+
+void Renderer::_submitMeshData(const MeshData& meshData) const
+{
+	const Material& material = meshData.material();
+	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::MATERIAL_AMBIENT],  1, material.ambient);
+	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::MATERIAL_DIFFUSE],  1, material.diffuse);
+	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::MATERIAL_SPECULAR], 1, material.specular);
+	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::MATERIAL_EMISSIVE], 1, material.emissive);
+	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::MATERIAL_SHININESS],    material.shininess);
+
+	const Texture& texture = meshData.texture();
+	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::N_TEXTURES],   (unsigned int)texture.nTextures());
+	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MODE], (unsigned int)texture.textureMode());
+	glUniform2ui(_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAPS], texture.textureIds()[0], texture.textureIds()[1]);
+}
+
+
+void Renderer::_submitRenderableInstanceBuffer(const RendererData::SubmitInstanceData& renderableInstanceBuffer) const
+{
+	glUniformMatrix4fv(_uniformLocation[RendererData::ShaderUniformType::INSTANCE_PVM_MATRIX], 
+		renderableInstanceBuffer.nRenderableInstances, GL_FALSE, (const float*)renderableInstanceBuffer.pvmMatrix);
+	glUniformMatrix4fv(_uniformLocation[RendererData::ShaderUniformType::INSTANCE_VM_MATRIX], 
+		renderableInstanceBuffer.nRenderableInstances, GL_FALSE, (const float*)renderableInstanceBuffer.vmMatrix);
+	glUniformMatrix3fv(_uniformLocation[RendererData::ShaderUniformType::INSTANCE_NORMAL_MATRIX], 
+		renderableInstanceBuffer.nRenderableInstances, GL_FALSE, (const float*)renderableInstanceBuffer.normalMatrix);
+}
+
+
+void Renderer::_submitRenderableData(const MeshData& meshData, RendererData::SubmitInstanceData& renderableInstanceBuffer) const
+{
+	_submitRenderableInstanceBuffer(renderableInstanceBuffer);
+	_renderInstanceBuffer(meshData, renderableInstanceBuffer);
+	renderableInstanceBuffer.nRenderableInstances = 0;
+}
+
+
+
+
+void Renderer::_renderInstanceBuffer(const MeshData& mesh, RendererData::SubmitInstanceData& renderableInstanceBuffer) const
 {
 	const MyMesh& meshData = mesh.mesh();
-
-	computeDerivedMatrix(PROJ_VIEW_MODEL);
-	computeNormalMatrix3x3();
-	glUniformMatrix4fv(_uniformLocation[RendererData::ShaderUniformType::INSTANCE_VM_MATRIX], 1, GL_FALSE, mCompMatrix[VIEW_MODEL]);
-	glUniformMatrix4fv(_uniformLocation[RendererData::ShaderUniformType::INSTANCE_PVM_MATRIX], 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);
-	glUniformMatrix3fv(_uniformLocation[RendererData::ShaderUniformType::INSTANCE_NORMAL_MATRIX], 1, GL_FALSE, mNormal3x3);
-	glUniform1uiv(_uniformLocation[RendererData::ShaderUniformType::INSTANCE_MESH_INDEX], 1, 0);
 
 	glBindVertexArray(meshData.vao);
 
 	if (!_shader.isProgramValid())
 		throw std::string("Invalid shader program!");
 
-	unsigned int nInstances = 1;
-	glDrawElementsInstanced(meshData.type, meshData.numIndexes, GL_UNSIGNED_INT, 0, nInstances);
+	glDrawElementsInstanced(meshData.type, meshData.numIndexes, GL_UNSIGNED_INT, 0, renderableInstanceBuffer.nRenderableInstances);
 	glBindVertexArray(0);
-	popMatrix(MODEL);
 }

@@ -84,7 +84,7 @@ MeshComponent::MeshComponent(MyMesh&& mesh, const Material& material, const Enti
 
 
 MeshComponent::MeshComponent(const MeshComponent& mesh, const Entity& entity)
-	: _meshData(mesh._meshData), _enabled(mesh._enabled)
+	: _meshData(mesh._meshData)
 {
 	Renderer& renderer = Application::getRenderer();
 	renderer.submitRenderableEntity(*this, entity);

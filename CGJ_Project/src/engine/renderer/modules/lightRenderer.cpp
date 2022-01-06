@@ -60,9 +60,9 @@ void Renderer::_formatDirectionalLight(const LightComponent& light, const Coords
 	float viewLightDirection[4] = {};
 	multMatrixPoint(VIEW, lightDirection, viewLightDirection);
 
-	lightData.lightTypes[lightData.nLights] = (unsigned int)LightComponent::LightType::DIRECTIONAL;
-	memcpy(&lightData.lightDirections[4 * lightData.nLights], viewLightDirection, 4 * sizeof(float));
-	lightData.lightIntensities[lightData.nLights] = light.intensity();
+	lightData.lightType[lightData.nLights] = (unsigned int)LightComponent::LightType::DIRECTIONAL;
+	memcpy(&lightData.lightDirection[4 * lightData.nLights], viewLightDirection, 4 * sizeof(float));
+	lightData.lightIntensity[lightData.nLights] = light.intensity();
 }
 
 
@@ -72,9 +72,9 @@ void Renderer::_formatPointLight(const LightComponent& light, const Coords3f& tr
 	float viewLightPosition[4] = {};
 	multMatrixPoint(VIEW, lightPosition, viewLightPosition);
 
-	lightData.lightTypes[lightData.nLights] = (unsigned int)LightComponent::LightType::POINT;
-	memcpy(&lightData.lightPositions[4 * lightData.nLights], viewLightPosition, 4 * sizeof(float));
-	lightData.lightIntensities[lightData.nLights] = light.intensity();
+	lightData.lightType[lightData.nLights] = (unsigned int)LightComponent::LightType::POINT;
+	memcpy(&lightData.lightPosition[4 * lightData.nLights], viewLightPosition, 4 * sizeof(float));
+	lightData.lightIntensity[lightData.nLights] = light.intensity();
 }
 
 
@@ -88,22 +88,22 @@ void Renderer::_formatSpotLight(const LightComponent& light, const Coords3f& tra
 	float viewLightDirection[4] = {};
 	multMatrixPoint(VIEW, lightDirection, viewLightDirection);
 
-	lightData.lightTypes[lightData.nLights] = (unsigned int)LightComponent::LightType::SPOT;
-	memcpy(&lightData.lightPositions[4 * lightData.nLights], viewLightPosition, 4 * sizeof(float));
-	memcpy(&lightData.lightDirections[4 * lightData.nLights], viewLightDirection, 4 * sizeof(float));
-	lightData.lightIntensities[lightData.nLights] = light.intensity();
-	lightData.lightCutOffs[lightData.nLights] = light.cutOff();
+	lightData.lightType[lightData.nLights] = (unsigned int)LightComponent::LightType::SPOT;
+	memcpy(&lightData.lightPosition[4 * lightData.nLights], viewLightPosition, 4 * sizeof(float));
+	memcpy(&lightData.lightDirection[4 * lightData.nLights], viewLightDirection, 4 * sizeof(float));
+	lightData.lightIntensity[lightData.nLights] = light.intensity();
+	lightData.lightCutOff[lightData.nLights] = light.cutOff();
 }
 
 
 void Renderer::_submitLightData(const RendererData::SubmitLightData& lightData) const
 {	
 	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::N_LIGHTS], lightData.nLights);
-	glUniform1uiv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_TYPE], lightData.nLights, lightData.lightTypes);
-	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_POSITION], lightData.nLights, lightData.lightPositions);
-	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_DIRECTION], lightData.nLights, lightData.lightDirections);
-	glUniform1fv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_INTENSITY], lightData.nLights, lightData.lightIntensities);
-	glUniform1fv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_CUTOFF], lightData.nLights, lightData.lightCutOffs);
+	glUniform1uiv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_TYPE], lightData.nLights, lightData.lightType);
+	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_POSITION], lightData.nLights, lightData.lightPosition);
+	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_DIRECTION], lightData.nLights, lightData.lightDirection);
+	glUniform1fv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_INTENSITY], lightData.nLights, lightData.lightIntensity);
+	glUniform1fv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_CUTOFF], lightData.nLights, lightData.lightCutOff);
 	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::LIGHT_AMBIENT], lightData.ambientCoefficient);
 	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::LIGHT_DIFFUSE], lightData.diffuseCoefficient);
 	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::LIGHT_SPECULAR], lightData.specularCoefficient);

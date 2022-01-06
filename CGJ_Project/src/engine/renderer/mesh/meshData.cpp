@@ -33,3 +33,9 @@ void MeshData::addTexture(unsigned int textureId)
 {
 	_texture._textureIds[_texture._nTextures++] = textureId;
 }
+
+
+void MeshData::setEnabled(bool enabled)
+{
+	_enabled = enabled;
+}

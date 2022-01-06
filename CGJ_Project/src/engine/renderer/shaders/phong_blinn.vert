@@ -1,7 +1,7 @@
 #version 430
 
 
-const uint MAX_INSTANCES = 100;
+const uint MAX_INSTANCES = 50;
 
 
 
@@ -10,7 +10,6 @@ struct InstanceData {
 	mat4 pvmMatrix[MAX_INSTANCES];
 	mat4 vmMatrix[MAX_INSTANCES];
 	mat3 normalMatrix[MAX_INSTANCES];
-	uint meshIndex[MAX_INSTANCES];
 };
 
 
@@ -31,7 +30,6 @@ out Data {
 	vec3 eye;
 	vec3 eyeDir;
 	vec2 textureCoords;
-	uint meshIndex;
 } dataOut;
 
 
@@ -44,7 +42,6 @@ void main () {
 	dataOut.eye = vec3(-dataOut.position);
 	dataOut.eyeDir = -vec3(instanceData.vmMatrix[gl_InstanceID] * position);
 	dataOut.textureCoords = textureCoords.st;
-	dataOut.meshIndex = instanceData.meshIndex[gl_InstanceID];
 	
 	gl_Position = instanceData.pvmMatrix[gl_InstanceID] * position;
 }

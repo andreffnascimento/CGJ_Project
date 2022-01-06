@@ -17,7 +17,7 @@ extern float mNormal3x3[9];
 
 void Renderer::renderColliders(const Scene& scene) const
 {
-	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
+	/*PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
 	if (!physicsEngine.showColliders())
 		return;
 
@@ -33,7 +33,7 @@ void Renderer::renderColliders(const Scene& scene) const
 		_loadMesh(mesh);		
 		_applyColliderTransform(collider);
 		_renderMesh(mesh);
-	}
+	}*/
 }
 
 
