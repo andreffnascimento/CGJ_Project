@@ -178,10 +178,32 @@ public:
 
 struct MeshComponent
 {
+public:
+	static constexpr size_t MAX_TEXTURES = 3;
+
+public:
+	enum class TextureMode
+	{
+		TEXEL_COLOR = 0,		// phong color is modulated with texel color
+		MULTITEXTURE = 1,		// multitexturing
+		TEXEL_DIFFUSE = 2		// diffuse color is replaced by texel color with specular area
+	};
+
+	struct Texture
+	{
+		MeshComponent::TextureMode textureMode = TextureMode::TEXEL_COLOR;
+		int textureIds[MeshComponent::MAX_TEXTURES] = {};
+		size_t nTextures = 0;
+	};
+
+
 private:
 	std::shared_ptr<MyMesh> _mesh = nullptr;
+	std::shared_ptr<MeshComponent::Texture> _texture = nullptr;
+
 	bool _enabled = true;
 
+	
 public:
 	MeshComponent() = delete;
 	MeshComponent(const MeshComponent&) = default;
@@ -189,17 +211,17 @@ public:
 	MeshComponent(const std::shared_ptr<MyMesh>& mesh, const Material& material) : _mesh(mesh) { setMaterial(material); }
 	~MeshComponent() = default;
 
-	inline bool enabled()	const			{ return _enabled; }
-	inline void setEnabled(bool enabled)	{ _enabled = enabled; }
+	inline const MyMesh* meshPtr()	const						{ return _mesh.get(); }
+	inline const MyMesh& meshData()	const						{ return *_mesh; }
+	inline const MeshComponent::Texture* texturePtr() const		{ return _texture.get(); }
+	inline const MeshComponent::Texture& textureData() const	{ return *_texture; }
+	inline bool enabled() const									{ return _enabled; }
 
-	inline const MyMesh* meshPtr()	const { return _mesh.get(); }
-	inline const MyMesh& meshData()	const { return *meshPtr(); } 
-
-	inline void setMaterial(const Material& material)	{ return MeshComponent::setMaterial(*_mesh, material); }
-	inline void setTexture(int textureId)				{ return MeshComponent::setTexture(*_mesh, textureId); }
+	inline void setMaterial(const Material& material)								{ return MeshComponent::setMaterial(*_mesh, material); }
+	inline void setTexture(const std::shared_ptr<MeshComponent::Texture>& texture)	{ _texture = texture; }
+	inline void setEnabled(bool enabled)											{ _enabled = enabled; }
 
 	static void setMaterial(MyMesh& mesh, const Material& material);
-	static void setTexture(MyMesh& mesh, int textureId);
 };
 
 

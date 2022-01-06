@@ -15,20 +15,34 @@
 class Renderer {
 
 public:
-	enum ShaderUniformType	{
+	enum ShaderUniformType {
 		PVM,
 		VM,
 		NORMAL,
 		L_POS,
+
 		MATERIAL_AMBIENT,
 		MATERIAL_DIFFUSE,
 		MATERIAL_SPECULAR,
 		MATERIAL_SHININESS,
 		MATERIAL_EMISSIVE,
 		MATERIAL_TEXCOUNT,
-		TEXT_MAP_0,
-		TEXT_MAP_1,
-		TEXT_MAP_2,
+
+		TEX_MODE,
+		TEX_MAP_0,
+		TEX_MAP_1,
+		TEX_MAP_2,
+
+		N_LIGHTS,
+		LIGHT_TYPES,
+		LIGHT_POSITIONS,
+		LIGHT_DIRECTIONS,
+		LIGHT_INTENSITIES,
+		LIGHT_CUTOFFS,
+		LIGHT_AMBIENT,
+		LIGHT_DIFFUSE,
+		LIGHT_SPECULAR,
+
 		N_UNIFORMS
 	};
 
@@ -75,7 +89,7 @@ private:
 
 
 private:
-	int _uniformLocation[ShaderUniformType::N_UNIFORMS] = {};
+	int _uniformLocation[Renderer::ShaderUniformType::N_UNIFORMS] = {};
 	
 	VSShaderLib _shader;
 	VSShaderLib _shaderText;
@@ -129,6 +143,7 @@ private:
 
 private:
 	void _loadMesh(const MeshComponent& mesh) const;
+	void _loadTexture(const MeshComponent& mesh) const;
 	void _applyTransform(const Entity& entity) const;
 	void _renderMesh(const MeshComponent& mesh) const;
 

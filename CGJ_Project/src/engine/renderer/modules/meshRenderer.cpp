@@ -24,6 +24,7 @@ void Renderer::renderMeshes(const Scene& scene) const
 
 		const Entity& entity = scene.getEntityById(entityId);
 		_loadMesh(mesh);
+		_loadTexture(mesh);
 		_applyTransform(entity);
 		_renderMesh(mesh);
 	}
@@ -35,12 +36,34 @@ void Renderer::renderMeshes(const Scene& scene) const
 void Renderer::_loadMesh(const MeshComponent& mesh) const
 {
 	const MyMesh& meshData = mesh.meshData();
-	glUniform4fv(_uniformLocation[ShaderUniformType::MATERIAL_AMBIENT], 1, meshData.mat.ambient);
-	glUniform4fv(_uniformLocation[ShaderUniformType::MATERIAL_DIFFUSE], 1, meshData.mat.diffuse);
-	glUniform4fv(_uniformLocation[ShaderUniformType::MATERIAL_SPECULAR], 1, meshData.mat.specular);
-	glUniform1f(_uniformLocation[ShaderUniformType::MATERIAL_SHININESS], meshData.mat.shininess);
-	glUniform4fv(_uniformLocation[ShaderUniformType::MATERIAL_EMISSIVE], 1, meshData.mat.emissive);
-	glUniform1ui(_uniformLocation[ShaderUniformType::MATERIAL_TEXCOUNT], meshData.mat.texCount);
+	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::MATERIAL_AMBIENT], 1, meshData.mat.ambient);
+	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::MATERIAL_DIFFUSE], 1, meshData.mat.diffuse);
+	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::MATERIAL_SPECULAR], 1, meshData.mat.specular);
+	glUniform1f(_uniformLocation[Renderer::ShaderUniformType::MATERIAL_SHININESS], meshData.mat.shininess);
+	glUniform4fv(_uniformLocation[Renderer::ShaderUniformType::MATERIAL_EMISSIVE], 1, meshData.mat.emissive);
+	glUniform1ui(_uniformLocation[Renderer::ShaderUniformType::MATERIAL_TEXCOUNT], meshData.mat.texCount);
+}
+
+
+void Renderer::_loadTexture(const MeshComponent& mesh) const
+{
+	constexpr Renderer::ShaderUniformType textureMaps[] = {
+		ShaderUniformType::TEX_MAP_0,
+		ShaderUniformType::TEX_MAP_1,
+		ShaderUniformType::TEX_MAP_2
+	};
+
+	const MeshComponent::Texture* textureData = mesh.texturePtr();
+	if (textureData != nullptr)
+	{
+		glUniform1i(_uniformLocation[Renderer::ShaderUniformType::TEX_MODE], (int)textureData->textureMode);
+		for (int i = 0; i < textureData->nTextures; i++)
+			glUniform1i(_uniformLocation[textureMaps[i]], textureData->textureIds[i]);
+	}
+	else
+	{
+		glUniform1i(_uniformLocation[Renderer::ShaderUniformType::TEX_MODE], (int)MeshComponent::TextureMode::TEXEL_COLOR);
+	}	
 }
 
 

@@ -78,12 +78,6 @@ void MeshComponent::setMaterial(MyMesh& mesh, const Material& material)
 }
 
 
-void MeshComponent::setTexture(MyMesh& mesh, int textureId)
-{
-	mesh.mat.texCount = textureId;
-}
-
-
 
 
 void ScriptComponent::onCreate() const
