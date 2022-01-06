@@ -50,6 +50,8 @@ public:
 public:
 	void init();
 	void updateViewport(CameraComponent& camera, int width, int height) const;
+	void submitRenderableMesh(const MeshComponent& mesh);
+	void submitRenderableEntity(const MeshComponent& mesh, const Entity& entity);
 
 
 public:

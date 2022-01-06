@@ -34,7 +34,7 @@ private:
 	void createTop(Scene* scene, GroupComponent& group, const MeshComponent& mesh)
 	{
 		Entity top = group.addNewEntity(scene, *this, "top");
-		top.addComponent<MeshComponent>(mesh);
+		top.addComponent<MeshComponent>(mesh, top);
 		Transform::scale(top, TABLE_SIZE);
 		Transform::translate(top, { 0.0f, TABLE_SIZE.y / 2.0f, 0.0f });
 
@@ -46,7 +46,7 @@ private:
 	void createLeg(Scene* scene, GroupComponent& group, const MeshComponent& mesh, float xMod, float zMod, const char *legId)
 	{
 		Entity leg = group.addNewEntity(scene, *this, "leg" + std::string(legId));
-		leg.addComponent<MeshComponent>(mesh);
+		leg.addComponent<MeshComponent>(mesh, leg);
 		Transform::scale(leg, LEG_SIZE);
 
 		float xPos = (xMod * TABLE_SIZE.x / 2.0f) - (xMod * LEG_SIZE.x / 2.0f);

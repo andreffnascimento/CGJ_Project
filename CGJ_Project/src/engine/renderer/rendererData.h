@@ -17,7 +17,7 @@ class RendererData
 {
 
 private:
-	typedef std::unordered_map<MeshData*, std::list<const TransformComponent*>> meshInstances_t;
+	typedef std::unordered_map<const MeshData*, std::list<const TransformComponent*>> meshInstances_t;
 
 
 

@@ -46,7 +46,7 @@ private:
 	void _createCandel(Scene* scene, GroupComponent& group, const MeshComponent& mesh, float xMod, float zMod, const char* candelId)
 	{
 		Entity candel = group.addNewEntity(scene, *this, candelId);
-		candel.addComponent<MeshComponent>(mesh);
+		candel.addComponent<MeshComponent>(mesh, candel);
 
 		RigidbodyComponent& rigidbody = candel.addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::STATIC);
 		AABBColliderComponent& collider = candel.addComponent<AABBColliderComponent>(rigidbody, CANDEL_SIZE);
@@ -64,7 +64,7 @@ private:
 	void _createCandelLight(Scene* scene, GroupComponent& group, const MeshComponent& mesh, float xMod, float zMod, const char* candelId)
 	{
 		Entity candel = group.addNewEntity(scene, *this, candelId);
-		candel.addComponent<MeshComponent>(mesh);
+		candel.addComponent<MeshComponent>(mesh, candel);
 
 		LightComponent& light = candel.addComponent<LightComponent>(LightComponent::LightType::POINT, 30.0f);
 		light.setEnabled(false);

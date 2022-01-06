@@ -37,7 +37,7 @@ private:
 		constexpr float angularDrag = 1000.0f;
 
 		Entity cheerio = group.addNewEntity(scene, *this, "cheerio_" + std::to_string(id));
-		cheerio.addComponent<MeshComponent>(mesh);
+		cheerio.addComponent<MeshComponent>(mesh, cheerio);
 
 		RigidbodyComponent& rigidbody = cheerio.addComponent<RigidbodyComponent>(rigidbodyType, mass, drag, angularDrag);
 		AABBColliderComponent& collider = cheerio.addComponent<AABBColliderComponent>(rigidbody, Coords3f({ CHEERIO_SIZE.x, CHEERIO_OUTER_RADIUS * 3.0f, CHEERIO_SIZE.z }));

@@ -67,6 +67,32 @@ void CameraComponent::_setPerspectiveCamera(float fov)
 
 
 
+MeshComponent::MeshComponent(MyMesh&& mesh, const Material& material)
+	: _meshData(std::make_shared<MeshData>(std::forward<MyMesh>(mesh), material))
+{
+	Renderer& renderer = Application::getRenderer();
+	renderer.submitRenderableMesh(*this);
+}
+
+
+MeshComponent::MeshComponent(MyMesh&& mesh, const Material& material, const Entity& entity)
+	: _meshData(std::make_shared<MeshData>(std::forward<MyMesh>(mesh), material))
+{
+	Renderer& renderer = Application::getRenderer();
+	renderer.submitRenderableEntity(*this, entity);
+}
+
+
+MeshComponent::MeshComponent(const MeshComponent& mesh, const Entity& entity)
+	: _meshData(mesh._meshData), _enabled(mesh._enabled)
+{
+	Renderer& renderer = Application::getRenderer();
+	renderer.submitRenderableEntity(*this, entity);
+}
+
+
+
+
 void ScriptComponent::onCreate() const
 {
 	for (auto& script : _scripts)

@@ -133,6 +133,18 @@ void Renderer::updateViewport(CameraComponent& camera, int width, int height) co
 }
 
 
+void Renderer::submitRenderableMesh(const MeshComponent& mesh)
+{
+	_solidMeshInstances.emplace(&mesh.meshData(), std::list<const TransformComponent*>());
+}
+
+
+void Renderer::submitRenderableEntity(const MeshComponent& mesh, const Entity& entity)
+{
+	_solidMeshInstances[&mesh.meshData()].push_back(&entity.transform());
+}
+
+
 
 
 void Renderer::renderScene(const Scene& scene) const
