@@ -5,6 +5,7 @@
 #include "MicroMachines3D/common/include.h"
 
 #include "MicroMachines3D/scripts/manager/game/globalLightScript.h"
+#include "MicroMachines3D/scripts/manager/game/fogToggleScript.h"
 
 
 
@@ -19,7 +20,10 @@ public:
 		Entity globalLight = _createGlobalLight(scene->createEntity("GlobalLight"));
 
 		std::shared_ptr<Script> globalLightScript = std::make_shared<GlobalLightScript>(scene);
-		addComponent<ScriptComponent>(globalLightScript);
+		std::shared_ptr<Script> fogToggleScript = std::make_shared<FogToggleScript>(scene);
+		ScriptComponent& script = addComponent<ScriptComponent>();
+		script.addScriptInstance(globalLightScript);
+		script.addScriptInstance(fogToggleScript);
 	}
 
 

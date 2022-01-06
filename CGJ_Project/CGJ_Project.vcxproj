@@ -236,6 +236,7 @@
     <ClInclude Include="src\engine\renderer\Texture_Loader.h" />
     <ClInclude Include="src\engine\renderer\VertexAttrDef.h" />
     <ClInclude Include="src\engine\renderer\vsShaderLib.h" />
+    <ClInclude Include="src\MicroMachines3D\scripts\manager\game\fogToggleScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\manager\game\globalLightScript.h" />
   </ItemGroup>
   <ItemGroup>
