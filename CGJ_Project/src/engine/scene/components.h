@@ -259,9 +259,9 @@ struct LightComponent
 public:
 	enum class LightType
 	{
-		DIRECTIONAL,
-		POINT,
-		SPOT
+		DIRECTIONAL = 1,
+		POINT = 2,
+		SPOT = 3
 	};
 
 private:

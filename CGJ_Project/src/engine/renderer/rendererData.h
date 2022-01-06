@@ -11,13 +11,6 @@ class RendererData
 {
 
 private:
-	constexpr static size_t DIRECTIONAL_LIGHT_TYPE = 1;
-	constexpr static size_t POINT_LIGHT_TYPE = 2;
-	constexpr static size_t SPOT_LIGHT_TYPE = 3;
-
-
-
-private:
 	enum ShaderUniformType {
 		PVM,
 		VM,

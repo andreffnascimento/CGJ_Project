@@ -60,7 +60,7 @@ void Renderer::_formatDirectionalLight(const LightComponent& light, const Coords
 	float viewLightDirection[4] = {};
 	multMatrixPoint(VIEW, lightDirection, viewLightDirection);
 
-	lightData.lightTypes[lightData.nLights] = RendererData::DIRECTIONAL_LIGHT_TYPE;
+	lightData.lightTypes[lightData.nLights] = (unsigned int)LightComponent::LightType::DIRECTIONAL;
 	memcpy(&lightData.lightDirections[4 * lightData.nLights], viewLightDirection, 4 * sizeof(float));
 	lightData.lightIntensities[lightData.nLights] = light.intensity();
 }
@@ -72,7 +72,7 @@ void Renderer::_formatPointLight(const LightComponent& light, const Coords3f& tr
 	float viewLightPosition[4] = {};
 	multMatrixPoint(VIEW, lightPosition, viewLightPosition);
 
-	lightData.lightTypes[lightData.nLights] = RendererData::POINT_LIGHT_TYPE;
+	lightData.lightTypes[lightData.nLights] = (unsigned int)LightComponent::LightType::POINT;
 	memcpy(&lightData.lightPositions[4 * lightData.nLights], viewLightPosition, 4 * sizeof(float));
 	lightData.lightIntensities[lightData.nLights] = light.intensity();
 }
@@ -88,7 +88,7 @@ void Renderer::_formatSpotLight(const LightComponent& light, const Coords3f& tra
 	float viewLightDirection[4] = {};
 	multMatrixPoint(VIEW, lightDirection, viewLightDirection);
 
-	lightData.lightTypes[lightData.nLights] = RendererData::SPOT_LIGHT_TYPE;
+	lightData.lightTypes[lightData.nLights] = (unsigned int)LightComponent::LightType::SPOT;
 	memcpy(&lightData.lightPositions[4 * lightData.nLights], viewLightPosition, 4 * sizeof(float));
 	memcpy(&lightData.lightDirections[4 * lightData.nLights], viewLightDirection, 4 * sizeof(float));
 	lightData.lightIntensities[lightData.nLights] = light.intensity();
