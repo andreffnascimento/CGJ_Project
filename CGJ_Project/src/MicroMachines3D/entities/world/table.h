@@ -14,22 +14,24 @@ public:
 	Table(Scene* scene)
 		: SceneEntity(scene->createEntity("Table"))
 	{	
-		std::shared_ptr<MyMesh> mesh = std::make_shared<MyMesh>(createCube());
-		MeshComponent::setMaterial(*mesh, TABLE_MATERIAL);
+		MeshComponent meshComponent = MeshComponent(std::make_shared<MyMesh>(createCube()), TABLE_MATERIAL);
+		meshComponent.initializeTexturing(MeshComponent::TextureMode::MULTITEXTURE);
+		meshComponent.addTexture(scene->create2dTexture("src/MicroMachines3D/textures/table/lightwood.tga"));
+		meshComponent.addTexture(scene->create2dTexture("src/MicroMachines3D/textures/table/stone.tga"));
 
 		GroupComponent& group = addComponent<GroupComponent>();
-		createTop(scene, group, mesh);
-		createLeg(scene, group, mesh, -1.0f, -1.0f, "1");
-		createLeg(scene, group, mesh,  1.0f, -1.0f, "2");
-		createLeg(scene, group, mesh, -1.0f,  1.0f, "3");
-		createLeg(scene, group, mesh,  1.0f,  1.0f, "4");
+		createTop(scene, group, meshComponent);
+		createLeg(scene, group, meshComponent, -1.0f, -1.0f, "1");
+		createLeg(scene, group, meshComponent,  1.0f, -1.0f, "2");
+		createLeg(scene, group, meshComponent, -1.0f,  1.0f, "3");
+		createLeg(scene, group, meshComponent,  1.0f,  1.0f, "4");
 	}
 
 
 
 
 private:
-	void createTop(Scene* scene, GroupComponent& group, const std::shared_ptr<MyMesh>& mesh)
+	void createTop(Scene* scene, GroupComponent& group, const MeshComponent& mesh)
 	{
 		Entity top = group.addNewEntity(scene, *this, "top");
 		top.addComponent<MeshComponent>(mesh);
@@ -41,7 +43,7 @@ private:
 	}
 
 
-	void createLeg(Scene* scene, GroupComponent& group, const std::shared_ptr<MyMesh>& mesh, float xMod, float zMod, const char *legId)
+	void createLeg(Scene* scene, GroupComponent& group, const MeshComponent& mesh, float xMod, float zMod, const char *legId)
 	{
 		Entity leg = group.addNewEntity(scene, *this, "leg" + std::string(legId));
 		leg.addComponent<MeshComponent>(mesh);

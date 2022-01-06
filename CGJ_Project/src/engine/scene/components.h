@@ -191,9 +191,18 @@ public:
 
 	struct Texture
 	{
-		MeshComponent::TextureMode textureMode = TextureMode::TEXEL_COLOR;
-		int textureIds[MeshComponent::MAX_TEXTURES] = {};
-		size_t nTextures = 0;
+	private:
+		MeshComponent::TextureMode _textureMode = TextureMode::TEXEL_COLOR;
+		int _textureIds[MeshComponent::MAX_TEXTURES] = {};
+		size_t _nTextures = 0;
+
+	public:
+		inline const MeshComponent::TextureMode& textureMode() const	{ return _textureMode; }
+		inline const int* textureIds() const							{ return _textureIds; }
+		inline size_t nTextures() const									{ return _nTextures; }
+
+	public:
+		friend struct MeshComponent;
 	};
 
 
@@ -220,6 +229,9 @@ public:
 	inline void setMaterial(const Material& material)								{ return MeshComponent::setMaterial(*_mesh, material); }
 	inline void setTexture(const std::shared_ptr<MeshComponent::Texture>& texture)	{ _texture = texture; }
 	inline void setEnabled(bool enabled)											{ _enabled = enabled; }
+
+	inline void initializeTexturing(const MeshComponent::TextureMode& textureMode)	{ (_texture = std::make_shared<MeshComponent::Texture>())->_textureMode = textureMode; }
+	inline void addTexture(int textureId)											{ _texture->_textureIds[_texture->_nTextures++] = textureId; }
 
 	static void setMaterial(MyMesh& mesh, const Material& material);
 };

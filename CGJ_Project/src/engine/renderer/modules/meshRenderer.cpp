@@ -56,9 +56,9 @@ void Renderer::_loadTexture(const MeshComponent& mesh) const
 	const MeshComponent::Texture* textureData = mesh.texturePtr();
 	if (textureData != nullptr)
 	{
-		glUniform1i(_uniformLocation[Renderer::ShaderUniformType::TEX_MODE], (int)textureData->textureMode);
-		for (int i = 0; i < textureData->nTextures; i++)
-			glUniform1i(_uniformLocation[textureMaps[i]], textureData->textureIds[i]);
+		glUniform1i(_uniformLocation[Renderer::ShaderUniformType::TEX_MODE], (int)textureData->textureMode());
+		for (int i = 0; i < textureData->nTextures(); i++)
+			glUniform1i(_uniformLocation[textureMaps[i]], textureData->textureIds()[i]);
 	}
 	else
 	{
