@@ -18,11 +18,8 @@ public:
 	{
 		GroupComponent& group = addComponent<GroupComponent>();
 
-		std::shared_ptr<MyMesh> bottomMesh = std::make_shared<MyMesh>(createCylinder(CANDEL_HEIGHT, CANDEL_RADIUS, CANDEL_SIDES));
-		MeshComponent::setMaterial(*bottomMesh, CANDEL_OFF_MATERIAL);
-
-		std::shared_ptr<MyMesh> topMesh = std::make_shared<MyMesh>(createCube());
-		MeshComponent::setMaterial(*topMesh, CANDEL_OFF_MATERIAL);
+		MeshComponent bottomMesh = MeshComponent(createCylinder(CANDEL_HEIGHT, CANDEL_RADIUS, CANDEL_SIDES), CANDEL_OFF_MATERIAL);
+		MeshComponent topMesh = MeshComponent(createCube(), CANDEL_OFF_MATERIAL);
 
 		_createCandel(scene, group, bottomMesh, -1.0f, -1.0f, "topLeft");
 		_createCandel(scene, group, bottomMesh,  0.0f, -1.0f, "topMiddle");
@@ -46,7 +43,7 @@ public:
 
 
 private:
-	void _createCandel(Scene* scene, GroupComponent& group, const std::shared_ptr<MyMesh>& mesh, float xMod, float zMod, const char* candelId)
+	void _createCandel(Scene* scene, GroupComponent& group, const MeshComponent& mesh, float xMod, float zMod, const char* candelId)
 	{
 		Entity candel = group.addNewEntity(scene, *this, candelId);
 		candel.addComponent<MeshComponent>(mesh);
@@ -64,7 +61,7 @@ private:
 	}
 
 
-	void _createCandelLight(Scene* scene, GroupComponent& group, const std::shared_ptr<MyMesh>& mesh, float xMod, float zMod, const char* candelId)
+	void _createCandelLight(Scene* scene, GroupComponent& group, const MeshComponent& mesh, float xMod, float zMod, const char* candelId)
 	{
 		Entity candel = group.addNewEntity(scene, *this, candelId);
 		candel.addComponent<MeshComponent>(mesh);

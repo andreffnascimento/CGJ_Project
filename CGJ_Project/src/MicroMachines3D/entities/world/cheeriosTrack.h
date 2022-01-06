@@ -24,14 +24,12 @@ public:
 private:
 	void _createTrack(Scene* scene, GroupComponent& group)
 	{
-		std::shared_ptr<MyMesh> mesh = std::make_shared<MyMesh>(createTorus(CHEERIO_INNER_RADIUS, CHEERIO_OUTER_RADIUS, CHEERIO_RINGS, CHEERIO_SIDES));
-		MeshComponent::setMaterial(*mesh, CHEERIO_MATERIAL);
-
+		MeshComponent mesh = MeshComponent(createTorus(CHEERIO_INNER_RADIUS, CHEERIO_OUTER_RADIUS, CHEERIO_RINGS, CHEERIO_SIDES), CHEERIO_MATERIAL);
 		_createCheerio(scene, group, mesh, 0, 0.0f, 0.0f);
 	}
 
 
-	void _createCheerio(Scene* scene, GroupComponent& group, const std::shared_ptr<MyMesh>& mesh, unsigned int id, float xPos, float yPos)
+	void _createCheerio(Scene* scene, GroupComponent& group, const MeshComponent& mesh, unsigned int id, float xPos, float yPos)
 	{
 		constexpr RigidbodyComponent::RigidbodyType rigidbodyType = RigidbodyComponent::RigidbodyType::DYNAMIC;
 		constexpr float mass = 2000.0f;

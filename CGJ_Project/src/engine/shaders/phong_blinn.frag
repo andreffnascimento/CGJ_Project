@@ -30,8 +30,8 @@ struct MaterialData {
 
 
 struct TextureData {
-	uint textureMode;
 	uint nTextures;
+	uint textureMode;
 	sampler2D textureMap0;
 	sampler2D textureMap1;
 	sampler2D textureMap2;

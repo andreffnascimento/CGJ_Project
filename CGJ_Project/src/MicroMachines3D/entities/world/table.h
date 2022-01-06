@@ -14,17 +14,17 @@ public:
 	Table(Scene* scene)
 		: SceneEntity(scene->createEntity("Table"))
 	{	
-		MeshComponent meshComponent = MeshComponent(std::make_shared<MyMesh>(createCube()), TABLE_MATERIAL);
-		meshComponent.initializeTexturing(MeshComponent::TextureMode::MODULATE_DIFFUSE);
-		meshComponent.addTexture(scene->create2dTexture("src/MicroMachines3D/textures/table/lightwood.tga"));
-		meshComponent.addTexture(scene->create2dTexture("src/MicroMachines3D/textures/table/stone.tga"));
+		MeshComponent mesh = MeshComponent(createCube(), TABLE_MATERIAL);
+		mesh.setTextureMode(MeshComponent::TextureMode::MODULATE_DIFFUSE);
+		mesh.addTexture(scene->create2dTexture("src/MicroMachines3D/textures/table/lightwood.tga"));
+		mesh.addTexture(scene->create2dTexture("src/MicroMachines3D/textures/table/stone.tga"));
 
 		GroupComponent& group = addComponent<GroupComponent>();
-		createTop(scene, group, meshComponent);
-		createLeg(scene, group, meshComponent, -1.0f, -1.0f, "1");
-		createLeg(scene, group, meshComponent,  1.0f, -1.0f, "2");
-		createLeg(scene, group, meshComponent, -1.0f,  1.0f, "3");
-		createLeg(scene, group, meshComponent,  1.0f,  1.0f, "4");
+		createTop(scene, group, mesh);
+		createLeg(scene, group, mesh, -1.0f, -1.0f, "1");
+		createLeg(scene, group, mesh,  1.0f, -1.0f, "2");
+		createLeg(scene, group, mesh, -1.0f,  1.0f, "3");
+		createLeg(scene, group, mesh,  1.0f,  1.0f, "4");
 	}
 
 
