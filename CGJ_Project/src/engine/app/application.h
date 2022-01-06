@@ -41,7 +41,7 @@ private:
 	unsigned int _frameCount = 0;
 	
 	unsigned int _prevTime = 0;
-	float _ts = 0;
+	float _ts = 0.0;
 
 	EventHandler _eventHandler = EventHandler();
 	PhysicsEngine _physicsEngine = PhysicsEngine();

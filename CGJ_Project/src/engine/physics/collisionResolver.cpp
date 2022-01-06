@@ -1,7 +1,6 @@
 #include "collisionResolver.h"
 
 #include "engine/scene/components.h"
-#include <iostream>
 
 
 
@@ -18,7 +17,7 @@ CollisionResolver::CollisionResolver(AABBColliderComponent& collider)
 void CollisionResolver::reset()
 {
 	_collisions.clear();
-	_impulseForces.clear();
+	_impulses.clear();
 }
 
 
@@ -40,8 +39,8 @@ void CollisionResolver::processCollisions()
 
 void CollisionResolver::updateVelocity(Coords3f& velocity) const
 {
-	for (const auto& force : _impulseForces)
-		velocity += force.value();
+	for (const auto& impulse : _impulses)
+		velocity += impulse;
 }
 
 
@@ -58,5 +57,5 @@ bool CollisionResolver::ignoreCollision(const RigidbodyComponent& rigidbody)
 void CollisionResolver::_processCollision(const Collision& collision)
 {
 	Coords3f impulseForce = collision.impulse() * _collider.rigidbody().invMass() * collision.collisionNormal();
-	_collider.collisionResolver()->_impulseForces.emplace_back(Force::ForceType::LINEAR, impulseForce);
+	_collider.collisionResolver()->_impulses.emplace_back(impulseForce);
 }

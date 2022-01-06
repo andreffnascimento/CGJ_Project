@@ -28,7 +28,7 @@ void Scene::onCreate()
 }
 
 
-void Scene::onUpdate(float ts)
+void Scene::onFixedUpdate(float ts)		// prevents the physics engine to break when the ts is too large
 {
 	// update entity scripts
 	for (auto& scriptIterator : _registry.getComponents<ScriptComponent>())
@@ -37,6 +37,22 @@ void Scene::onUpdate(float ts)
 	// simulate physics
 	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
 	physicsEngine.simulate(*this, ts);
+}
+
+
+void Scene::onUpdate(float ts)
+{
+	_timeAccumulator += ts;
+	while (_timeAccumulator >= PhysicsEngine::PHYSICS_SIMULATION_MIN_INTERVAL)
+	{
+		float fixedTs = std::min(ts, PhysicsEngine::PHYSICS_SIMULATION_MAX_INTERVAL);
+		_timeAccumulator -= fixedTs;
+		onFixedUpdate(fixedTs);
+
+	}
+
+	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
+	physicsEngine.updateTransforms(*this);
 
 	// update entity transform matrixes
 	for (auto& transformIterator : _registry.getComponents<TransformComponent>())

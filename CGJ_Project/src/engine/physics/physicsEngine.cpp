@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <memory>
-#include <iostream>
 
 #include "engine/physics/collisionResolver.h"
 
@@ -33,19 +32,10 @@ void PhysicsEngine::rotateBoundingBox(AABBColliderComponent& collider, const Qua
 Coords3f PhysicsEngine::calculateDragForce(const Coords3f& velocity, float drag, float dragThreshold)
 {
 	float velocityLength = velocity.length();
-	float dragLength = -PhysicsEngine::AIR_DENSITY * drag * velocityLength * (velocityLength * velocityLength > dragThreshold ? velocityLength : PhysicsEngine::DRAG_SLOW_CONSTANT);
+	float dragLength = -PhysicsEngine::AIR_DENSITY * drag * velocityLength * (velocityLength > dragThreshold ? velocityLength : PhysicsEngine::DRAG_SLOW_CONSTANT);
 	Coords3f dragForce = velocity.normalized();
 	dragForce *= dragLength;
 	return dragForce;
-}
-
-
-
-
-PhysicsEngine::PhysicsEngine(unsigned int collisionIterations)
-	:_collisionIterations(collisionIterations)
-{
-	// empty
 }
 
 
@@ -58,11 +48,27 @@ void PhysicsEngine::initialize(const Scene& scene) const
 }
 
 
-void PhysicsEngine::simulate(const Scene& scene, float ts) const
+void PhysicsEngine::simulate(const Scene& scene, float ts)
 {
 	_simulateRigidbodyMovement(scene, ts);
 	_simulateCollisions(scene, ts);
-	_updateRigidbodyTransform(scene);
+}
+
+
+void PhysicsEngine::updateTransforms(const Scene& scene)
+{
+	std::unordered_map<EntityHandle, RigidbodyComponent>& rigidbodyComponents = scene.getSceneComponents<RigidbodyComponent>();
+	for (auto& rigidbodyIterator : rigidbodyComponents)
+	{
+		EntityHandle entityId = rigidbodyIterator.first;
+		RigidbodyComponent& rigidbody = rigidbodyIterator.second;
+		if (!rigidbody._sleeping)
+		{
+			Entity entity = scene.getEntityById(entityId);
+			Transform::translateTo(entity, rigidbody._position);
+			Transform::rotateTo(entity, rigidbody._rotation);
+		}
+	}
 }
 
 
@@ -123,7 +129,7 @@ void PhysicsEngine::_simulateRigidbodyMovement(const Scene& scene, float ts) con
 void PhysicsEngine::_simulateCollisions(const Scene& scene, float ts) const
 {
 	std::unordered_map<EntityHandle, AABBColliderComponent>& colliderComponents = scene.getSceneComponents<AABBColliderComponent>();
-	for (unsigned int i = 0; i < _collisionIterations; i++)
+	for (unsigned int i = 0; i < PhysicsEngine::COLLISION_ITERATIONS; i++)
 	{
 		_resetCollider(scene);
 		for (auto& entityColliderIterator = colliderComponents.begin(); entityColliderIterator != colliderComponents.end(); entityColliderIterator++)
@@ -175,47 +181,26 @@ void PhysicsEngine::_resolveCollisions(const Scene& scene, float ts) const
 }
 
 
-void PhysicsEngine::_updateRigidbodyTransform(const Scene& scene) const
-{
-	std::unordered_map<EntityHandle, RigidbodyComponent>& rigidbodyComponents = scene.getSceneComponents<RigidbodyComponent>();
-	for (auto& rigidbodyIterator : rigidbodyComponents)
-	{
-		EntityHandle entityId = rigidbodyIterator.first;
-		RigidbodyComponent& rigidbody = rigidbodyIterator.second;
-		if (!rigidbody._sleeping)
-		{
-			Entity entity = scene.getEntityById(entityId);
-			Transform::translateTo(entity, rigidbody._position);
-			Transform::rotateTo(entity, rigidbody._rotation);
-		}
-	}
-}
-
-
 
 
 void PhysicsEngine::_processRigidbodyMovement(const Scene& scene, RigidbodyComponent& rigidbody, float ts) const
 {
+	Coords3f linearForce = Coords3f();
+	Coords3f angularForce = Coords3f();
+
 	rigidbody._sleeping = false;
 	if (rigidbody._type == RigidbodyComponent::RigidbodyType::DYNAMIC)
 	{
-		Coords3f linearForce = Coords3f();
-		Coords3f angularForce = Coords3f();
 		_combineForces(rigidbody, linearForce, angularForce);
-		_calculateExpectedAngularVelocity(rigidbody, angularForce, ts);
-		Coords3f rotation = _calculateExpectedRotation(rigidbody, ts);
-		_calculateExpectedVelocity(rigidbody, linearForce, ts, rotation);
+		_calculateFinalAngularForce(rigidbody, angularForce);
+		_calculateFinalLinearForce(rigidbody, linearForce);
 	}
 
-	rigidbody._position += rigidbody._velocity * ts;
+	Coords3f rotation = _calculateExpectedRotation(rigidbody, ts);
+	_calculateExpectedPosition(rigidbody, linearForce, ts);
+	_calculateExpectedAngularVelocity(rigidbody, angularForce, ts);
+	_calculateExpectedLinearVelocity(rigidbody, linearForce, Quaternion(rotation), ts);
 	_processSleepThreshold(rigidbody);
-}
-
-
-void PhysicsEngine::_addGravityForce(RigidbodyComponent& rigidbody, Coords3f& linearForce, float ts) const
-{
-	if (rigidbody._usesGravity)
-		linearForce += Coords3f({ 0.0f, -PhysicsEngine::GRAVITY * ts, 0.0f });
 }
 
 
@@ -236,35 +221,54 @@ void PhysicsEngine::_combineForces(RigidbodyComponent& rigidbody, Coords3f& line
 		else
 			angularForce += force.value();
 	}
+}
 
-	rigidbody._forces.clear();
+
+void PhysicsEngine::_calculateFinalAngularForce(RigidbodyComponent& rigidbody, Coords3f& angularForce) const
+{
+	angularForce += PhysicsEngine::calculateDragForce(rigidbody._angularVelocity, rigidbody._angularDrag, rigidbody._dragThreshold);
+	angularForce *= rigidbody._mass;
+}
+
+
+void PhysicsEngine::_calculateFinalLinearForce(RigidbodyComponent& rigidbody, Coords3f& linearForce) const
+{
+	linearForce += PhysicsEngine::calculateDragForce(rigidbody._velocity, rigidbody._drag, rigidbody._dragThreshold);
+	linearForce *= rigidbody._mass;
+
+	if (rigidbody._usesGravity)
+		linearForce.y -= PhysicsEngine::GRAVITY;
+}
+
+
+void PhysicsEngine::_calculateExpectedPosition(RigidbodyComponent& rigidbody, const Coords3f& linearForce, float ts) const
+{
+	float time2 = std::pow(ts, 2.0f) / 2.0f;
+	rigidbody._position.x += rigidbody._velocity.x * ts + linearForce.x * time2;
+	rigidbody._position.y += rigidbody._velocity.y * ts + linearForce.y * time2;
+	rigidbody._position.z += rigidbody._velocity.z * ts + linearForce.z * time2;
 }
 
 
 void PhysicsEngine::_calculateExpectedAngularVelocity(RigidbodyComponent& rigidbody, Coords3f& angularForce, float ts) const
 {
-	angularForce += PhysicsEngine::calculateDragForce(rigidbody._angularVelocity, rigidbody._angularDrag, rigidbody._dragThreshold);
-	angularForce *= rigidbody._mass * ts;
+	angularForce *= ts;
 	rigidbody._angularVelocity += angularForce;
 }
 
 
-void PhysicsEngine::_calculateExpectedVelocity(RigidbodyComponent& rigidbody, Coords3f& linearForce, float ts, const Quaternion& rotation) const
+void PhysicsEngine::_calculateExpectedLinearVelocity(RigidbodyComponent& rigidbody, Coords3f& linearForce, const Quaternion& rotation, float ts) const
 {
-	linearForce += PhysicsEngine::calculateDragForce(rigidbody._velocity, rigidbody._drag, rigidbody._dragThreshold);
-	linearForce *= rigidbody._mass * ts;
-
-	_addGravityForce(rigidbody, linearForce, ts);
-
 	rotation.rotatePoint(linearForce);
 	rotation.rotatePoint(rigidbody._velocity);
-
+	linearForce *= ts;
 	rigidbody._velocity += linearForce;
 }
 
 
 void PhysicsEngine::_processSleepThreshold(RigidbodyComponent& rigidbody) const
 {
+	rigidbody._forces.clear();
 	if (rigidbody._velocity.length() > rigidbody._sleepThreshold || rigidbody._angularVelocity.length() > rigidbody._sleepThreshold)
 		return;
 
@@ -327,6 +331,7 @@ void PhysicsEngine::_checkCollision(AABBColliderComponent& entityCollider, AABBC
 	contained[2] = otherPtr[4] < entityPtr[4] && entityPtr[5] < otherPtr[5];
 	_resolveCollision(*entityColliderPtr, *otherColliderPtr, contained, ts);
 }
+
 
 void PhysicsEngine::_resolveCollision(AABBColliderComponent& entityCollider, AABBColliderComponent& otherCollider, const bool* contained, float ts) const
 {

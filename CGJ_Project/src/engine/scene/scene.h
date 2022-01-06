@@ -19,6 +19,8 @@ private:
 	ECSRegistry _registry = ECSRegistry();
 	CameraEntity _activeCamera = CameraEntity();
 
+	float _timeAccumulator = 0.0f;
+
 
 
 
@@ -34,6 +36,7 @@ public:
 public:
 	void onCreate();
 	void onUpdate(float ts);
+	void onFixedUpdate(float ts);
 	void onViewportResize(int width, int height);
 
 

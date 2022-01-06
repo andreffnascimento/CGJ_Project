@@ -5,7 +5,6 @@
 #include <list>
 
 #include "engine/physics/collision.h"
-#include "engine/physics/force.h"
 
 #include "engine/scene/components.h"
 #include "engine/utils/coords.h"
@@ -20,7 +19,7 @@ protected:
 	AABBColliderComponent& _collider; 
 
 	std::list<Collision> _collisions = std::list<Collision>();
-	std::list<Force> _impulseForces = std::list<Force>();
+	std::list<Coords3f> _impulses = std::list<Coords3f>();
 
 
 
@@ -35,7 +34,7 @@ public:
 public:
 	inline const std::list<Collision>& collisions() const	{ return _collisions; }
 	inline bool collided() const							{ return !_collisions.empty(); }
-	inline bool updated() const								{ return _impulseForces.empty(); }
+	inline bool updated() const								{ return _impulses.empty(); }
 
 
 public:
