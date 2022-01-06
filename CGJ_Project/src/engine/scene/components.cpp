@@ -67,12 +67,6 @@ void CameraComponent::_setPerspectiveCamera(float fov)
 
 
 
-MeshComponent::MeshComponent(MyMesh&& mesh)
-	: _mesh(std::make_shared<MyMesh>(std::forward<MyMesh>(mesh))), _texture(std::make_shared<MeshComponent::Texture>())
-{
-	// empty
-}
-
 MeshComponent::MeshComponent(MyMesh&& mesh, const Material& material)
 	: _mesh(std::make_shared<MyMesh>(std::forward<MyMesh>(mesh))), _texture(std::make_shared<MeshComponent::Texture>())
 {

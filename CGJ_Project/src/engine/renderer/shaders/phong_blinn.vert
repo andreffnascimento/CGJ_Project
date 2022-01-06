@@ -1,9 +1,22 @@
 #version 430
 
 
-uniform mat4 m_pvm;
-uniform mat4 m_viewModel;
-uniform mat3 m_normal;
+const uint MAX_INSTANCES = 100;
+
+
+
+
+struct InstanceData {
+	mat4 pvmMatrix[MAX_INSTANCES];
+	mat4 vmMatrix[MAX_INSTANCES];
+	mat3 normalMatrix[MAX_INSTANCES];
+	uint meshIndex[MAX_INSTANCES];
+};
+
+
+
+
+uniform InstanceData instanceData; 
 
 
 in vec4 position;
@@ -18,6 +31,7 @@ out Data {
 	vec3 eye;
 	vec3 eyeDir;
 	vec2 textureCoords;
+	uint meshIndex;
 } dataOut;
 
 
@@ -25,11 +39,12 @@ out Data {
 
 void main () {
 
-	dataOut.position = m_viewModel * position;
-	dataOut.normal = normalize(m_normal * normal.xyz);
+	dataOut.position = instanceData.vmMatrix[gl_InstanceID] * position;
+	dataOut.normal = normalize(instanceData.normalMatrix[gl_InstanceID] * normal.xyz);
 	dataOut.eye = vec3(-dataOut.position);
-	dataOut.eyeDir = -vec3(m_viewModel * position);
+	dataOut.eyeDir = -vec3(instanceData.vmMatrix[gl_InstanceID] * position);
 	dataOut.textureCoords = textureCoords.st;
+	dataOut.meshIndex = instanceData.meshIndex[gl_InstanceID];
 	
-	gl_Position = m_pvm * position;
+	gl_Position = instanceData.pvmMatrix[gl_InstanceID] * position;
 }

@@ -179,9 +179,10 @@ GLuint Renderer::_setupShaders()
 
 	glLinkProgram(_shader.getProgramIndex());
 
-	_uniformLocation[RendererData::ShaderUniformType::PVM]		= glGetUniformLocation(_shader.getProgramIndex(), "m_pvm");
-	_uniformLocation[RendererData::ShaderUniformType::VM]		= glGetUniformLocation(_shader.getProgramIndex(), "m_viewModel");
-	_uniformLocation[RendererData::ShaderUniformType::NORMAL]	= glGetUniformLocation(_shader.getProgramIndex(), "m_normal");
+	_uniformLocation[RendererData::ShaderUniformType::INSTANCE_PVM_MATRIX]		= glGetUniformLocation(_shader.getProgramIndex(), "instanceData.pvmMatrix");
+	_uniformLocation[RendererData::ShaderUniformType::INSTANCE_VM_MATRIX]		= glGetUniformLocation(_shader.getProgramIndex(), "instanceData.vmMatrix");
+	_uniformLocation[RendererData::ShaderUniformType::INSTANCE_NORMAL_MATRIX]	= glGetUniformLocation(_shader.getProgramIndex(), "instanceData.normalMatrix");
+	_uniformLocation[RendererData::ShaderUniformType::INSTANCE_MESH_INDEX]		= glGetUniformLocation(_shader.getProgramIndex(), "instanceData.meshIndex");
 
 	_uniformLocation[RendererData::ShaderUniformType::MATERIAL_AMBIENT]		= glGetUniformLocation(_shader.getProgramIndex(), "materialData.ambient");
 	_uniformLocation[RendererData::ShaderUniformType::MATERIAL_DIFFUSE]		= glGetUniformLocation(_shader.getProgramIndex(), "materialData.diffuse");
@@ -194,11 +195,11 @@ GLuint Renderer::_setupShaders()
 	_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAPS]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.maps");
 
 	_uniformLocation[RendererData::ShaderUniformType::N_LIGHTS]				= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.nLights");
-	_uniformLocation[RendererData::ShaderUniformType::LIGHT_TYPES]			= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.types");
-	_uniformLocation[RendererData::ShaderUniformType::LIGHT_POSITIONS]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.positions");
-	_uniformLocation[RendererData::ShaderUniformType::LIGHT_DIRECTIONS]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.directions");
-	_uniformLocation[RendererData::ShaderUniformType::LIGHT_INTENSITIES]	= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.intensities");
-	_uniformLocation[RendererData::ShaderUniformType::LIGHT_CUTOFFS]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.cutOffs");
+	_uniformLocation[RendererData::ShaderUniformType::LIGHT_TYPE]			= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.type");
+	_uniformLocation[RendererData::ShaderUniformType::LIGHT_POSITION]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.position");
+	_uniformLocation[RendererData::ShaderUniformType::LIGHT_DIRECTION]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.direction");
+	_uniformLocation[RendererData::ShaderUniformType::LIGHT_INTENSITY]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.intensity");
+	_uniformLocation[RendererData::ShaderUniformType::LIGHT_CUTOFF]			= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.cutOff");
 	_uniformLocation[RendererData::ShaderUniformType::LIGHT_AMBIENT]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.ambientCoefficient");
 	_uniformLocation[RendererData::ShaderUniformType::LIGHT_DIFFUSE]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.diffuseCoefficient");
 	_uniformLocation[RendererData::ShaderUniformType::LIGHT_SPECULAR]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.specularCoefficient");

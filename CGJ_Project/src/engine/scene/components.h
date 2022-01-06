@@ -215,7 +215,6 @@ private:
 public:
 	MeshComponent() = delete;
 	MeshComponent(const MeshComponent&) = default;
-	MeshComponent(MyMesh&& mesh);
 	MeshComponent(MyMesh&& mesh, const Material& material);
 	~MeshComponent() = default;
 
