@@ -19,7 +19,7 @@ private:
 
 
 
-private:
+public:
 	struct ReflectionCoefficients
 	{
 		float ambient = 1.0f;
@@ -33,9 +33,9 @@ private:
 	{
 		enum class FogMode
 		{
-			LINEAR,
-			EXP,
-			EXP2
+			LINEAR = 1,
+			EXP = 2,
+			EXP2 = 3
 		};
 
 		Fog::FogMode mode = Fog::FogMode::LINEAR;
@@ -52,7 +52,6 @@ private:
 public:
 	friend class Renderer;
 	friend class RendererData;
-
 };
 
 

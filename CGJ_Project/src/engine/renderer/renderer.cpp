@@ -42,22 +42,22 @@ unsigned int Renderer::createCubeMapTexture(const char** texturePaths)
 
 
 
-void Renderer::setReflectionCoefficients(float ambient, float diffuse, float specular, float darkTexture)
+void Renderer::setReflectionCoefficients(const RendererSettings::ReflectionCoefficients& reflectionCoefficients)
 {
-	if (ambient < 0.0f || ambient > 1.0f)
+	if (reflectionCoefficients.ambient < 0.0f || reflectionCoefficients.ambient > 1.0f)
 		throw std::string("The ambient coefficient must be a float value between 0.0f and 1.0f!");
 
-	if (diffuse < 0.0f || diffuse > 1.0f)
+	if (reflectionCoefficients.diffuse < 0.0f || reflectionCoefficients.diffuse > 1.0f)
 		throw std::string("The diffuse coefficient must be a float value between 0.0f and 1.0f!");
 
-	if (specular < 0.0f || specular > 1.0f)
+	if (reflectionCoefficients.specular < 0.0f || reflectionCoefficients.specular > 1.0f)
 		throw std::string("The specular coefficient must be a float value between 0.0f and 1.0f!");
 
-	if (darkTexture < 0.0f || darkTexture > 1.0f)
+	if (reflectionCoefficients.darkTexture < 0.0f || reflectionCoefficients.darkTexture > 1.0f)
 		throw std::string("The dark texture coefficient must be a float value between 0.0f and 1.0f!");
 
 	Renderer& renderer = Application::getRenderer();
-	renderer._reflectionCoefficients = { ambient, diffuse, specular, darkTexture };
+	renderer._reflectionCoefficients = reflectionCoefficients;
 }
 
 
@@ -73,7 +73,7 @@ void Renderer::setFog(const RendererSettings::Fog& fog)
 		throw std::string("The fog start distance must be smaller than its end distance!");
 
 	Renderer& renderer = Application::getRenderer();
-	renderer._fog = { fog.mode, fog.color, fog.density, fog.startDistance, fog.endDistance, fog.active };
+	renderer._fog = fog;
 }
 
 
@@ -151,6 +151,7 @@ void Renderer::initSceneRendering() const
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glUseProgram(_shader.getProgramIndex());
 	_activateTextures();
+	_submitFogData();
 }
 
 
@@ -189,19 +190,26 @@ GLuint Renderer::_setupShaders()
 	_uniformLocation[RendererData::ShaderUniformType::MATERIAL_EMISSIVE]	= glGetUniformLocation(_shader.getProgramIndex(), "materialData.emissive");
 
 	_uniformLocation[RendererData::ShaderUniformType::N_TEXTURES]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.nTextures");
-	_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MODE]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.textureMode");
-	_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAPS]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.textureMaps");
+	_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MODE]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.mode");
+	_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAPS]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.maps");
 
 	_uniformLocation[RendererData::ShaderUniformType::N_LIGHTS]				= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.nLights");
-	_uniformLocation[RendererData::ShaderUniformType::LIGHT_TYPES]			= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.lightTypes");
-	_uniformLocation[RendererData::ShaderUniformType::LIGHT_POSITIONS]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.lightPositions");
-	_uniformLocation[RendererData::ShaderUniformType::LIGHT_DIRECTIONS]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.lightDirections");
-	_uniformLocation[RendererData::ShaderUniformType::LIGHT_INTENSITIES]	= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.lightIntensities");
-	_uniformLocation[RendererData::ShaderUniformType::LIGHT_CUTOFFS]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.lightCutOffs");
+	_uniformLocation[RendererData::ShaderUniformType::LIGHT_TYPES]			= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.types");
+	_uniformLocation[RendererData::ShaderUniformType::LIGHT_POSITIONS]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.positions");
+	_uniformLocation[RendererData::ShaderUniformType::LIGHT_DIRECTIONS]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.directions");
+	_uniformLocation[RendererData::ShaderUniformType::LIGHT_INTENSITIES]	= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.intensities");
+	_uniformLocation[RendererData::ShaderUniformType::LIGHT_CUTOFFS]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.cutOffs");
 	_uniformLocation[RendererData::ShaderUniformType::LIGHT_AMBIENT]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.ambientCoefficient");
 	_uniformLocation[RendererData::ShaderUniformType::LIGHT_DIFFUSE]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.diffuseCoefficient");
 	_uniformLocation[RendererData::ShaderUniformType::LIGHT_SPECULAR]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.specularCoefficient");
 	_uniformLocation[RendererData::ShaderUniformType::LIGHT_DARK_TEXTURE]	= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.darkTextureCoefficient");
+
+	_uniformLocation[RendererData::ShaderUniformType::FOG_MODE]				= glGetUniformLocation(_shader.getProgramIndex(), "fogData.mode");
+	_uniformLocation[RendererData::ShaderUniformType::FOG_COLOR]			= glGetUniformLocation(_shader.getProgramIndex(), "fogData.color");
+	_uniformLocation[RendererData::ShaderUniformType::FOG_DENSITY]			= glGetUniformLocation(_shader.getProgramIndex(), "fogData.density");
+	_uniformLocation[RendererData::ShaderUniformType::FOG_START_DISTANCE]	= glGetUniformLocation(_shader.getProgramIndex(), "fogData.startDistance");
+	_uniformLocation[RendererData::ShaderUniformType::FOG_END_DISTANCE]		= glGetUniformLocation(_shader.getProgramIndex(), "fogData.endDistance");
+	_uniformLocation[RendererData::ShaderUniformType::FOG_ACTIVE]			= glGetUniformLocation(_shader.getProgramIndex(), "fogData.isActive");
 
 	std::cout << "InfoLog for Per Fragment Phong Lightning Shader\n" << _shader.getAllInfoLogs().c_str()  << "\n\n";
 
@@ -224,4 +232,19 @@ void Renderer::_activateTextures() const
 		glActiveTexture(GL_TEXTURE0 + i);
 		glBindTexture(_textures.textureType[i], _textures.textureData[i]);
 	}
+}
+
+void Renderer::_submitFogData() const
+{
+	glUniform1i(_uniformLocation[RendererData::ShaderUniformType::FOG_ACTIVE], _fog.active);
+	if (!_fog.active)
+		return;
+
+	float fogColor[4] = { _fog.color.x, _fog.color.y, _fog.color.z, _fog.color.w };
+	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::FOG_MODE], (unsigned int)_fog.mode);
+	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::FOG_COLOR], 4, fogColor);
+	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::FOG_START_DISTANCE], _fog.startDistance);
+	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::FOG_END_DISTANCE], _fog.endDistance);
+	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::FOG_DENSITY], _fog.density);
+
 }

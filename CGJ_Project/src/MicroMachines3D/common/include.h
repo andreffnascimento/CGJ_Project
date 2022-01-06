@@ -11,8 +11,9 @@
 
 #include "engine/physics/force.h"
 
-#include "engine/renderer/renderer.h"
 #include "engine/renderer/geometry.h"
+#include "engine/renderer/renderer.h"
+#include "engine/renderer/rendererSettings.h"
 
 #include "engine/scene/cameraEntity.h"
 #include "engine/scene/components.h"

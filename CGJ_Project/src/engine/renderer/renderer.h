@@ -35,7 +35,7 @@ public:
 
 
 public:
-	static void setReflectionCoefficients(float ambient, float diffuse, float specular, float darkTexture);
+	static void setReflectionCoefficients(const RendererSettings::ReflectionCoefficients& reflectionCoefficients);
 	static void setFog(const RendererSettings::Fog& fog);
 	static void setFogActive(bool active);
 
@@ -67,6 +67,7 @@ public:
 private:
 	GLuint _setupShaders();
 	void _activateTextures() const;
+	void _submitFogData() const;
 
 
 private:

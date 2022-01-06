@@ -26,8 +26,24 @@ public:
 private:
 	void setupScene() override
 	{
-		Renderer::setReflectionCoefficients(0.5f, 1.0f, 1.0f, 0.1f);
+		RendererSettings::ReflectionCoefficients reflectionCoefficients = RendererSettings::ReflectionCoefficients();
+		reflectionCoefficients.ambient = 0.5f;
+		reflectionCoefficients.diffuse = 1.0f;
+		reflectionCoefficients.specular = 1.0f;
+		reflectionCoefficients.darkTexture = 0.1f;
+
+		RendererSettings::Fog fog = RendererSettings::Fog();
+		fog.mode = RendererSettings::Fog::FogMode::EXP;
+		fog.color = Coords4f{ 0.27f, 0.07f, 0.03f, 1.0f };
+		fog.density = 0.03f;
+		fog.active = false;
+
+		Renderer::setReflectionCoefficients(reflectionCoefficients);
+		Renderer::setFog(fog);
+
 		
+
+
 		GameManager gameManager = GameManager(this);
 		CameraManager cameraManager = CameraManager(this);
 
