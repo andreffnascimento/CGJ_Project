@@ -97,7 +97,7 @@ private:
 	void _createCheerio(Scene* scene, GroupComponent& group, const MeshComponent& mesh, unsigned int id, float xPos, float yPos)
 	{
 		constexpr RigidbodyComponent::RigidbodyType rigidbodyType = RigidbodyComponent::RigidbodyType::DYNAMIC;
-		constexpr float mass = 500.0f;
+		constexpr float mass = 1000.0f;
 		constexpr float drag = 1000.0f;
 		constexpr float angularDrag = 1000.0f;
 
