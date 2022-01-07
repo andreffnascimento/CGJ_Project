@@ -26,7 +26,7 @@ private:
 public:
 	CandelsLightScript() = delete;
 	CandelsLightScript(const CandelsLightScript&) = default;
-	CandelsLightScript(Scene* scene) : Script(scene) {}
+	CandelsLightScript(Scene* scene) : Script(scene, "CandelsLightScript") {}
 	~CandelsLightScript() = default;
 
 

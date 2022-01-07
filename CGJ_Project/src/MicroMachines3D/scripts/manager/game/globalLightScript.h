@@ -21,7 +21,7 @@ private:
 public:
 	GlobalLightScript() = delete;
 	GlobalLightScript(const GlobalLightScript&) = default;
-	GlobalLightScript(Scene* scene) : Script(scene) {}
+	GlobalLightScript(Scene* scene) : Script(scene, "GlobalLightScript") {}
 	~GlobalLightScript() = default;
 
 

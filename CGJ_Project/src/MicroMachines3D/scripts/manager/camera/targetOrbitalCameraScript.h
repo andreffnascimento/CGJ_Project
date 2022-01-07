@@ -4,6 +4,8 @@
 
 #include "MicroMachines3D/common/include.h"
 
+#include "MicroMachines3D/scripts/car/carMovementScript.h"
+
 
 
 
@@ -33,7 +35,9 @@ private:
 	const EventHandler* _eventHandler = nullptr;
 
 	Entity _car = Entity();
+	const TransformComponent* _carTransform = nullptr;
 	const RigidbodyComponent* _carRigidbody = nullptr;
+	const CarMovementScript* _carMovementScript = nullptr;
 
 	CameraEntity _camera = CameraEntity();
 	TargetOrbitalCameraScript::TrackingStatus _trackingStatus = TargetOrbitalCameraScript::TrackingStatus::NONE;
@@ -53,7 +57,7 @@ private:
 public:
 	TargetOrbitalCameraScript() = delete;
 	TargetOrbitalCameraScript(const TargetOrbitalCameraScript&) = default;
-	TargetOrbitalCameraScript(Scene* scene) : Script(scene) {}
+	TargetOrbitalCameraScript(Scene* scene) : Script(scene, "TargetOrbitalCameraScript") {}
 	~TargetOrbitalCameraScript() = default;
 
 
@@ -61,10 +65,13 @@ public:
 	void onCreate() override
 	{
 		_eventHandler = &Application::getEventHandler();
-		_car = _scene->getEntityByTag("Car");
-		_camera = _scene->getEntityByTag("Camera3");
-		_carRigidbody = &_car.getComponent<RigidbodyComponent>();
 
+		_car = _scene->getEntityByTag("Car");
+		_carTransform = &_car.getComponent<TransformComponent>();
+		_carRigidbody = &_car.getComponent<RigidbodyComponent>();
+		_carMovementScript = dynamic_cast<CarMovementScript*>(_car.getComponent<ScriptComponent>().getScriptByTag("CarMovementScript"));
+
+		_camera = _scene->getEntityByTag("Camera3");
 		_alpha = _alphaAux = _getDesiredAlpha();
 		_updateCameraTransform();
 		_setCameraTarget();
@@ -92,7 +99,7 @@ private:
 	void _setCameraTarget() const
 	{
 		CameraComponent& cameraComponent = _camera.getComponent<CameraComponent>();
-		cameraComponent.setTargetCoords(_car.transform().translation());
+		cameraComponent.setTargetCoords(_carTransform->translation());
 	}
 
 
@@ -224,7 +231,7 @@ private:
 		float orbitalCameraZ = _rAux * cos(toRadians(_alphaAux)) * cos(toRadians(_betaAux));
 		float orbitalCameraY = _rAux * sin(toRadians(_betaAux));
 
-		const Coords3f& carPosition = _car.transform().translation();
+		const Coords3f& carPosition = _carTransform->translation();
 		float cameraX = carPosition.x + orbitalCameraX;
 		float cameraY = carPosition.y + orbitalCameraY;
 		float cameraZ = carPosition.z + orbitalCameraZ;
@@ -233,7 +240,16 @@ private:
 	}
 
 
-	inline float _getDesiredAlpha() { return _car.transform().rotation().toEulerAngles().y + 180.0f; }
+	float _getDesiredAlpha() 
+	{
+		float carRotation = _carTransform->rotation().toEulerAngles().y;
+		float cosRotation = std::cos(toRadians(carRotation));
+		float sinRotation = std::sin(toRadians(carRotation));
+
+		return _carRigidbody->velocity().dot(Coords3f({sinRotation, 0.0f, cosRotation})) >= 0.0f
+			? _carTransform->rotation().toEulerAngles().y + 180.0f 
+			: _carTransform->rotation().toEulerAngles().y;
+	}
 
 };
 

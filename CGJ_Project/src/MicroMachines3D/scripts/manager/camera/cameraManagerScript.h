@@ -23,7 +23,7 @@ private:
 public:
 	CameraManagerScript() = delete;
 	CameraManagerScript(const CameraManagerScript&) = default;
-	CameraManagerScript(Scene* scene) : Script(scene) {}
+	CameraManagerScript(Scene* scene) : Script(scene, "CameraManagerScript") {}
 	~CameraManagerScript() = default;
 
 

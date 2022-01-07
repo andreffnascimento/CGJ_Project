@@ -107,6 +107,16 @@ void ScriptComponent::onUpdate(float ts) const
 }
 
 
+Script* ScriptComponent::getScriptByTag(const std::string& tag)
+{
+	for (auto& script : _scripts)
+		if (*script == tag)
+			return script.get();
+
+	return nullptr;
+}
+
+
 
 
 LightComponent::LightComponent(LightComponent::LightType lightType, float intensity)

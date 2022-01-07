@@ -21,6 +21,8 @@ public:
 	ScriptComponent(const std::shared_ptr<Script>& script) { _scripts.push_back(script); }
 	~ScriptComponent() = default;
 
+	Script* getScriptByTag(const std::string& tag);
+
 	void addScriptInstance(const std::shared_ptr<Script>& script) { _scripts.push_back(script); }
 
 	void onCreate() const;

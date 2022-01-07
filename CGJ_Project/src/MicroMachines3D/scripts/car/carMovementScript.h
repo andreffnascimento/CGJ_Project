@@ -36,7 +36,7 @@ private:
 public:
 	CarMovementScript() = delete;
 	CarMovementScript(const CarMovementScript&) = default;
-	CarMovementScript(Scene* scene) : Script(scene) {}
+	CarMovementScript(Scene* scene) : Script(scene, "CarMovementScript") {}
 	~CarMovementScript() = default;
 
 
@@ -63,6 +63,16 @@ public:
 		_rigidbody->addRelativeForce({ 0.0f, 0.0f, travelForce });
 		_rigidbody->addAngularForce({ 0.0f, steeringForce, 0.0f });
 	}
+
+
+
+
+public:
+	inline float travelForce() const
+	{
+		return _forwardForce - _backwardsForce;
+	}
+
 
 
 

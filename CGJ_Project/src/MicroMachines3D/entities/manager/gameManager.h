@@ -19,11 +19,9 @@ public:
 	{
 		Entity globalLight = _createGlobalLight(scene->createEntity("GlobalLight"));
 
-		std::shared_ptr<Script> globalLightScript = std::make_shared<GlobalLightScript>(scene);
-		std::shared_ptr<Script> fogToggleScript = std::make_shared<FogToggleScript>(scene);
 		ScriptComponent& script = addComponent<ScriptComponent>();
-		script.addScriptInstance(globalLightScript);
-		script.addScriptInstance(fogToggleScript);
+		script.addScriptInstance(std::make_shared<GlobalLightScript>(scene));
+		script.addScriptInstance(std::make_shared<FogToggleScript>(scene));
 	}
 
 

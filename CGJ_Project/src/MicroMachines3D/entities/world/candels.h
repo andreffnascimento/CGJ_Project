@@ -35,8 +35,7 @@ public:
 		_createCandelLight(scene, group, topMesh,  0.0f,  1.0f, "light_bottomMiddle");
 		_createCandelLight(scene, group, topMesh,  1.0f,  1.0f, "light_bottomRight");
 
-		std::shared_ptr<Script> candelsLightScript = std::make_shared<CandelsLightScript>(scene);
-		addComponent<ScriptComponent>(candelsLightScript);
+		addComponent<ScriptComponent>(std::make_shared<CandelsLightScript>(scene));
 	}
 
 

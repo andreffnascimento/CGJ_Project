@@ -21,7 +21,7 @@ private:
 public:
 	FogToggleScript() = delete;
 	FogToggleScript(const FogToggleScript&) = default;
-	FogToggleScript(Scene* scene) : Script(scene) {}
+	FogToggleScript(Scene* scene) : Script(scene, "FogToggleScript") {}
 	~FogToggleScript() = default;
 
 

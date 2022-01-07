@@ -27,7 +27,7 @@ private:
 public:
 	CarHeadlightsScript() = delete;
 	CarHeadlightsScript(const CarHeadlightsScript&) = default;
-	CarHeadlightsScript(Scene* scene) : Script(scene) {}
+	CarHeadlightsScript(Scene* scene) : Script(scene, "CarHeadlightsScript") {}
 	~CarHeadlightsScript() = default;
 
 

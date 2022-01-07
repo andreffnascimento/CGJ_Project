@@ -21,8 +21,7 @@ public:
 		Entity camera2 = _createCamera2(scene->createEntity("Camera2"));		// camera 2 : perspective camera with top view		
 		Entity camera3 = _createCamera3(scene->createEntity("Camera3"), scene);	// camera 3 : perspective camera that follows the car
 
-		std::shared_ptr<Script> script = std::make_shared<CameraManagerScript>(scene);
-		ScriptComponent& scriptComponent = addComponent<ScriptComponent>(script);
+		ScriptComponent& scriptComponent = addComponent<ScriptComponent>(std::make_shared<CameraManagerScript>(scene));
 	}
 
 
@@ -50,8 +49,7 @@ private:
 	Entity _createCamera3(Entity entity, Scene* scene)
 	{
 		CameraComponent& camera = entity.addComponent<CameraComponent>(CameraComponent::CameraProjection::PERSPECTIVE, ClippingPlanes({ 0.01f, 1000.0f }), 70.0f);
-		std::shared_ptr<Script> script = std::make_shared<TargetOrbitalCameraScript>(scene);
-		ScriptComponent& scriptComponent = entity.addComponent<ScriptComponent>(script);
+		ScriptComponent& scriptComponent = entity.addComponent<ScriptComponent>(std::make_shared<TargetOrbitalCameraScript>(scene));
 		return entity;
 	}
 };
