@@ -1,9 +1,5 @@
 #include "engine/renderer/renderer.h"
 
-#include <memory>
-
-#include "engine/renderer/mesh/geometry.h"
-
 #include "engine/app/application.h"
 #include "engine/math/AVTmathLib.h"
 #include "engine/math/transform.h"
@@ -17,26 +13,26 @@ extern float mNormal3x3[9];
 
 void Renderer::renderColliders(const Scene& scene) const
 {
-	/*PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
+	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
 	if (!physicsEngine.showColliders())
 		return;
 
-	const MeshComponent& mesh = getColliderMesh();
+	const MeshData& meshData = getColliderMesh().meshData();
+	_submitMeshData(meshData);
+
+	RendererData::SubmitInstanceData colliderInstanceBuffer = RendererData::SubmitInstanceData();
 	const auto& colliderComponents = scene.getSceneComponents<AABBColliderComponent>();
 	for (const auto& colliderIterator : colliderComponents)
 	{
-		EntityHandle entityId = colliderIterator.first;
+		if (colliderInstanceBuffer.nRenderableInstances >= RendererSettings::MAX_RENDERABLE_INSTANCES_SUBMISSION)
+			_submitRenderableData(meshData, colliderInstanceBuffer);
+
 		const AABBColliderComponent& collider = colliderIterator.second;
-		const RigidbodyComponent& rigidbody = collider.rigidbody();
-		const Entity& entity = scene.getEntityById(entityId);
+		_formatColliderInstanceBuffer(colliderInstanceBuffer, collider);
+	}
 
-		_loadMesh(mesh);		
-		_applyColliderTransform(collider);
-		_renderMesh(mesh);
-	}*/
+	_submitRenderableData(meshData, colliderInstanceBuffer);
 }
-
-
 
 
 const MeshComponent& Renderer::getColliderMesh() const
@@ -54,6 +50,18 @@ const MeshComponent& Renderer::getColliderMesh() const
 }
 
 
+void Renderer::_formatColliderInstanceBuffer(RendererData::SubmitInstanceData& renderableInstanceBuffer, const AABBColliderComponent& collider) const
+{
+	_applyColliderTransform(collider);
+
+	memcpy(renderableInstanceBuffer.pvmMatrix[renderableInstanceBuffer.nRenderableInstances], mCompMatrix[PROJ_VIEW_MODEL], 4 * 4 * sizeof(float));
+	memcpy(renderableInstanceBuffer.vmMatrix[renderableInstanceBuffer.nRenderableInstances], mCompMatrix[VIEW_MODEL], 4 * 4 * sizeof(float));
+	memcpy(renderableInstanceBuffer.normalMatrix[renderableInstanceBuffer.nRenderableInstances], mNormal3x3, 3 * 3 * sizeof(float));
+
+	renderableInstanceBuffer.nRenderableInstances++;
+}
+
+
 void Renderer::_applyColliderTransform(const AABBColliderComponent& collider) const
 {
 	TransformComponent transform = TransformComponent();
@@ -62,4 +70,6 @@ void Renderer::_applyColliderTransform(const AABBColliderComponent& collider) co
 
 	pushMatrix(MODEL);
 	loadMatrix(MODEL, Transform::calculateTransformMatrix(transform));
+	computeDerivedMatrix(PROJ_VIEW_MODEL);
+	computeNormalMatrix3x3();
 }

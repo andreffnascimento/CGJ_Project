@@ -97,6 +97,7 @@ private:
 
 private:
 	const MeshComponent& getColliderMesh() const;
+	void _formatColliderInstanceBuffer(RendererData::SubmitInstanceData& renderableInstanceBuffer, const AABBColliderComponent& collider) const;
 	void _applyColliderTransform(const AABBColliderComponent& collider) const;
 
 };
