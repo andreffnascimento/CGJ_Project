@@ -23,6 +23,7 @@ private:
 
 	RendererData::TextureData _textures = RendererData::TextureData();
 	RendererData::meshInstances_t _solidMeshInstances = RendererData::meshInstances_t();
+	RendererData::meshInstances_t _translucidMeshInstances = RendererData::meshInstances_t();
 
 	RendererSettings::ReflectionCoefficients _reflectionCoefficients = RendererSettings::ReflectionCoefficients();
 	RendererSettings::Fog _fog = RendererSettings::Fog();
