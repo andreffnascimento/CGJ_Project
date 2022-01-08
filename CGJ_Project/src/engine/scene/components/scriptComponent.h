@@ -27,6 +27,7 @@ public:
 
 	void onCreate() const;
 	void onUpdate(float ts) const;
+	void onFixedUpdate(float ts) const;
 };
 
 

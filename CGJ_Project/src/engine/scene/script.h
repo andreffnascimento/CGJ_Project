@@ -29,8 +29,9 @@ public:
 
 
 protected:
-	virtual void onCreate()			{}
-	virtual void onUpdate(float ts) {}
+	virtual void onCreate()					{}
+	virtual void onFixedUpdate(float ts)	{}
+	virtual void onUpdate(float ts)			{}
 
 
 private:

@@ -109,6 +109,13 @@ void ScriptComponent::onCreate() const
 }
 
 
+void ScriptComponent::onFixedUpdate(float ts) const
+{
+	for (auto& script : _scripts)
+		script.get()->onFixedUpdate(ts);
+}
+
+
 void ScriptComponent::onUpdate(float ts) const
 {
 	for (auto& script : _scripts)

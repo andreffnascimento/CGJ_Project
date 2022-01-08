@@ -49,7 +49,7 @@ public:
 	}
 
 
-	void onUpdate(float ts) override
+	void onFixedUpdate(float ts) override
 	{
 		if (std::abs(_rigidbody->velocity().y) > 2.0f)	// car is not on top of the table
 			return;
@@ -119,11 +119,13 @@ private:
 	float _calculateSteeringForce(float ts)
 	{
 		float steeringForce = 0.0f;
+		Coords3f velocity = Coords3f({ _rigidbody->velocity().x, 0.0f, _rigidbody->velocity().z });
+
 		if (_eventHandler->keyState('O').down() || _eventHandler->keyState('o').down())
-			steeringForce += CarMovementScript::STEERING_FORCE * _rigidbody->velocity().length();
+			steeringForce += CarMovementScript::STEERING_FORCE * velocity.length();
 
 		if (_eventHandler->keyState('P').down() || _eventHandler->keyState('p').down())
-			steeringForce -= CarMovementScript::STEERING_FORCE * _rigidbody->velocity().length();
+			steeringForce -= CarMovementScript::STEERING_FORCE * velocity.length();
 
 		return steeringForce;
 	}
