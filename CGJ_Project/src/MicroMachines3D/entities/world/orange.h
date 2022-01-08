@@ -13,21 +13,33 @@ class Orange : public SceneEntity
 {
 
 public:
-	Orange(Scene* scene, std::string tag, Coords3f position, Coords3f movementDirection)
-		: SceneEntity(scene->createEntity(tag))
+	//Orange(Scene* scene, std::string tag, Coords3f position, Coords3f movementDirection, float movementSpeed)
+	//	: SceneEntity(scene->createEntity(tag))
+	//{
+	//	RigidbodyComponent& rigidbody = addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::KINEMATIC);
+	//	AABBColliderComponent& collider = addComponent<AABBColliderComponent>(rigidbody, ORANGE_SIZE);
+
+	//	MeshComponent mesh = MeshComponent(createSphere(ORANGE_RADIUS, ORANGE_DIVISIONS), ORANGE_MATERIAL);
+
+	//	// TODO texture 
+	//	// TODO rotational movement (rolling effect)
+
+	//	ScriptComponent& script = addComponent<ScriptComponent>();
+	//	script.addScriptInstance(std::make_shared<OrangeMovementScript>(scene, tag, movementDirection, movementSpeed));
+
+	//	Transform::translate(*this, position);
+	//}
+
+	Orange(Scene* scene)
+		: SceneEntity(scene->createEntity("orange"))
 	{
-		RigidbodyComponent& rigidbody = addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::KINEMATIC);
-		AABBColliderComponent& collider = addComponent<AABBColliderComponent>(rigidbody, ORANGE_SIZE);
+		//RigidbodyComponent& rigidbody = addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::STATIC);
+		//AABBColliderComponent& collider = addComponent<AABBColliderComponent>(rigidbody, ORANGE_SIZE);
 
-		MeshComponent mesh = MeshComponent(createSphere(ORANGE_RADIUS, ORANGE_DIVISIONS), ORANGE_MATERIAL);
-
-		// TODO texture 
-
-		ScriptComponent& script = addComponent<ScriptComponent>();
-		script.addScriptInstance(std::make_shared<OrangeMovementScript>(scene, tag, movementDirection));
-
-		Transform::translate(*this, position);
+		//MeshComponent mesh = addComponent<MeshComponent>(createSphere(ORANGE_RADIUS, ORANGE_DIVISIONS), ORANGE_MATERIAL);
+		MeshComponent mesh = addComponent<MeshComponent>(createCube(), ORANGE_MATERIAL);
 	}
+
 };
 
 #endif // !__mm3d_entities_world_orange__

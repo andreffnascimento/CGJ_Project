@@ -6,10 +6,12 @@
 
 #include "MicroMachines3D/entities/manager/gameManager.h"
 #include "MicroMachines3D/entities/manager/cameraManager.h"
+#include "MicroMachines3D/entities/manager/orangesManager.h"
 #include "MicroMachines3D/entities/world/table.h"
 #include "MicroMachines3D/entities/world/car.h"
 #include "MicroMachines3D/entities/world/cheeriosTrack.h"
 #include "MicroMachines3D/entities/world/candels.h"
+#include "MicroMachines3D/entities/world/orange.h"
 
 
 
@@ -46,6 +48,7 @@ private:
 
 		GameManager gameManager = GameManager(this);
 		CameraManager cameraManager = CameraManager(this);
+		//OrangesManager orangesManager = OrangesManager(this);
 
 		Table table = Table(this);
 		Transform::translate(table, { 0.0f, -TABLE_SIZE.y, 0.0f });
@@ -57,6 +60,9 @@ private:
 		CheeriosTrack cheeriosTrack = CheeriosTrack(this);
 
 		Candels candels = Candels(this);
+
+		Orange orange = Orange(this);
+		Transform::translate(orange, { 0.0f, 10.0f, 0.0f });
 	}
 };
 
