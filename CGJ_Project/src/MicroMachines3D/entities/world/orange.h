@@ -13,31 +13,34 @@ class Orange : public SceneEntity
 {
 
 public:
-	//Orange(Scene* scene, std::string tag, Coords3f position, Coords3f movementDirection, float movementSpeed)
-	//	: SceneEntity(scene->createEntity(tag))
-	//{
-	//	RigidbodyComponent& rigidbody = addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::KINEMATIC);
-	//	AABBColliderComponent& collider = addComponent<AABBColliderComponent>(rigidbody, ORANGE_SIZE);
+	Orange(Scene* scene, std::string tag, Coords3f position, Coords3f movementDirection, float movementSpeed)
+		: SceneEntity(scene->createEntity(tag))
+	{
+		RigidbodyComponent& rigidbody = addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::KINEMATIC);
+		AABBColliderComponent& collider = addComponent<AABBColliderComponent>(rigidbody, ORANGE_SIZE);
 
-	//	MeshComponent mesh = MeshComponent(createSphere(ORANGE_RADIUS, ORANGE_DIVISIONS), ORANGE_MATERIAL);
+		MeshComponent mesh = MeshComponent(createSphere(ORANGE_RADIUS, ORANGE_DIVISIONS), ORANGE_MATERIAL);
 
-	//	// TODO texture 
-	//	// TODO rotational movement (rolling effect)
+		// TODO texture 
+		// TODO rotational movement (rolling effect)
 
-	//	ScriptComponent& script = addComponent<ScriptComponent>();
-	//	script.addScriptInstance(std::make_shared<OrangeMovementScript>(scene, tag, movementDirection, movementSpeed));
+		ScriptComponent& script = addComponent<ScriptComponent>();
+		script.addScriptInstance(std::make_shared<OrangeMovementScript>(scene, tag, movementDirection, movementSpeed));
 
-	//	Transform::translate(*this, position);
-	//}
+		Transform::translate(*this, position);
+	}
 
 	Orange(Scene* scene)
 		: SceneEntity(scene->createEntity("orange"))
 	{
-		//RigidbodyComponent& rigidbody = addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::STATIC);
-		//AABBColliderComponent& collider = addComponent<AABBColliderComponent>(rigidbody, ORANGE_SIZE);
+		RigidbodyComponent& rigidbody = addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::STATIC);
+		AABBColliderComponent& collider = addComponent<AABBColliderComponent>(rigidbody, ORANGE_SIZE);
+		
+		//MeshComponent mesh = MeshComponent(createSphere(ORANGE_RADIUS, ORANGE_DIVISIONS), ORANGE_MATERIAL);
+		MeshComponent mesh = MeshComponent(createCube(), ORANGE_MATERIAL);
+		addComponent<MeshComponent>(mesh);
 
-		//MeshComponent mesh = addComponent<MeshComponent>(createSphere(ORANGE_RADIUS, ORANGE_DIVISIONS), ORANGE_MATERIAL);
-		MeshComponent mesh = addComponent<MeshComponent>(createCube(), ORANGE_MATERIAL);
+
 	}
 
 };

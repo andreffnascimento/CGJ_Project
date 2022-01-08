@@ -62,7 +62,7 @@ private:
 		Candels candels = Candels(this);
 
 		Orange orange = Orange(this);
-		Transform::translate(orange, { 0.0f, 10.0f, 0.0f });
+		//Transform::translate(orange, { 0.0f, 5.0f, 0.0f });
 	}
 };
 

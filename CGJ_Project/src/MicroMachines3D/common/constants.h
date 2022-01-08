@@ -53,5 +53,7 @@ constexpr Coords4f ORANGE_SPAWN_AREA = { -73.0f, 73.0f, -35.0f, 35.0f };
 constexpr float MIN_ORANGE_BASE_SPEED = 200.0f;
 constexpr float MAX_ORANGE_BASE_SPEED = 500.0f;
 constexpr Coords4f ORANGE_BORDERS = { -73.0f, 73.0f, -35.0f, 35.0f };
+constexpr float ORANGE_DIRECTION_MIN = -5.0f;
+constexpr float ORANGE_DIRECTION_MAX = 5.0f;
 
 #endif // !__mm3d_common_constants__

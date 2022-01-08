@@ -13,11 +13,19 @@
 
 class OrangesManagerScript : public Script
 {
+
+
 private:
+	//std::mt19937 _gen(std::random_device);
+
+	//std::default_random_engine _gen;
+	//std::uniform_int_distribution<> _spawnRangeX;
+	//std::uniform_int_distribution<> _spawnRangeZ;
+	//std::uniform_int_distribution<> _speedRange;
+	//std::uniform_int_distribution<> _directionRange;
+
 	std::list<Orange> _orangeObjects = std::list<Orange>();
 	std::list<OrangeMovementScript> _orangeScriptComponents = std::list<OrangeMovementScript>();
-	std::mt19937 _gen;
-
 
 public:
 	OrangesManagerScript() = delete;
@@ -32,8 +40,14 @@ public:
 		Coords3f position, movementDirection;
 		float speed;
 
-		std::random_device rd;
-		_gen.seed(rd);
+		//std::random_device rd;
+		//_gen.seed(21423545345);
+
+		//_spawnRangeX(ORANGE_SPAWN_AREA.x, ORANGE_SPAWN_AREA.y);
+		//_spawnRangeZ(ORANGE_SPAWN_AREA.z, ORANGE_SPAWN_AREA.w);
+		//_speedRange(MIN_ORANGE_BASE_SPEED, MAX_ORANGE_BASE_SPEED);
+		//_directionRange(ORANGE_DIRECTION_MIN, ORANGE_DIRECTION_MAX);
+
 
 		for (int i = 0; i < NUM_ORANGES; i++)
 		{
@@ -80,11 +94,11 @@ private:
 
 	Coords3f getRandomSpawnPosition() 
 	{
-		std::uniform_int_distribution<> rangeX(ORANGE_SPAWN_AREA.x, ORANGE_SPAWN_AREA.y);
-		std::uniform_int_distribution<> rangeZ(ORANGE_SPAWN_AREA.z, ORANGE_SPAWN_AREA.w);
+		//float coordX = _spawnRangeX(_gen);
+		//float coordZ = _spawnRangeZ(_gen);
 
-		float coordX = rangeX(_gen);
-		float coordZ = rangeZ(_gen);
+		float coordX = 0.0f;
+		float coordZ = 0.0f;
 
 		Coords3f position = { coordX, ORANGE_RADIUS, coordZ };
 
@@ -93,18 +107,17 @@ private:
 
 	float getRandomBaseSpeed()
 	{
-		std::uniform_int_distribution<> speedRange(MIN_ORANGE_BASE_SPEED, MAX_ORANGE_BASE_SPEED);
-
-		return speedRange(_gen);
+		//return _speedRange(_gen);
+		return 200.0f;
 	}
 
 	Coords3f getRandomMovementDirection()
 	{
-		std::uniform_int_distribution<> range(-5, 5);
-
-		float dirX = range(_gen);
-		float dirY = 0;
-		float dirZ = range(_gen);
+		//float dirX = _directionRange(_gen);
+		float dirX = 1.0f;
+		float dirY = 0.0f;
+		float dirZ = 1.0f;
+		//float dirZ = _directionRange(_gen);
 
 		Coords3f direction = { dirX, dirY, dirZ };
 
