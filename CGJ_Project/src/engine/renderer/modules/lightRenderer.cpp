@@ -8,7 +8,7 @@
 
 void Renderer::renderLights(const Scene& scene) const
 {
-	RendererData::SubmitLightData lightData = RendererData::SubmitLightData();
+	RendererData::SubmitLightBuffer lightBuffer = RendererData::SubmitLightBuffer();
 
 	const auto& lightComponents = scene.getSceneComponents<LightComponent>();
 	if (lightComponents.size() > RendererSettings::MAX_LIGHTS)
@@ -30,55 +30,55 @@ void Renderer::renderLights(const Scene& scene) const
 		switch (light.lightType())
 		{
 		case LightComponent::LightType::DIRECTIONAL:
-			_formatDirectionalLight(light, rotation.rotatePoint(Coords3f({ 0.0f, 0.0f, 1.0f })), lightData);
+			_formatDirectionalLight(light, rotation.rotatePoint(Coords3f({ 0.0f, 0.0f, 1.0f })), lightBuffer);
 			break;
 
 		case LightComponent::LightType::POINT:
-			_formatPointLight(light, translation, lightData);
+			_formatPointLight(light, translation, lightBuffer);
 			break;
 
 		case LightComponent::LightType::SPOT:
-			_formatSpotLight(light, translation, rotation.rotatePoint(Coords3f({ 0.0f, 0.0f, 1.0f })), lightData);
+			_formatSpotLight(light, translation, rotation.rotatePoint(Coords3f({ 0.0f, 0.0f, 1.0f })), lightBuffer);
 			break;
 		}
 
-		lightData.nLights++;
+		lightBuffer.nLights++;
 	}
 
-	lightData.ambientCoefficient = _reflectionCoefficients.ambient;
-	lightData.diffuseCoefficient = _reflectionCoefficients.diffuse;
-	lightData.specularCoefficient = _reflectionCoefficients.specular;
-	lightData.darkTextureCoefficient = _reflectionCoefficients.darkTexture;
-	_submitLightData(lightData);
+	lightBuffer.ambientCoefficient = _reflectionCoefficients.ambient;
+	lightBuffer.diffuseCoefficient = _reflectionCoefficients.diffuse;
+	lightBuffer.specularCoefficient = _reflectionCoefficients.specular;
+	lightBuffer.darkTextureCoefficient = _reflectionCoefficients.darkTexture;
+	_submitLightData(lightBuffer);
 }
 
 
 
-void Renderer::_formatDirectionalLight(const LightComponent& light, const Coords3f& direction, RendererData::SubmitLightData& lightData) const
+void Renderer::_formatDirectionalLight(const LightComponent& light, const Coords3f& direction, RendererData::SubmitLightBuffer& lightBuffer) const
 {
 	float lightDirection[4] = { direction.x, direction.y, direction.z, 0.0f };
 	float viewLightDirection[4] = {};
 	multMatrixPoint(VIEW, lightDirection, viewLightDirection);
 
-	lightData.lightType[lightData.nLights] = (unsigned int)LightComponent::LightType::DIRECTIONAL;
-	memcpy(&lightData.lightDirection[4 * lightData.nLights], viewLightDirection, 4 * sizeof(float));
-	lightData.lightIntensity[lightData.nLights] = light.intensity();
+	lightBuffer.lightType[lightBuffer.nLights] = (unsigned int)LightComponent::LightType::DIRECTIONAL;
+	memcpy(&lightBuffer.lightDirection[4 * lightBuffer.nLights], viewLightDirection, 4 * sizeof(float));
+	lightBuffer.lightIntensity[lightBuffer.nLights] = light.intensity();
 }
 
 
-void Renderer::_formatPointLight(const LightComponent& light, const Coords3f& translation, RendererData::SubmitLightData& lightData) const
+void Renderer::_formatPointLight(const LightComponent& light, const Coords3f& translation, RendererData::SubmitLightBuffer& lightBuffer) const
 {
 	float lightPosition[4] = { translation.x, translation.y, translation.z, 1.0f };
 	float viewLightPosition[4] = {};
 	multMatrixPoint(VIEW, lightPosition, viewLightPosition);
 
-	lightData.lightType[lightData.nLights] = (unsigned int)LightComponent::LightType::POINT;
-	memcpy(&lightData.lightPosition[4 * lightData.nLights], viewLightPosition, 4 * sizeof(float));
-	lightData.lightIntensity[lightData.nLights] = light.intensity();
+	lightBuffer.lightType[lightBuffer.nLights] = (unsigned int)LightComponent::LightType::POINT;
+	memcpy(&lightBuffer.lightPosition[4 * lightBuffer.nLights], viewLightPosition, 4 * sizeof(float));
+	lightBuffer.lightIntensity[lightBuffer.nLights] = light.intensity();
 }
 
 
-void Renderer::_formatSpotLight(const LightComponent& light, const Coords3f& translation, const Coords3f& direction, RendererData::SubmitLightData& lightData) const
+void Renderer::_formatSpotLight(const LightComponent& light, const Coords3f& translation, const Coords3f& direction, RendererData::SubmitLightBuffer& lightBuffer) const
 {
 	float lightPosition[4] = { translation.x, translation.y, translation.z, 1.0f };
 	float viewLightPosition[4] = {};
@@ -88,24 +88,24 @@ void Renderer::_formatSpotLight(const LightComponent& light, const Coords3f& tra
 	float viewLightDirection[4] = {};
 	multMatrixPoint(VIEW, lightDirection, viewLightDirection);
 
-	lightData.lightType[lightData.nLights] = (unsigned int)LightComponent::LightType::SPOT;
-	memcpy(&lightData.lightPosition[4 * lightData.nLights], viewLightPosition, 4 * sizeof(float));
-	memcpy(&lightData.lightDirection[4 * lightData.nLights], viewLightDirection, 4 * sizeof(float));
-	lightData.lightIntensity[lightData.nLights] = light.intensity();
-	lightData.lightCutOff[lightData.nLights] = light.cutOff();
+	lightBuffer.lightType[lightBuffer.nLights] = (unsigned int)LightComponent::LightType::SPOT;
+	memcpy(&lightBuffer.lightPosition[4 * lightBuffer.nLights], viewLightPosition, 4 * sizeof(float));
+	memcpy(&lightBuffer.lightDirection[4 * lightBuffer.nLights], viewLightDirection, 4 * sizeof(float));
+	lightBuffer.lightIntensity[lightBuffer.nLights] = light.intensity();
+	lightBuffer.lightCutOff[lightBuffer.nLights] = light.cutOff();
 }
 
 
-void Renderer::_submitLightData(const RendererData::SubmitLightData& lightData) const
+void Renderer::_submitLightData(const RendererData::SubmitLightBuffer& lightBuffer) const
 {	
-	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::N_LIGHTS], lightData.nLights);
-	glUniform1uiv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_TYPE], lightData.nLights, lightData.lightType);
-	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_POSITION], lightData.nLights, lightData.lightPosition);
-	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_DIRECTION], lightData.nLights, lightData.lightDirection);
-	glUniform1fv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_INTENSITY], lightData.nLights, lightData.lightIntensity);
-	glUniform1fv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_CUTOFF], lightData.nLights, lightData.lightCutOff);
-	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::LIGHT_AMBIENT], lightData.ambientCoefficient);
-	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::LIGHT_DIFFUSE], lightData.diffuseCoefficient);
-	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::LIGHT_SPECULAR], lightData.specularCoefficient);
-	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::LIGHT_DARK_TEXTURE], lightData.darkTextureCoefficient);
+	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::N_LIGHTS], lightBuffer.nLights);
+	glUniform1uiv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_TYPE], lightBuffer.nLights, lightBuffer.lightType);
+	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_POSITION], lightBuffer.nLights, lightBuffer.lightPosition);
+	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_DIRECTION], lightBuffer.nLights, lightBuffer.lightDirection);
+	glUniform1fv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_INTENSITY], lightBuffer.nLights, lightBuffer.lightIntensity);
+	glUniform1fv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_CUTOFF], lightBuffer.nLights, lightBuffer.lightCutOff);
+	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::LIGHT_AMBIENT], lightBuffer.ambientCoefficient);
+	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::LIGHT_DIFFUSE], lightBuffer.diffuseCoefficient);
+	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::LIGHT_SPECULAR], lightBuffer.specularCoefficient);
+	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::LIGHT_DARK_TEXTURE], lightBuffer.darkTextureCoefficient);
 }

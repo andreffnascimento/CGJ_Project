@@ -15,8 +15,19 @@ extern float mNormal3x3[9];
 
 void Renderer::renderMeshes(const Scene& scene) const
 {
-	RendererData::SubmitInstanceData renderableInstanceBuffer = RendererData::SubmitInstanceData();
-	for (const auto& meshIterator : _solidMeshInstances)
+	if (!_shader.isProgramValid())
+		throw std::string("Invalid shader program!");
+
+	_renderMeshInstances(_solidMeshInstances);
+}
+
+
+
+
+void Renderer::_renderMeshInstances(const RendererData::meshInstances_t& meshInstances) const
+{
+	RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
+	for (const auto& meshIterator : meshInstances)
 	{
 		const MeshData* meshData = meshIterator.first;
 		const std::unordered_set<const TransformComponent*> transformComponents = meshIterator.second;
@@ -25,31 +36,28 @@ void Renderer::renderMeshes(const Scene& scene) const
 			continue;
 
 		_submitMeshData(*meshData);
-
 		for (const auto& transform : transformComponents)
 		{
-			if (renderableInstanceBuffer.nRenderableInstances >= RendererSettings::MAX_RENDERABLE_INSTANCES_SUBMISSION)
-				_submitRenderableData(*meshData, renderableInstanceBuffer);
+			if (instanceBuffer.nInstances >= RendererSettings::MAX_INSTANCES_PER_SUBMISSION)
+				_submitRenderableData(*meshData, instanceBuffer);
 
-			_formatRenderableInstanceBuffer(renderableInstanceBuffer, transform);
-		}	
+			_addToInstanceBuffer(instanceBuffer, transform);
+		}
 
-		_submitRenderableData(*meshData, renderableInstanceBuffer);
+		_submitRenderableData(*meshData, instanceBuffer);
 	}
 }
 
 
 
 
-void Renderer::_formatRenderableInstanceBuffer(RendererData::SubmitInstanceData& renderableInstanceBuffer, const TransformComponent* transform) const
+void Renderer::_addToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform) const
 {
 	_applyTransform(*transform);
-
-	memcpy(renderableInstanceBuffer.pvmMatrix[renderableInstanceBuffer.nRenderableInstances], mCompMatrix[PROJ_VIEW_MODEL], 4 * 4 * sizeof(float));
-	memcpy(renderableInstanceBuffer.vmMatrix[renderableInstanceBuffer.nRenderableInstances], mCompMatrix[VIEW_MODEL], 4 * 4 * sizeof(float));
-	memcpy(renderableInstanceBuffer.normalMatrix[renderableInstanceBuffer.nRenderableInstances], mNormal3x3, 3 * 3 * sizeof(float));
-
-	renderableInstanceBuffer.nRenderableInstances++;
+	memcpy(instanceBuffer.pvmMatrix[instanceBuffer.nInstances],    mCompMatrix[PROJ_VIEW_MODEL], 4 * 4 * sizeof(float));
+	memcpy(instanceBuffer.vmMatrix[instanceBuffer.nInstances],     mCompMatrix[VIEW_MODEL],		 4 * 4 * sizeof(float));
+	memcpy(instanceBuffer.normalMatrix[instanceBuffer.nInstances], mNormal3x3,					 3 * 3 * sizeof(float));
+	instanceBuffer.nInstances++;
 }
 
 
@@ -61,6 +69,15 @@ void Renderer::_applyTransform(const TransformComponent& transform) const
 	computeNormalMatrix3x3();
 }
 
+
+
+
+void Renderer::_submitRenderableData(const MeshData& meshData, RendererData::SubmitInstanceBuffer& instanceBuffer) const
+{
+	_submitInstanceBuffer(instanceBuffer);
+	_renderMesh(meshData, instanceBuffer);
+	instanceBuffer.nInstances = 0;
+}
 
 
 void Renderer::_submitMeshData(const MeshData& meshData) const
@@ -79,36 +96,18 @@ void Renderer::_submitMeshData(const MeshData& meshData) const
 }
 
 
-void Renderer::_submitRenderableInstanceBuffer(const RendererData::SubmitInstanceData& renderableInstanceBuffer) const
+void Renderer::_submitInstanceBuffer(const RendererData::SubmitInstanceBuffer& instanceBuffer) const
 {
-	glUniformMatrix4fv(_uniformLocation[RendererData::ShaderUniformType::INSTANCE_PVM_MATRIX], 
-		renderableInstanceBuffer.nRenderableInstances, GL_FALSE, (const float*)renderableInstanceBuffer.pvmMatrix);
-	glUniformMatrix4fv(_uniformLocation[RendererData::ShaderUniformType::INSTANCE_VM_MATRIX], 
-		renderableInstanceBuffer.nRenderableInstances, GL_FALSE, (const float*)renderableInstanceBuffer.vmMatrix);
-	glUniformMatrix3fv(_uniformLocation[RendererData::ShaderUniformType::INSTANCE_NORMAL_MATRIX], 
-		renderableInstanceBuffer.nRenderableInstances, GL_FALSE, (const float*)renderableInstanceBuffer.normalMatrix);
+	glUniformMatrix4fv(_uniformLocation[RendererData::ShaderUniformType::INSTANCE_PVM_MATRIX],    instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.pvmMatrix);
+	glUniformMatrix4fv(_uniformLocation[RendererData::ShaderUniformType::INSTANCE_VM_MATRIX],     instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.vmMatrix);
+	glUniformMatrix3fv(_uniformLocation[RendererData::ShaderUniformType::INSTANCE_NORMAL_MATRIX], instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.normalMatrix);
 }
 
 
-void Renderer::_submitRenderableData(const MeshData& meshData, RendererData::SubmitInstanceData& renderableInstanceBuffer) const
-{
-	_submitRenderableInstanceBuffer(renderableInstanceBuffer);
-	_renderInstanceBuffer(meshData, renderableInstanceBuffer);
-	renderableInstanceBuffer.nRenderableInstances = 0;
-}
-
-
-
-
-void Renderer::_renderInstanceBuffer(const MeshData& mesh, RendererData::SubmitInstanceData& renderableInstanceBuffer) const
+void Renderer::_renderMesh(const MeshData& mesh, RendererData::SubmitInstanceBuffer& instanceBuffer) const
 {
 	const MyMesh& meshData = mesh.mesh();
-
 	glBindVertexArray(meshData.vao);
-
-	if (!_shader.isProgramValid())
-		throw std::string("Invalid shader program!");
-
-	glDrawElementsInstanced(meshData.type, meshData.numIndexes, GL_UNSIGNED_INT, 0, renderableInstanceBuffer.nRenderableInstances);
+	glDrawElementsInstanced(meshData.type, meshData.numIndexes, GL_UNSIGNED_INT, 0, instanceBuffer.nInstances);
 	glBindVertexArray(0);
 }

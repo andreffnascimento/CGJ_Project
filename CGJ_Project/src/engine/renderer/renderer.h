@@ -80,25 +80,27 @@ private:
 
 
 private:
-	void _formatDirectionalLight(const LightComponent& light, const Coords3f& direction, RendererData::SubmitLightData& lightData) const;
-	void _formatPointLight(const LightComponent& light, const Coords3f& translation, RendererData::SubmitLightData& lightData) const;
-	void _formatSpotLight(const LightComponent& light, const Coords3f& translation, const Coords3f& direction, RendererData::SubmitLightData& lightData) const;
-	void _submitLightData(const RendererData::SubmitLightData& lightData) const;
+	void _formatDirectionalLight(const LightComponent& light, const Coords3f& direction, RendererData::SubmitLightBuffer& lightBuffer) const;
+	void _formatPointLight(const LightComponent& light, const Coords3f& translation, RendererData::SubmitLightBuffer& lightBuffer) const;
+	void _formatSpotLight(const LightComponent& light, const Coords3f& translation, const Coords3f& direction, RendererData::SubmitLightBuffer& lightBuffer) const;
+	void _submitLightData(const RendererData::SubmitLightBuffer& lightBuffer) const;
 
 
 private:
-	void _formatRenderableInstanceBuffer(RendererData::SubmitInstanceData& renderableInstanceBuffer, const TransformComponent* transform) const;
+	void _renderMeshInstances(const RendererData::meshInstances_t& meshInstances) const;
+
+	void _addToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform) const;
 	void _applyTransform(const TransformComponent& transform) const;
 
+	void _submitRenderableData(const MeshData& meshData, RendererData::SubmitInstanceBuffer& instanceBuffer) const;
 	void _submitMeshData(const MeshData& meshData) const;
-	void _submitRenderableInstanceBuffer(const RendererData::SubmitInstanceData& renderableInstanceBuffer) const;
-	void _submitRenderableData(const MeshData& meshData, RendererData::SubmitInstanceData& renderableInstanceBuffer) const;
-	void _renderInstanceBuffer(const MeshData& mesh, RendererData::SubmitInstanceData& renderableInstanceBuffer) const;
+	void _submitInstanceBuffer(const RendererData::SubmitInstanceBuffer& instanceBuffer) const;
+	void _renderMesh(const MeshData& mesh, RendererData::SubmitInstanceBuffer& instanceBuffer) const;
 
 
 private:
 	const MeshComponent& getColliderMesh() const;
-	void _formatColliderInstanceBuffer(RendererData::SubmitInstanceData& renderableInstanceBuffer, const AABBColliderComponent& collider) const;
+	void _addToColliderInstanceBuffer(RendererData::SubmitInstanceBuffer& colliderInstanceBuffer, const AABBColliderComponent& collider) const;
 	void _applyColliderTransform(const AABBColliderComponent& collider) const;
 
 };

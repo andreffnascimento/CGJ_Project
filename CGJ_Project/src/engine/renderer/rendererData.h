@@ -71,7 +71,7 @@ private:
 	};
 
 
-	struct SubmitLightData
+	struct SubmitLightBuffer
 	{
 		unsigned int nLights = 0;
 		unsigned int lightType[RendererSettings::MAX_LIGHTS] = {};
@@ -87,12 +87,12 @@ private:
 	};
 
 
-	struct SubmitInstanceData
+	struct SubmitInstanceBuffer
 	{
-		unsigned int nRenderableInstances = 0;
-		float pvmMatrix[RendererSettings::MAX_RENDERABLE_INSTANCES_SUBMISSION][4][4] = {};
-		float vmMatrix[RendererSettings::MAX_RENDERABLE_INSTANCES_SUBMISSION][4][4] = {};
-		float normalMatrix[RendererSettings::MAX_RENDERABLE_INSTANCES_SUBMISSION][3][3] = {};
+		unsigned int nInstances = 0;
+		float pvmMatrix[RendererSettings::MAX_INSTANCES_PER_SUBMISSION][4][4] = {};
+		float vmMatrix[RendererSettings::MAX_INSTANCES_PER_SUBMISSION][4][4] = {};
+		float normalMatrix[RendererSettings::MAX_INSTANCES_PER_SUBMISSION][3][3] = {};
 	};
 
 

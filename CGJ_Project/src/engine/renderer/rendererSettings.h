@@ -15,9 +15,9 @@ public:
 
 	constexpr static size_t MAX_LIGHTS = 32;
 	constexpr static size_t MAX_TEXTURES = 20;
-	constexpr static size_t MAX_MESH_TEXTURES = 2;
+	constexpr static size_t MAX_TEXTURES_PER_MESH = 2;
 
-	constexpr static size_t MAX_RENDERABLE_INSTANCES_SUBMISSION = 50;
+	constexpr static size_t MAX_INSTANCES_PER_SUBMISSION = 50;
 
 
 

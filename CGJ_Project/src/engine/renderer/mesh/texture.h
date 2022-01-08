@@ -22,7 +22,7 @@ public:
 
 private:
 	Texture::TextureMode _textureMode = TextureMode::MODULATE_DIFFUSE;
-	unsigned int _textureIds[RendererSettings::MAX_MESH_TEXTURES] = {};
+	unsigned int _textureIds[RendererSettings::MAX_TEXTURES_PER_MESH] = {};
 	size_t _nTextures = 0;
 
 

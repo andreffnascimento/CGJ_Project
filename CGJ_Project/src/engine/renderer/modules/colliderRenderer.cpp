@@ -20,15 +20,15 @@ void Renderer::renderColliders(const Scene& scene) const
 	const MeshData& meshData = getColliderMesh().meshData();
 	_submitMeshData(meshData);
 
-	RendererData::SubmitInstanceData colliderInstanceBuffer = RendererData::SubmitInstanceData();
+	RendererData::SubmitInstanceBuffer colliderInstanceBuffer = RendererData::SubmitInstanceBuffer();
 	const auto& colliderComponents = scene.getSceneComponents<AABBColliderComponent>();
 	for (const auto& colliderIterator : colliderComponents)
 	{
-		if (colliderInstanceBuffer.nRenderableInstances >= RendererSettings::MAX_RENDERABLE_INSTANCES_SUBMISSION)
+		if (colliderInstanceBuffer.nInstances >= RendererSettings::MAX_INSTANCES_PER_SUBMISSION)
 			_submitRenderableData(meshData, colliderInstanceBuffer);
 
 		const AABBColliderComponent& collider = colliderIterator.second;
-		_formatColliderInstanceBuffer(colliderInstanceBuffer, collider);
+		_addToColliderInstanceBuffer(colliderInstanceBuffer, collider);
 	}
 
 	_submitRenderableData(meshData, colliderInstanceBuffer);
@@ -50,15 +50,13 @@ const MeshComponent& Renderer::getColliderMesh() const
 }
 
 
-void Renderer::_formatColliderInstanceBuffer(RendererData::SubmitInstanceData& renderableInstanceBuffer, const AABBColliderComponent& collider) const
+void Renderer::_addToColliderInstanceBuffer(RendererData::SubmitInstanceBuffer& colliderInstanceBuffer, const AABBColliderComponent& collider) const
 {
 	_applyColliderTransform(collider);
-
-	memcpy(renderableInstanceBuffer.pvmMatrix[renderableInstanceBuffer.nRenderableInstances], mCompMatrix[PROJ_VIEW_MODEL], 4 * 4 * sizeof(float));
-	memcpy(renderableInstanceBuffer.vmMatrix[renderableInstanceBuffer.nRenderableInstances], mCompMatrix[VIEW_MODEL], 4 * 4 * sizeof(float));
-	memcpy(renderableInstanceBuffer.normalMatrix[renderableInstanceBuffer.nRenderableInstances], mNormal3x3, 3 * 3 * sizeof(float));
-
-	renderableInstanceBuffer.nRenderableInstances++;
+	memcpy(colliderInstanceBuffer.pvmMatrix[colliderInstanceBuffer.nInstances],    mCompMatrix[PROJ_VIEW_MODEL], 4 * 4 * sizeof(float));
+	memcpy(colliderInstanceBuffer.vmMatrix[colliderInstanceBuffer.nInstances],     mCompMatrix[VIEW_MODEL],		 4 * 4 * sizeof(float));
+	memcpy(colliderInstanceBuffer.normalMatrix[colliderInstanceBuffer.nInstances], mNormal3x3,					 3 * 3 * sizeof(float));
+	colliderInstanceBuffer.nInstances++;
 }
 
 
