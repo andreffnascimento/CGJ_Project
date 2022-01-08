@@ -8,11 +8,12 @@
 
 
 
+
 class Orange : public SceneEntity
 {
 
 public:
-	Orange(Scene* scene, std::string tag, Coords3f position, Coords3f movementDirection) 
+	Orange(Scene* scene, std::string tag, Coords3f position, Coords3f movementDirection)
 		: SceneEntity(scene->createEntity(tag))
 	{
 		RigidbodyComponent& rigidbody = addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::KINEMATIC);
@@ -23,10 +24,10 @@ public:
 		// TODO texture 
 
 		ScriptComponent& script = addComponent<ScriptComponent>();
-		script.addScriptInstance(std::make_shared<OrangeMovementScript>(scene, movementDirection));
+		script.addScriptInstance(std::make_shared<OrangeMovementScript>(scene, tag, movementDirection));
 
-		Transform::translate(this, position);
+		Transform::translate(*this, position);
 	}
-}
+};
 
 #endif // !__mm3d_entities_world_orange__
