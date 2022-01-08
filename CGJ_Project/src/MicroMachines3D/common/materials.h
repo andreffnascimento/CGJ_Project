@@ -98,4 +98,15 @@ constexpr Material CANDEL_ON_MATERIAL = {
 };
 
 
+
+
+constexpr Material BUTTER_MATERIAL = {
+	{ 0.30f, 0.30f, 0.10f, 1.0f },
+	{ 0.80f, 0.80f, 0.10f, 0.8f },
+	{ 0.90f, 0.90f, 0.20f, 1.0f },
+	{ 0.0f, 0.0f, 0.0f, 0.0f },
+	100.0f,
+};
+
+
 #endif // !__mm3d_common_materials__

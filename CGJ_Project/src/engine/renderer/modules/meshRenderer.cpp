@@ -1,5 +1,7 @@
 #include "engine/renderer/renderer.h"
 
+#include <map>
+
 #include "engine/renderer/mesh/geometry.h"
 #include "engine/renderer/mesh/texture.h"
 
@@ -18,16 +20,91 @@ void Renderer::renderMeshes(const Scene& scene) const
 	if (!_shader.isProgramValid())
 		throw std::string("Invalid shader program!");
 
-	_renderMeshInstances(_solidMeshInstances);
+	_renderOpaqueMeshInstances();
+	_enableTranslucentRendering();
+
+	RendererData::translucentMeshInstances_t sortedTranslucentMeshInstances = RendererData::translucentMeshInstances_t();
+	_sortTranslucentMeshInstancesInto(scene, sortedTranslucentMeshInstances);
+	_renderTranslucentMeshInstances(sortedTranslucentMeshInstances);
+	_enableOpaqueRendering();
 }
 
 
 
 
-void Renderer::_renderMeshInstances(const RendererData::meshInstances_t& meshInstances) const
+void Renderer::_enableOpaqueRendering() const
+{
+	glDepthMask(GL_TRUE);
+	glDisable(GL_BLEND);
+}
+
+
+void Renderer::_enableTranslucentRendering() const
+{
+	glDepthMask(GL_FALSE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+
+
+void Renderer::_sortTranslucentMeshInstancesInto(const Scene& scene, RendererData::translucentMeshInstances_t& sortedTranslucentMeshInstancesOut) const
+{
+	Coords3f cameraPosition;
+	Quaternion cameraRotation;
+	Coords3f cameraSize;
+	Transform::decomposeTransformMatrix(scene.activeCamera(), cameraPosition, cameraRotation, cameraSize);
+
+	auto translucentMeshInstancesToDistance = std::map<const std::pair<const MeshComponent* const, const TransformComponent*>*, float>();
+	for (const auto& translucentMeshInstance : _translucentMeshInstances)
+	{
+		const MeshComponent& mesh = *translucentMeshInstance.first;
+		const TransformComponent& transform = *translucentMeshInstance.second;
+		if (!mesh.enabled())
+			continue;
+
+		Coords3f instancePosition;
+		Quaternion instanceRotation;
+		Coords3f instanceSize;
+		Transform::decomposeTransformMatrix(transform, instancePosition, instanceRotation, instanceSize);
+		float distance = cameraPosition.distance(instancePosition);
+		translucentMeshInstancesToDistance[&translucentMeshInstance] = distance;
+	}
+	
+	auto firstIterator = translucentMeshInstancesToDistance.begin();
+	while (firstIterator != translucentMeshInstancesToDistance.cend())
+	{
+		const std::pair<const MeshComponent* const, const TransformComponent*>* nearestMesh = firstIterator->first;
+		float minDistance = firstIterator->second;
+
+		auto secondIterator = std::next(firstIterator);
+		for (; secondIterator != translucentMeshInstancesToDistance.cend(); secondIterator++)
+		{
+			const std::pair<const MeshComponent* const, const TransformComponent*>* mesh = secondIterator->first;
+			float distance = secondIterator->second;
+
+			if (distance < minDistance)
+			{
+				nearestMesh = mesh;
+				minDistance = distance;
+			}
+		}
+
+		firstIterator++;
+		if (firstIterator != translucentMeshInstancesToDistance.cend() && firstIterator->first == nearestMesh)
+			firstIterator--;
+
+		sortedTranslucentMeshInstancesOut[nearestMesh->first] = nearestMesh->second;
+		translucentMeshInstancesToDistance.erase(nearestMesh);
+	}
+}
+
+
+
+void Renderer::_renderOpaqueMeshInstances() const
 {
 	RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
-	for (const auto& meshIterator : meshInstances)
+	for (const auto& meshIterator : _opaqueMeshInstances)
 	{
 		const MeshData* meshData = meshIterator.first;
 		const std::unordered_set<const TransformComponent*> transformComponents = meshIterator.second;
@@ -49,6 +126,29 @@ void Renderer::_renderMeshInstances(const RendererData::meshInstances_t& meshIns
 }
 
 
+void Renderer::_renderTranslucentMeshInstances(const RendererData::translucentMeshInstances_t& translucentMeshInstances) const
+{
+	RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
+	auto meshIterator = translucentMeshInstances.cbegin();
+	while (meshIterator != translucentMeshInstances.cend())
+	{
+		const MeshComponent* originalMesh = meshIterator->first;
+
+		_submitMeshData(originalMesh->meshData());
+		while (meshIterator != translucentMeshInstances.cend() && meshIterator->first == originalMesh)
+		{
+			if (instanceBuffer.nInstances >= RendererSettings::MAX_INSTANCES_PER_SUBMISSION)
+				_submitRenderableData(*originalMesh, instanceBuffer);
+
+			const TransformComponent* transform = meshIterator->second;
+			_addToInstanceBuffer(instanceBuffer, transform);
+			meshIterator++;
+		}
+
+		_submitRenderableData(*originalMesh, instanceBuffer);
+	}
+}
+
 
 
 void Renderer::_addToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform) const
@@ -68,7 +168,6 @@ void Renderer::_applyTransform(const TransformComponent& transform) const
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
 	computeNormalMatrix3x3();
 }
-
 
 
 

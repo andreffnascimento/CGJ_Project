@@ -16,13 +16,14 @@ struct MeshComponent
 
 private:
 	std::shared_ptr<MeshData> _meshData = nullptr;
+	const Entity* _entity = nullptr;
 
 public:
 	MeshComponent() = delete;
-	MeshComponent(const MeshComponent&) = default;
-	MeshComponent(MyMesh&& mesh, const Material& material);							// initializes the mesh but doesn't set it up for rendering
-	MeshComponent(MyMesh&& mesh, const Material& material, const Entity& entity);	// initializes the mesh and sets it up for rendering
-	MeshComponent(const MeshComponent&, const Entity& entity);						// sets the mesh up for rendering
+	MeshComponent(const MeshComponent&);
+	MeshComponent(const MyMesh& mesh, const Material& material);							// initializes the mesh but doesn't set it up for rendering
+	MeshComponent(const MyMesh& mesh, const Material& material, const Entity& entity);	// initializes the mesh and sets it up for rendering
+	MeshComponent(const MeshComponent& mesh, const Entity& entity);						// sets the mesh up for rendering
 	~MeshComponent() = default;
 
 	inline const MeshData& meshData() const { return *_meshData; }

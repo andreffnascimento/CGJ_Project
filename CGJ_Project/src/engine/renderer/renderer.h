@@ -22,8 +22,8 @@ private:
 	int _uniformLocation[RendererData::ShaderUniformType::N_UNIFORMS] = {};
 
 	RendererData::TextureData _textures = RendererData::TextureData();
-	RendererData::meshInstances_t _solidMeshInstances = RendererData::meshInstances_t();
-	RendererData::meshInstances_t _translucidMeshInstances = RendererData::meshInstances_t();
+	RendererData::opaqueMeshInstances_t _opaqueMeshInstances = RendererData::opaqueMeshInstances_t();
+	RendererData::translucentMeshInstances_t _translucentMeshInstances = RendererData::translucentMeshInstances_t();
 
 	RendererSettings::ReflectionCoefficients _reflectionCoefficients = RendererSettings::ReflectionCoefficients();
 	RendererSettings::Fog _fog = RendererSettings::Fog();
@@ -87,7 +87,13 @@ private:
 
 
 private:
-	void _renderMeshInstances(const RendererData::meshInstances_t& meshInstances) const;
+	void _enableOpaqueRendering() const;
+	void _enableTranslucentRendering() const;
+
+	void _sortTranslucentMeshInstancesInto(const Scene& scene, RendererData::translucentMeshInstances_t& sortedTranslucentMeshInstancesOut) const;
+
+	void _renderOpaqueMeshInstances() const;
+	void _renderTranslucentMeshInstances(const RendererData::translucentMeshInstances_t& translucentMeshInstances) const;
 
 	void _addToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform) const;
 	void _applyTransform(const TransformComponent& transform) const;

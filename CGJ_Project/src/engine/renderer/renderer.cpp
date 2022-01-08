@@ -136,18 +136,16 @@ void Renderer::updateViewport(CameraComponent& camera, int width, int height) co
 void Renderer::submitRenderableMesh(const MeshComponent& mesh)
 {
 	if (mesh.material().diffuse[3] == 1.0f)		// checks if the object is translucid
-		_solidMeshInstances.emplace(&mesh.meshData(), std::unordered_set<const TransformComponent*>());
-	else
-		_translucidMeshInstances.emplace(&mesh.meshData(), std::unordered_set<const TransformComponent*>());
+		_opaqueMeshInstances.emplace(&mesh.meshData(), std::unordered_set<const TransformComponent*>());
 }
 
 
 void Renderer::submitRenderableEntity(const MeshComponent& mesh, const Entity& entity)
 {
 	if (mesh.material().diffuse[3] == 1.0f)		// checks if the object is translucid
-		_solidMeshInstances[&mesh.meshData()].emplace(&entity.transform());
+		_opaqueMeshInstances[&mesh.meshData()].emplace(&entity.transform());
 	else
-		_translucidMeshInstances[&mesh.meshData()].emplace(&entity.transform());
+		_translucentMeshInstances[&mesh] = &entity.transform();
 
 }
 

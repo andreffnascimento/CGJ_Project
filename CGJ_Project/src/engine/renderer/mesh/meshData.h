@@ -21,8 +21,8 @@ private:
 
 public:
 	MeshData() = delete;
-	MeshData(const MeshData& meshData) = delete;
-	MeshData(MyMesh&& mesh, const Material& material);
+	MeshData(const MeshData& meshData) = default;
+	MeshData(const MyMesh& mesh, const Material& material);
 	~MeshData() = default;
 
 

@@ -67,27 +67,36 @@ void CameraComponent::_setPerspectiveCamera(float fov)
 
 
 
-MeshComponent::MeshComponent(MyMesh&& mesh, const Material& material)
-	: _meshData(std::make_shared<MeshData>(std::forward<MyMesh>(mesh), material))
+MeshComponent::MeshComponent(const MeshComponent& mesh)
+	: _meshData(mesh._meshData), _entity(mesh._entity)
+{
+	if (_entity != nullptr)
+	{
+		Renderer& renderer = Application::getRenderer();
+		renderer.submitRenderableEntity(*this, *_entity);
+	}
+}
+
+
+MeshComponent::MeshComponent(const MyMesh& mesh, const Material& material)
+	: _meshData(std::make_shared<MeshData>(mesh, material)), _entity(nullptr)
 {
 	Renderer& renderer = Application::getRenderer();
 	renderer.submitRenderableMesh(*this);
 }
 
 
-MeshComponent::MeshComponent(MyMesh&& mesh, const Material& material, const Entity& entity)
-	: _meshData(std::make_shared<MeshData>(std::forward<MyMesh>(mesh), material))
+MeshComponent::MeshComponent(const MyMesh& mesh, const Material& material, const Entity& entity)
+	: _meshData(std::make_shared<MeshData>(mesh, material)), _entity(&entity)
 {
-	Renderer& renderer = Application::getRenderer();
-	renderer.submitRenderableEntity(*this, entity);
+	// empty
 }
 
 
 MeshComponent::MeshComponent(const MeshComponent& mesh, const Entity& entity)
-	: _meshData(mesh._meshData)
+	: _meshData(mesh._meshData), _entity(&entity)
 {
-	Renderer& renderer = Application::getRenderer();
-	renderer.submitRenderableEntity(*this, entity);
+	// emtpty
 }
 
 

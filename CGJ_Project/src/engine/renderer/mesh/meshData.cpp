@@ -3,8 +3,8 @@
 
 
 
-MeshData::MeshData(MyMesh&& mesh, const Material& material)
-	: _mesh(std::forward<MyMesh>(mesh))
+MeshData::MeshData(const MyMesh& mesh, const Material& material)
+	: _mesh(mesh)
 {
 	setMaterial(material);
 }

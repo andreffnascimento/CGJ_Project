@@ -10,6 +10,7 @@
 #include "MicroMachines3D/entities/world/car.h"
 #include "MicroMachines3D/entities/world/cheeriosTrack.h"
 #include "MicroMachines3D/entities/world/candels.h"
+#include "MicroMachines3D/entities/world/butters.h"
 
 
 
@@ -57,6 +58,8 @@ private:
 		CheeriosTrack cheeriosTrack = CheeriosTrack(this);
 
 		Candels candels = Candels(this);
+
+		Butters butters = Butters(this);
 	}
 };
 

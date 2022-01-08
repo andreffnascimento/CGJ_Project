@@ -234,6 +234,7 @@
     <ClInclude Include="src\MicroMachines3D\common\constants.h" />
     <ClInclude Include="src\MicroMachines3D\common\include.h" />
     <ClInclude Include="src\MicroMachines3D\entities\manager\gameManager.h" />
+    <ClInclude Include="src\MicroMachines3D\entities\world\butters.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\candels.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\cheeriosTrack.h" />
     <ClInclude Include="src\MicroMachines3D\scenes\MicroMachines3DScene.h" />
