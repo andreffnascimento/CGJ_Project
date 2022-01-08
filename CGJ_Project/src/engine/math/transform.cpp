@@ -1,7 +1,9 @@
 #include "transform.h"
 
-typedef Transform::transform_func_coords_t transform_func_coords_t;
-typedef Transform::transform_func_quaternion_t transform_func_quaternion_t;
+typedef Transform::transform_entity_coords_func_t		transform_entity_coords_func_t;
+typedef Transform::transform_entity_quaternion_func_t	transform_entity_quaternion_func_t;
+typedef Transform::transform_local_coords_func_t		transform_local_coords_func_t;
+typedef Transform::transform_local_quaternion_func_t	transform_local_quaternion_func_t;
 
 
 
@@ -73,30 +75,34 @@ void Transform::decomposeTransformMatrix(const TransformComponent& transform, Co
 
 
 
-void Transform::_localUpdate(const Entity& entity, const Coords3f& transform, transform_func_coords_t transformFunc)
+void Transform::_localUpdate(const Entity& entity, const Coords3f& transform, transform_entity_coords_func_t transformFunc)
 {
 	TransformComponent& transformComponent = entity.transform();
-	_localUpdate(transformComponent, transform, transformFunc);
-	_groupUpdate(entity);	
-}
-
-void Transform::_localUpdate(const Entity& entity, const Quaternion& transform, transform_func_quaternion_t transformFunc)
-{
-	TransformComponent& transformComponent = entity.transform();
-	_localUpdate(transformComponent, transform, transformFunc);
+	RigidbodyComponent* rigidbodyComponent = entity.getComponentIfExists<RigidbodyComponent>();
+	transformFunc(transformComponent, rigidbodyComponent, transform);
+	transformComponent._locallyUpdated = false;
 	_groupUpdate(entity);
 }
 
-void Transform::_localUpdate(TransformComponent& transformComponent, const Coords3f& transform, transform_func_coords_t transformFunc)
+void Transform::_localUpdate(const Entity& entity, const Quaternion& transform, transform_entity_quaternion_func_t transformFunc)
 {
+	TransformComponent& transformComponent = entity.transform();
+	RigidbodyComponent* rigidbodyComponent = entity.getComponentIfExists<RigidbodyComponent>();
+	transformFunc(transformComponent, rigidbodyComponent, transform);
 	transformComponent._locallyUpdated = false;
-	transformFunc(transformComponent, transform);
+	_groupUpdate(entity);
 }
 
-void Transform::_localUpdate(TransformComponent& transformComponent, const Quaternion& transform, transform_func_quaternion_t transformFunc)
+void Transform::_localUpdate(TransformComponent& transformComponent, const Coords3f& transform, transform_local_coords_func_t transformFunc)
 {
-	transformComponent._locallyUpdated = false;
 	transformFunc(transformComponent, transform);
+	transformComponent._locallyUpdated = false;
+}
+
+void Transform::_localUpdate(TransformComponent& transformComponent, const Quaternion& transform, transform_local_quaternion_func_t transformFunc)
+{
+	transformFunc(transformComponent, transform);
+	transformComponent._locallyUpdated = false;
 }
 
 
@@ -110,6 +116,62 @@ void Transform::_groupUpdate(const Entity& entity)
 	group->expandGroupToComponent<TransformComponent>(groupTransforms);
 	for (auto& transform : groupTransforms)
 		transform->_globallyUpdated = false;
+}
+
+
+
+
+void Transform::_translateTo(TransformComponent& transform, RigidbodyComponent* rigidbody, const Coords3f& newTranslation)
+{
+	transform._translation = newTranslation;
+	if (rigidbody != nullptr)
+		rigidbody->_position = transform._translation;
+}
+
+void Transform::_rotateTo(TransformComponent& transform, RigidbodyComponent* rigidbody, const Coords3f& newRotation)
+{
+	transform._rotation = Quaternion(newRotation);
+	if (rigidbody != nullptr)
+		rigidbody->_rotation = transform._rotation;
+}
+
+void Transform::_rotateTo(TransformComponent& transform, RigidbodyComponent* rigidbody, const Quaternion& newRotation)
+{
+	transform._rotation = newRotation;
+	if (rigidbody != nullptr)
+		rigidbody->_rotation = transform._rotation;
+}
+
+void Transform::_scaleTo(TransformComponent& transform, RigidbodyComponent* rigidbody, const Coords3f& newScale)
+{
+	transform._scale = newScale;
+}
+
+
+void Transform::_translate(TransformComponent& transform, RigidbodyComponent* rigidbody, const Coords3f& translation)
+{
+	transform._translation += translation;
+	if (rigidbody != nullptr)
+		rigidbody->_position = transform._translation;
+}
+
+void Transform::_rotate(TransformComponent& transform, RigidbodyComponent* rigidbody, const Coords3f& rotation)
+{
+	transform._rotation.rotate(rotation);
+	if (rigidbody != nullptr)
+		rigidbody->_rotation = transform._rotation;
+}
+
+void Transform::_rotate(TransformComponent& transform, RigidbodyComponent* rigidbody, const Quaternion& rotation)
+{
+	transform._rotation += rotation;
+	if (rigidbody != nullptr)
+		rigidbody->_rotation = transform._rotation;
+}
+
+void Transform::_scale(TransformComponent& transform, RigidbodyComponent* rigidbody, const Coords3f& scale)
+{
+	transform._scale *= scale;
 }
 
 

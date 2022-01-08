@@ -74,6 +74,7 @@ public:
 	void addRelativeForce(const Force& force);
 
 public:
+	friend class Transform;
 	friend class PhysicsEngine;
 };
 

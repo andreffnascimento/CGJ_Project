@@ -88,7 +88,6 @@ void PhysicsEngine::_initializeRigidbodies(const Scene& scene) const
 		Coords3f scale;
 		Transform::decomposeTransformMatrix(entity, translation, rotation, scale);
 
-		// HACK: this may very easily break when dealing with group movements
 		rigidbody._position = translation;
 		rigidbody._rotation = rotation;
 	}

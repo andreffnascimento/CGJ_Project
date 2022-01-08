@@ -16,8 +16,10 @@ class Transform
 {
 
 public:
-	typedef void (*transform_func_coords_t)(TransformComponent&, const Coords3f&);
-	typedef void (*transform_func_quaternion_t)(TransformComponent&, const Quaternion&);
+	typedef void (*transform_entity_coords_func_t)(TransformComponent&, RigidbodyComponent*, const Coords3f&);
+	typedef void (*transform_entity_quaternion_func_t)(TransformComponent&, RigidbodyComponent*, const Quaternion&);
+	typedef void (*transform_local_coords_func_t)(TransformComponent&, const Coords3f&);
+	typedef void (*transform_local_quaternion_func_t)(TransformComponent&, const Quaternion&);
 
 
 
@@ -54,11 +56,23 @@ public:
 
 
 private:
-	static void _localUpdate(const Entity& entity, const Coords3f& transform, transform_func_coords_t transformFunc);
-	static void _localUpdate(const Entity& entity, const Quaternion& transform, transform_func_quaternion_t transformFunc);
-	static void _localUpdate(TransformComponent& transformComponent, const Coords3f& transform, transform_func_coords_t transformFunc);
-	static void _localUpdate(TransformComponent& transformComponent, const Quaternion& transform, transform_func_quaternion_t transformFunc);
+	static void _localUpdate(const Entity& entity, const Coords3f& transform, transform_entity_coords_func_t transformFunc);
+	static void _localUpdate(const Entity& entity, const Quaternion& transform, transform_entity_quaternion_func_t transformFunc);
+	static void _localUpdate(TransformComponent& transformComponent, const Coords3f& transform, transform_local_coords_func_t transformFunc);
+	static void _localUpdate(TransformComponent& transformComponent, const Quaternion& transform, transform_local_quaternion_func_t transformFunc);
 	static void _groupUpdate(const Entity& entity);
+
+
+private:
+	static void _translateTo(TransformComponent& transform, RigidbodyComponent* rigidbody, const Coords3f& newTranslation);
+	static void _rotateTo(TransformComponent& transform, RigidbodyComponent* rigidbody, const Coords3f& newRotation);
+	static void _rotateTo(TransformComponent& transform, RigidbodyComponent* rigidbody, const Quaternion& newRotation);
+	static void _scaleTo(TransformComponent& transform, RigidbodyComponent* rigidbody, const Coords3f& newScale);
+
+	static void _translate(TransformComponent& transform, RigidbodyComponent* rigidbody, const Coords3f& translation);
+	static void _rotate(TransformComponent& transform, RigidbodyComponent* rigidbody, const Coords3f& rotation);
+	static void _rotate(TransformComponent& transform, RigidbodyComponent* rigidbody, const Quaternion& rotation);
+	static void _scale(TransformComponent& transform, RigidbodyComponent* rigidbody, const Coords3f& scale);
 
 
 private:
