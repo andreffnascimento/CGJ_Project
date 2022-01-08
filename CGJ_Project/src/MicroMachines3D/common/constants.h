@@ -44,5 +44,9 @@ constexpr int   CANDEL_SIDES = 20;
 constexpr Coords3f CANDEL_SIZE = { 3.0f, 5.0f, 3.0f };
 constexpr Coords3f CANDEL_TOP_SIZE = { 0.3f, 1.0f, 0.3f };
 
+constexpr float ORANGE_RADIUS = 4.0f;
+constexpr int ORANGE_DIVISIONS = 20;
+constexpr Coords3f ORANGE_SIZE = { 6.0f, 6.0f, 6.0f }
+
 
 #endif // !__mm3d_common_constants__

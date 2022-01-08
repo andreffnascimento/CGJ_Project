@@ -98,4 +98,15 @@ constexpr Material CANDEL_ON_MATERIAL = {
 };
 
 
+
+
+constexpr Material ORANGE_MATERIAL = {
+	{ 0.5f, 0.25f, 0.0f, 1.0f },
+	{ 1.0f, 0.5f,  0.0f, 1.0f },
+	{ 1.0f, 0.5f,  0.0f, 1.0f },
+	{ 0.0f, 0.0f,  0.0f, 0.0f },
+	10.0f,
+};
+
+
 #endif // !__mm3d_common_materials__
