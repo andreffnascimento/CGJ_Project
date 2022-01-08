@@ -227,8 +227,8 @@ void RigidbodyComponent::addRelativeForce(const Force& force)
 
 
 
-AABBColliderComponent::AABBColliderComponent(RigidbodyComponent& rigidbody, const Coords3f& initialSize)
-	: _rigidbody(&rigidbody), _initialSize(initialSize / 2.0f)
+AABBColliderComponent::AABBColliderComponent(unsigned int id, RigidbodyComponent& rigidbody, const Coords3f& initialSize)
+	: _id(id), _rigidbody(&rigidbody), _initialSize(initialSize / 2.0f)
 {
 	// empty
 }

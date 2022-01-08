@@ -24,7 +24,7 @@ public:
 
 	static constexpr bool SHOW_COLLIDERS = false;
 	static constexpr unsigned int COLLISION_ITERATIONS = 2;
-	static constexpr float PHYSICS_SIMULATION_MIN_INTERVAL = 0.01f;
+	static constexpr float PHYSICS_SIMULATION_MIN_INTERVAL = 0.02f;
 	static constexpr float PHYSICS_SIMULATION_MAX_INTERVAL = 0.13f;
 
 
@@ -73,7 +73,6 @@ private:
 	void _combineForces(RigidbodyComponent& rigidbody, Coords3f& linearForce, Coords3f& angularForce) const;
 	void _calculateFinalAngularForce(RigidbodyComponent& rigidbody, Coords3f& angularForce) const;
 	void _calculateFinalLinearForce(RigidbodyComponent& rigidbody, Coords3f& linearForce) const;
-	void _calculateExpectedPosition(RigidbodyComponent& rigidbody, const Coords3f& linearForce, float ts) const;
 	void _calculateExpectedAngularVelocity(RigidbodyComponent& rigidbody, Coords3f& angularForce, float ts) const;
 	void _calculateExpectedLinearVelocity(RigidbodyComponent& rigidbody, Coords3f& linearForce, const Quaternion& rotation, float ts) const;
 	void _processSleepThreshold(RigidbodyComponent& rigidbody) const;

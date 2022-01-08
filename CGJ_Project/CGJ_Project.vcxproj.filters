@@ -88,6 +88,7 @@
     <ClInclude Include="src\engine\scene\components\rigidbodyComponent.h" />
     <ClInclude Include="src\engine\scene\components\aabbColliderComponent.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\butters.h" />
+    <ClInclude Include="src\MicroMachines3D\common\colliderIds.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />

@@ -203,9 +203,9 @@ void PhysicsEngine::_processRigidbodyMovement(const Scene& scene, RigidbodyCompo
 	}
 
 	Coords3f rotation = _calculateExpectedRotation(rigidbody, ts);
-	_calculateExpectedPosition(rigidbody, linearForce, ts);
 	_calculateExpectedAngularVelocity(rigidbody, angularForce, ts);
 	_calculateExpectedLinearVelocity(rigidbody, linearForce, Quaternion(rotation), ts);
+	rigidbody._position += rigidbody._velocity * ts;
 	_processSleepThreshold(rigidbody);
 }
 
@@ -244,15 +244,6 @@ void PhysicsEngine::_calculateFinalLinearForce(RigidbodyComponent& rigidbody, Co
 
 	if (rigidbody._usesGravity)
 		linearForce.y -= PhysicsEngine::GRAVITY;
-}
-
-
-void PhysicsEngine::_calculateExpectedPosition(RigidbodyComponent& rigidbody, const Coords3f& linearForce, float ts) const
-{
-	float time2 = std::pow(ts, 2.0f) / 2.0f;
-	rigidbody._position.x += rigidbody._velocity.x * ts + linearForce.x * time2;
-	rigidbody._position.y += rigidbody._velocity.y * ts + linearForce.y * time2;
-	rigidbody._position.z += rigidbody._velocity.z * ts + linearForce.z * time2;
 }
 
 

@@ -39,8 +39,15 @@ void CollisionResolver::processCollisions()
 
 void CollisionResolver::updateVelocity(Coords3f& velocity) const
 {
+	Coords3f finalImpulse = Coords3f();
 	for (const auto& impulse : _impulses)
-		velocity += impulse / (float)_impulses.size();
+	{
+		finalImpulse.x = std::signbit(finalImpulse.x) == std::signbit(impulse.x) ? std::max(finalImpulse.x, impulse.x) : finalImpulse.x + impulse.x;
+		finalImpulse.y = std::signbit(finalImpulse.y) == std::signbit(impulse.y) ? std::max(finalImpulse.y, impulse.y) : finalImpulse.y + impulse.y;
+		finalImpulse.z = std::signbit(finalImpulse.z) == std::signbit(impulse.z) ? std::max(finalImpulse.z, impulse.z) : finalImpulse.z + impulse.z;
+	}
+
+	velocity += finalImpulse;
 }
 
 

@@ -240,6 +240,7 @@
     <ClInclude Include="src\MicroMachines3D\scenes\MicroMachines3DScene.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\candels\candelsLightScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\car\carMovementScript.h" />
+    <ClInclude Include="src\MicroMachines3D\common\colliderIds.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\manager\camera\cameraManagerScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\manager\camera\targetOrbitalCameraScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\car\carHeadlightsScript.h" />

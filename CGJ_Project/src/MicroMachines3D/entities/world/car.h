@@ -28,7 +28,7 @@ public:
 		rigidbody.setUsesGravity(GRAVITY_ENABLED);
 
 		Coords3f carSize = { CAR_BOTTOM_SIZE.x, CAR_BOTTOM_SIZE.y + CAR_TOP_SIZE.y + CAR_FLOOR_DISTANCE - 0.2f, CAR_BOTTOM_SIZE.z + CAR_BUMPER_SIZE.z };
-		AABBColliderComponent& collider = addComponent<AABBColliderComponent>(rigidbody, carSize);
+		AABBColliderComponent& collider = addComponent<AABBColliderComponent>((unsigned int)ColliderIds::CAR, rigidbody, carSize);
 		collider.setRestitutionCocoefficient(0.3f);
 		
 		ScriptComponent& script = addComponent<ScriptComponent>();
