@@ -13,7 +13,7 @@ class FogToggleScript : public Script
 private:
 	const EventHandler* _eventHandler = nullptr;
 
-	bool _fogToggle = false;
+	bool _fogToggle = true;
 
 
 

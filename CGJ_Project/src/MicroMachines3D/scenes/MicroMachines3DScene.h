@@ -37,7 +37,7 @@ private:
 		fog.mode = RendererSettings::Fog::FogMode::EXP;
 		fog.color = Coords4f{ 0.27f, 0.07f, 0.03f, 1.0f };
 		fog.density = 0.025f;
-		fog.active = false;
+		fog.active = true;
 
 		Renderer::setReflectionCoefficients(reflectionCoefficients);
 		Renderer::setFog(fog);

@@ -41,7 +41,7 @@ private:
 	{
 		CameraComponent& camera = entity.addComponent<CameraComponent>(CameraComponent::CameraProjection::PERSPECTIVE, ClippingPlanes({ 0.01f, 1000.0f }), 53.13f);
 		camera.setTargetCoords({ 0.0f, 0.0f, 0.0f });
-		Transform::translateTo(entity, { 0.0f, 120.0f, 0.0f });
+		Transform::translateTo(entity, { 0.0f, 90.0f, 0.0f });
 		return entity;
 	}
 
