@@ -3,6 +3,7 @@
 
 
 #include <list>
+#include <initializer_list>
 
 #include "engine/physics/collision.h"
 
@@ -15,11 +16,26 @@
 class CollisionResolver
 {
 
+private:
+	enum class ComputeListType
+	{
+		WHITELIST = 1,
+		BLACKLIST = 2
+	};
+
+
+
+
 protected:
 	AABBColliderComponent& _collider; 
 
 	std::list<Collision> _collisions = std::list<Collision>();
 	std::list<Coords3f> _impulses = std::list<Coords3f>();
+
+
+private:
+	ComputeListType _computeListType = ComputeListType::WHITELIST;
+	std::list<unsigned int> _computeIds = std::list<unsigned int>();
 
 
 
@@ -45,7 +61,19 @@ public:
 
 
 public:
-	virtual bool ignoreCollision(const RigidbodyComponent& rigidbody);
+	bool isMoving() const;
+
+
+public:
+	virtual void init();
+	virtual bool ignoreCollision(const AABBColliderComponent& otherCollider) const;
+
+
+
+
+protected:
+	void _setWhitelist(std::initializer_list<unsigned int> initializerList);
+	void _setBlacklist(std::initializer_list<unsigned int> initializerList);
 
 
 protected:

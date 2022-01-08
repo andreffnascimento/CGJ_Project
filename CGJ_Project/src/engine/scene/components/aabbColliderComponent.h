@@ -14,7 +14,7 @@ class CollisionResolver;
 struct AABBColliderComponent
 {
 private:
-	unsigned int _id = 0;	// used to identity the "type" of object that is being collided with
+	unsigned int _id = 0;	// used to identity the "type" of object that is being collided with (default 0)
 
 	Coords3f _initialSize = Coords3f();
 	Coords3f _boundingBox = Coords3f();
@@ -27,6 +27,7 @@ private:
 public:
 	AABBColliderComponent() = delete;
 	AABBColliderComponent(const AABBColliderComponent&) = default;
+	AABBColliderComponent(RigidbodyComponent& rigidbody, const Coords3f& initialSize);
 	AABBColliderComponent(unsigned int id, RigidbodyComponent& rigidbody, const Coords3f& initialSize);
 	~AABBColliderComponent();
 
@@ -38,6 +39,7 @@ public:
 	inline void setInitialSize(const Coords3f& initialSize)					{ _initialSize = initialSize / 2.0f; }
 	inline void setFixedBoundingBox(bool fixedBoundingBox)					{ _fixedBoundingBox = fixedBoundingBox; }
 	inline void setRestitutionCocoefficient(float restitutionCocoefficient) { _restitutionCocoefficient = restitutionCocoefficient; }
+	inline void setCollisionResolver(CollisionResolver* collisionResolver)	{ _collisionResolver = collisionResolver; }
 
 public:
 	friend class PhysicsEngine;

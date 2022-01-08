@@ -89,6 +89,8 @@
     <ClInclude Include="src\engine\scene\components\aabbColliderComponent.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\butters.h" />
     <ClInclude Include="src\MicroMachines3D\common\colliderIds.h" />
+    <ClInclude Include="src\MicroMachines3D\scripts\collisionResolver\carCollisionResolver.h" />
+    <ClInclude Include="src\MicroMachines3D\scripts\collisionResolver\cherrioColliderResolver.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />

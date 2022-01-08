@@ -10,6 +10,7 @@
 #include "engine/math/transformMatrix.h"
 
 #include "engine/physics/force.h"
+#include "engine/physics/collisionResolver.h"
 
 #include "engine/renderer/renderer.h"
 #include "engine/renderer/rendererSettings.h"

@@ -241,6 +241,8 @@
     <ClInclude Include="src\MicroMachines3D\scripts\candels\candelsLightScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\car\carMovementScript.h" />
     <ClInclude Include="src\MicroMachines3D\common\colliderIds.h" />
+    <ClInclude Include="src\MicroMachines3D\scripts\collisionResolver\carCollisionResolver.h" />
+    <ClInclude Include="src\MicroMachines3D\scripts\collisionResolver\cherrioColliderResolver.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\manager\camera\cameraManagerScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\manager\camera\targetOrbitalCameraScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\car\carHeadlightsScript.h" />

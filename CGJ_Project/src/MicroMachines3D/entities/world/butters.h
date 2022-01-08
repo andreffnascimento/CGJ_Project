@@ -44,6 +44,8 @@ private:
 		butter.addComponent<MeshComponent>(mesh, butter);
 
 		RigidbodyComponent& rigidbody = butter.addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::STATIC);
+		AABBColliderComponent& collider = butter.addComponent<AABBColliderComponent>(ColliderIds::BUTTER, rigidbody, Coords3f({ xSize, BUTTER_HEIGHT, zSize }));
+		collider.setFixedBoundingBox(true);
 
 		Transform::translate(butter, Coords3f({ xPos, BUTTER_HEIGHT / 2.0f, zPos }));
 		Transform::scale(butter, Coords3f({ xSize, BUTTER_HEIGHT, zSize }));

@@ -53,9 +53,39 @@ void CollisionResolver::updateVelocity(Coords3f& velocity) const
 
 
 
-bool CollisionResolver::ignoreCollision(const RigidbodyComponent& rigidbody)
+bool CollisionResolver::isMoving() const
 {
-	return rigidbody.sleeping() || rigidbody.type() == RigidbodyComponent::RigidbodyType::STATIC;
+	return !_collider.rigidbody().sleeping() && _collider.rigidbody().type() != RigidbodyComponent::RigidbodyType::STATIC;
+}
+
+
+
+
+void CollisionResolver::_setWhitelist(std::initializer_list<unsigned int> initializerList)
+{
+	_computeListType = CollisionResolver::ComputeListType::WHITELIST;
+	_computeIds = std::list<unsigned int>(initializerList);
+}
+
+void CollisionResolver::_setBlacklist(std::initializer_list<unsigned int> initializerList)
+{
+	_computeListType = CollisionResolver::ComputeListType::BLACKLIST;
+	_computeIds = std::list<unsigned int>(initializerList);
+}
+
+
+
+
+void CollisionResolver::init()
+{
+	// empty
+}
+
+
+bool CollisionResolver::ignoreCollision(const AABBColliderComponent& otherCollider) const
+{
+	bool whitelist = _computeListType == CollisionResolver::ComputeListType::WHITELIST;
+	return whitelist != (std::find(_computeIds.begin(), _computeIds.end(), otherCollider.id()) != _computeIds.end());
 }
 
 

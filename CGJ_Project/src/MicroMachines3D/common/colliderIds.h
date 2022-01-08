@@ -4,14 +4,14 @@
 
 
 
-enum class ColliderIds
+struct ColliderIds
 {
-	CAR = 1,
-	TABLE = 2,
-	CANDEL = 3,
-	CHEERIO = 4,
-	ORANGES = 5,
-	BUTTER = 6
+	constexpr static unsigned int CAR = 1;
+	constexpr static unsigned int TABLE = 2;
+	constexpr static unsigned int CANDEL = 3;
+	constexpr static unsigned int CHEERIO = 4;
+	constexpr static unsigned int ORANGES = 5;
+	constexpr static unsigned int BUTTER = 6;
 };
 
 

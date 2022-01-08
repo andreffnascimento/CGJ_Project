@@ -106,6 +106,7 @@ void PhysicsEngine::_initializeColliders(const Scene& scene) const
 		if (collider._collisionResolver == nullptr)
 			collider._collisionResolver = new CollisionResolver(collider);
 
+		collider._collisionResolver->init();
 		if (!collider._fixedBoundingBox)
 			PhysicsEngine::rotateBoundingBox(collider, collider._rigidbody->_rotation);
 	}
@@ -136,14 +137,14 @@ void PhysicsEngine::_simulateCollisions(const Scene& scene, float ts) const
 		{
 			EntityHandle entityId = entityColliderIterator.first;
 			AABBColliderComponent& entityCollider = entityColliderIterator.second;
-			if (entityCollider._collisionResolver->ignoreCollision(*entityCollider._rigidbody))
+			if (!entityCollider._collisionResolver->isMoving())
 				continue;
 
 			for (auto& otherColliderIterator : colliderComponents)
 			{
 				EntityHandle otherId = otherColliderIterator.first;
 				AABBColliderComponent& otherCollider = otherColliderIterator.second;
-				if (entityId != otherId)
+				if (entityId != otherId && !entityCollider._collisionResolver->ignoreCollision(otherCollider))
 					_checkCollision(entityCollider, otherCollider, ts);
 			}
 		}

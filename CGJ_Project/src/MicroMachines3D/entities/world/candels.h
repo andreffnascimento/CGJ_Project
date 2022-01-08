@@ -48,7 +48,7 @@ private:
 		candel.addComponent<MeshComponent>(mesh, candel);
 
 		RigidbodyComponent& rigidbody = candel.addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::STATIC);
-		AABBColliderComponent& collider = candel.addComponent<AABBColliderComponent>((unsigned int)ColliderIds::CANDEL, rigidbody, CANDEL_SIZE);
+		AABBColliderComponent& collider = candel.addComponent<AABBColliderComponent>(ColliderIds::CANDEL, rigidbody, CANDEL_SIZE);
 		collider.setFixedBoundingBox(true);
 
 		float xPos = (TABLE_SIZE.x - CANDEL_SIZE.x) * xMod / 2.0f;

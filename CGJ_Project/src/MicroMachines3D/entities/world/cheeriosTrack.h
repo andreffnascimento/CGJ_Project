@@ -4,6 +4,10 @@
 
 #include "MicroMachines3D/common/include.h"
 
+#include "MicroMachines3D/scripts/collisionResolver/cherrioColliderResolver.h"
+
+
+
 
 class CheeriosTrack : public SceneEntity
 {
@@ -106,7 +110,8 @@ private:
 
 		Coords3f cheerioSize = Coords3f({ CHEERIO_SIZE.x, CHEERIO_OUTER_RADIUS * 3.0f, CHEERIO_SIZE.z });
 		RigidbodyComponent& rigidbody = cheerio.addComponent<RigidbodyComponent>(rigidbodyType, mass, drag, angularDrag);
-		AABBColliderComponent& collider = cheerio.addComponent<AABBColliderComponent>((unsigned int)ColliderIds::CHEERIO, rigidbody, cheerioSize);
+		AABBColliderComponent& collider = cheerio.addComponent<AABBColliderComponent>(ColliderIds::CHEERIO, rigidbody, cheerioSize);
+		collider.setCollisionResolver(new CheerioCollisionResolver(scene, collider));
 		collider.setFixedBoundingBox(true);
 		collider.setRestitutionCocoefficient(0.1f);
 
