@@ -50,6 +50,7 @@ public:
 public:
 	void initialize(const Scene& scene) const;
 	void simulate(const Scene& scene, float ts);
+	void syncTransforms(const Scene& scene);
 	void updateTransforms(const Scene& scene);
 
 

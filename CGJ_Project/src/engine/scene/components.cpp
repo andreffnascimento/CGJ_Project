@@ -105,21 +105,21 @@ MeshComponent::MeshComponent(const MeshComponent& mesh, const Entity& entity)
 void ScriptComponent::onCreate() const
 {
 	for (auto& script : _scripts)
-		script.get()->onCreate();
+		script->onCreate();
 }
 
 
 void ScriptComponent::onFixedUpdate(float ts) const
 {
 	for (auto& script : _scripts)
-		script.get()->onFixedUpdate(ts);
+		script->onFixedUpdate(ts);
 }
 
 
 void ScriptComponent::onUpdate(float ts) const
 {
 	for (auto& script : _scripts)
-		script.get()->onUpdate(ts);
+		script->onUpdate(ts);
 }
 
 

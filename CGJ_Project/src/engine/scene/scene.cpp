@@ -16,8 +16,8 @@
 void Scene::onCreate()
 {
 	// initialize all the script components
-	for (auto& script : _registry.getComponents<ScriptComponent>())
-		script.second.onCreate();
+	for (auto& scriptIterator : _registry.getComponents<ScriptComponent>())
+		scriptIterator.second.onCreate();
 
 	// initialize the transform matrices
 	for (auto& transformIterator : _registry.getComponents<TransformComponent>())
@@ -46,6 +46,9 @@ void Scene::onUpdate(float ts)
 	for (auto& scriptIterator : _registry.getComponents<ScriptComponent>())
 		scriptIterator.second.onUpdate(ts);
 
+	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
+	physicsEngine.syncTransforms(*this);
+
 	// processes the physics world
 	_timeAccumulator += ts;
 	while (_timeAccumulator >= PhysicsEngine::PHYSICS_SIMULATION_MIN_INTERVAL)
@@ -56,7 +59,6 @@ void Scene::onUpdate(float ts)
 	}
 
 	// update the transforms using the physics engine data
-	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
 	physicsEngine.updateTransforms(*this);
 
 	// update entity transform matrixes

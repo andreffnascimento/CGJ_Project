@@ -22,7 +22,7 @@ public:
 		DYNAMIC
 	};
 
-private:
+public:
 	RigidbodyType _type = RigidbodyComponent::RigidbodyType::DYNAMIC;
 	float _mass = 1.0f;
 	float _drag = 0.0f;

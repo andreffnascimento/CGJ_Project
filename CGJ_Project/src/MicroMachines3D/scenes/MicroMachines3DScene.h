@@ -52,8 +52,6 @@ private:
 		Transform::translate(table, { 0.0f, -TABLE_SIZE.y, 0.0f });
 
 		Car car = Car(this);
-		Transform::translateTo(car, { 0.0f, CAR_BOTTOM_SIZE.y / 2.0f + CAR_FLOOR_DISTANCE + CAR_SPAWN_HEIGHT, TABLE_SIZE.z / 3.0f });
-		Transform::rotate(car, { 0.0f, 90.0f, 0.0f });
 
 		CheeriosTrack cheeriosTrack = CheeriosTrack(this);
 

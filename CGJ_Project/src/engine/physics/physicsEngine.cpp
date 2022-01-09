@@ -55,16 +55,27 @@ void PhysicsEngine::simulate(const Scene& scene, float ts)
 }
 
 
+void PhysicsEngine::syncTransforms(const Scene& scene)
+{
+	std::unordered_map<EntityHandle, RigidbodyComponent>& rigidbodyComponents = scene.getSceneComponents<RigidbodyComponent>();
+	for (auto& rigidbodyIterator : rigidbodyComponents)
+	{
+		RigidbodyComponent& rigidbody = rigidbodyIterator.second;
+		if (!Transform::updated(*rigidbody.transform))
+			_syncRigidbodyWithTransform(scene.getEntityById(rigidbodyIterator.first), rigidbody);
+	}
+}
+
+
 void PhysicsEngine::updateTransforms(const Scene& scene)
 {
 	std::unordered_map<EntityHandle, RigidbodyComponent>& rigidbodyComponents = scene.getSceneComponents<RigidbodyComponent>();
 	for (auto& rigidbodyIterator : rigidbodyComponents)
 	{
-		EntityHandle entityId = rigidbodyIterator.first;
 		RigidbodyComponent& rigidbody = rigidbodyIterator.second;
 		if (!rigidbody._sleeping)
 		{
-			Entity entity = scene.getEntityById(entityId);
+			Entity entity = scene.getEntityById(rigidbodyIterator.first);
 			Transform::translateTo(entity, rigidbody._position);
 			Transform::rotateTo(entity, rigidbody._rotation);
 		}
@@ -79,9 +90,8 @@ void PhysicsEngine::_initializeRigidbodies(const Scene& scene) const
 	std::unordered_map<EntityHandle, RigidbodyComponent>& _rigidbodyComponents = scene.getSceneComponents<RigidbodyComponent>();
 	for (auto& rigidbodyIterator : _rigidbodyComponents)
 	{
-		EntityHandle entityId = rigidbodyIterator.first;
 		RigidbodyComponent& rigidbody = rigidbodyIterator.second;
-		Entity entity = scene.getEntityById(entityId);
+		Entity entity = scene.getEntityById(rigidbodyIterator.first);
 		rigidbody.transform = &entity.transform();
 		_syncRigidbodyWithTransform(entity, rigidbody);	
 	}
@@ -124,11 +134,7 @@ void PhysicsEngine::_simulateRigidbodyMovement(const Scene& scene, float ts) con
 	std::unordered_map<EntityHandle, RigidbodyComponent>& rigidbodyComponents = scene.getSceneComponents<RigidbodyComponent>();
 	for (auto& rigidbodyIterator : rigidbodyComponents)
 	{
-		Entity entity = scene.getEntityById(rigidbodyIterator.first);
 		RigidbodyComponent& rigidbody = rigidbodyIterator.second;
-		if (!Transform::updated(*rigidbody.transform))
-			_syncRigidbodyWithTransform(entity, rigidbody);
-
 		if (!rigidbody._sleeping || rigidbody._usesGravity)
 			_processRigidbodyMovement(scene, rigidbody, ts);
 	}
