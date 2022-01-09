@@ -61,6 +61,8 @@ public:
 	inline const Coords3f& angularVelocity() const	{ return _angularVelocity; }
 	inline bool sleeping() const					{ return _sleeping; }
 
+	inline void setdrag(float drag)						{ _drag = drag; }
+	inline void setAngularDrag(float angularDrag)		{ _angularDrag = angularDrag; }
 	inline void setDragThreshold(float dragThreshold)	{ _dragThreshold = dragThreshold; }
 	inline void setUsesGravity(bool usesGravity)		{ _usesGravity = usesGravity; }
 	inline void setSleepThreshold(float sleepThreshold) { _sleepThreshold = sleepThreshold; }

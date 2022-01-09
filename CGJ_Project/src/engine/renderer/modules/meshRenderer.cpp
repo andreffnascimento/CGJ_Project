@@ -72,15 +72,20 @@ void Renderer::_sortTranslucentMeshInstancesInto(const Scene& scene, RendererDat
 		translucentMeshInstancesToDistance[&translucentMeshInstance] = distance;
 	}
 	
+
 	while (translucentMeshInstancesToDistance.size() > 0)
 	{
-		const std::pair<const MeshComponent* const, const TransformComponent*>* nearestMesh = nullptr;
-		float minDistance = std::numeric_limits<float>::max();
+		auto translucentMeshIterator = translucentMeshInstancesToDistance.cbegin();
+		if (translucentMeshIterator == translucentMeshInstancesToDistance.cend())
+			break;
 
-		for (const auto& translucentMeshIterator : translucentMeshInstancesToDistance)
+		const std::pair<const MeshComponent* const, const TransformComponent*>* nearestMesh = translucentMeshIterator->first;
+		float minDistance = translucentMeshIterator->second;
+
+		for (; translucentMeshIterator != translucentMeshInstancesToDistance.cend(); translucentMeshIterator++)
 		{
-			const std::pair<const MeshComponent* const, const TransformComponent*>* mesh = translucentMeshIterator.first;
-			float distance = translucentMeshIterator.second;
+			const std::pair<const MeshComponent* const, const TransformComponent*>* mesh = translucentMeshIterator->first;
+			float distance = translucentMeshIterator->second;
 
 			if (distance < minDistance)
 			{

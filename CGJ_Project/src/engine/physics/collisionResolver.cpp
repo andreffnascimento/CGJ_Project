@@ -16,7 +16,7 @@ CollisionResolver::CollisionResolver(AABBColliderComponent& collider)
 
 void CollisionResolver::addCollision(const AABBColliderComponent& otherCollider, const Coords3f& collisionNormal, const Coords3f& relativeVelocity, float impulse)
 {
-	if (_collider.rigidbody().type() == RigidbodyComponent::RigidbodyType::STATIC)
+	if (_collider.rigidbody()->type() == RigidbodyComponent::RigidbodyType::STATIC)
 		return;
 
 	_collisions.emplace_back(otherCollider, collisionNormal, relativeVelocity, impulse);
@@ -49,7 +49,7 @@ void CollisionResolver::updateVelocity(Coords3f& velocity)
 
 bool CollisionResolver::isMoving() const
 {
-	return !_collider.rigidbody().sleeping() && _collider.rigidbody().type() != RigidbodyComponent::RigidbodyType::STATIC;
+	return !_collider.rigidbody()->sleeping() && _collider.rigidbody()->type() != RigidbodyComponent::RigidbodyType::STATIC;
 }
 
 
@@ -93,7 +93,7 @@ void CollisionResolver::_initCollisionProcessing()
 
 void CollisionResolver::_processCollision(const Collision& collision)
 {
-	Coords3f impulseForce = collision.impulse() * _collider.rigidbody().invMass() * collision.collisionNormal();
+	Coords3f impulseForce = collision.impulse() * _collider.rigidbody()->invMass() * collision.collisionNormal();
 	_collider.collisionResolver()->_impulses.emplace_back(impulseForce);
 }
 

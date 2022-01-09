@@ -4,6 +4,10 @@
 
 #include "MicroMachines3D/common/include.h"
 
+#include "MicroMachines3D/scripts/butters/buttersDriftScript.h"
+
+
+
 
 class Butters : public SceneEntity
 {
@@ -13,7 +17,6 @@ public:
 		: SceneEntity(scene->createEntity("Butters"))
 	{
 		GroupComponent& group = addComponent<GroupComponent>();
-
 		MeshComponent mesh = MeshComponent(createCube(), BUTTER_MATERIAL);
 		
 		_createButter(scene, group, mesh,  40.0f,  00.0f, 05.0f, 25.0f);
@@ -32,6 +35,8 @@ public:
 		_createButter(scene, group, mesh, -30.0f,  29.5f, 15.0f, 03.0f);
 		_createButter(scene, group, mesh, -15.0f,  21.0f, 15.0f, 04.0f);
 		_createButter(scene, group, mesh, -15.0f,  29.0f, 15.0f, 04.0f);
+
+		addComponent<ScriptComponent>(std::make_shared<ButtersDriftScript>(scene));
 	}
 
 

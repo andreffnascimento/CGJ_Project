@@ -63,7 +63,7 @@ void Renderer::_addToColliderInstanceBuffer(RendererData::SubmitInstanceBuffer& 
 void Renderer::_applyColliderTransform(const AABBColliderComponent& collider) const
 {
 	TransformComponent transform = TransformComponent();
-	Transform::translateTo(transform, collider.rigidbody().position());
+	Transform::translateTo(transform, collider.rigidbody()->position());
 	Transform::scaleTo(transform, collider.boundingBox() * 2.0f);
 
 	pushMatrix(MODEL);

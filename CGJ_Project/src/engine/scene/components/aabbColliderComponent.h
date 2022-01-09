@@ -32,7 +32,7 @@ public:
 	~AABBColliderComponent();
 
 	inline const Coords3f& boundingBox() const			{ return _boundingBox; }
-	inline const RigidbodyComponent& rigidbody() const	{ return *_rigidbody; }
+	inline RigidbodyComponent* rigidbody() const		{ return _rigidbody; }
 	inline CollisionResolver* collisionResolver() const { return _collisionResolver; }
 	inline unsigned int id() const						{ return _id; }
 

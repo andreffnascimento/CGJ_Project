@@ -92,6 +92,7 @@
     <ClInclude Include="src\MicroMachines3D\scripts\collisionResolver\carCollisionResolver.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\collisionResolver\cherrioColliderResolver.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\manager\game\raceManagerScript.h" />
+    <ClInclude Include="src\MicroMachines3D\scripts\butters\buttersDriftScript.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />

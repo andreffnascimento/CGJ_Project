@@ -239,6 +239,7 @@
     <ClInclude Include="src\MicroMachines3D\entities\world\candels.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\cheeriosTrack.h" />
     <ClInclude Include="src\MicroMachines3D\scenes\MicroMachines3DScene.h" />
+    <ClInclude Include="src\MicroMachines3D\scripts\butters\buttersDriftScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\candels\candelsLightScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\car\carMovementScript.h" />
     <ClInclude Include="src\MicroMachines3D\common\colliderIds.h" />
