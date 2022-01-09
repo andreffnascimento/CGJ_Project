@@ -15,7 +15,7 @@ extern float mNormal3x3[9];
 
 
 
-#include <iostream>
+
 void Renderer::renderMeshes(const Scene& scene) const
 {
 	if (!_shader.isProgramValid())

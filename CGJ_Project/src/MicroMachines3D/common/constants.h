@@ -35,6 +35,8 @@ constexpr int   WHEEL_RINGS = 20;
 constexpr int   WHEEL_SIDES = 20;
 
 
+
+
 constexpr float CHEERIO_INNER_RADIUS = 0.15f;
 constexpr float CHEERIO_OUTER_RADIUS = 0.375f;
 constexpr int   CHEERIO_RINGS = 20;
@@ -45,12 +47,25 @@ constexpr Coords3f CHEERIO_SIZE = { 3.45f, 6.0f, 3.45f };
 constexpr float CHEERIO_SPACING = 2.0f * CHEERIO_OUTER_RADIUS * CHEERIO_SIZE.x;
 constexpr float TRACK_WIDTH = 6.0f * CHEERIO_SPACING;
 
+
+
+
 constexpr float CANDEL_HEIGHT = 1.0f;
 constexpr float CANDEL_RADIUS = 0.5f;
 constexpr int   CANDEL_SIDES = 20;
 
 constexpr Coords3f CANDEL_SIZE = { 3.0f, 5.0f, 3.0f };
 constexpr Coords3f CANDEL_TOP_SIZE = { 0.3f, 1.0f, 0.3f };
+
+
+
+
+constexpr float ORANGE_RADIUS = 0.5f;
+constexpr int ORANGE_DIVISIONS = 20;
+
+constexpr Coords3f ORANGE_SIZE = { 6.0f, 6.0f, 6.0f };
+
+constexpr int N_ORANGES = 7;
 
 
 

@@ -76,6 +76,16 @@ public:
 
 
 
+public:
+	void reset()
+	{
+		_forwardForce = 0.0f;
+		_backwardsForce = 0.0f;
+	}
+
+
+
+
 private:
 	void _calculateForwardForce(float ts)
 	{

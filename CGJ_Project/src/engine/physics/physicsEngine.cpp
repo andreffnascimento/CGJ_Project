@@ -55,14 +55,18 @@ void PhysicsEngine::simulate(const Scene& scene, float ts)
 }
 
 
-void PhysicsEngine::syncTransforms(const Scene& scene)
+void PhysicsEngine::syncTransforms(const Scene& scene) const
 {
 	std::unordered_map<EntityHandle, RigidbodyComponent>& rigidbodyComponents = scene.getSceneComponents<RigidbodyComponent>();
 	for (auto& rigidbodyIterator : rigidbodyComponents)
 	{
 		RigidbodyComponent& rigidbody = rigidbodyIterator.second;
-		if (!Transform::updated(*rigidbody.transform))
+		if (!rigidbody.transform->updated())
+		{
+			Entity entity = scene.getEntityById(rigidbodyIterator.first);
+			Transform::calculateTransformMatrix(entity);
 			_syncRigidbodyWithTransform(scene.getEntityById(rigidbodyIterator.first), rigidbody);
+		}
 	}
 }
 
@@ -93,7 +97,7 @@ void PhysicsEngine::_initializeRigidbodies(const Scene& scene) const
 		RigidbodyComponent& rigidbody = rigidbodyIterator.second;
 		Entity entity = scene.getEntityById(rigidbodyIterator.first);
 		rigidbody.transform = &entity.transform();
-		_syncRigidbodyWithTransform(entity, rigidbody);	
+		_syncRigidbodyWithTransform(entity, rigidbody);
 	}
 }
 
@@ -151,6 +155,7 @@ void PhysicsEngine::_simulateCollisions(const Scene& scene, float ts) const
 		{
 			EntityHandle entityId = entityColliderIterator.first;
 			AABBColliderComponent& entityCollider = entityColliderIterator.second;
+
 			if (!entityCollider._collisionResolver->isMoving())
 				continue;
 

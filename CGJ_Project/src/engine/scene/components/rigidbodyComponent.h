@@ -22,7 +22,7 @@ public:
 		DYNAMIC
 	};
 
-public:
+private:
 	RigidbodyType _type = RigidbodyComponent::RigidbodyType::DYNAMIC;
 	float _mass = 1.0f;
 	float _drag = 0.0f;
@@ -30,7 +30,7 @@ public:
 	float _dragThreshold = 1.0f;
 	bool _usesGravity = false;
 
-	const TransformComponent* transform = nullptr;		// pointer to the entity transform for efficiency reasons
+	const TransformComponent* transform = nullptr;
 	Coords3f _position = Coords3f();
 	Quaternion _rotation = Coords3f();
 	Coords3f _velocity = Coords3f();
@@ -66,6 +66,9 @@ public:
 	inline void setDragThreshold(float dragThreshold)	{ _dragThreshold = dragThreshold; }
 	inline void setUsesGravity(bool usesGravity)		{ _usesGravity = usesGravity; }
 	inline void setSleepThreshold(float sleepThreshold) { _sleepThreshold = sleepThreshold; }
+
+	inline void setPosition(const Coords3f& position) { _position = position; }
+	inline void setRotation(const Coords3f& rotation) { _rotation = rotation; }
 
 	inline void addRelativeForce(const Coords3f& value) { addRelativeForce(Force(Force::ForceType::LINEAR, value)); }
 	inline void addAbsoluteForce(const Coords3f& value) { addAbsoluteForce(Force(Force::ForceType::LINEAR, value)); }

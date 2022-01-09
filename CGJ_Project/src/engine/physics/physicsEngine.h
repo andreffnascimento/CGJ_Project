@@ -23,7 +23,7 @@ public:
 	static constexpr float DRAG_SLOW_CONSTANT = 10.0f;
 
 	static constexpr bool SHOW_COLLIDERS = false;
-	static constexpr unsigned int COLLISION_ITERATIONS = 2;
+	static constexpr unsigned int COLLISION_ITERATIONS = 4;
 	static constexpr float PHYSICS_SIMULATION_MIN_INTERVAL = 0.02f;
 	static constexpr float PHYSICS_SIMULATION_MAX_INTERVAL = 0.13f;
 
@@ -50,7 +50,7 @@ public:
 public:
 	void initialize(const Scene& scene) const;
 	void simulate(const Scene& scene, float ts);
-	void syncTransforms(const Scene& scene);
+	void syncTransforms(const Scene& scene) const;
 	void updateTransforms(const Scene& scene);
 
 

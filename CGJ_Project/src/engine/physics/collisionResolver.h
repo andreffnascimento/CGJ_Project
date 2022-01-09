@@ -73,12 +73,7 @@ protected:
 
 
 protected:
-	virtual void _initCollisionProcessing();
 	virtual void _processCollision(const Collision& collision);
-	virtual void _terminateCollisionProcessing();
-	virtual void _initVelocityProcessing(Coords3f& velocity);
-	virtual void _processVelocity(Coords3f& velocity, const Coords3f& impulse);
-	virtual void _terminateVelocityProcessing(Coords3f& velocity);
 
 };
 

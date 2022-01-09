@@ -25,23 +25,25 @@ void CollisionResolver::addCollision(const AABBColliderComponent& otherCollider,
 
 void CollisionResolver::processCollisions()
 {
-	_initCollisionProcessing();
 	for (const auto& collision : _collisions)
 		_processCollision(collision);
 
 	_collisions.clear();
-	_terminateCollisionProcessing();
 }
 
 
 void CollisionResolver::updateVelocity(Coords3f& velocity)
 {
-	_initVelocityProcessing(velocity);
+	Coords3f finalImpulse = Coords3f();
 	for (const auto& impulse : _impulses)
-		_processVelocity(velocity, impulse);
+	{
+		finalImpulse.x = std::abs(finalImpulse.x) > std::abs(impulse.x) ? finalImpulse.x : impulse.x;
+		finalImpulse.y = std::abs(finalImpulse.y) > std::abs(impulse.y) ? finalImpulse.y : impulse.y;
+		finalImpulse.z = std::abs(finalImpulse.z) > std::abs(impulse.z) ? finalImpulse.z : impulse.z;
+	}
 
 	_impulses.clear();
-	_terminateVelocityProcessing(velocity);
+	velocity += finalImpulse;
 }
 
 
@@ -85,38 +87,8 @@ void CollisionResolver::_setBlacklist(unsigned long long computeIdsFlag)
 
 
 
-void CollisionResolver::_initCollisionProcessing()
-{
-	// empty
-}
-
-
 void CollisionResolver::_processCollision(const Collision& collision)
 {
 	Coords3f impulseForce = collision.impulse() * _collider.rigidbody()->invMass() * collision.collisionNormal();
 	_collider.collisionResolver()->_impulses.emplace_back(impulseForce);
-}
-
-
-void CollisionResolver::_terminateCollisionProcessing()
-{
-	// empty
-}
-
-
-void CollisionResolver::_initVelocityProcessing(Coords3f& velocity)
-{
-	// empty
-}
-
-
-void CollisionResolver::_processVelocity(Coords3f& velocity, const Coords3f& impulse)
-{
-	velocity += impulse;
-}
-
-
-void CollisionResolver::_terminateVelocityProcessing(Coords3f& velocity)
-{
-	// empty
 }

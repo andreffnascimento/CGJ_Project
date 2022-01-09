@@ -32,6 +32,8 @@ public:
 
 	inline const TransformMatrix& transformMatrix() const { return _worldTransform; }
 
+	inline bool updated() const { return _locallyUpdated && _globallyUpdated; }
+
 public:
 	friend class Transform;
 };

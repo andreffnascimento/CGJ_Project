@@ -36,6 +36,7 @@ void Scene::onFixedUpdate(float ts)		// prevents the physics engine to break whe
 
 	// simulate physics
 	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
+	physicsEngine.syncTransforms(*this);
 	physicsEngine.simulate(*this, ts);
 }
 
@@ -45,10 +46,7 @@ void Scene::onUpdate(float ts)
 	// update entity scripts
 	for (auto& scriptIterator : _registry.getComponents<ScriptComponent>())
 		scriptIterator.second.onUpdate(ts);
-
-	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
-	physicsEngine.syncTransforms(*this);
-
+	
 	// processes the physics world
 	_timeAccumulator += ts;
 	while (_timeAccumulator >= PhysicsEngine::PHYSICS_SIMULATION_MIN_INTERVAL)
@@ -57,8 +55,9 @@ void Scene::onUpdate(float ts)
 		_timeAccumulator -= fixedTs;
 		onFixedUpdate(fixedTs);
 	}
-
+	
 	// update the transforms using the physics engine data
+	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
 	physicsEngine.updateTransforms(*this);
 
 	// update entity transform matrixes

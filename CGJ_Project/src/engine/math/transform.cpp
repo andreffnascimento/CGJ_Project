@@ -6,17 +6,6 @@ typedef Transform::transform_quaternion_func_t	transform_quaternion_func_t;
 
 
 
-bool Transform::updated(const Entity& entity)
-{
-	return updated(entity.transform());
-}
-
-bool Transform::updated(const TransformComponent& transform)
-{
-	return transform._locallyUpdated && transform._globallyUpdated;
-}
-
-
 const TransformMatrix& Transform::calculateTransformMatrix(const Entity& entity)
 {
 	TransformComponent& transform = entity.transform();

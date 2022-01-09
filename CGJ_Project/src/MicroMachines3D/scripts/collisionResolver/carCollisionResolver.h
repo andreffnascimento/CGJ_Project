@@ -4,6 +4,7 @@
 
 #include "MicroMachines3D/common/include.h"
 
+#include "MicroMachines3D/scripts/manager/game/raceManagerScript.h"
 #include "MicroMachines3D/scripts/butters/buttersDriftScript.h"
 
 
@@ -15,7 +16,8 @@ class CarCollisionResolver : public CollisionResolver
 private:
 	const Scene* _scene;
 
-	ButtersDriftScript* buttersDriftScript = nullptr;
+	RaceManagerScript* _raceManagerScript = nullptr;
+	ButtersDriftScript* _buttersDriftScript = nullptr;
 
 	unsigned int _nCheerioCollisions = 0;
 
@@ -35,43 +37,34 @@ public:
 		CollisionResolver::init();
 		_setBlacklist(0);	// car collides with everything
 
-		buttersDriftScript = dynamic_cast<ButtersDriftScript*>(_scene->getEntityByTag("Butters").getComponent<ScriptComponent>().getScriptByTag("ButtersDriftScript"));
+		_buttersDriftScript = dynamic_cast<ButtersDriftScript*>(_scene->getEntityByTag("Butters").getComponent<ScriptComponent>().getScriptByTag("ButtersDriftScript"));
+		_raceManagerScript = dynamic_cast<RaceManagerScript*>(_scene->getEntityByTag("GameManager").getComponent<ScriptComponent>().getScriptByTag("RaceManagerScript"));
 	}
 
 
 
 
 protected:
-	void _initCollisionProcessing() override
-	{
-		_nCheerioCollisions = 0;
-	}
-
-
 	void _processCollision(const Collision& collision) override
 	{
-		if (collision.collider().id() == ColliderIds::CHEERIO)
+		switch (collision.collider().id())
 		{
-			_nCheerioCollisions++;
-		}
 
-		else if (collision.collider().id() == ColliderIds::BUTTER)
-		{
-			buttersDriftScript->addDriftingBody(_collider.rigidbody());
+		case ColliderIds::CHEERIO:
+			_nCheerioCollisions++;
+			break;
+		
+		case ColliderIds::ORANGES:
+			_raceManagerScript->setColliderWithOranges(true);
 			return;
+
+		case ColliderIds::BUTTER:
+			_buttersDriftScript->addDriftingBody(_collider.rigidbody());
+			return;
+
 		}
 
 		CollisionResolver::_processCollision(collision);
-	}
-
-
-	void _terminateVelocityProcessing(Coords3f& velocity) override
-	{
-		if (_nCheerioCollisions == 0)
-			return;
-
-		velocity.x /= _nCheerioCollisions;
-		velocity.z /= _nCheerioCollisions;
 	}
 
 };

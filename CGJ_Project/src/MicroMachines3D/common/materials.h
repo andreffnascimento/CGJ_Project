@@ -100,6 +100,17 @@ constexpr Material CANDEL_ON_MATERIAL = {
 
 
 
+constexpr Material ORANGE_MATERIAL = {
+	{ 0.5f, 0.25f, 0.0f, 1.0f },
+	{ 1.0f, 0.5f,  0.0f, 1.0f },
+	{ 1.0f, 0.5f,  0.0f, 1.0f },
+	{ 0.0f, 0.0f,  0.0f, 0.0f },
+	10.0f,
+};
+
+
+
+
 constexpr Material BUTTER_MATERIAL = {
 	{ 0.30f, 0.30f, 0.10f, 1.0f },
 	{ 0.80f, 0.80f, 0.10f, 0.4f },

@@ -47,8 +47,6 @@ public:
 
 
 public:
-	static bool updated(const Entity& entity);
-	static bool updated(const TransformComponent& transform);
 	static const TransformMatrix& calculateTransformMatrix(const Entity& entity);
 	static const TransformMatrix& calculateTransformMatrix(TransformComponent& transform);	// only considers local transformations
 	static void decomposeTransformMatrix(const Entity& entity, Coords3f& outTranslation, Quaternion& outRotation, Coords3f& outScale);
