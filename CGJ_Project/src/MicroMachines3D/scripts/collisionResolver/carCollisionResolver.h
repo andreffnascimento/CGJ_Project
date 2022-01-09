@@ -13,6 +13,8 @@ class CarCollisionResolver : public CollisionResolver
 private:
 	const Scene* _scene;
 
+	unsigned int _nCheerioCollisions = 0;
+
 
 
 
@@ -34,12 +36,31 @@ public:
 
 
 protected:
-	void _processCollision(const Collision& collision)
+	void _initCollisionProcessing() override
 	{
-		if (collision.collider().id() == ColliderIds::BUTTER)
+		_nCheerioCollisions = 0;
+	}
+
+
+	void _processCollision(const Collision& collision) override
+	{
+		if (collision.collider().id() == ColliderIds::CHEERIO)
+			_nCheerioCollisions++;
+
+		else if (collision.collider().id() == ColliderIds::BUTTER)
 			return;
 
 		CollisionResolver::_processCollision(collision);
+	}
+
+
+	void _terminateVelocityProcessing(Coords3f& velocity) override
+	{
+		if (_nCheerioCollisions == 0)
+			return;
+
+		velocity.x /= _nCheerioCollisions;
+		velocity.z /= _nCheerioCollisions;
 	}
 
 };

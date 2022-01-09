@@ -140,7 +140,7 @@ void PhysicsEngine::_simulateCollisions(const Scene& scene, float ts) const
 	std::unordered_map<EntityHandle, AABBColliderComponent>& colliderComponents = scene.getSceneComponents<AABBColliderComponent>();
 	for (unsigned int i = 0; i < PhysicsEngine::COLLISION_ITERATIONS; i++)
 	{
-		//_resetCollider(scene);
+		_resetCollider(scene);
 		for (auto& entityColliderIterator : colliderComponents)
 		{
 			EntityHandle entityId = entityColliderIterator.first;
