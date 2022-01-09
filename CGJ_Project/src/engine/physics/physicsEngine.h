@@ -58,6 +58,7 @@ public:
 private:
 	void _initializeRigidbodies(const Scene& scene) const;
 	void _initializeColliders(const Scene& scene) const;
+	void _syncRigidbodyWithTransform(const Entity& entity, RigidbodyComponent& rigidbody) const;
 
 
 private:

@@ -27,7 +27,7 @@ public:
 	void init() override
 	{
 		CollisionResolver::init();
-		_setBlacklist({  });	// car collides with everything
+		_setBlacklist(0);	// car collides with everything
 	}
 
 

@@ -30,6 +30,7 @@ private:
 	float _dragThreshold = 1.0f;
 	bool _usesGravity = false;
 
+	const TransformComponent* transform = nullptr;		// pointer to the entity transform for efficiency reasons
 	Coords3f _position = Coords3f();
 	Quaternion _rotation = Coords3f();
 	Coords3f _velocity = Coords3f();

@@ -134,7 +134,8 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>freeglut.lib;glew32.lib;DevIL.lib;assimp.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <Profile>true</Profile>
+      <Profile>false</Profile>
+      <OptimizeReferences>false</OptimizeReferences>
     </Link>
     <PreBuildEvent>
       <Command>Dependencies.exe</Command>
@@ -259,6 +260,7 @@
     <ClInclude Include="src\engine\renderer\vsShaderLib.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\manager\game\fogToggleScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\manager\game\globalLightScript.h" />
+    <ClInclude Include="src\MicroMachines3D\scripts\manager\game\raceManagerScript.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />

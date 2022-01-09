@@ -82,14 +82,8 @@ void PhysicsEngine::_initializeRigidbodies(const Scene& scene) const
 		EntityHandle entityId = rigidbodyIterator.first;
 		RigidbodyComponent& rigidbody = rigidbodyIterator.second;
 		Entity entity = scene.getEntityById(entityId);
-
-		Coords3f translation;
-		Quaternion rotation;
-		Coords3f scale;
-		Transform::decomposeTransformMatrix(entity, translation, rotation, scale);
-
-		rigidbody._position = translation;
-		rigidbody._rotation = rotation;
+		rigidbody.transform = &entity.transform();
+		_syncRigidbodyWithTransform(entity, rigidbody);	
 	}
 }
 
@@ -112,6 +106,17 @@ void PhysicsEngine::_initializeColliders(const Scene& scene) const
 }
 
 
+void PhysicsEngine::_syncRigidbodyWithTransform(const Entity& entity, RigidbodyComponent& rigidbody) const
+{
+	Coords3f translation;
+	Quaternion rotation;
+	Coords3f scale;
+	Transform::decomposeTransformMatrix(entity, translation, rotation, scale);
+	rigidbody._position = translation;
+	rigidbody._rotation = rotation;
+}
+
+
 
 
 void PhysicsEngine::_simulateRigidbodyMovement(const Scene& scene, float ts) const
@@ -119,7 +124,11 @@ void PhysicsEngine::_simulateRigidbodyMovement(const Scene& scene, float ts) con
 	std::unordered_map<EntityHandle, RigidbodyComponent>& rigidbodyComponents = scene.getSceneComponents<RigidbodyComponent>();
 	for (auto& rigidbodyIterator : rigidbodyComponents)
 	{
+		Entity entity = scene.getEntityById(rigidbodyIterator.first);
 		RigidbodyComponent& rigidbody = rigidbodyIterator.second;
+		if (!Transform::updated(*rigidbody.transform))
+			_syncRigidbodyWithTransform(entity, rigidbody);
+
 		if (!rigidbody._sleeping || rigidbody._usesGravity)
 			_processRigidbodyMovement(scene, rigidbody, ts);
 	}
@@ -131,7 +140,7 @@ void PhysicsEngine::_simulateCollisions(const Scene& scene, float ts) const
 	std::unordered_map<EntityHandle, AABBColliderComponent>& colliderComponents = scene.getSceneComponents<AABBColliderComponent>();
 	for (unsigned int i = 0; i < PhysicsEngine::COLLISION_ITERATIONS; i++)
 	{
-		_resetCollider(scene);
+		//_resetCollider(scene);
 		for (auto& entityColliderIterator : colliderComponents)
 		{
 			EntityHandle entityId = entityColliderIterator.first;
@@ -158,7 +167,6 @@ void PhysicsEngine::_resetCollider(const Scene& scene) const
 	for (auto& colliderIterator : colliderComponents)
 	{
 		AABBColliderComponent& collider = colliderIterator.second;
-		collider._collisionResolver->reset();
 		if (!collider._rigidbody->_sleeping && !collider._fixedBoundingBox)
 			PhysicsEngine::rotateBoundingBox(collider, collider._rigidbody->_rotation);
 	}
@@ -191,20 +199,19 @@ void PhysicsEngine::_resolveCollisions(const Scene& scene, float ts) const
 
 void PhysicsEngine::_processRigidbodyMovement(const Scene& scene, RigidbodyComponent& rigidbody, float ts) const
 {
-	Coords3f linearForce = Coords3f();
-	Coords3f angularForce = Coords3f();
-
 	rigidbody._sleeping = false;
 	if (rigidbody._type == RigidbodyComponent::RigidbodyType::DYNAMIC)
 	{
+		Coords3f linearForce = Coords3f();
+		Coords3f angularForce = Coords3f();
 		_combineForces(rigidbody, linearForce, angularForce);
 		_calculateFinalAngularForce(rigidbody, angularForce);
 		_calculateFinalLinearForce(rigidbody, linearForce);
+		Coords3f rotation = _calculateExpectedRotation(rigidbody, ts);
+		_calculateExpectedAngularVelocity(rigidbody, angularForce, ts);
+		_calculateExpectedLinearVelocity(rigidbody, linearForce, Quaternion(rotation), ts);
 	}
 
-	Coords3f rotation = _calculateExpectedRotation(rigidbody, ts);
-	_calculateExpectedAngularVelocity(rigidbody, angularForce, ts);
-	_calculateExpectedLinearVelocity(rigidbody, linearForce, Quaternion(rotation), ts);
 	rigidbody._position += rigidbody._velocity * ts;
 	_processSleepThreshold(rigidbody);
 }

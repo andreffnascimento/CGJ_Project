@@ -14,30 +14,25 @@ CollisionResolver::CollisionResolver(AABBColliderComponent& collider)
 
 
 
-void CollisionResolver::reset()
-{
-	_collisions.clear();
-	_impulses.clear();
-}
-
-
 void CollisionResolver::addCollision(const AABBColliderComponent& otherCollider, const Coords3f& collisionNormal, const Coords3f& relativeVelocity, float impulse)
 {
+	if (_collider.rigidbody().type() == RigidbodyComponent::RigidbodyType::STATIC)
+		return;
+
 	_collisions.emplace_back(otherCollider, collisionNormal, relativeVelocity, impulse);
 }
 
 
 void CollisionResolver::processCollisions()
 {
-	if (_collider.rigidbody().type() == RigidbodyComponent::RigidbodyType::STATIC)
-		return;
-
 	for (const auto& collision : _collisions)
-			_processCollision(collision);
+		_processCollision(collision);
+
+	_collisions.clear();
 }
 
 
-void CollisionResolver::updateVelocity(Coords3f& velocity) const
+void CollisionResolver::updateVelocity(Coords3f& velocity)
 {
 	Coords3f finalImpulse = Coords3f();
 	for (const auto& impulse : _impulses)
@@ -48,6 +43,7 @@ void CollisionResolver::updateVelocity(Coords3f& velocity) const
 	}
 
 	velocity += finalImpulse;
+	_impulses.clear();
 }
 
 
@@ -56,21 +52,6 @@ void CollisionResolver::updateVelocity(Coords3f& velocity) const
 bool CollisionResolver::isMoving() const
 {
 	return !_collider.rigidbody().sleeping() && _collider.rigidbody().type() != RigidbodyComponent::RigidbodyType::STATIC;
-}
-
-
-
-
-void CollisionResolver::_setWhitelist(std::initializer_list<unsigned int> initializerList)
-{
-	_computeListType = CollisionResolver::ComputeListType::WHITELIST;
-	_computeIds = std::list<unsigned int>(initializerList);
-}
-
-void CollisionResolver::_setBlacklist(std::initializer_list<unsigned int> initializerList)
-{
-	_computeListType = CollisionResolver::ComputeListType::BLACKLIST;
-	_computeIds = std::list<unsigned int>(initializerList);
 }
 
 
@@ -85,7 +66,22 @@ void CollisionResolver::init()
 bool CollisionResolver::ignoreCollision(const AABBColliderComponent& otherCollider) const
 {
 	bool whitelist = _computeListType == CollisionResolver::ComputeListType::WHITELIST;
-	return whitelist != (std::find(_computeIds.begin(), _computeIds.end(), otherCollider.id()) != _computeIds.end());
+	return whitelist != (bool)(_computeIdsFlag & (unsigned long long)otherCollider.id());
+}
+
+
+
+
+void CollisionResolver::_setWhitelist(unsigned long long computeIdsFlag)
+{
+	_computeListType = CollisionResolver::ComputeListType::WHITELIST;
+	_computeIdsFlag = computeIdsFlag;
+}
+
+void CollisionResolver::_setBlacklist(unsigned long long computeIdsFlag)
+{
+	_computeListType = CollisionResolver::ComputeListType::BLACKLIST;
+	_computeIdsFlag = computeIdsFlag;
 }
 
 

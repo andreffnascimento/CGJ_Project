@@ -6,12 +6,12 @@
 
 struct ColliderIds
 {
-	constexpr static unsigned int CAR = 1;
-	constexpr static unsigned int TABLE = 2;
-	constexpr static unsigned int CANDEL = 3;
-	constexpr static unsigned int CHEERIO = 4;
-	constexpr static unsigned int ORANGES = 5;
-	constexpr static unsigned int BUTTER = 6;
+	constexpr static unsigned int CAR		= 0x1 << 0;
+	constexpr static unsigned int TABLE		= 0x1 << 1;
+	constexpr static unsigned int CANDEL	= 0x1 << 2;
+	constexpr static unsigned int CHEERIO	= 0x1 << 3;
+	constexpr static unsigned int ORANGES	= 0x1 << 4;
+	constexpr static unsigned int BUTTER	= 0x1 << 5;
 };
 
 

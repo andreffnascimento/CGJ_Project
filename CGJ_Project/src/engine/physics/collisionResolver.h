@@ -2,9 +2,6 @@
 #define __engine_physics_collisionResolver__
 
 
-#include <list>
-#include <initializer_list>
-
 #include "engine/physics/collision.h"
 
 #include "engine/scene/components.h"
@@ -35,7 +32,7 @@ protected:
 
 private:
 	ComputeListType _computeListType = ComputeListType::WHITELIST;
-	std::list<unsigned int> _computeIds = std::list<unsigned int>();
+	unsigned long long _computeIdsFlag = 0x0;
 
 
 
@@ -54,10 +51,9 @@ public:
 
 
 public:
-	void reset();
 	void addCollision(const AABBColliderComponent& otherCollider, const Coords3f& collisionNormal, const Coords3f& relativeVelocity, float impulse);
 	void processCollisions();
-	void updateVelocity(Coords3f& velocity) const;
+	void updateVelocity(Coords3f& velocity);
 
 
 public:
@@ -72,8 +68,8 @@ public:
 
 
 protected:
-	void _setWhitelist(std::initializer_list<unsigned int> initializerList);
-	void _setBlacklist(std::initializer_list<unsigned int> initializerList);
+	void _setWhitelist(unsigned long long computeIdsFlag);
+	void _setBlacklist(unsigned long long computeIdsFlag);
 
 
 protected:
