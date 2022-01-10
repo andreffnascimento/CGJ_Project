@@ -27,6 +27,8 @@ private:
 	void _createTrack(Scene* scene, GroupComponent& group)
 	{
 		MeshComponent mesh = MeshComponent(createTorus(CHEERIO_INNER_RADIUS, CHEERIO_OUTER_RADIUS, CHEERIO_RINGS, CHEERIO_SIDES), CHEERIO_MATERIAL);
+		mesh.setTextureMode(Texture::TextureMode::MODULATE_DIFFUSE);
+		mesh.addTexture(Renderer::create2dTexture("src/MicroMachines3D/textures/cheerios/tire.jpg"));
 
 		int currentId = 0;
 		float drawX = 18.0f;
@@ -116,7 +118,7 @@ private:
 		collider.setRestitutionCocoefficient(0.1f);
 
 		Transform::scaleTo(cheerio, CHEERIO_SIZE);
-		Transform::translate(cheerio, { xPos, CHEERIO_SIZE.y / 5.0f, yPos });
+		Transform::translate(cheerio, { xPos, 0.5f, yPos });
 	}
 
 };
