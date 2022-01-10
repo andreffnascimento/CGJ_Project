@@ -76,7 +76,7 @@ private:
 public:
 	OrangesManagerScript() = delete;
 	OrangesManagerScript(const OrangesManagerScript&) = default;
-	OrangesManagerScript(Scene* scene): Script(scene) {}
+	OrangesManagerScript(Scene* scene): Script(scene, "OrangesManagerScript") {}
 	~OrangesManagerScript() = default;
 
 
@@ -114,6 +114,15 @@ public:
 
 		for (auto& orangeData : _orangesData)
 			(this->*_processOrangesStateFuncs[(unsigned int)orangeData.orangeState])(orangeData, ts);
+	}
+
+
+
+
+public:
+	void resetOrangesSpeed()
+	{
+		_timeModifier = 1.0f;
 	}
 
 

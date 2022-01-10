@@ -5,6 +5,7 @@
 #include "MicroMachines3D/common/include.h"
 
 #include "MicroMachines3D/scripts/car/carMovementScript.h"
+#include "MicroMachines3D/scripts/oranges/orangesManagerScript.h"
 
 
 
@@ -22,6 +23,7 @@ private:
 	RigidbodyComponent* _carRigidbody = nullptr;
 
 	CarMovementScript* _carMovementScript = nullptr;
+	OrangesManagerScript* _orangesManagerScript = nullptr;
 
 	bool _colliderWithOrange = false;
 
@@ -40,6 +42,7 @@ public:
 		_car = _scene->getEntityByTag("Car");
 		_carRigidbody = &_car.getComponent<RigidbodyComponent>();
 		_carMovementScript = dynamic_cast<CarMovementScript*>(_scene->getEntityByTag("Car").getComponent<ScriptComponent>().getScriptByTag("CarMovementScript"));
+		_orangesManagerScript = dynamic_cast<OrangesManagerScript*>(_scene->getEntityByTag("Oranges").getComponent<ScriptComponent>().getScriptByTag("OrangesManagerScript"));
 		_respawn();
 	}
 
@@ -67,6 +70,7 @@ private:
 		_carRigidbody->setVelocity(Coords3f({ 0.0f, 0.0f, 0.0f }));
 		_carRigidbody->setAngularVelocity(Coords3f({ 0.0f, 0.0f, 0.0f }));
 		_carMovementScript->reset();
+		_orangesManagerScript->resetOrangesSpeed();
 		_colliderWithOrange = false;
 	}
 
