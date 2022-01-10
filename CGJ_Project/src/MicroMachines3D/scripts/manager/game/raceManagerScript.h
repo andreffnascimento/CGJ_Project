@@ -66,7 +66,7 @@ private:
 	void _respawn()
 	{
 		Transform::translateTo(_car, Coords3f({ 0.0f, CAR_BOTTOM_SIZE.y / 2.0f + CAR_FLOOR_DISTANCE + CAR_SPAWN_HEIGHT, TABLE_SIZE.z / 3.0f }));
-		Transform::rotateTo(_car, Coords3f({ 0.0f, 90.0f, 0.0f }));
+		Transform::rotateTo(_car, Coords3f({ 0.0f, -90.0f, 0.0f }));
 		_carRigidbody->setVelocity(Coords3f({ 0.0f, 0.0f, 0.0f }));
 		_carRigidbody->setAngularVelocity(Coords3f({ 0.0f, 0.0f, 0.0f }));
 		_carMovementScript->reset();

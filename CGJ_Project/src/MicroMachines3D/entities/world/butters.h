@@ -29,12 +29,12 @@ public:
 		_createButter(scene, group, mesh, -68.0f,  00.0f, 06.0f, 04.0f);
 		_createButter(scene, group, mesh, -62.0f,  13.0f, 06.0f, 04.0f);
 
-		_createButter(scene, group, mesh, -45.0f,  20.0f, 15.0f, 02.0f);
-		_createButter(scene, group, mesh, -45.0f,  30.0f, 15.0f, 02.0f);
-		_createButter(scene, group, mesh, -30.0f,  20.5f, 15.0f, 03.0f);
-		_createButter(scene, group, mesh, -30.0f,  29.5f, 15.0f, 03.0f);
-		_createButter(scene, group, mesh, -15.0f,  21.0f, 15.0f, 04.0f);
-		_createButter(scene, group, mesh, -15.0f,  29.0f, 15.0f, 04.0f);
+		_createButter(scene, group, mesh,  45.0f,  20.0f, 15.0f, 02.0f);
+		_createButter(scene, group, mesh,  45.0f,  30.0f, 15.0f, 02.0f);
+		_createButter(scene, group, mesh,  30.0f,  20.5f, 15.0f, 03.0f);
+		_createButter(scene, group, mesh,  30.0f,  29.5f, 15.0f, 03.0f);
+		_createButter(scene, group, mesh,  15.0f,  21.0f, 15.0f, 04.0f);
+		_createButter(scene, group, mesh,  15.0f,  29.0f, 15.0f, 04.0f);
 
 		addComponent<ScriptComponent>(std::make_shared<ButtersDriftScript>(scene));
 	}

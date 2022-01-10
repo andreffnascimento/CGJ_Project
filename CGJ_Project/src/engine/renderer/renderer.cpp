@@ -167,15 +167,14 @@ void Renderer::initSceneRendering() const
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glUseProgram(_shader.getProgramIndex());
-	_activateTextures();
 	_submitFogData();
 }
 
 
 void Renderer::terminateSceneRendering() const
 {
-	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
 
@@ -242,15 +241,6 @@ GLuint Renderer::_setupShaders()
 }
 
 
-void Renderer::_activateTextures() const
-{
-	for (unsigned int i = 0; i < _textures.nTextures; i++)
-	{
-		glActiveTexture(GL_TEXTURE0 + i);
-		glBindTexture(_textures.textureType[i], _textures.textureData[i]);
-	}
-}
-
 void Renderer::_submitFogData() const
 {
 	glUniform1i(_uniformLocation[RendererData::ShaderUniformType::FOG_ACTIVE], _fog.active);
@@ -263,5 +253,4 @@ void Renderer::_submitFogData() const
 	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::FOG_START_DISTANCE], _fog.startDistance);
 	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::FOG_END_DISTANCE], _fog.endDistance);
 	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::FOG_DENSITY], _fog.density);
-
 }

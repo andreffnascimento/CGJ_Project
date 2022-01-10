@@ -70,7 +70,6 @@ public:
 
 private:
 	GLuint _setupShaders();
-	void _activateTextures() const;
 	void _submitFogData() const;
 
 

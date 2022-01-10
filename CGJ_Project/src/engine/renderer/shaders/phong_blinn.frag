@@ -7,6 +7,7 @@ const uint LIGHT_TYPE_POINT = 2;
 const uint LIGHT_TYPE_SPOT = 3;
 
 const uint MAX_TEXTURES = 2;
+const uint TEXTURE_MODE_NONE = 0;
 const uint TEXTURE_MODE_MODULATE_DIFFUSE = 1;
 const uint TEXTURE_MODE_REPLACE_DIFFUSE = 2;
 
@@ -29,7 +30,7 @@ struct MaterialData {
 struct TextureData {
 	uint nTextures;
 	uint mode;
-	sampler2D maps;
+	sampler2D maps[MAX_TEXTURES];
 };
 
 
@@ -153,7 +154,7 @@ vec3 processModulateDiffuseTexture(FragLightingData fragLighting) {
 	vec3 texel = vec3(1.0);
 	for (int i = 0; i < textureData.nTextures; i++)
 		texel *= texture(textureData.maps[i], dataIn.textureCoords);
-
+		
 	return max(fragLighting.diffuse * texel + fragLighting.specular, lightingData.darkTextureCoefficient * texel);
 }
 
@@ -202,7 +203,7 @@ void main() {
 	fragLighting.specularIntensity *= lightingData.specularCoefficient;
 	vec3 rgbColor = vec3(0.0);
 	
-	if (textureData.nTextures == 0)
+	if (textureData.mode == TEXTURE_MODE_NONE)
 		rgbColor = max(fragLighting.diffuse + fragLighting.specular, fragLighting.ambient);
 	
 	else if (textureData.mode == TEXTURE_MODE_MODULATE_DIFFUSE)
