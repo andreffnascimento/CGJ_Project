@@ -207,7 +207,8 @@ GLuint Renderer::_setupShaders()
 
 	_uniformLocation[RendererData::ShaderUniformType::N_TEXTURES]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.nTextures");
 	_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MODE]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.mode");
-	_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAPS]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.maps");
+	_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAP_0]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.maps[0]");
+	_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAP_1]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.maps[1]");
 
 	_uniformLocation[RendererData::ShaderUniformType::N_LIGHTS]				= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.nLights");
 	_uniformLocation[RendererData::ShaderUniformType::LIGHT_TYPE]			= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.type");

@@ -60,9 +60,9 @@ struct FogData {
 
 
 struct FragLightingData {
-	vec3 ambient;
-	vec3 specular;
-	vec3 diffuse;
+	vec4 ambient;
+	vec4 specular;
+	vec4 diffuse;
 
 	float diffuseIntensity;
 	float specularIntensity;
@@ -150,8 +150,8 @@ FragLightingData processSpotLight(FragLightingData fragLighting, uint index, vec
 
 
 
-vec3 processModulateDiffuseTexture(FragLightingData fragLighting) {
-	vec3 texel = vec3(1.0);
+vec4 processModulateDiffuseTexture(FragLightingData fragLighting) {
+	vec4 texel = vec4(1.0);
 	for (int i = 0; i < textureData.nTextures; i++)
 		texel *= texture(textureData.maps[i], dataIn.textureCoords);
 		
@@ -159,8 +159,8 @@ vec3 processModulateDiffuseTexture(FragLightingData fragLighting) {
 }
 
 
-vec3 processReplaceDiffuseTexture(FragLightingData fragLighting) {
-	vec3 texel = vec3(1.0);
+vec4 processReplaceDiffuseTexture(FragLightingData fragLighting) {
+	vec4 texel = vec4(1.0);
 	for (int i = 0; i < textureData.nTextures; i++)
 		texel *= texture(textureData.maps[i], dataIn.textureCoords);
 
@@ -178,9 +178,9 @@ void main() {
 
 	// process all the lights of the scene
 	FragLightingData fragLighting;
-	fragLighting.ambient = materialData.ambient.rgb * lightingData.ambientCoefficient;
-	fragLighting.diffuse = materialData.diffuse.rgb * lightingData.diffuseCoefficient;
-	fragLighting.specular = materialData.specular.rgb * lightingData.specularCoefficient;
+	fragLighting.ambient = materialData.ambient * lightingData.ambientCoefficient;
+	fragLighting.diffuse = materialData.diffuse * lightingData.diffuseCoefficient;
+	fragLighting.specular = materialData.specular * lightingData.specularCoefficient;
 	fragLighting.diffuseIntensity = 0.0;
 	fragLighting.specularIntensity = 0.0;
 
@@ -201,7 +201,7 @@ void main() {
 	fragLighting.specular *= fragLighting.specularIntensity;
 	fragLighting.diffuseIntensity *= lightingData.diffuseCoefficient;
 	fragLighting.specularIntensity *= lightingData.specularCoefficient;
-	vec3 rgbColor = vec3(0.0);
+	vec4 rgbColor = vec4(0.0);
 	
 	if (textureData.mode == TEXTURE_MODE_NONE)
 		rgbColor = max(fragLighting.diffuse + fragLighting.specular, fragLighting.ambient);
@@ -227,5 +227,5 @@ void main() {
 			fogAmount = pow(exp(-fogData.density * fragDistance), 2);
 	}
 
-	colorOut = vec4(mix(fogData.color.rgb, rgbColor, fogAmount), materialData.diffuse.a);
+	colorOut = vec4(mix(fogData.color.rgb, rgbColor.rgb, fogAmount), materialData.diffuse.a);
 }

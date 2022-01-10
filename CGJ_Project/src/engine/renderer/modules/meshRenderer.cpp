@@ -191,10 +191,14 @@ void Renderer::_submitMeshData(const MeshData& meshData) const
 	const Texture& texture = meshData.texture();
 	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::N_TEXTURES],   (unsigned int)texture.nTextures());
 	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MODE], (unsigned int)texture.textureMode());
-	glUniform1uiv(_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAPS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.textureIds());
+	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAP_0], texture.textureIds()[0]);
+	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAP_1], texture.textureIds()[1]);
 
 	for (unsigned int i = 0; i < texture.nTextures(); i++)
+	{
+		glActiveTexture(GL_TEXTURE0 + i);
 		glBindTexture(_textures.textureType[texture.textureIds()[i]], _textures.textureData[texture.textureIds()[i]]);
+	}
 }
 
 
