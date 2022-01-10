@@ -34,20 +34,24 @@ private:
 
 
 private:
-	typedef void (OrangesManagerScript::*process_oranges_state_func_t)(OrangeData&);
+	typedef void (OrangesManagerScript::*process_oranges_state_func_t)(OrangeData&, float);
 
 
 	
 
 private:
-	constexpr static float MIN_VELOCITY = 2.0f;
-	constexpr static float MAX_VELOCITY = 20.0f;
+	constexpr static float MIN_VELOCITY = 1.0f;
+	constexpr static float MAX_VELOCITY = 10.0f;
 	constexpr static float MAX_ANGLE_VARIATION = 75.0f;
 
 	constexpr static float SIZE_TO_MOVE = 4.0f;
 	constexpr static float SIZE_TO_RESPAWN = 0.2f;
-	constexpr static Coords3f INCREASE_SIZE_FACTOR = { 1.2f, 1.2f, 1.2f };
-	constexpr static Coords3f DECREASE_SIZE_FACTOR = { 0.8f, 0.8f, 0.8f };
+	constexpr static float INCREASE_SIZE_FACTOR = 500.0f;
+	constexpr static float DECREASE_SIZE_FACTOR = 0.002f;
+
+	constexpr static float INCREASE_TIME_FACTOR = 0.1f;
+
+	constexpr static float ORANGE_ROTATION_SPEED_FACTOR = 20.0f;
 
 
 
@@ -63,6 +67,8 @@ private:
 	std::list<OrangeData> _orangesData = std::list<OrangeData>();
 
 	process_oranges_state_func_t _processOrangesStateFuncs[(unsigned int)OrangeState::N_STATES] = {};
+
+	float _timeModifier = 1.0f;		// used to increase the speed of the oranges as the game progresses
 
 
 
@@ -104,8 +110,10 @@ public:
 
 	void onUpdate(float ts) override
 	{
+		_timeModifier += ts * OrangesManagerScript::INCREASE_TIME_FACTOR;
+
 		for (auto& orangeData : _orangesData)
-			(this->*_processOrangesStateFuncs[(unsigned int)orangeData.orangeState])(orangeData);
+			(this->*_processOrangesStateFuncs[(unsigned int)orangeData.orangeState])(orangeData, ts);
 	}
 
 
@@ -118,22 +126,29 @@ private:
 		orangeData.orangeState = OrangesManagerScript::OrangeState::SPAWNING;
 		Transform::translateTo(orangeData.orange, _calculateOrangeSpawnCoords(orangeData.spawnTableSide));
 		Transform::scaleTo(orangeData.orange, Coords3f({ SIZE_TO_RESPAWN, SIZE_TO_RESPAWN, SIZE_TO_RESPAWN }));
+		Transform::rotateTo(orangeData.orange, Coords3f({ 0.0f, 0.0f, 0.0f }));
 	}
 
 
-	void _spawnOrange(OrangeData& orangeData)
+	void _spawnOrange(OrangeData& orangeData, float ts)
 	{
-		Transform::scale(orangeData.orange, OrangesManagerScript::INCREASE_SIZE_FACTOR);
+		float increaseFactor = std::pow(OrangesManagerScript::INCREASE_SIZE_FACTOR, ts);
+		Transform::scale(orangeData.orange, Coords3f({ increaseFactor, increaseFactor, increaseFactor}));
 		if (orangeData.orange.transform().scale().x > SIZE_TO_MOVE)
 		{
+			float directionAngle = orangeData.spawnTableSide * 90.0f + _spawnAngle(_randomGenerator);
+			Coords3f orangeVelocity = _calculateOrangeSpawnVelocity(directionAngle);
+			Coords3f orangeAngularVelocity = Coords3f({ orangeVelocity.length() / (ORANGE_SIZE.x * 0.5f), 0.0f, 0.0f });
 			orangeData.orangeState = OrangesManagerScript::OrangeState::MOVING;
-			orangeData.orangeRigidbody->setVelocity(_calculateOrangeSpawnVelocity(orangeData.spawnTableSide));
+			orangeData.orangeRigidbody->setVelocity(orangeVelocity);
+			orangeData.orangeRigidbody->setAngularVelocity(orangeAngularVelocity * ORANGE_ROTATION_SPEED_FACTOR);
 			Transform::scaleTo(orangeData.orange, ORANGE_SIZE);
+			Transform::rotateTo(orangeData.orange, Coords3f({ 0.0f, directionAngle, 0.0f }));
 		}
 	}
 
 
-	void _moveOrange(OrangeData& orangeData)
+	void _moveOrange(OrangeData& orangeData, float ts)
 	{
 		const Coords3f& orangePosition = orangeData.orangeRigidbody->position();
 		if (std::abs(orangePosition.x) > (TABLE_SIZE.x) / 2.0f || std::abs(orangePosition.z) > (TABLE_SIZE.z) / 2.0f)
@@ -144,9 +159,10 @@ private:
 	}
 
 
-	void _despawnOrange(OrangeData& orangeData)
+	void _despawnOrange(OrangeData& orangeData, float ts)
 	{
-		Transform::scale(orangeData.orange, OrangesManagerScript::DECREASE_SIZE_FACTOR);
+		float decreaseFactor = std::pow(OrangesManagerScript::DECREASE_SIZE_FACTOR, ts);
+		Transform::scale(orangeData.orange, Coords3f({ decreaseFactor, decreaseFactor, decreaseFactor }));
 		if (orangeData.orange.transform().scale().x < OrangesManagerScript::SIZE_TO_RESPAWN)
 			_generateOrangeInfo(orangeData);
 	}
@@ -174,13 +190,12 @@ private:
 	}
 
 
-	Coords3f _calculateOrangeSpawnVelocity(int spawnTableSide)
+	Coords3f _calculateOrangeSpawnVelocity(float directionAngle)
 	{
 		Coords3f spawnDirection = Coords3f({ 0.0f, 0.0f, 1.0f });
-		float baseAngle = spawnTableSide * 90.0f + _spawnAngle(_randomGenerator);
-		Quaternion velocityRotation(Coords3f({ 0.0f, 1.0f, 0.0f }), baseAngle);
+		Quaternion velocityRotation(Coords3f({ 0.0f, 1.0f, 0.0f }), directionAngle);
 		velocityRotation.rotatePoint(spawnDirection);
-		spawnDirection *= _spawnVelocity(_randomGenerator);
+		spawnDirection *= _timeModifier * _spawnVelocity(_randomGenerator);
 		return spawnDirection;
 	}
 

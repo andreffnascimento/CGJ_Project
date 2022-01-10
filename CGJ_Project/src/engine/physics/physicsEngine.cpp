@@ -218,21 +218,13 @@ void PhysicsEngine::_processRigidbodyMovement(const Scene& scene, RigidbodyCompo
 		_combineForces(rigidbody, linearForce, angularForce);
 		_calculateFinalAngularForce(rigidbody, angularForce);
 		_calculateFinalLinearForce(rigidbody, linearForce);
-		Coords3f rotation = _calculateExpectedRotation(rigidbody, ts);
 		_calculateExpectedAngularVelocity(rigidbody, angularForce, ts);
-		_calculateExpectedLinearVelocity(rigidbody, linearForce, Quaternion(rotation), ts);
+		_calculateExpectedLinearVelocity(rigidbody, linearForce, ts);
 	}
 
 	rigidbody._position += rigidbody._velocity * ts;
+	rigidbody._rotation.rotate(rigidbody._angularVelocity * ts);
 	_processSleepThreshold(rigidbody);
-}
-
-
-Coords3f PhysicsEngine::_calculateExpectedRotation(RigidbodyComponent& rigidbody, float ts) const
-{
-	Coords3f rotation = rigidbody._angularVelocity * ts;
-	rigidbody._rotation.rotate(rotation);
-	return rotation;
 }
 
 
@@ -272,8 +264,9 @@ void PhysicsEngine::_calculateExpectedAngularVelocity(RigidbodyComponent& rigidb
 }
 
 
-void PhysicsEngine::_calculateExpectedLinearVelocity(RigidbodyComponent& rigidbody, Coords3f& linearForce, const Quaternion& rotation, float ts) const
+void PhysicsEngine::_calculateExpectedLinearVelocity(RigidbodyComponent& rigidbody, Coords3f& linearForce, float ts) const
 {
+	Quaternion rotation = Quaternion(rigidbody._angularVelocity * ts);
 	rotation.rotatePoint(linearForce);
 	rotation.rotatePoint(rigidbody._velocity);
 	linearForce *= ts;

@@ -285,6 +285,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="src\MicroMachines3D\textures\lightwood.tga" />
+    <Image Include="src\MicroMachines3D\textures\orange\orange.jpg" />
     <Image Include="src\MicroMachines3D\textures\stone.tga" />
     <Image Include="src\MicroMachines3D\textures\table\checker.png" />
     <Image Include="src\MicroMachines3D\textures\table\lightwood.tga" />
