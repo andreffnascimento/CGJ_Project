@@ -168,6 +168,7 @@ void Renderer::initSceneRendering() const
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glUseProgram(_shader.getProgramIndex());
 	_submitFogData();
+	_submitTextureData();
 }
 
 
@@ -207,8 +208,8 @@ GLuint Renderer::_setupShaders()
 
 	_uniformLocation[RendererData::ShaderUniformType::N_TEXTURES]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.nTextures");
 	_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MODE]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.mode");
-	_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAP_0]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.maps[0]");
-	_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAP_1]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.maps[1]");
+	_uniformLocation[RendererData::ShaderUniformType::TEXTURE_IDS]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.ids");
+	_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAPS]	= glGetUniformLocation(_shader.getProgramIndex(), "textureData.maps");
 
 	_uniformLocation[RendererData::ShaderUniformType::N_LIGHTS]				= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.nLights");
 	_uniformLocation[RendererData::ShaderUniformType::LIGHT_TYPE]			= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.type");
@@ -254,4 +255,18 @@ void Renderer::_submitFogData() const
 	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::FOG_START_DISTANCE], _fog.startDistance);
 	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::FOG_END_DISTANCE], _fog.endDistance);
 	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::FOG_DENSITY], _fog.density);
+}
+
+void Renderer::_submitTextureData() const
+{
+	int textureMaps[RendererSettings::MAX_TEXTURES] = {};
+
+	for (unsigned int i = 0; i < _textures.nTextures; i++)
+	{
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(_textures.textureType[i], _textures.textureData[i]);
+		textureMaps[i] = i;
+	}
+	
+	glUniform1iv(_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAPS], _textures.nTextures, textureMaps);
 }

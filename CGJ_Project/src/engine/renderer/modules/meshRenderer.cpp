@@ -22,22 +22,15 @@ void Renderer::renderMeshes(const Scene& scene) const
 		throw std::string("Invalid shader program!");
 
 	_renderOpaqueMeshInstances();
-	_enableTranslucentRendering();
 
+	_enableTranslucentRendering();
 	RendererData::translucentMeshInstances_t sortedTranslucentMeshInstances = RendererData::translucentMeshInstances_t();
 	_sortTranslucentMeshInstancesInto(scene, sortedTranslucentMeshInstances);
 	_renderTranslucentMeshInstances(sortedTranslucentMeshInstances);
-	_enableOpaqueRendering();
+	_disableTranslucentRendering();
 }
 
 
-
-
-void Renderer::_enableOpaqueRendering() const
-{
-	glDepthMask(GL_TRUE);
-	glDisable(GL_BLEND);
-}
 
 
 void Renderer::_enableTranslucentRendering() const
@@ -46,6 +39,14 @@ void Renderer::_enableTranslucentRendering() const
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
+
+
+void Renderer::_disableTranslucentRendering() const
+{
+	glDepthMask(GL_TRUE);
+	glDisable(GL_BLEND);
+}
+
 
 
 
@@ -191,14 +192,7 @@ void Renderer::_submitMeshData(const MeshData& meshData) const
 	const Texture& texture = meshData.texture();
 	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::N_TEXTURES],   (unsigned int)texture.nTextures());
 	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MODE], (unsigned int)texture.textureMode());
-	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAP_0], texture.textureIds()[0]);
-	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAP_1], texture.textureIds()[1]);
-
-	for (unsigned int i = 0; i < texture.nTextures(); i++)
-	{
-		glActiveTexture(GL_TEXTURE0 + i);
-		glBindTexture(_textures.textureType[texture.textureIds()[i]], _textures.textureData[texture.textureIds()[i]]);
-	}
+	glUniform1uiv(_uniformLocation[RendererData::ShaderUniformType::TEXTURE_IDS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.textureIds());
 }
 
 

@@ -16,8 +16,8 @@ public:
 	{	
 		MeshComponent mesh = MeshComponent(createCube(), TABLE_MATERIAL);
 		mesh.setTextureMode(Texture::TextureMode::MODULATE_DIFFUSE);
-		mesh.addTexture(Renderer::create2dTexture("src/MicroMachines3D/textures/table/stone.tga"));
 		mesh.addTexture(Renderer::create2dTexture("src/MicroMachines3D/textures/table/lightwood.tga"));
+		mesh.addTexture(Renderer::create2dTexture("src/MicroMachines3D/textures/table/stone.tga"));
 
 		GroupComponent& group = addComponent<GroupComponent>();
 		createTop(scene, group, mesh);

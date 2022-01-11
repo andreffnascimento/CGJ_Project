@@ -6,7 +6,8 @@ const uint LIGHT_TYPE_DIRECTIONAL = 1;
 const uint LIGHT_TYPE_POINT = 2;
 const uint LIGHT_TYPE_SPOT = 3;
 
-const uint MAX_TEXTURES = 2;
+const uint MAX_TEXTURES = 20;
+const uint MAX_TEXTURES_PER_MESH = 2;
 const uint TEXTURE_MODE_NONE = 0;
 const uint TEXTURE_MODE_MODULATE_DIFFUSE = 1;
 const uint TEXTURE_MODE_REPLACE_DIFFUSE = 2;
@@ -30,6 +31,7 @@ struct MaterialData {
 struct TextureData {
 	uint nTextures;
 	uint mode;
+	uint ids[MAX_TEXTURES_PER_MESH];
 	sampler2D maps[MAX_TEXTURES];
 };
 
@@ -153,8 +155,8 @@ FragLightingData processSpotLight(FragLightingData fragLighting, uint index, vec
 vec4 processModulateDiffuseTexture(FragLightingData fragLighting) {
 	vec4 texel = vec4(1.0);
 	for (int i = 0; i < textureData.nTextures; i++)
-		texel *= texture(textureData.maps[i], dataIn.textureCoords);
-		
+		texel *= texture(textureData.maps[textureData.ids[i]], dataIn.textureCoords);
+	
 	return max(fragLighting.diffuse * texel + fragLighting.specular, lightingData.darkTextureCoefficient * texel);
 }
 
@@ -162,7 +164,7 @@ vec4 processModulateDiffuseTexture(FragLightingData fragLighting) {
 vec4 processReplaceDiffuseTexture(FragLightingData fragLighting) {
 	vec4 texel = vec4(1.0);
 	for (int i = 0; i < textureData.nTextures; i++)
-		texel *= texture(textureData.maps[i], dataIn.textureCoords);
+		texel *= texture(textureData.maps[textureData.ids[i]], dataIn.textureCoords);
 
 	return max(fragLighting.diffuseIntensity * texel + fragLighting.specular, lightingData.darkTextureCoefficient * texel);
 }
@@ -175,12 +177,11 @@ void main() {
 	vec3 normal = normalize(dataIn.normal);
 	vec3 eye = normalize(dataIn.eye);
 
-
 	// process all the lights of the scene
 	FragLightingData fragLighting;
-	fragLighting.ambient = materialData.ambient * lightingData.ambientCoefficient;
-	fragLighting.diffuse = materialData.diffuse * lightingData.diffuseCoefficient;
-	fragLighting.specular = materialData.specular * lightingData.specularCoefficient;
+	fragLighting.ambient = materialData.ambient;
+	fragLighting.diffuse = materialData.diffuse;
+	fragLighting.specular = materialData.specular;
 	fragLighting.diffuseIntensity = 0.0;
 	fragLighting.specularIntensity = 0.0;
 
@@ -197,10 +198,10 @@ void main() {
 
 
 	// generates the color of the fragment according to the texture mode
-	fragLighting.diffuse *= fragLighting.diffuseIntensity;
-	fragLighting.specular *= fragLighting.specularIntensity;
 	fragLighting.diffuseIntensity *= lightingData.diffuseCoefficient;
 	fragLighting.specularIntensity *= lightingData.specularCoefficient;
+	fragLighting.diffuse *= fragLighting.diffuseIntensity;
+	fragLighting.specular *= fragLighting.specularIntensity;
 	vec4 rgbColor = vec4(0.0);
 	
 	if (textureData.mode == TEXTURE_MODE_NONE)

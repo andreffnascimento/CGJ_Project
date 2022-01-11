@@ -71,6 +71,7 @@ public:
 private:
 	GLuint _setupShaders();
 	void _submitFogData() const;
+	void _submitTextureData() const;
 
 
 private:
@@ -86,8 +87,8 @@ private:
 
 
 private:
-	void _enableOpaqueRendering() const;
 	void _enableTranslucentRendering() const;
+	void _disableTranslucentRendering() const;
 
 	void _sortTranslucentMeshInstancesInto(const Scene& scene, RendererData::translucentMeshInstances_t& sortedTranslucentMeshInstancesOut) const;
 
