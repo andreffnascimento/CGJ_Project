@@ -70,7 +70,7 @@ MyMesh createQuad(float size_x, float size_y) {
 	return(amesh);
 }
 
-MyMesh createCubeWithTexCoords(float x, float z)
+MyMesh createCubeWithTexCoords(float u, float v)
 {
 	MyMesh amesh;
 	amesh.numIndexes = faceCount * 3;
@@ -84,7 +84,7 @@ MyMesh createCubeWithTexCoords(float x, float z)
 	size_t index = 0;
 	float adjustedTexCoords[sizeof(cubeTexCoords) / sizeof(float)];
 	
-	multiplyCubeTexCoordsByAspectRatio(x, z, adjustedTexCoords);
+	multiplyCubeTexCoordsByAspectRatio(u, v, adjustedTexCoords);
 
 	float data[(sizeof(cubeVertices) + sizeof(cubeNormals) + sizeof(adjustedTexCoords) + sizeof(cubeTangents)) / sizeof(float)];
 	memcpy(data + (index += 0), cubeVertices, sizeof(cubeVertices));
@@ -220,16 +220,16 @@ MyMesh createCone(float height, float baseRadius, int sides) {
 	return (computeVAO((p.size()-4)/2, &(p[2]), &(p[0]), sides, 0.0f));
 }
 
-void multiplyCubeTexCoordsByAspectRatio(float x, float z, float result[])
+void multiplyCubeTexCoordsByAspectRatio(float u, float v, float result[])
 {
 	const int numVertices = sizeof(cubeTexCoords) / sizeof(float);
 
 	for (int i = 0; i < numVertices; i++)
 	{
 		if		(i % 4 == 0)
-			result[i] = cubeTexCoords[i] * x;
+			result[i] = cubeTexCoords[i] * u;
 		else if (i % 4 == 1)
-			result[i] = cubeTexCoords[i] * z;
+			result[i] = cubeTexCoords[i] * v;
 		else if (i % 4 == 2)
 			result[i] = 0;
 		else
