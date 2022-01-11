@@ -106,7 +106,7 @@ constexpr float cubeTangents[] = {
 	1.0f, 0.0f, 0.0f, 0.0f
 };
 
-constexpr float cubeTexCoords[] = {
+/*constexpr float cubeTexCoords[] = {
 	0.0f, 6.0f, 0.0f, 1.0f,
 	0.0f, 0.0f, 0.0f, 1.0f,
 	9.6f, 0.0f, 0.0f, 1.0f,
@@ -136,6 +136,39 @@ constexpr float cubeTexCoords[] = {
 	0.0f, 0.0f, 0.0f, 1.0f,
 	9.6f, 0.0f, 0.0f, 1.0f,
 	9.6f, 6.0f, 0.0f, 1.0f
+};*/
+
+constexpr float cubeTexCoords[] = {
+	0.0f, 9.0f, 0.0f, 1.0f,
+	0.0f, 0.0f, 0.0f, 1.0f,
+	6.0f, 0.0f, 0.0f, 1.0f,
+	6.0f, 9.6f, 0.0f, 1.0f,
+
+	0.0f, 9.0f, 0.0f, 1.0f,
+	0.0f, 0.0f, 0.0f, 1.0f,
+	6.0f, 0.0f, 0.0f, 1.0f,
+	6.0f, 9.6f, 0.0f, 1.0f,
+
+	0.0f, 9.0f, 0.0f, 1.0f,
+	0.0f, 0.0f, 0.0f, 1.0f,
+	6.0f, 0.0f, 0.0f, 1.0f,
+	6.0f, 9.6f, 0.0f, 1.0f,
+
+	0.0f, 9.0f, 0.0f, 1.0f,
+	0.0f, 0.0f, 0.0f, 1.0f,
+	6.0f, 0.0f, 0.0f, 1.0f,
+	6.0f, 9.6f, 0.0f, 1.0f,
+
+	0.0f, 9.0f, 0.0f, 1.0f,
+	0.0f, 0.0f, 0.0f, 1.0f,
+	6.0f, 0.0f, 0.0f, 1.0f,
+	6.0f, 9.6f, 0.0f, 1.0f,
+
+	0.0f, 9.0f, 0.0f, 1.0f,
+	0.0f, 0.0f, 0.0f, 1.0f,
+	6.0f, 0.0f, 0.0f, 1.0f,
+	6.0f, 9.6f, 0.0f, 1.0f,
+
 };
 
 constexpr unsigned int cubeFaceIndex[] = {

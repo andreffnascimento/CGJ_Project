@@ -63,7 +63,7 @@ private:
 
 		Butters butters = Butters(this);
 
-		//CheckeredFlag flag = CheckeredFlag(this);
+		CheckeredFlag flag = CheckeredFlag(this);
 	}
 };
 

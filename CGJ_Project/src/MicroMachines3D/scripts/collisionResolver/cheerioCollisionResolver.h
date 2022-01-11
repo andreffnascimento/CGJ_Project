@@ -24,7 +24,7 @@ public:
 	void init() override
 	{
 		CollisionResolver::init();
-		_setWhitelist(ColliderIds::CAR | ColliderIds::CHEERIO | ColliderIds::CANDEL);
+		_setWhitelist(ColliderIds::CAR | ColliderIds::CHEERIO | ColliderIds::CANDEL | ColliderIds::TABLE);
 	}
 
 };

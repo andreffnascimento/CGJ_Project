@@ -17,7 +17,7 @@ public:
 		mesh.setTextureMode(Texture::TextureMode::MODULATE_DIFFUSE);
 		mesh.addTexture(Renderer::create2dTexture("src/MicroMachines3D/textures/flag/flag.jpg"));
 
-		_createFlag(scene, group, mesh, -2.0f * CAR_BOTTOM_SIZE.x, TABLE_SIZE.z / 3.0f, CAR_BUMPER_SIZE.x, TRACK_WIDTH);
+		_createFlag(scene, group, mesh, -2.0f * CAR_BOTTOM_SIZE.x, TABLE_SIZE.z / 3.0f, 2.0f * CAR_BUMPER_SIZE.x, TRACK_WIDTH);
 
 	}
 
