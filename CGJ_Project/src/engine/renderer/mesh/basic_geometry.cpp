@@ -21,6 +21,8 @@ Basic Revolution Geometry
 #include "engine/renderer/VertexAttrDef.h"
 #include "geometry.h"
 #include "cube.h"
+#include <iostream>
+
 
 
 GLuint VboId[2];
@@ -64,6 +66,49 @@ MyMesh createQuad(float size_x, float size_y) {
     // unbind the VAO
     glBindVertexArray(0);
   
+	amesh.type = GL_TRIANGLES;
+	return(amesh);
+}
+
+MyMesh createCubeWithTexCoords(float x, float z)
+{
+	MyMesh amesh;
+	amesh.numIndexes = faceCount * 3;
+
+	glGenVertexArrays(1, &(amesh.vao));
+	glBindVertexArray(amesh.vao);
+
+	glGenBuffers(2, VboId);
+	glBindBuffer(GL_ARRAY_BUFFER, VboId[0]);
+
+	size_t index = 0;
+	float adjustedTexCoords[sizeof(cubeTexCoords) / sizeof(float)];
+	
+	multiplyCubeTexCoordsByAspectRatio(x, z, adjustedTexCoords);
+
+	float data[(sizeof(cubeVertices) + sizeof(cubeNormals) + sizeof(adjustedTexCoords) + sizeof(cubeTangents)) / sizeof(float)];
+	memcpy(data + (index += 0), cubeVertices, sizeof(cubeVertices));
+	memcpy(data + (index += sizeof(cubeVertices) / sizeof(float)), cubeNormals, sizeof(cubeNormals));
+	memcpy(data + (index += sizeof(cubeNormals) / sizeof(float)), adjustedTexCoords, sizeof(adjustedTexCoords));
+	memcpy(data + (index += sizeof(adjustedTexCoords) / sizeof(float)), cubeTangents, sizeof(cubeTangents));
+	glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(VERTEX_COORD_ATTRIB);
+	glVertexAttribPointer(VERTEX_COORD_ATTRIB, 4, GL_FLOAT, 0, 0, 0);
+	glEnableVertexAttribArray(NORMAL_ATTRIB);
+	glVertexAttribPointer(NORMAL_ATTRIB, 4, GL_FLOAT, 0, 0, (void*)sizeof(cubeVertices));
+	glEnableVertexAttribArray(TEXTURE_COORD_ATTRIB);
+	glVertexAttribPointer(TEXTURE_COORD_ATTRIB, 4, GL_FLOAT, 0, 0, (void*)(sizeof(cubeVertices) + sizeof(cubeNormals)));
+	glEnableVertexAttribArray(TANGENT_ATTRIB);
+	glVertexAttribPointer(TANGENT_ATTRIB, 4, GL_FLOAT, 0, 0, (void*)(sizeof(cubeVertices) + sizeof(cubeNormals) + sizeof(adjustedTexCoords)));
+
+	//index buffer
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VboId[1]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * amesh.numIndexes, cubeFaceIndex, GL_STATIC_DRAW);
+
+	// unbind the VAO
+	glBindVertexArray(0);
+
 	amesh.type = GL_TRIANGLES;
 	return(amesh);
 }
@@ -175,6 +220,27 @@ MyMesh createCone(float height, float baseRadius, int sides) {
 	return (computeVAO((p.size()-4)/2, &(p[2]), &(p[0]), sides, 0.0f));
 }
 
+void multiplyCubeTexCoordsByAspectRatio(float x, float z, float result[])
+{
+	const int numVertices = sizeof(cubeTexCoords) / sizeof(float);
+
+	for (int i = 0; i < numVertices; i++)
+	{
+		if		(i % 4 == 0)
+			result[i] = cubeTexCoords[i] * x;
+		else if (i % 4 == 1)
+			result[i] = cubeTexCoords[i] * z;
+		else if (i % 4 == 2)
+			result[i] = 0;
+		else
+			result[i] = 1;
+
+		std::cout << result[i] << " ";
+
+		if (i % 4 == 3)
+			std::cout << std::endl;
+	}
+}
 
 MyMesh createPawn() {
 
@@ -266,6 +332,8 @@ MyMesh createPawn() {
 
 	return(computeVAO(numP, p, points, sides, smoothCos));
 }
+
+
 
 MyMesh computeVAO(int numP, float *p, float *points, int sides, float smoothCos) {
 	// Compute and store vertices
