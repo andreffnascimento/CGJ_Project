@@ -24,15 +24,19 @@ public:
 private:
 	Texture::TextureMode _textureMode = TextureMode::NONE;
 	unsigned int _textureIds[RendererSettings::MAX_TEXTURES_PER_MESH] = {};
+	unsigned int _normalIds[RendererSettings::MAX_TEXTURES_PER_MESH] = {};
 	size_t _nTextures = 0;
+	size_t _nNormals = 0;
 
 
 
 
 public:
 	inline const Texture::TextureMode& textureMode() const { return _textureMode; }
-	inline const unsigned int* textureIds() const  { return _textureIds; }
+	inline const unsigned int* textureIds() const { return _textureIds; }
+	inline const unsigned int* normalIds() const  { return _normalIds; }
 	inline size_t nTextures() const { return _nTextures; }
+	inline size_t nNormals() const { return _nNormals; }
 
 
 

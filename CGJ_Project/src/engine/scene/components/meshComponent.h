@@ -36,6 +36,7 @@ public:
 	inline void setEnabled(bool enabled)								{ _meshData->setEnabled(enabled); }
 	inline void setTextureMode(const Texture::TextureMode& textureMode) { _meshData->setTextureMode(textureMode); }
 	inline void addTexture(unsigned int textureId)						{ _meshData->addTexture(textureId); }
+	inline void addNormal(unsigned int normalId)						{ _meshData->addNormal(normalId); }
 
 	inline operator const MeshData&() const { return *_meshData; }
 };

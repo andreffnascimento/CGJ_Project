@@ -30,9 +30,11 @@ struct MaterialData {
 
 struct TextureData {
 	uint nTextures;
+	uint nNormals;
 	uint mode;
-	uint ids[MAX_TEXTURES_PER_MESH];
-	sampler2D maps[MAX_TEXTURES];
+	uint textureIds[MAX_TEXTURES_PER_MESH];
+	uint normalIds[MAX_TEXTURES_PER_MESH];
+	sampler2D maps[MAX_TEXTURES * 2];
 };
 
 
@@ -155,7 +157,7 @@ FragLightingData processSpotLight(FragLightingData fragLighting, uint index, vec
 vec4 processModulateDiffuseTexture(FragLightingData fragLighting) {
 	vec4 texel = vec4(1.0);
 	for (int i = 0; i < textureData.nTextures; i++)
-		texel *= texture(textureData.maps[textureData.ids[i]], dataIn.textureCoords);
+		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
 	
 	return max(fragLighting.diffuse * texel + fragLighting.specular, lightingData.darkTextureCoefficient * texel);
 }
@@ -164,7 +166,7 @@ vec4 processModulateDiffuseTexture(FragLightingData fragLighting) {
 vec4 processReplaceDiffuseTexture(FragLightingData fragLighting) {
 	vec4 texel = vec4(1.0);
 	for (int i = 0; i < textureData.nTextures; i++)
-		texel *= texture(textureData.maps[textureData.ids[i]], dataIn.textureCoords);
+		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
 
 	return max(fragLighting.diffuseIntensity * texel + fragLighting.specular, lightingData.darkTextureCoefficient * texel);
 }
@@ -174,8 +176,12 @@ vec4 processReplaceDiffuseTexture(FragLightingData fragLighting) {
 
 void main() {
 	colorOut = vec4(0.0);
-	vec3 normal = normalize(dataIn.normal);
 	vec3 eye = normalize(dataIn.eye);
+	vec3 normal = normalize(dataIn.normal);;
+	
+	// Calculate normal if a normal map is provided
+	for (int i = 0; i < textureData.nNormals; i++)
+		normal = normalize(2.0 * texture(textureData.maps[textureData.normalIds[i]], dataIn.textureCoords).rgb - 1.0);
 
 	// process all the lights of the scene
 	FragLightingData fragLighting;

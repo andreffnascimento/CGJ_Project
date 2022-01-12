@@ -14,6 +14,7 @@ class MeshData
 private:
 	MyMesh _mesh;
 	Texture _texture;
+
 	bool _enabled = true;
 
 
@@ -37,6 +38,7 @@ public:
 	void setMaterial(const Material& material);
 	void setTextureMode(const Texture::TextureMode& textureMode);
 	void addTexture(unsigned int textureId);
+	void addNormal(unsigned int normalId);
 	void setEnabled(bool enabled);
 
 };

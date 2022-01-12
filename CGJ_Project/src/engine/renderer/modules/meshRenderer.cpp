@@ -190,9 +190,11 @@ void Renderer::_submitMeshData(const MeshData& meshData) const
 	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::MATERIAL_SHININESS],    material.shininess);
 
 	const Texture& texture = meshData.texture();
-	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::N_TEXTURES],   (unsigned int)texture.nTextures());
+	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::N_TEXTURES], (unsigned int)texture.nTextures());
+	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::N_NORMALS],   (unsigned int)texture.nNormals());
 	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MODE], (unsigned int)texture.textureMode());
 	glUniform1uiv(_uniformLocation[RendererData::ShaderUniformType::TEXTURE_IDS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.textureIds());
+	glUniform1uiv(_uniformLocation[RendererData::ShaderUniformType::NORMAL_IDS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.normalIds());
 }
 
 
