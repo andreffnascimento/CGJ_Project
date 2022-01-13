@@ -39,9 +39,10 @@ private:
 	bool _running = false;
 	int _windowHandle = 0;
 	unsigned int _frameCount = 0;
-	
+
 	unsigned int _prevTime = 0;
 	float _ts = 0.0;
+	float _timeScale = 1.0f;
 
 	EventHandler _eventHandler = EventHandler();
 	PhysicsEngine _physicsEngine = PhysicsEngine();
@@ -80,6 +81,10 @@ public:
 public:
 	void setScene(Scene* scene);
 	void run();
+
+
+public:
+	void setTimeScale(float timeScale);
 
 
 

@@ -4,6 +4,9 @@
 
 #include "MicroMachines3D/common/include.h"
 
+#include "MicroMachines3D/scripts/manager/game/raceManagerScript.h"
+
+
 
 
 
@@ -12,6 +15,8 @@ class GlobalLightScript : public Script
 
 private:
 	const EventHandler* _eventHandler = nullptr;
+
+	const RaceManagerScript* _raceManagerScript = nullptr;
 
 	LightComponent* _globalLight = nullptr;
 
@@ -29,12 +34,16 @@ public:
 	void onCreate() override
 	{
 		_eventHandler = &Application::getEventHandler();
+		_raceManagerScript = dynamic_cast<RaceManagerScript*>(_scene->getEntityByTag("GameManager").getComponent<ScriptComponent>().getScriptByTag("RaceManagerScript"));
 		_globalLight = &_scene->getEntityByTag("GlobalLight").getComponent<LightComponent>();
 	}
 
 
 	void onUpdate(float ts) override
 	{
+		if (_raceManagerScript->paused())
+			return;
+
 		if (_eventHandler->keyState('N').pressed() || _eventHandler->keyState('n').pressed())
 			_globalLight->setEnabled(!_globalLight->isEnabled());
 	}
