@@ -13,7 +13,7 @@ public:
 		: SceneEntity(scene->createEntity("flags"))
 	{
 		GroupComponent& group = addComponent<GroupComponent>();
-		MeshComponent mesh = MeshComponent(createCubeWithTexCoords(2, 9), FLAG_MATERIAL);
+		MeshComponent mesh = MeshComponent(createCube(2, 9), FLAG_MATERIAL);
 		mesh.setTextureMode(Texture::TextureMode::MODULATE_DIFFUSE);
 		mesh.addTexture(Renderer::create2dTexture("src/MicroMachines3D/textures/flag/flag.jpg"));
 
