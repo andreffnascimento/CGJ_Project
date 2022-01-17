@@ -106,8 +106,9 @@ void Renderer::init()
 	}
 	ilInit();
 
-	// initialization of freetype library with font_name file
-	freeType_init(RendererSettings::FONT_NAME);
+	// setup shaders
+	if (!_setupShaders())
+		throw std::string("Unable to initialize the shaders");
 
 	// generates the texture names
 	glGenTextures(RendererSettings::MAX_TEXTURES, _textures.textureData);
@@ -118,9 +119,8 @@ void Renderer::init()
 	glEnable(GL_MULTISAMPLE);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-	// setup shaders
-	if (!_setupShaders())
-		throw std::string("Unable to initialize the shaders");
+	// initialization of freetype library with font_name file
+	freeType_init(RendererSettings::FONT_NAME);
 }
 
 
@@ -159,6 +159,7 @@ void Renderer::renderScene(const Scene& scene) const
 	renderLights(scene);
 	renderMeshes(scene);
 	renderColliders(scene);
+	renderCanvas(scene);
 	terminateSceneRendering();
 }
 
@@ -234,14 +235,20 @@ GLuint Renderer::_setupShaders()
 	std::cout << "InfoLog for Per Fragment Phong Lightning Shader\n" << _shader.getAllInfoLogs().c_str()  << "\n\n";
 
 	// Shader for bitmap Text
-	_shaderText.init();
-	_shaderText.loadShader(VSShaderLib::VERTEX_SHADER, "src/engine/renderer/shaders/text.vert");
-	_shaderText.loadShader(VSShaderLib::FRAGMENT_SHADER, "src/engine/renderer/shaders/text.frag");
+	_textShader.init();
+	_textShader.loadShader(VSShaderLib::VERTEX_SHADER, "src/engine/renderer/shaders/text.vert");
+	_textShader.loadShader(VSShaderLib::FRAGMENT_SHADER, "src/engine/renderer/shaders/text.frag");
 
-	glLinkProgram(_shaderText.getProgramIndex());
-	std::cout << "InfoLog for Text Rendering Shader\n" << _shaderText.getAllInfoLogs().c_str() << "\n\n";
+	glLinkProgram(_textShader.getProgramIndex());
+	std::cout << "InfoLog for Text Rendering Shader\n" << _textShader.getAllInfoLogs().c_str() << "\n\n";
 
-	return _shader.isProgramLinked() && _shaderText.isProgramLinked();
+	if (!_shader.isProgramValid())
+		throw std::string("Invalid shader program!");
+
+	if (!_textShader.isProgramValid())
+		throw std::string("Invalid text shader program!");
+
+	return _shader.isProgramLinked() && _textShader.isProgramLinked();
 }
 
 

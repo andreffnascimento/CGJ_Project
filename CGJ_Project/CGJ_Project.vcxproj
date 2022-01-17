@@ -181,6 +181,7 @@
     <ClCompile Include="src\engine\math\transformMatrix.cpp" />
     <ClCompile Include="src\engine\renderer\mesh\meshData.cpp" />
     <ClCompile Include="src\engine\renderer\modules\cameraRenderer.cpp" />
+    <ClCompile Include="src\engine\renderer\modules\canvasRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\colliderRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\lightRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\meshRenderer.cpp" />

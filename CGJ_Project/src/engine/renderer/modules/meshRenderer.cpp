@@ -18,9 +18,6 @@ extern float mNormal3x3[9];
 
 void Renderer::renderMeshes(const Scene& scene) const
 {
-	if (!_shader.isProgramValid())
-		throw std::string("Invalid shader program!");
-
 	_renderOpaqueMeshInstances();
 
 	_enableTranslucentRendering();

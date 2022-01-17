@@ -113,11 +113,10 @@ void freeType_init(const string font_name)
 
 // render line of text
 // -------------------
-void RenderText(VSShaderLib& shaderText, std::string text, float x, float y, float scale, float cR, float cG, float cB)
+void RenderText(const VSShaderLib& shaderText, std::string text, float x, float y, float scale, float cR, float cG, float cB)
 {
 	// activate corresponding render state	
 	GLuint programIndex = shaderText.getProgramIndex();
-	glUseProgram(programIndex);
 
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
 	glUniformMatrix4fv(glGetUniformLocation(programIndex, "m_pvm"), 1, GL_FALSE, mCompMatrix[PROJ_VIEW_MODEL]);

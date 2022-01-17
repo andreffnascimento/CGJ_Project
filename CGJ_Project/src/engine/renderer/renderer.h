@@ -18,7 +18,7 @@ class Renderer {
 
 private:
 	VSShaderLib _shader;
-	VSShaderLib _shaderText;
+	VSShaderLib _textShader;
 	int _uniformLocation[RendererData::ShaderUniformType::N_UNIFORMS] = {};
 
 	RendererData::TextureData _textures = RendererData::TextureData();
@@ -60,6 +60,7 @@ public:
 	void initSceneRendering() const;
 	void terminateSceneRendering() const;
 
+	void renderCanvas(const Scene& scene) const;
 	void renderCamera(const Scene& scene) const;
 	void renderLights(const Scene& scene) const;
 	void renderMeshes(const Scene& scene) const;
@@ -72,6 +73,12 @@ private:
 	GLuint _setupShaders();
 	void _submitFogData() const;
 	void _submitTextureData() const;
+
+
+private:
+	void _initCanvasRendering() const;
+	void _terminateCanvasRendering() const;
+	void _renderTextInstances(const std::unordered_map<EntityHandle, CanvasComponent>& canvasComponents) const;
 
 
 private:
