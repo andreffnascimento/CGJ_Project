@@ -266,3 +266,29 @@ Entity CanvasComponent::addText(Scene* scene, const Entity& canvasEntity, const 
 	_canvasText[&textComponent] = &entity.transform();
 	return entity;
 }
+
+
+Entity CanvasComponent::addImage(Scene* scene, const Entity& canvasEntity, unsigned int textureId, const std::string& tag)
+{
+	Entity entity = scene->createEntity(canvasEntity.tag().tag() + ":" + tag);
+	ImageComponent& imageComponent = entity.addComponent<ImageComponent>(textureId);
+	_canvasImage[&imageComponent] = &entity.transform();
+	return entity;
+}
+
+
+Entity CanvasComponent::addImage(Scene* scene, const Entity& canvasEntity, unsigned int textureId)
+{
+	Entity entity = scene->createEntity(canvasEntity.tag(), true);
+	ImageComponent& imageComponent = entity.addComponent<ImageComponent>(textureId);
+	_canvasImage[&imageComponent] = &entity.transform();
+	return entity;
+}
+
+
+
+
+ImageComponent::ImageComponent(unsigned int imageId)
+{
+	_meshData->addTexture(imageId);
+}

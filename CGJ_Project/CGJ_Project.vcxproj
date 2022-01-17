@@ -219,6 +219,7 @@
     <ClInclude Include="src\engine\scene\components\cameraComponent.h" />
     <ClInclude Include="src\engine\scene\components\groupComponent.h" />
     <ClInclude Include="src\engine\scene\components\canvasComponent.h" />
+    <ClInclude Include="src\engine\scene\components\imageComponent.h" />
     <ClInclude Include="src\engine\scene\components\lightComponent.h" />
     <ClInclude Include="src\engine\scene\components\meshComponent.h" />
     <ClInclude Include="src\engine\scene\components\parentComponent.h" />
@@ -289,6 +290,7 @@
     <None Include="src\engine\renderer\shaders\text.vert" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="src\MicroMachines3D\textures\heart.png" />
     <Image Include="src\MicroMachines3D\textures\lightwood.tga" />
     <Image Include="src\MicroMachines3D\textures\orange\orange.jpg" />
     <Image Include="src\MicroMachines3D\textures\stone.tga" />

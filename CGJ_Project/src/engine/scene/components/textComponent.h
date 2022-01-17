@@ -17,7 +17,7 @@ private:
 	Coords3f _color = Coords3f({ 1.0f, 1.0f, 1.0f });
 
 public:
-	TextComponent() = default;
+	TextComponent() = delete;
 	TextComponent(const TextComponent&) = default;
 	TextComponent(const std::string& text) : _text(text) {}
 	~TextComponent() = default;
