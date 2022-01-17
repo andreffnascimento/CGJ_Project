@@ -8,6 +8,8 @@
 #include "engine/renderer/mesh/geometry.h"
 #include "engine/renderer/mesh/texture.h"
 
+class Entity;
+
 
 
 

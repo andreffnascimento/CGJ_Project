@@ -97,6 +97,8 @@
     <ClInclude Include="src\MicroMachines3D\scripts\oranges\orangesManagerScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\collisionResolver\orangeCollisionResolver.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\checkeredFlag.h" />
+    <ClInclude Include="src\engine\scene\components\textComponent.h" />
+    <ClInclude Include="src\engine\scene\components\canvasComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />

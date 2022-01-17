@@ -247,3 +247,13 @@ AABBColliderComponent::~AABBColliderComponent()
 
 	_collisionResolver = nullptr;
 }
+
+
+
+
+void CanvasComponent::addText(Entity textEntity)
+{
+	const TextComponent& text = textEntity.getComponent<TextComponent>();
+	const TransformComponent& transform = textEntity.transform();
+	_canvasText[&text] = &transform;
+}
