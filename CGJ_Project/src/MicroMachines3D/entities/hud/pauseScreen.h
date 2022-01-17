@@ -28,7 +28,9 @@ private:
 	void createPauseText(Scene* scene, CanvasComponent& canvas, const WindowCoords& windowCoords)
 	{
 		canvas.addText(scene, *this, "Pause", "PauseText");
-		canvas.addImage(scene, *this, Renderer::create2dTexture("src/MicroMachines3D/textures/heart.png"), "HeartImg");
+		Entity img = canvas.addImage(scene, *this, Renderer::create2dTexture("src/MicroMachines3D/textures/heart.png"), "HeartImg");
+		Transform::scaleTo(img, { 50.0f, 50.0f, 1.0f });
+		Transform::translateTo(img, { 1000.0f, 50.0f, 0.0f });
 	}
 
 };

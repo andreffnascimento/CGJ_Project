@@ -37,8 +37,3 @@ void MeshData::addNormal(unsigned int normalId)
 {
 	_texture._normalIds[_texture._nNormals++] = normalId;
 }
-
-void MeshData::setEnabled(bool enabled)
-{
-	_enabled = enabled;
-}

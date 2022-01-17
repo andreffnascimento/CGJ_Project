@@ -11,6 +11,7 @@ const uint MAX_TEXTURES_PER_MESH = 2;
 const uint TEXTURE_MODE_NONE = 0;
 const uint TEXTURE_MODE_MODULATE_DIFFUSE = 1;
 const uint TEXTURE_MODE_REPLACE_DIFFUSE = 2;
+const uint TEXTURE_MODE_IMAGE_TEXTURING = 3;
 
 const uint FOG_TYPE_LINEAR = 1;
 const uint FOG_TYPE_EXP = 2;
@@ -172,6 +173,18 @@ vec4 processReplaceDiffuseTexture(FragLightingData fragLighting) {
 }
 
 
+vec4 processImageTexture(FragLightingData fragLighting) {
+	vec4 texel = vec4(1.0);
+	for (int i = 0; i < textureData.nTextures; i++)
+		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
+
+	if (texel.a == 0.0)
+		discard;
+
+	return texel;
+}
+
+
 
 
 void main() {
@@ -182,6 +195,20 @@ void main() {
 	// Calculate normal if a normal map is provided
 	for (int i = 0; i < textureData.nNormals; i++)
 		normal = normalize(2.0 * texture(textureData.maps[textureData.normalIds[i]], dataIn.textureCoords).rgb - 1.0);
+
+	// generate the fog color
+	float fogAmount = 1.0;
+	float fragDistance = sqrt(dot(dataIn.position, dataIn.position));
+	if (fogData.isActive) {
+		if (fogData.mode == FOG_TYPE_LINEAR)
+			fogAmount = clamp((fogData.endDistance - fragDistance) / (fogData.endDistance - fogData.startDistance), 0.0, 1.0);
+
+		else if (fogData.mode == FOG_TYPE_EXP)
+			fogAmount = exp(-fogData.density * fragDistance);
+
+		else if (fogData.mode == FOG_TYPE_EXP2)
+			fogAmount = pow(exp(-fogData.density * fragDistance), 2);
+	}
 
 	// process all the lights of the scene
 	FragLightingData fragLighting;
@@ -211,28 +238,25 @@ void main() {
 	vec4 rgbColor = vec4(0.0);
 	
 	if (textureData.mode == TEXTURE_MODE_NONE)
+	{
 		rgbColor = max(fragLighting.diffuse + fragLighting.specular, fragLighting.ambient);
+		colorOut = vec4(mix(fogData.color.rgb, rgbColor.rgb, fogAmount), materialData.diffuse.a);
+	}
 	
 	else if (textureData.mode == TEXTURE_MODE_MODULATE_DIFFUSE)
+	{
 		rgbColor = processModulateDiffuseTexture(fragLighting);
+		colorOut = vec4(mix(fogData.color.rgb, rgbColor.rgb, fogAmount), materialData.diffuse.a);
+	}
 	
 	else if (textureData.mode == TEXTURE_MODE_REPLACE_DIFFUSE)
+	{
 		rgbColor = processReplaceDiffuseTexture(fragLighting);
-
-
-	// generate the fog color
-	float fogAmount = 1.0;
-	float fragDistance = sqrt(dot(dataIn.position, dataIn.position));
-	if (fogData.isActive) {
-		if (fogData.mode == FOG_TYPE_LINEAR)
-			fogAmount = clamp((fogData.endDistance - fragDistance) / (fogData.endDistance - fogData.startDistance), 0.0, 1.0);
-
-		else if (fogData.mode == FOG_TYPE_EXP)
-			fogAmount = exp(-fogData.density * fragDistance);
-
-		else if (fogData.mode == FOG_TYPE_EXP2)
-			fogAmount = pow(exp(-fogData.density * fragDistance), 2);
+		colorOut = vec4(mix(fogData.color.rgb, rgbColor.rgb, fogAmount), materialData.diffuse.a);
 	}
 
-	colorOut = vec4(mix(fogData.color.rgb, rgbColor.rgb, fogAmount), materialData.diffuse.a);
+	else if (textureData.mode == TEXTURE_MODE_IMAGE_TEXTURING)
+	{
+		colorOut = processImageTexture(fragLighting);
+	}
 }

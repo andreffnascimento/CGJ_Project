@@ -15,6 +15,7 @@ void Renderer::renderCanvas(const Scene& scene) const
 
 	const std::unordered_map<EntityHandle, CanvasComponent>& canvasComponents = scene.getSceneComponents<CanvasComponent>();
 	_renderTextInstances(canvasComponents);
+	_renderImageInstances(canvasComponents);
 
 	_terminateCanvasRendering();
 }
@@ -59,7 +60,42 @@ void Renderer::_renderTextInstances(const std::unordered_map<EntityHandle, Canva
 		{
 			const TextComponent& text = *canvasTextIterator.first;
 			const Coords3f& translation = canvasTextIterator.second->translation();
-			RenderText(_textShader, text, translation.x, translation.y, text.size(), text.color().x, text.color().y, text.color().z);
+			if (text.enabled())
+				RenderText(_textShader, text, translation.x, translation.y, text.size(), text.color().x, text.color().y, text.color().z);
+		}
+	}
+}
+
+
+void Renderer::_renderImageInstances(const std::unordered_map<EntityHandle, CanvasComponent>& canvasComponents) const
+{
+	glUseProgram(_shader.getProgramIndex());
+
+	for (const auto& canvasIterator : canvasComponents)
+	{
+		const CanvasComponent& canvas = canvasIterator.second;
+		if (!canvas.enabled())
+			continue;
+
+		auto canvasImageIterator = canvas.canvasImage().cbegin();
+		while (canvasImageIterator != canvas.canvasImage().cend())
+		{
+			RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
+			const ImageComponent* originalImage = canvasImageIterator->first;
+			_submitMeshData(originalImage->meshData());
+
+			while (canvasImageIterator != canvas.canvasImage().cend() && canvasImageIterator->first == originalImage)
+			{ 
+				if (instanceBuffer.nInstances >= RendererSettings::MAX_INSTANCES_PER_SUBMISSION)
+					_submitRenderableData(originalImage->meshData(), instanceBuffer);
+
+				const TransformComponent* transform = canvasImageIterator->second;
+				if (originalImage->enabled())
+					_addToInstanceBuffer(instanceBuffer, transform);
+				canvasImageIterator++;
+			}
+
+			_submitRenderableData(originalImage->meshData(), instanceBuffer);
 		}
 	}
 }

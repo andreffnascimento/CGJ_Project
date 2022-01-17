@@ -14,7 +14,8 @@
 struct ImageComponent
 {
 private:
-	std::shared_ptr<MeshData> _meshData = std::make_shared<MeshData>(createQuad(1.0f, 1.0f), Material());
+	std::shared_ptr<MeshData> _meshData = nullptr;
+	bool _enabled = true;
 
 public:
 	ImageComponent() = delete;
@@ -26,6 +27,9 @@ public:
 	inline const MyMesh& mesh()	const		{ return _meshData->mesh(); }
 	inline const Material& material() const { return _meshData->material(); }
 	inline const Texture& texture() const	{ return _meshData->texture(); }
+	inline bool enabled() const				{ return _enabled; }
+
+	inline void setEnabled(bool enabled) { _enabled = enabled; }
 
 };
 

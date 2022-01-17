@@ -59,7 +59,7 @@ public:
 	void renderScene(const Scene& scene) const;
 	void initSceneRendering() const;
 	void terminateSceneRendering() const;
-
+	
 	void renderCanvas(const Scene& scene) const;
 	void renderCamera(const Scene& scene) const;
 	void renderLights(const Scene& scene) const;
@@ -79,6 +79,7 @@ private:
 	void _initCanvasRendering() const;
 	void _terminateCanvasRendering() const;
 	void _renderTextInstances(const std::unordered_map<EntityHandle, CanvasComponent>& canvasComponents) const;
+	void _renderImageInstances(const std::unordered_map<EntityHandle, CanvasComponent>& canvasComponents) const;
 
 
 private:
