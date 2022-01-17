@@ -27,7 +27,8 @@ public:
 private:
 	void createPauseText(Scene* scene, CanvasComponent& canvas, const WindowCoords& windowCoords)
 	{
-		canvas.addText(scene, *this, "Pause");
+		canvas.addText(scene, *this, "Pause", "PauseText");
+		canvas.addImage(scene, *this, Renderer::create2dTexture("src/MicroMachines3D/textures/heart.png"), "HeartImg");
 	}
 
 };
