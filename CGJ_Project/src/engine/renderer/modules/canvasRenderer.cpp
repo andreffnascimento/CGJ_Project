@@ -58,8 +58,8 @@ void Renderer::_renderTextInstances(const std::unordered_map<EntityHandle, Canva
 		for (const auto& canvasTextIterator : canvas.canvasText())
 		{
 			const TextComponent& text = *canvasTextIterator.first;
-			const TransformComponent& transform = *canvasTextIterator.second;
-			RenderText(_textShader, text, transform.translation().x, transform.translation().y, 1.0f, 1.0f, 1.0f, 1.0f);
+			const Coords3f& translation = canvasTextIterator.second->translation();
+			RenderText(_textShader, text, translation.x, translation.y, text.size(), text.color().x, text.color().y, text.color().z);
 		}
 	}
 }
