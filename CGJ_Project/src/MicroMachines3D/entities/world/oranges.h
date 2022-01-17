@@ -21,6 +21,7 @@ public:
 		MeshComponent mesh = MeshComponent(createSphere(ORANGE_RADIUS, ORANGE_DIVISIONS), ORANGE_MATERIAL);
 		mesh.setTextureMode(Texture::TextureMode::MODULATE_DIFFUSE);
 		mesh.addTexture(Renderer::create2dTexture("src/MicroMachines3D/textures/orange/orange.jpg"));
+		mesh.addNormal(Renderer::create2dTexture("src/MicroMachines3D/textures/orange/normals.jpg"));
 
 		for (int i = 0; i < N_ORANGES; i++)
 			_createOrange(scene, group, mesh, i);

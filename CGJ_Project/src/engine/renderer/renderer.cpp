@@ -83,7 +83,11 @@ void Renderer::setFogActive(bool active)
 	renderer._fog.active = active;
 }
 
-
+void Renderer::setBumpActive(bool active)
+{
+	Renderer& renderer = Application::getRenderer();
+	renderer._bump = active;
+}
 
 
 void Renderer::init()
@@ -212,6 +216,7 @@ GLuint Renderer::_setupShaders()
 	_uniformLocation[RendererData::ShaderUniformType::TEXTURE_IDS]			= glGetUniformLocation(_shader.getProgramIndex(), "textureData.textureIds");
 	_uniformLocation[RendererData::ShaderUniformType::NORMAL_IDS]			= glGetUniformLocation(_shader.getProgramIndex(), "textureData.normalIds");
 	_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAPS]			= glGetUniformLocation(_shader.getProgramIndex(), "textureData.maps");
+	_uniformLocation[RendererData::ShaderUniformType::BUMP_ACTIVE]			= glGetUniformLocation(_shader.getProgramIndex(), "textureData.bumpActive");
 
 	_uniformLocation[RendererData::ShaderUniformType::N_LIGHTS]				= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.nLights");
 	_uniformLocation[RendererData::ShaderUniformType::LIGHT_TYPE]			= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.type");
@@ -271,4 +276,5 @@ void Renderer::_submitTextureData() const
 	}
 	
 	glUniform1iv(_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAPS], _textures.nTextures, textureMaps);
+	glUniform1i(_uniformLocation[RendererData::ShaderUniformType::BUMP_ACTIVE], _bump);
 }
