@@ -251,9 +251,18 @@ AABBColliderComponent::~AABBColliderComponent()
 
 
 
-void CanvasComponent::addText(Entity textEntity)
+Entity CanvasComponent::addText(Scene* scene, const Entity& canvasEntity, const std::string& text, const std::string& tag)
 {
-	const TextComponent& text = textEntity.getComponent<TextComponent>();
-	const TransformComponent& transform = textEntity.transform();
-	_canvasText[&text] = &transform;
+	Entity entity = scene->createEntity(canvasEntity.tag().tag() + ":" + tag);
+	TextComponent& textComponent = entity.addComponent<TextComponent>(text);
+	_canvasText[&textComponent] = &entity.transform();
+	return entity;
+}
+
+Entity CanvasComponent::addText(Scene* scene, const Entity& canvasEntity, const std::string& text)
+{
+	Entity entity = scene->createEntity(canvasEntity.tag(), true);
+	TextComponent& textComponent = entity.addComponent<TextComponent>(text);
+	_canvasText[&textComponent] = &entity.transform();
+	return entity;
 }

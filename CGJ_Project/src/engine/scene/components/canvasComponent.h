@@ -2,6 +2,7 @@
 #define __engine_scene_components_canvasComponent__
 
 
+#include <string>
 #include <unordered_map>
 
 #include "engine/scene/components/textComponent.h"
@@ -26,10 +27,10 @@ public:
 	inline const std::unordered_map<const TextComponent*, const TransformComponent*>& canvasText() const { return _canvasText; }
 	inline bool enabled() const { return _enabled; }
 
-	inline void addText(const TextComponent* text, const TransformComponent* transform) { _canvasText[text] = transform; }
 	inline void setEnabled(bool enabled) { _enabled = enabled; }
 
-	void addText(Entity textEntity);
+	Entity addText(Scene* scene, const Entity& canvasEntity, const std::string& text, const std::string& tag);
+	Entity addText(Scene* scene, const Entity& canvasEntity, const std::string& text);
 
 };
 

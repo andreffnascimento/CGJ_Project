@@ -13,6 +13,7 @@
 #include "MicroMachines3D/entities/world/oranges.h"
 #include "MicroMachines3D/entities/world/butters.h"
 #include "MicroMachines3D/entities/world/checkeredFlag.h"
+#include "MicroMachines3D/entities/hud/pauseScreen.h"
 
 
 
@@ -51,19 +52,14 @@ private:
 		CameraManager cameraManager = CameraManager(this);
 
 		Table table = Table(this);
-		Transform::translate(table, { 0.0f, -TABLE_SIZE.y, 0.0f });
-
 		Car car = Car(this);
-
 		CheeriosTrack cheeriosTrack = CheeriosTrack(this);
-
 		Candels candels = Candels(this);
-
 		Oranges oranges = Oranges(this);
-
 		Butters butters = Butters(this);
-
 		CheckeredFlag flag = CheckeredFlag(this);
+
+		PauseScreen pauseScreen = PauseScreen(this);
 	}
 };
 

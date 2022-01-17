@@ -197,6 +197,7 @@
     <ClCompile Include="src\engine\renderer\Texture_Loader.cpp" />
     <ClCompile Include="src\engine\renderer\vsShaderLib.cpp" />
     <ClCompile Include="src\MicroMachines3D\common\materials.h" />
+    <ClCompile Include="src\MicroMachines3D\entities\hud\pauseScreen.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\app\application.h" />
