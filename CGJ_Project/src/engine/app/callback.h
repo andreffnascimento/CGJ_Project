@@ -82,7 +82,7 @@ void displayScene()
 	app._prevTime = currTime;
 
 	app._frameCount++;
-	app._scene->onUpdate(app._ts);
+	app._scene->onUpdate(app._ts * app._timeScale);
 	app._eventHandler.reset();
 
 	glutSwapBuffers();

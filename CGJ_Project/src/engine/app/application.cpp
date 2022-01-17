@@ -141,3 +141,14 @@ void Application::run()
 	if (Application::isRunning())
 		glutMainLoop();
 }
+
+
+
+
+void Application::setTimeScale(float timeScale)
+{
+	if (timeScale < 0.0f)
+		throw std::string("The time scale must be a non negative float value!");
+
+	_timeScale = timeScale;
+}

@@ -48,17 +48,22 @@ void Scene::onUpdate(float ts)
 		scriptIterator.second.onUpdate(ts);
 	
 	// processes the physics world
+	bool physicsUpdated = true;
 	_timeAccumulator += ts;
 	while (_timeAccumulator >= PhysicsEngine::PHYSICS_SIMULATION_MIN_INTERVAL)
 	{
 		float fixedTs = std::min(ts, PhysicsEngine::PHYSICS_SIMULATION_MAX_INTERVAL);
 		_timeAccumulator -= fixedTs;
+		physicsUpdated = false;
 		onFixedUpdate(fixedTs);
 	}
 	
 	// update the transforms using the physics engine data
-	PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
-	physicsEngine.updateTransforms(*this);
+	if (!physicsUpdated)
+	{
+		PhysicsEngine& physicsEngine = Application::getPhysicsEngine();
+		physicsEngine.updateTransforms(*this);
+	}
 
 	// update entity transform matrixes
 	for (auto& transformIterator : _registry.getComponents<TransformComponent>())

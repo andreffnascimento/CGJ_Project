@@ -70,49 +70,6 @@ MyMesh createQuad(float size_x, float size_y) {
 	return(amesh);
 }
 
-MyMesh createCubeWithTexCoords(float u, float v)
-{
-	MyMesh amesh;
-	amesh.numIndexes = faceCount * 3;
-
-	glGenVertexArrays(1, &(amesh.vao));
-	glBindVertexArray(amesh.vao);
-
-	glGenBuffers(2, VboId);
-	glBindBuffer(GL_ARRAY_BUFFER, VboId[0]);
-
-	size_t index = 0;
-	float adjustedTexCoords[sizeof(cubeTexCoords) / sizeof(float)];
-	
-	multiplyCubeTexCoordsByAspectRatio(u, v, adjustedTexCoords);
-
-	float data[(sizeof(cubeVertices) + sizeof(cubeNormals) + sizeof(adjustedTexCoords) + sizeof(cubeTangents)) / sizeof(float)];
-	memcpy(data + (index += 0), cubeVertices, sizeof(cubeVertices));
-	memcpy(data + (index += sizeof(cubeVertices) / sizeof(float)), cubeNormals, sizeof(cubeNormals));
-	memcpy(data + (index += sizeof(cubeNormals) / sizeof(float)), adjustedTexCoords, sizeof(adjustedTexCoords));
-	memcpy(data + (index += sizeof(adjustedTexCoords) / sizeof(float)), cubeTangents, sizeof(cubeTangents));
-	glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(VERTEX_COORD_ATTRIB);
-	glVertexAttribPointer(VERTEX_COORD_ATTRIB, 4, GL_FLOAT, 0, 0, 0);
-	glEnableVertexAttribArray(NORMAL_ATTRIB);
-	glVertexAttribPointer(NORMAL_ATTRIB, 4, GL_FLOAT, 0, 0, (void*)sizeof(cubeVertices));
-	glEnableVertexAttribArray(TEXTURE_COORD_ATTRIB);
-	glVertexAttribPointer(TEXTURE_COORD_ATTRIB, 4, GL_FLOAT, 0, 0, (void*)(sizeof(cubeVertices) + sizeof(cubeNormals)));
-	glEnableVertexAttribArray(TANGENT_ATTRIB);
-	glVertexAttribPointer(TANGENT_ATTRIB, 4, GL_FLOAT, 0, 0, (void*)(sizeof(cubeVertices) + sizeof(cubeNormals) + sizeof(adjustedTexCoords)));
-
-	//index buffer
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VboId[1]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * amesh.numIndexes, cubeFaceIndex, GL_STATIC_DRAW);
-
-	// unbind the VAO
-	glBindVertexArray(0);
-
-	amesh.type = GL_TRIANGLES;
-	return(amesh);
-}
-
 MyMesh createCube() {
 
 	MyMesh amesh;
@@ -148,6 +105,50 @@ MyMesh createCube() {
 // unbind the VAO
 	glBindVertexArray(0);
 	
+	amesh.type = GL_TRIANGLES;
+	return(amesh);
+}
+
+
+MyMesh createCube(float u, float v)
+{
+	MyMesh amesh;
+	amesh.numIndexes = faceCount * 3;
+
+	glGenVertexArrays(1, &(amesh.vao));
+	glBindVertexArray(amesh.vao);
+
+	glGenBuffers(2, VboId);
+	glBindBuffer(GL_ARRAY_BUFFER, VboId[0]);
+
+	size_t index = 0;
+	float adjustedTexCoords[sizeof(cubeTexCoords) / sizeof(float)];
+
+	multiplyCubeTexCoordsByAspectRatio(u, v, adjustedTexCoords);
+
+	float data[(sizeof(cubeVertices) + sizeof(cubeNormals) + sizeof(adjustedTexCoords) + sizeof(cubeTangents)) / sizeof(float)];
+	memcpy(data + (index += 0), cubeVertices, sizeof(cubeVertices));
+	memcpy(data + (index += sizeof(cubeVertices) / sizeof(float)), cubeNormals, sizeof(cubeNormals));
+	memcpy(data + (index += sizeof(cubeNormals) / sizeof(float)), adjustedTexCoords, sizeof(adjustedTexCoords));
+	memcpy(data + (index += sizeof(adjustedTexCoords) / sizeof(float)), cubeTangents, sizeof(cubeTangents));
+	glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(VERTEX_COORD_ATTRIB);
+	glVertexAttribPointer(VERTEX_COORD_ATTRIB, 4, GL_FLOAT, 0, 0, 0);
+	glEnableVertexAttribArray(NORMAL_ATTRIB);
+	glVertexAttribPointer(NORMAL_ATTRIB, 4, GL_FLOAT, 0, 0, (void*)sizeof(cubeVertices));
+	glEnableVertexAttribArray(TEXTURE_COORD_ATTRIB);
+	glVertexAttribPointer(TEXTURE_COORD_ATTRIB, 4, GL_FLOAT, 0, 0, (void*)(sizeof(cubeVertices) + sizeof(cubeNormals)));
+	glEnableVertexAttribArray(TANGENT_ATTRIB);
+	glVertexAttribPointer(TANGENT_ATTRIB, 4, GL_FLOAT, 0, 0, (void*)(sizeof(cubeVertices) + sizeof(cubeNormals) + sizeof(adjustedTexCoords)));
+
+	//index buffer
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VboId[1]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * amesh.numIndexes, cubeFaceIndex, GL_STATIC_DRAW);
+
+	// unbind the VAO
+	glBindVertexArray(0);
+
 	amesh.type = GL_TRIANGLES;
 	return(amesh);
 }
@@ -234,11 +235,6 @@ void multiplyCubeTexCoordsByAspectRatio(float u, float v, float result[])
 			result[i] = 0;
 		else
 			result[i] = 1;
-
-		std::cout << result[i] << " ";
-
-		if (i % 4 == 3)
-			std::cout << std::endl;
 	}
 }
 

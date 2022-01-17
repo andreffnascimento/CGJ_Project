@@ -4,6 +4,8 @@
 
 #include "MicroMachines3D/common/include.h"
 
+#include "MicroMachines3D/scripts/manager/game/raceManagerScript.h"
+
 
 
 
@@ -12,6 +14,8 @@ class CarHeadlightsScript : public Script
 
 private:
 	const EventHandler* _eventHandler = nullptr;
+
+	const RaceManagerScript* _raceManagerScript = nullptr;
 
 	MeshComponent* _frontMesh = nullptr;
 	MeshComponent* _backMesh  = nullptr;
@@ -35,6 +39,7 @@ public:
 	void onCreate() override
 	{
 		_eventHandler = &Application::getEventHandler();
+		_raceManagerScript = dynamic_cast<RaceManagerScript*>(_scene->getEntityByTag("GameManager").getComponent<ScriptComponent>().getScriptByTag("RaceManagerScript"));
 		_frontMesh = &_scene->getEntityByTag("Car:headlight-frontLeft").getComponent<MeshComponent>();
 		_backMesh  = &_scene->getEntityByTag("Car:headlight-backLeft").getComponent<MeshComponent>();
 		_leftFrontLight = &_scene->getEntityByTag("Car:headlight-frontLeft").getComponent<LightComponent>();
@@ -44,6 +49,9 @@ public:
 
 	void onUpdate(float ts) override
 	{
+		if (_raceManagerScript->paused())
+			return;
+
 		if (_eventHandler->keyState('H').pressed() || _eventHandler->keyState('h').pressed())
 		{
 			_lightsOn = !_lightsOn;

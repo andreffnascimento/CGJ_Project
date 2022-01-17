@@ -19,6 +19,8 @@ private:
 	
 
 private:
+	const EventHandler* _eventHandler = nullptr;
+
 	Entity _car = Entity();
 	RigidbodyComponent* _carRigidbody = nullptr;
 
@@ -26,6 +28,7 @@ private:
 	OrangesManagerScript* _orangesManagerScript = nullptr;
 
 	bool _colliderWithOrange = false;
+	bool _paused = false;
 
 
 
@@ -39,6 +42,7 @@ public:
 public:
 	void onCreate() override
 	{
+		_eventHandler = &Application::getEventHandler();
 		_car = _scene->getEntityByTag("Car");
 		_carRigidbody = &_car.getComponent<RigidbodyComponent>();
 		_carMovementScript = dynamic_cast<CarMovementScript*>(_scene->getEntityByTag("Car").getComponent<ScriptComponent>().getScriptByTag("CarMovementScript"));
@@ -49,11 +53,23 @@ public:
 
 	void onUpdate(float ts) override
 	{
+		// check for pause button
+		if (_eventHandler->keyState('S').pressed() || _eventHandler->keyState('s').pressed())
+		{
+			_paused = !_paused;
+			Application::getInstance().setTimeScale(_paused ? 0.0f : 1.0f);
+		}
+
+		// check if the game needs to be reset
 		if (_colliderWithOrange || _carRigidbody->position().y < RESET_GAME_HEIGHT)
 			_respawn();
 	}
 
 
+
+
+public:
+	inline bool paused() const { return _paused; }
 
 
 public:

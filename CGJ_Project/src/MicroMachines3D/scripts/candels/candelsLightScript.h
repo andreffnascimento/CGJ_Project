@@ -4,6 +4,8 @@
 
 #include "MicroMachines3D/common/include.h"
 
+#include "MicroMachines3D/scripts/manager/game/raceManagerScript.h"
+
 #include <list>
 
 
@@ -14,6 +16,8 @@ class CandelsLightScript : public Script
 
 private:
 	const EventHandler* _eventHandler = nullptr;
+
+	const RaceManagerScript* _raceManagerScript = nullptr;
 
 	std::list<MeshComponent*> _meshes = std::list<MeshComponent*>();
 	std::list<LightComponent*> _lights = std::list<LightComponent*>();
@@ -34,6 +38,7 @@ public:
 	void onCreate() override
 	{
 		_eventHandler = &Application::getEventHandler();
+		_raceManagerScript = dynamic_cast<RaceManagerScript*>(_scene->getEntityByTag("GameManager").getComponent<ScriptComponent>().getScriptByTag("RaceManagerScript"));
 		for (auto& candel : _scene->getEntitiesByTag(std::regex("^Candels:light_.*$")))
 		{
 			_meshes.push_back(&candel.getComponent<MeshComponent>());
@@ -44,6 +49,9 @@ public:
 
 	void onUpdate(float ts) override
 	{
+		if (_raceManagerScript->paused())
+			return;
+
 		if (_eventHandler->keyState('C').pressed() || _eventHandler->keyState('c').pressed())
 		{
 			_candelsOn = !_candelsOn;
@@ -61,10 +69,7 @@ public:
 				for (auto& mesh : _meshes)
 					mesh->setMaterial(CANDEL_OFF_MATERIAL);
 			}
-
-
 		}
-			
 	}
 
 };

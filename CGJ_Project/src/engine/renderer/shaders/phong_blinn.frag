@@ -6,7 +6,7 @@ const uint LIGHT_TYPE_DIRECTIONAL = 1;
 const uint LIGHT_TYPE_POINT = 2;
 const uint LIGHT_TYPE_SPOT = 3;
 
-const uint MAX_TEXTURES = 20;
+const uint MAX_TEXTURES = 32;
 const uint MAX_TEXTURES_PER_MESH = 2;
 const uint TEXTURE_MODE_NONE = 0;
 const uint TEXTURE_MODE_MODULATE_DIFFUSE = 1;

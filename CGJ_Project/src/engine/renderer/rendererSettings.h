@@ -14,7 +14,7 @@ public:
 	constexpr static const char* FONT_NAME = "fonts/arial.ttf";
 
 	constexpr static size_t MAX_LIGHTS = 32;
-	constexpr static size_t MAX_TEXTURES = 20;
+	constexpr static size_t MAX_TEXTURES = 32;
 	constexpr static size_t MAX_TEXTURES_PER_MESH = 2;
 
 	constexpr static size_t MAX_INSTANCES_PER_SUBMISSION = 50;

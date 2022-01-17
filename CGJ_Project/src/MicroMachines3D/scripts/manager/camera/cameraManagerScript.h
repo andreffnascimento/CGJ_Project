@@ -4,6 +4,8 @@
 
 #include "MicroMachines3D/common/include.h"
 
+#include "MicroMachines3D/scripts/manager/game/raceManagerScript.h"
+
 
 
 
@@ -12,6 +14,8 @@ class CameraManagerScript : public Script
 
 private:
 	const EventHandler* _eventHandler = nullptr;
+
+	const RaceManagerScript* _raceManagerScript = nullptr;
 
 	CameraEntity _camera1 = CameraEntity();
 	CameraEntity _camera2 = CameraEntity();
@@ -31,6 +35,7 @@ public:
 	void onCreate() override
 	{
 		_eventHandler = &Application::getEventHandler();
+		_raceManagerScript = dynamic_cast<RaceManagerScript*>(_scene->getEntityByTag("GameManager").getComponent<ScriptComponent>().getScriptByTag("RaceManagerScript"));
 		_camera1 = _scene->getEntityByTag("Camera1");
 		_camera2 = _scene->getEntityByTag("Camera2");
 		_camera3 = _scene->getEntityByTag("Camera3");
@@ -40,6 +45,9 @@ public:
 
 	void onUpdate(float ts) override
 	{
+		if (_raceManagerScript->paused())
+			return;
+
 		if (_eventHandler->keyState('1').pressed())
 			_scene->setActiveCamera(_camera1);
 
