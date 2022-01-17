@@ -36,7 +36,7 @@ struct TextureData {
 	uint mode;
 	uint textureIds[MAX_TEXTURES_PER_MESH];
 	uint normalIds[MAX_TEXTURES_PER_MESH];
-	sampler2D maps[MAX_TEXTURES * 2];
+	sampler2D maps[MAX_TEXTURES];
 	bool bumpActive;
 };
 
