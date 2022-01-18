@@ -6,6 +6,7 @@
 
 #include "MicroMachines3D/entities/manager/gameManager.h"
 #include "MicroMachines3D/entities/manager/cameraManager.h"
+
 #include "MicroMachines3D/entities/world/table.h"
 #include "MicroMachines3D/entities/world/car.h"
 #include "MicroMachines3D/entities/world/cheeriosTrack.h"
@@ -13,6 +14,8 @@
 #include "MicroMachines3D/entities/world/oranges.h"
 #include "MicroMachines3D/entities/world/butters.h"
 #include "MicroMachines3D/entities/world/checkeredFlag.h"
+
+#include "MicroMachines3D/entities/hud/playingScreen.h"
 #include "MicroMachines3D/entities/hud/pauseScreen.h"
 
 
@@ -59,6 +62,7 @@ private:
 		Butters butters = Butters(this);
 		CheckeredFlag flag = CheckeredFlag(this);
 
+		PlayingScreen playingScreen = PlayingScreen(this);
 		PauseScreen pauseScreen = PauseScreen(this);
 	}
 };

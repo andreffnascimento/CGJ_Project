@@ -26,6 +26,7 @@ private:
 
 
 private:
+	static constexpr unsigned int MAX_LIVES = 5;
 	static constexpr float RESET_GAME_HEIGHT = -10.0f;
 
 
@@ -40,6 +41,7 @@ private:
 	CanvasComponent* _playingScreenCanvas = nullptr;
 	CanvasComponent* _pauseScreenCanvas = nullptr;
 	CanvasComponent* _gameoverScreenCanvas = nullptr;
+	ImageComponent* _hearts[RaceManagerScript::MAX_LIVES] = {};
 
 	CarMovementScript* _carMovementScript = nullptr;
 	OrangesManagerScript* _orangesManagerScript = nullptr;
@@ -48,7 +50,7 @@ private:
 	bool _bumpToggle = true;
 
 	RaceManagerScript::GameState _gameState = RaceManagerScript::GameState::PLAYING;
-	unsigned int _lives = 5;
+	unsigned int _lives = RaceManagerScript::MAX_LIVES;
 	bool _collideLastFrame = false;
 	bool _colliderWithOrange = false;
 
@@ -66,9 +68,14 @@ public:
 		_eventHandler = &Application::getEventHandler();
 		_car = _scene->getEntityByTag("Car");
 		_carRigidbody = &_car.getComponent<RigidbodyComponent>();
+		_playingScreenCanvas = &_scene->getEntityByTag("PlayingScreen").getComponent<CanvasComponent>();
 		_pauseScreenCanvas = &_scene->getEntityByTag("PauseScreen").getComponent<CanvasComponent>();
 		_carMovementScript = dynamic_cast<CarMovementScript*>(_car.getComponent<ScriptComponent>().getScriptByTag("CarMovementScript"));
 		_orangesManagerScript = dynamic_cast<OrangesManagerScript*>(_scene->getEntityByTag("Oranges").getComponent<ScriptComponent>().getScriptByTag("OrangesManagerScript"));
+
+		for (int i = 0; i < RaceManagerScript::MAX_LIVES; i++)
+			_hearts[i] = &_scene->getEntityByTag("PlayingScreen:Heart_" + std::to_string(i)).getComponent<ImageComponent>();
+
 		_respawn();
 	}
 
@@ -119,7 +126,6 @@ private:
 		{
 			_gameState = RaceManagerScript::GameState::PAUSED;
 			Application::getInstance().setTimeScale(0.0f);
-			//_playingScreenCanvas->setEnabled(false);
 			_pauseScreenCanvas->setEnabled(true);
 		}
 
@@ -148,7 +154,6 @@ private:
 		{
 			_gameState = RaceManagerScript::GameState::PLAYING;
 			Application::getInstance().setTimeScale(1.0f);
-			//_playingScreenCanvas->setEnabled(true);
 			_pauseScreenCanvas->setEnabled(false);
 		}
 	}
@@ -166,7 +171,8 @@ private:
 	void _decreaseLives()
 	{
 		_collideLastFrame = true;
-		if (--_lives == 0)
+		_hearts[--_lives]->setEnabled(false);
+		if (_lives == 0)
 			_gameover();
 	}
 
@@ -174,7 +180,7 @@ private:
 	{
 		_gameState = RaceManagerScript::GameState::GAMEOVER;
 		Application::getInstance().setTimeScale(0.0f);
-		//_playingScreenCanvas->setEnabled(false);
+		_playingScreenCanvas->setEnabled(false);
 		_pauseScreenCanvas->setEnabled(false);
 		//_gameoverScreenCanvas->setEnabled(true);
 	}
@@ -193,14 +199,17 @@ private:
 		_carRigidbody->setVelocity(Coords3f({ 0.0f, 0.0f, 0.0f }));
 		_carRigidbody->setAngularVelocity(Coords3f({ 0.0f, 0.0f, 0.0f }));
 		_carMovementScript->reset();
-		_orangesManagerScript->resetOrangesSpeed();
+		_orangesManagerScript->resetOranges();
 
-		_lives = 5;
+		_lives = RaceManagerScript::MAX_LIVES;
 		_colliderWithOrange = false;
 		_gameState = RaceManagerScript::GameState::PLAYING;
-		//_playingScreenCanvas->setEnabled(true);
+		_playingScreenCanvas->setEnabled(true);
 		_pauseScreenCanvas->setEnabled(false);
 		//_gameoverScreenCanvas->setEnabled(false);
+
+		for (int i = 0; i < RaceManagerScript::MAX_LIVES; i++)
+			_hearts[i]->setEnabled(true);
 	}
 
 };

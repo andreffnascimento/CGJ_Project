@@ -120,8 +120,10 @@ public:
 
 
 public:
-	void resetOrangesSpeed()
+	void resetOranges()
 	{
+		for (auto& orange : _orangesData)
+			orange.orangeState = OrangesManagerScript::OrangeState::DESPAWNING;
 		_timeModifier = 1.0f;
 	}
 

@@ -239,6 +239,7 @@
     <ClInclude Include="src\engine\renderer\renderer.h" />
     <ClInclude Include="src\MicroMachines3D\common\constants.h" />
     <ClInclude Include="src\MicroMachines3D\common\include.h" />
+    <ClInclude Include="src\MicroMachines3D\entities\hud\playingScreen.h" />
     <ClInclude Include="src\MicroMachines3D\entities\manager\gameManager.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\butters.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\candels.h" />
@@ -289,7 +290,8 @@
     <None Include="src\engine\renderer\shaders\text.vert" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="src\MicroMachines3D\textures\heart.png" />
+    <Image Include="src\MicroMachines3D\textures\hud\heart.png" />
+    <Image Include="src\MicroMachines3D\textures\hud\pause.png" />
     <Image Include="src\MicroMachines3D\textures\lightwood.tga" />
     <Image Include="src\MicroMachines3D\textures\orange\orange.jpg" />
     <Image Include="src\MicroMachines3D\textures\stone.tga" />

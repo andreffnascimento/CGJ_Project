@@ -101,6 +101,7 @@
     <ClInclude Include="src\engine\scene\components\textComponent.h" />
     <ClInclude Include="src\engine\scene\components\canvasComponent.h" />
     <ClInclude Include="src\engine\scene\components\imageComponent.h" />
+    <ClInclude Include="src\MicroMachines3D\entities\hud\playingScreen.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />
@@ -126,6 +127,7 @@
     <Image Include="src\MicroMachines3D\textures\table\lightwood.tga" />
     <Image Include="src\MicroMachines3D\textures\table\stone.tga" />
     <Image Include="src\MicroMachines3D\textures\orange\orange.jpg" />
-    <Image Include="src\MicroMachines3D\textures\heart.png" />
+    <Image Include="src\MicroMachines3D\textures\hud\heart.png" />
+    <Image Include="src\MicroMachines3D\textures\hud\pause.png" />
   </ItemGroup>
 </Project>
