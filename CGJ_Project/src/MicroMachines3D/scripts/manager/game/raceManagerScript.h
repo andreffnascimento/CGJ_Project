@@ -74,6 +74,7 @@ public:
 		_carRigidbody = &_car.getComponent<RigidbodyComponent>();
 		_playingScreenCanvas = &_scene->getEntityByTag("PlayingScreen").getComponent<CanvasComponent>();
 		_pauseScreenCanvas = &_scene->getEntityByTag("PauseScreen").getComponent<CanvasComponent>();
+		_gameoverScreenCanvas = &_scene->getEntityByTag("GameoverScreen").getComponent<CanvasComponent>();
 		_carMovementScript = dynamic_cast<CarMovementScript*>(_car.getComponent<ScriptComponent>().getScriptByTag("CarMovementScript"));
 		_orangesManagerScript = dynamic_cast<OrangesManagerScript*>(_scene->getEntityByTag("Oranges").getComponent<ScriptComponent>().getScriptByTag("OrangesManagerScript"));
 
@@ -214,7 +215,7 @@ private:
 		Application::getInstance().setTimeScale(0.0f);
 		_playingScreenCanvas->setEnabled(false);
 		_pauseScreenCanvas->setEnabled(false);
-		//_gameoverScreenCanvas->setEnabled(true);
+		_gameoverScreenCanvas->setEnabled(true);
 	}
 
 
@@ -238,7 +239,7 @@ private:
 		_gameState = RaceManagerScript::GameState::PLAYING;
 		_playingScreenCanvas->setEnabled(true);
 		_pauseScreenCanvas->setEnabled(false);
-		//_gameoverScreenCanvas->setEnabled(false);
+		_gameoverScreenCanvas->setEnabled(false);
 
 		_resetQuery->setEnabled(false);
 		_resetQueryTimer = 0.0f;

@@ -48,7 +48,6 @@ private:
 		TextComponent& text = resetQuery.getComponent<TextComponent>();
 		text.setText("Press \'R\' again to reset the race!");
 		text.setSize(0.7f);
-		text.setEnabled(false);
 		Transform::translateTo(resetQuery, { windowCoords.x / 2.0f + 100.0f, windowCoords.y - 40.0f, 0.0f});
 	}
 

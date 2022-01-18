@@ -239,6 +239,7 @@
     <ClInclude Include="src\engine\renderer\renderer.h" />
     <ClInclude Include="src\MicroMachines3D\common\constants.h" />
     <ClInclude Include="src\MicroMachines3D\common\include.h" />
+    <ClInclude Include="src\MicroMachines3D\entities\hud\gameoverScreen.h" />
     <ClInclude Include="src\MicroMachines3D\entities\hud\playingScreen.h" />
     <ClInclude Include="src\MicroMachines3D\entities\manager\gameManager.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\butters.h" />

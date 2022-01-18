@@ -17,6 +17,7 @@
 
 #include "MicroMachines3D/entities/hud/playingScreen.h"
 #include "MicroMachines3D/entities/hud/pauseScreen.h"
+#include "MicroMachines3D/entities/hud/gameoverScreen.h"
 
 
 
@@ -64,6 +65,7 @@ private:
 
 		PlayingScreen playingScreen = PlayingScreen(this);
 		PauseScreen pauseScreen = PauseScreen(this);
+		GameoverScreen gameoverScreen = GameoverScreen(this);
 	}
 };
 
