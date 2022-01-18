@@ -289,8 +289,15 @@ Entity CanvasComponent::addImage(Scene* scene, const Entity& canvasEntity, unsig
 
 
 ImageComponent::ImageComponent(unsigned int imageId)
-	: _meshData(std::make_shared<MeshData>(createQuad(1.0f, 1.0f), Material()))
 {
+	Material material = {
+		{ 0.8f, 0.0f, 0.0f, 0.5f },
+		{ 0.0f, 0.0f, 0.0f, 0.0f },
+		{ 0.0f, 0.0f, 0.0f, 0.0f, },
+		{ 0.0f, 0.0f, 0.0f, 0.0f },
+		100.0f,
+	};
+	_meshData = std::make_shared<MeshData>(createQuad(1.0f, 1.0f), material);
 	_meshData->setTextureMode(Texture::TextureMode::IMAGE_TEXTURING);
 	_meshData->addTexture(imageId);
 }

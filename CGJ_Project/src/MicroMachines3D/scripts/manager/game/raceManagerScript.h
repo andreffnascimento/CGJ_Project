@@ -29,6 +29,8 @@ private:
 
 	bool _colliderWithOrange = false;
 	bool _paused = false;
+	bool _fogToggle = true;
+	bool _bumpToggle = true;
 
 
 
@@ -55,10 +57,18 @@ public:
 	{
 		// check for pause button
 		if (_eventHandler->keyState('S').pressed() || _eventHandler->keyState('s').pressed())
-		{
-			_paused = !_paused;
-			Application::getInstance().setTimeScale(_paused ? 0.0f : 1.0f);
-		}
+			Application::getInstance().setTimeScale(_paused = !_paused ? 0.0f : 1.0f);
+
+		if (_paused)
+			return;
+
+		// checks for the fog toggle button
+		if (_eventHandler->keyState('F').pressed() || _eventHandler->keyState('f').pressed())
+			Renderer::setFogActive(_fogToggle = !_fogToggle);
+
+		// checks the bump toggle buttom
+		if (_eventHandler->keyState('B').pressed() || _eventHandler->keyState('b').pressed())
+			Renderer::setBumpActive(_bumpToggle = !_bumpToggle);
 
 		// check if the game needs to be reset
 		if (_colliderWithOrange || _carRigidbody->position().y < RESET_GAME_HEIGHT)

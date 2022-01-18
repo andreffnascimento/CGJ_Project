@@ -76,7 +76,6 @@
     <ClInclude Include="src\engine\physics\collisionResolver.h" />
     <ClInclude Include="src\engine\renderer\rendererSettings.h" />
     <ClInclude Include="src\engine\renderer\rendererData.h" />
-    <ClInclude Include="src\MicroMachines3D\scripts\manager\game\fogToggleScript.h" />
     <ClInclude Include="src\engine\renderer\mesh\texture.h" />
     <ClInclude Include="src\engine\renderer\mesh\meshData.h" />
     <ClInclude Include="src\engine\scene\components\meshComponent.h" />

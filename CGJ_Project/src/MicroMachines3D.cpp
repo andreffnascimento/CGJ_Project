@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
 		application.setScene(&scene);
 		application.run();
 	} 
-	catch (std::string e) 
+	catch (std::string e)
 	{
 		std::cerr << "Exception: " << e << "\n";
 	}

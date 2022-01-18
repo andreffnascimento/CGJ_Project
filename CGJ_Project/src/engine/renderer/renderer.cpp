@@ -83,11 +83,14 @@ void Renderer::setFogActive(bool active)
 	renderer._fog.active = active;
 }
 
+
 void Renderer::setBumpActive(bool active)
 {
 	Renderer& renderer = Application::getRenderer();
-	renderer._bump = active;
+	renderer._enableBump = active;
 }
+
+
 
 
 void Renderer::init()
@@ -274,7 +277,6 @@ void Renderer::_submitFogData() const
 void Renderer::_submitTextureData() const
 {
 	int textureMaps[RendererSettings::MAX_TEXTURES] = {};
-
 	for (unsigned int i = 0; i < _textures.nTextures; i++)
 	{
 		glActiveTexture(GL_TEXTURE0 + i);
@@ -283,5 +285,5 @@ void Renderer::_submitTextureData() const
 	}
 	
 	glUniform1iv(_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAPS], _textures.nTextures, textureMaps);
-	glUniform1i(_uniformLocation[RendererData::ShaderUniformType::BUMP_ACTIVE], _bump);
+	glUniform1i(_uniformLocation[RendererData::ShaderUniformType::BUMP_ACTIVE], _enableBump);
 }

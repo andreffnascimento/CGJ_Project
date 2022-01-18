@@ -27,7 +27,7 @@ private:
 
 	RendererSettings::ReflectionCoefficients _reflectionCoefficients = RendererSettings::ReflectionCoefficients();
 	RendererSettings::Fog _fog = RendererSettings::Fog();
-	bool _bump = true;
+	bool _enableBump = true;
 
 
 	

@@ -158,6 +158,29 @@ FragLightingData processSpotLight(FragLightingData fragLighting, uint index, vec
 
 
 
+vec3 processNormalMaps()
+{
+    vec3 currentMap;
+	vec3 normal = normalize(dataIn.normal);
+
+	if(!textureData.bumpActive)
+		return normal;
+
+	// Calculate normal if a normal map is provided
+	vec3 calculatedNormals = normal;
+	for (int i = 0; i < textureData.nNormals; i++) {
+		float dirUp, dirFront;	
+		currentMap = texture(textureData.maps[textureData.normalIds[i]], dataIn.textureCoords).rgb;
+		normal = normalize(mix(currentMap, calculatedNormals, NORMAL_BLEND_AMOUNT) * 2.0 - 1.0);
+		calculatedNormals = normalize(vec3(normal.xy + calculatedNormals.xy, normal.z));
+	}
+
+	return calculatedNormals;
+}
+
+
+
+
 vec4 processModulateDiffuseTexture(FragLightingData fragLighting) {
 	vec4 texel = vec4(1.0);
 	for (int i = 0; i < textureData.nTextures; i++)
@@ -173,33 +196,6 @@ vec4 processReplaceDiffuseTexture(FragLightingData fragLighting) {
 		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
 
 	return max(fragLighting.diffuseIntensity * texel + fragLighting.specular, lightingData.darkTextureCoefficient * texel);
-}
-
-vec3 processNormalMaps()
-{
-    vec3 currentMap;
-	vec3 normal = normalize(dataIn.normal);
-
-	if(!textureData.bumpActive)
-		return normal;
-
-
-	vec3 calculatedNormals = normal;
-
-	// Calculate normal if a normal map is provided
-	for (int i = 0; i < textureData.nNormals; i++)
-	{
-		float dirUp, dirFront;	
-	
-		currentMap = texture(textureData.maps[textureData.normalIds[i]], dataIn.textureCoords).rgb;
-
-		normal = normalize(mix(currentMap, calculatedNormals, NORMAL_BLEND_AMOUNT) * 2.0 - 1.0);
-
-		calculatedNormals = normalize(vec3(normal.xy + calculatedNormals.xy, normal.z));
-	}
-
-
-	return calculatedNormals;
 }
 
 
@@ -236,6 +232,7 @@ void main() {
 		else if (fogData.mode == FOG_TYPE_EXP2)
 			fogAmount = pow(exp(-fogData.density * fragDistance), 2);
 	}
+
 
 	// process all the lights of the scene
 	FragLightingData fragLighting;
