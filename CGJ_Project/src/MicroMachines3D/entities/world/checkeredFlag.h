@@ -30,7 +30,7 @@ private:
 		Entity flag = group.addNewEntity(scene, *this);
 		flag.addComponent<MeshComponent>(mesh, flag);
 
-		Transform::translate(flag, Coords3f({ xPos, BUTTER_HEIGHT / 4.0f, zPos }));
+		Transform::translate(flag, Coords3f({ xPos, BUTTER_HEIGHT / 10.0f, zPos }));
 		Transform::scale(flag, Coords3f({ xSize, BUTTER_HEIGHT / 2.0f, zSize }));
 	}
 
