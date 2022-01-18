@@ -76,6 +76,8 @@ Application& Application::init(const ApplicationData& applicationData, int argc,
 	// return from main loop
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 
+	app._originalWindowSize = WindowCoords({ appData.width, appData.heigth });
+
 	app._renderer.init();				// initializes the renderer
 	return app;
 }

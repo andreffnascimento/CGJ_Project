@@ -24,8 +24,11 @@ private:
 	Entity _car = Entity();
 	RigidbodyComponent* _carRigidbody = nullptr;
 
+	CanvasComponent* _pauseScreenCanvas = nullptr;
+
 	CarMovementScript* _carMovementScript = nullptr;
 	OrangesManagerScript* _orangesManagerScript = nullptr;
+
 
 	bool _colliderWithOrange = false;
 	bool _paused = false;
@@ -47,7 +50,8 @@ public:
 		_eventHandler = &Application::getEventHandler();
 		_car = _scene->getEntityByTag("Car");
 		_carRigidbody = &_car.getComponent<RigidbodyComponent>();
-		_carMovementScript = dynamic_cast<CarMovementScript*>(_scene->getEntityByTag("Car").getComponent<ScriptComponent>().getScriptByTag("CarMovementScript"));
+		_pauseScreenCanvas = &_scene->getEntityByTag("PauseScreen").getComponent<CanvasComponent>();
+		_carMovementScript = dynamic_cast<CarMovementScript*>(_car.getComponent<ScriptComponent>().getScriptByTag("CarMovementScript"));
 		_orangesManagerScript = dynamic_cast<OrangesManagerScript*>(_scene->getEntityByTag("Oranges").getComponent<ScriptComponent>().getScriptByTag("OrangesManagerScript"));
 		_respawn();
 	}
@@ -57,7 +61,10 @@ public:
 	{
 		// check for pause button
 		if (_eventHandler->keyState('S').pressed() || _eventHandler->keyState('s').pressed())
-			Application::getInstance().setTimeScale(_paused = !_paused ? 0.0f : 1.0f);
+		{
+			Application::getInstance().setTimeScale((_paused = !_paused) ? 0.0f : 1.0f);
+			_pauseScreenCanvas->setEnabled(_paused);
+		}
 
 		if (_paused)
 			return;

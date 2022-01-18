@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 
+#include "engine/app/application.h"
 #include "engine/math/AVTmathLib.h"
 #include "engine/math/transform.h"
 #include "engine/text/avtFreeType.h"
@@ -14,8 +15,8 @@ void Renderer::renderCanvas(const Scene& scene) const
 	_initCanvasRendering();
 
 	const std::unordered_map<EntityHandle, CanvasComponent>& canvasComponents = scene.getSceneComponents<CanvasComponent>();
-	_renderTextInstances(canvasComponents);
 	_renderImageInstances(canvasComponents);
+	_renderTextInstances(canvasComponents);
 
 	_terminateCanvasRendering();
 }
@@ -25,13 +26,12 @@ void Renderer::renderCanvas(const Scene& scene) const
 
 void Renderer::_initCanvasRendering() const
 {
-	int viewport[4] = {};
-	glGetIntegerv(GL_VIEWPORT, viewport);
+	WindowCoords originalWindowSize = Application::getInstance().getOriginalWindowSize();
+
 	pushMatrix(PROJECTION);
 	loadIdentity(PROJECTION);
 	loadIdentity(VIEW);
-	loadIdentity(MODEL);
-	ortho((float)viewport[0], viewport[0] + viewport[2] - 1.0f, (float)viewport[1], viewport[1] + viewport[3] - 1.0f, -1.0f, 1.0f);
+	ortho(0, (float)originalWindowSize.x, 0, (float)originalWindowSize.y, -1.0f, 1.0f);
 
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -49,6 +49,7 @@ void Renderer::_terminateCanvasRendering() const
 
 void Renderer::_renderTextInstances(const std::unordered_map<EntityHandle, CanvasComponent>& canvasComponents) const
 {
+	loadIdentity(MODEL);
 	glUseProgram(_textShader.getProgramIndex());
 	for (const auto& canvasIterator : canvasComponents)
 	{
@@ -70,7 +71,6 @@ void Renderer::_renderTextInstances(const std::unordered_map<EntityHandle, Canva
 void Renderer::_renderImageInstances(const std::unordered_map<EntityHandle, CanvasComponent>& canvasComponents) const
 {
 	glUseProgram(_shader.getProgramIndex());
-
 	for (const auto& canvasIterator : canvasComponents)
 	{
 		const CanvasComponent& canvas = canvasIterator.second;

@@ -44,6 +44,8 @@ private:
 	float _ts = 0.0;
 	float _timeScale = 1.0f;
 
+	WindowCoords _originalWindowSize = WindowCoords();
+
 	EventHandler _eventHandler = EventHandler();
 	PhysicsEngine _physicsEngine = PhysicsEngine();
 	Renderer _renderer = Renderer();
@@ -75,7 +77,8 @@ public:
 
 
 public:
-	inline WindowCoords getWindowSize() const { return { _applicationData.width, _applicationData.heigth }; }
+	inline WindowCoords getWindowSize() const			{ return { _applicationData.width, _applicationData.heigth }; }
+	inline WindowCoords getOriginalWindowSize() const	{ return _originalWindowSize; }
 
 
 public:
