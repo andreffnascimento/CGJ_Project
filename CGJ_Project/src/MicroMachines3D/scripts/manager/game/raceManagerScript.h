@@ -69,6 +69,9 @@ public:
 		if (_paused)
 			return;
 
+		if (_eventHandler->keyState('R').pressed() || _eventHandler->keyState('r').pressed())
+			_respawn();
+
 		// checks for the fog toggle button
 		if (_eventHandler->keyState('F').pressed() || _eventHandler->keyState('f').pressed())
 			Renderer::setFogActive(_fogToggle = !_fogToggle);
