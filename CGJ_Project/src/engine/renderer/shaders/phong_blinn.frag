@@ -156,31 +156,6 @@ FragLightingData processSpotLight(FragLightingData fragLighting, uint index, vec
 }
 
 
-
-
-vec3 processNormalMaps()
-{
-    vec3 currentMap;
-	vec3 normal = normalize(dataIn.normal);
-
-	if(!textureData.bumpActive)
-		return normal;
-
-	// Calculate normal if a normal map is provided
-	vec3 calculatedNormals = normal;
-	for (int i = 0; i < textureData.nNormals; i++) {
-		float dirUp, dirFront;	
-		currentMap = texture(textureData.maps[textureData.normalIds[i]], dataIn.textureCoords).rgb;
-		normal = normalize(mix(currentMap, calculatedNormals, NORMAL_BLEND_AMOUNT) * 2.0 - 1.0);
-		calculatedNormals = normalize(vec3(normal.xy + calculatedNormals.xy, normal.z));
-	}
-
-	return calculatedNormals;
-}
-
-
-
-
 vec4 processModulateDiffuseTexture(FragLightingData fragLighting) {
 	vec4 texel = vec4(1.0);
 	for (int i = 0; i < textureData.nTextures; i++)
@@ -213,7 +188,29 @@ vec4 processImageTexture(FragLightingData fragLighting) {
 	return vec4(texel.xyz * (1 - materialData.ambient.a) + materialData.ambient.xyz * materialData.ambient.a, texel.a);
 }
 
+vec3 processNormalMaps()
+{
+    vec3 currentMap;
+	vec3 normal = normalize(dataIn.normal);
 
+	if(!textureData.bumpActive)
+		return normal;
+
+
+	vec3 calculatedNormals = normal;
+
+	// Calculate normal if a normal map is provided
+	for (int i = 0; i < textureData.nNormals; i++)
+	{	
+		currentMap = texture(textureData.maps[textureData.normalIds[i]], dataIn.textureCoords).rgb;
+
+		normal = normalize(2.0 * currentMap - 1.0);
+
+		calculatedNormals = normalize(vec3(normal.xy + calculatedNormals.xy, normal.z));
+	}
+
+	return calculatedNormals;
+}
 
 
 void main() {
