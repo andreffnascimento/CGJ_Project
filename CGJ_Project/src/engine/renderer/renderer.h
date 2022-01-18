@@ -18,7 +18,7 @@ class Renderer {
 
 private:
 	VSShaderLib _shader;
-	VSShaderLib _shaderText;
+	VSShaderLib _textShader;
 	int _uniformLocation[RendererData::ShaderUniformType::N_UNIFORMS] = {};
 
 	RendererData::TextureData _textures = RendererData::TextureData();
@@ -27,7 +27,7 @@ private:
 
 	RendererSettings::ReflectionCoefficients _reflectionCoefficients = RendererSettings::ReflectionCoefficients();
 	RendererSettings::Fog _fog = RendererSettings::Fog();
-	bool _bump = true;
+	bool _enableBump = true;
 
 
 	
@@ -60,7 +60,8 @@ public:
 	void renderScene(const Scene& scene) const;
 	void initSceneRendering() const;
 	void terminateSceneRendering() const;
-
+	
+	void renderCanvas(const Scene& scene) const;
 	void renderCamera(const Scene& scene) const;
 	void renderLights(const Scene& scene) const;
 	void renderMeshes(const Scene& scene) const;
@@ -73,6 +74,13 @@ private:
 	GLuint _setupShaders();
 	void _submitFogData() const;
 	void _submitTextureData() const;
+
+
+private:
+	void _initCanvasRendering() const;
+	void _terminateCanvasRendering() const;
+	void _renderTextInstances(const std::unordered_map<EntityHandle, CanvasComponent>& canvasComponents) const;
+	void _renderImageInstances(const std::unordered_map<EntityHandle, CanvasComponent>& canvasComponents) const;
 
 
 private:

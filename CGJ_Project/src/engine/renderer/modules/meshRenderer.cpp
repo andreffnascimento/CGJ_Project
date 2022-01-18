@@ -18,9 +18,6 @@ extern float mNormal3x3[9];
 
 void Renderer::renderMeshes(const Scene& scene) const
 {
-	if (!_shader.isProgramValid())
-		throw std::string("Invalid shader program!");
-
 	_renderOpaqueMeshInstances();
 
 	_enableTranslucentRendering();
@@ -104,18 +101,20 @@ void Renderer::_sortTranslucentMeshInstancesInto(const Scene& scene, RendererDat
 
 void Renderer::_renderOpaqueMeshInstances() const
 {
-	RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
 	for (const auto& meshIterator : _opaqueMeshInstances)
 	{
+		RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
 		const MeshData* meshData = meshIterator.first;
-		const std::unordered_set<const TransformComponent*> transformComponents = meshIterator.second;
-
-		if (!meshData->enabled())
-			continue;
-
+		const std::unordered_map<const MeshComponent*, const TransformComponent*> mesheInstances = meshIterator.second;
 		_submitMeshData(*meshData);
-		for (const auto& transform : transformComponents)
+
+		for (const auto& meshInstanceIterator : mesheInstances)
 		{
+			const MeshComponent* mesh = meshInstanceIterator.first;
+			const TransformComponent* transform = meshInstanceIterator.second;
+			if (!mesh->enabled())
+				continue;
+
 			if (instanceBuffer.nInstances >= RendererSettings::MAX_INSTANCES_PER_SUBMISSION)
 				_submitRenderableData(*meshData, instanceBuffer);
 
@@ -129,20 +128,22 @@ void Renderer::_renderOpaqueMeshInstances() const
 
 void Renderer::_renderTranslucentMeshInstances(const RendererData::translucentMeshInstances_t& translucentMeshInstances) const
 {
-	RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
 	auto meshIterator = translucentMeshInstances.cbegin();
 	while (meshIterator != translucentMeshInstances.cend())
 	{
+		RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
 		const MeshComponent* originalMesh = meshIterator->first;
-
 		_submitMeshData(originalMesh->meshData());
+
 		while (meshIterator != translucentMeshInstances.cend() && meshIterator->first == originalMesh)
 		{
 			if (instanceBuffer.nInstances >= RendererSettings::MAX_INSTANCES_PER_SUBMISSION)
 				_submitRenderableData(*originalMesh, instanceBuffer);
 
+			const MeshComponent* mesh = meshIterator->first;
 			const TransformComponent* transform = meshIterator->second;
-			_addToInstanceBuffer(instanceBuffer, transform);
+			if (mesh->enabled())
+				_addToInstanceBuffer(instanceBuffer, transform);
 			meshIterator++;
 		}
 

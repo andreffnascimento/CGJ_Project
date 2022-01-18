@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
 	appData.caption = "CGJ Project : Micro Machines 3D";
 	appData.width = 1280;
 	appData.heigth = 720;
-	appData.lockedFps = false;
+	appData.lockedFps = true;
 
 	try 
 	{
@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
 		application.setScene(&scene);
 		application.run();
 	} 
-	catch (std::string e) 
+	catch (std::string e)
 	{
 		std::cerr << "Exception: " << e << "\n";
 	}

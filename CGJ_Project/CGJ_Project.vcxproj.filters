@@ -28,6 +28,8 @@
     <ClCompile Include="src\engine\physics\collisionResolver.cpp" />
     <ClCompile Include="src\engine\renderer\modules\colliderRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\mesh\meshData.cpp" />
+    <ClCompile Include="src\MicroMachines3D\entities\hud\pauseScreen.h" />
+    <ClCompile Include="src\engine\renderer\modules\canvasRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\app\application.h" />
@@ -74,7 +76,6 @@
     <ClInclude Include="src\engine\physics\collisionResolver.h" />
     <ClInclude Include="src\engine\renderer\rendererSettings.h" />
     <ClInclude Include="src\engine\renderer\rendererData.h" />
-    <ClInclude Include="src\MicroMachines3D\scripts\manager\game\fogToggleScript.h" />
     <ClInclude Include="src\engine\renderer\mesh\texture.h" />
     <ClInclude Include="src\engine\renderer\mesh\meshData.h" />
     <ClInclude Include="src\engine\scene\components\meshComponent.h" />
@@ -97,6 +98,9 @@
     <ClInclude Include="src\MicroMachines3D\scripts\oranges\orangesManagerScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\collisionResolver\orangeCollisionResolver.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\checkeredFlag.h" />
+    <ClInclude Include="src\engine\scene\components\textComponent.h" />
+    <ClInclude Include="src\engine\scene\components\canvasComponent.h" />
+    <ClInclude Include="src\engine\scene\components\imageComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />
@@ -122,5 +126,6 @@
     <Image Include="src\MicroMachines3D\textures\table\lightwood.tga" />
     <Image Include="src\MicroMachines3D\textures\table\stone.tga" />
     <Image Include="src\MicroMachines3D\textures\orange\orange.jpg" />
+    <Image Include="src\MicroMachines3D\textures\heart.png" />
   </ItemGroup>
 </Project>

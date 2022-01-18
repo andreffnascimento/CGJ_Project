@@ -15,8 +15,6 @@ private:
 	MyMesh _mesh;
 	Texture _texture;
 
-	bool _enabled = true;
-
 
 
 
@@ -31,7 +29,6 @@ public:
 	inline const MyMesh& mesh() const		{ return _mesh; }
 	inline const Material& material() const { return _mesh.mat; }
 	inline const Texture& texture() const	{ return _texture; }
-	inline bool enabled() const				{ return _enabled; }
 
 
 public:
@@ -39,7 +36,6 @@ public:
 	void setTextureMode(const Texture::TextureMode& textureMode);
 	void addTexture(unsigned int textureId);
 	void addNormal(unsigned int normalId);
-	void setEnabled(bool enabled);
 
 };
 

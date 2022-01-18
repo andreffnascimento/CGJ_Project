@@ -83,11 +83,14 @@ void Renderer::setFogActive(bool active)
 	renderer._fog.active = active;
 }
 
+
 void Renderer::setBumpActive(bool active)
 {
 	Renderer& renderer = Application::getRenderer();
-	renderer._bump = active;
+	renderer._enableBump = active;
 }
+
+
 
 
 void Renderer::init()
@@ -110,8 +113,9 @@ void Renderer::init()
 	}
 	ilInit();
 
-	// initialization of freetype library with font_name file
-	freeType_init(RendererSettings::FONT_NAME);
+	// setup shaders
+	if (!_setupShaders())
+		throw std::string("Unable to initialize the shaders");
 
 	// generates the texture names
 	glGenTextures(RendererSettings::MAX_TEXTURES, _textures.textureData);
@@ -122,9 +126,8 @@ void Renderer::init()
 	glEnable(GL_MULTISAMPLE);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-	// setup shaders
-	if (!_setupShaders())
-		throw std::string("Unable to initialize the shaders");
+	// initialization of freetype library with font_name file
+	freeType_init(RendererSettings::FONT_NAME);
 }
 
 
@@ -140,14 +143,14 @@ void Renderer::updateViewport(CameraComponent& camera, int width, int height) co
 void Renderer::submitRenderableMesh(const MeshComponent& mesh)
 {
 	if (mesh.material().diffuse[3] == 1.0f)		// checks if the object is translucid
-		_opaqueMeshInstances.emplace(&mesh.meshData(), std::unordered_set<const TransformComponent*>());
+		_opaqueMeshInstances.emplace(&mesh.meshData(), std::unordered_map<const MeshComponent*, const TransformComponent*>());
 }
 
 
 void Renderer::submitRenderableEntity(const MeshComponent& mesh, const Entity& entity)
 {
 	if (mesh.material().diffuse[3] == 1.0f)		// checks if the object is translucid
-		_opaqueMeshInstances[&mesh.meshData()].emplace(&entity.transform());
+		_opaqueMeshInstances[&mesh.meshData()][&mesh] = &entity.transform();
 	else
 		_translucentMeshInstances[&mesh] = &entity.transform();
 
@@ -163,6 +166,7 @@ void Renderer::renderScene(const Scene& scene) const
 	renderLights(scene);
 	renderMeshes(scene);
 	renderColliders(scene);
+	renderCanvas(scene);
 	terminateSceneRendering();
 }
 
@@ -239,14 +243,20 @@ GLuint Renderer::_setupShaders()
 	std::cout << "InfoLog for Per Fragment Phong Lightning Shader\n" << _shader.getAllInfoLogs().c_str()  << "\n\n";
 
 	// Shader for bitmap Text
-	_shaderText.init();
-	_shaderText.loadShader(VSShaderLib::VERTEX_SHADER, "src/engine/renderer/shaders/text.vert");
-	_shaderText.loadShader(VSShaderLib::FRAGMENT_SHADER, "src/engine/renderer/shaders/text.frag");
+	_textShader.init();
+	_textShader.loadShader(VSShaderLib::VERTEX_SHADER, "src/engine/renderer/shaders/text.vert");
+	_textShader.loadShader(VSShaderLib::FRAGMENT_SHADER, "src/engine/renderer/shaders/text.frag");
 
-	glLinkProgram(_shaderText.getProgramIndex());
-	std::cout << "InfoLog for Text Rendering Shader\n" << _shaderText.getAllInfoLogs().c_str() << "\n\n";
+	glLinkProgram(_textShader.getProgramIndex());
+	std::cout << "InfoLog for Text Rendering Shader\n" << _textShader.getAllInfoLogs().c_str() << "\n\n";
 
-	return _shader.isProgramLinked() && _shaderText.isProgramLinked();
+	if (!_shader.isProgramValid())
+		throw std::string("Invalid shader program!");
+
+	if (!_textShader.isProgramValid())
+		throw std::string("Invalid text shader program!");
+
+	return _shader.isProgramLinked() && _textShader.isProgramLinked();
 }
 
 
@@ -267,7 +277,6 @@ void Renderer::_submitFogData() const
 void Renderer::_submitTextureData() const
 {
 	int textureMaps[RendererSettings::MAX_TEXTURES] = {};
-
 	for (unsigned int i = 0; i < _textures.nTextures; i++)
 	{
 		glActiveTexture(GL_TEXTURE0 + i);
@@ -276,5 +285,5 @@ void Renderer::_submitTextureData() const
 	}
 	
 	glUniform1iv(_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAPS], _textures.nTextures, textureMaps);
-	glUniform1i(_uniformLocation[RendererData::ShaderUniformType::BUMP_ACTIVE], _bump);
+	glUniform1i(_uniformLocation[RendererData::ShaderUniformType::BUMP_ACTIVE], _enableBump);
 }

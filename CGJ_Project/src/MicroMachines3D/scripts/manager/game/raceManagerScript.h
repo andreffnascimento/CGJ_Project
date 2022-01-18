@@ -24,11 +24,16 @@ private:
 	Entity _car = Entity();
 	RigidbodyComponent* _carRigidbody = nullptr;
 
+	CanvasComponent* _pauseScreenCanvas = nullptr;
+
 	CarMovementScript* _carMovementScript = nullptr;
 	OrangesManagerScript* _orangesManagerScript = nullptr;
 
+
 	bool _colliderWithOrange = false;
 	bool _paused = false;
+	bool _fogToggle = true;
+	bool _bumpToggle = true;
 
 
 
@@ -45,7 +50,8 @@ public:
 		_eventHandler = &Application::getEventHandler();
 		_car = _scene->getEntityByTag("Car");
 		_carRigidbody = &_car.getComponent<RigidbodyComponent>();
-		_carMovementScript = dynamic_cast<CarMovementScript*>(_scene->getEntityByTag("Car").getComponent<ScriptComponent>().getScriptByTag("CarMovementScript"));
+		_pauseScreenCanvas = &_scene->getEntityByTag("PauseScreen").getComponent<CanvasComponent>();
+		_carMovementScript = dynamic_cast<CarMovementScript*>(_car.getComponent<ScriptComponent>().getScriptByTag("CarMovementScript"));
 		_orangesManagerScript = dynamic_cast<OrangesManagerScript*>(_scene->getEntityByTag("Oranges").getComponent<ScriptComponent>().getScriptByTag("OrangesManagerScript"));
 		_respawn();
 	}
@@ -56,9 +62,20 @@ public:
 		// check for pause button
 		if (_eventHandler->keyState('S').pressed() || _eventHandler->keyState('s').pressed())
 		{
-			_paused = !_paused;
-			Application::getInstance().setTimeScale(_paused ? 0.0f : 1.0f);
+			Application::getInstance().setTimeScale((_paused = !_paused) ? 0.0f : 1.0f);
+			_pauseScreenCanvas->setEnabled(_paused);
 		}
+
+		if (_paused)
+			return;
+
+		// checks for the fog toggle button
+		if (_eventHandler->keyState('F').pressed() || _eventHandler->keyState('f').pressed())
+			Renderer::setFogActive(_fogToggle = !_fogToggle);
+
+		// checks the bump toggle buttom
+		if (_eventHandler->keyState('B').pressed() || _eventHandler->keyState('b').pressed())
+			Renderer::setBumpActive(_bumpToggle = !_bumpToggle);
 
 		// check if the game needs to be reset
 		if (_colliderWithOrange || _carRigidbody->position().y < RESET_GAME_HEIGHT)

@@ -27,6 +27,8 @@ public:
 		createLeg(scene, group, mesh,  1.0f, -1.0f, "2");
 		createLeg(scene, group, mesh, -1.0f,  1.0f, "3");
 		createLeg(scene, group, mesh,  1.0f,  1.0f, "4");
+
+		Transform::translate(*this, { 0.0f, -TABLE_SIZE.y, 0.0f });
 	}
 
 

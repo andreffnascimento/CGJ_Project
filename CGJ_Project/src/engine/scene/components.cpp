@@ -247,3 +247,68 @@ AABBColliderComponent::~AABBColliderComponent()
 
 	_collisionResolver = nullptr;
 }
+
+
+
+
+Entity CanvasComponent::createTextEntity(Scene* scene, const Entity& canvasEntity, const std::string& tag)
+{
+	Entity entity = scene->createEntity(canvasEntity.tag().tag() + ":" + tag);
+	TextComponent& textComponent = entity.addComponent<TextComponent>();
+	_canvasText[&textComponent] = &entity.transform();
+	return entity;
+}
+
+Entity CanvasComponent::createTextEntity(Scene* scene, const Entity& canvasEntity)
+{
+	Entity entity = scene->createEntity(canvasEntity.tag(), true);
+	TextComponent& textComponent = entity.addComponent<TextComponent>();
+	_canvasText[&textComponent] = &entity.transform();
+	return entity;
+}
+
+
+Entity CanvasComponent::createImageEntity(Scene* scene, const Entity& canvasEntity, const std::string& tag)
+{
+	Entity entity = scene->createEntity(canvasEntity.tag().tag() + ":" + tag);
+	ImageComponent& imageComponent = entity.addComponent<ImageComponent>();
+	_canvasImage[&imageComponent] = &entity.transform();
+	return entity;
+}
+
+
+Entity CanvasComponent::createImageEntity(Scene* scene, const Entity& canvasEntity)
+{
+	Entity entity = scene->createEntity(canvasEntity.tag(), true);
+	ImageComponent& imageComponent = entity.addComponent<ImageComponent>();
+	_canvasImage[&imageComponent] = &entity.transform();
+	return entity;
+}
+
+
+
+
+ImageComponent::ImageComponent()
+{
+	Material material = {
+		{ 0.0f, 0.0f, 0.0f, 0.0f },
+		{ 0.0f, 0.0f, 0.0f, 0.0f },
+		{ 0.0f, 0.0f, 0.0f, 0.0f },
+		{ 0.0f, 0.0f, 0.0f, 0.0f },
+		0.0f,
+	};
+
+	_meshData = std::make_shared<MeshData>(createQuad(1.0f, 1.0f), material);
+	_meshData->setTextureMode(Texture::TextureMode::IMAGE_TEXTURING);	
+}
+
+
+void ImageComponent::setBlendColor(const Coords4f& blendColor)
+{
+	Material material = _meshData->material();
+	material.ambient[0] = blendColor.x;
+	material.ambient[1] = blendColor.y;
+	material.ambient[2] = blendColor.z;
+	material.ambient[3] = blendColor.w;
+	_meshData->setMaterial(material);
+}

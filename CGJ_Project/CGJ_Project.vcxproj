@@ -181,6 +181,7 @@
     <ClCompile Include="src\engine\math\transformMatrix.cpp" />
     <ClCompile Include="src\engine\renderer\mesh\meshData.cpp" />
     <ClCompile Include="src\engine\renderer\modules\cameraRenderer.cpp" />
+    <ClCompile Include="src\engine\renderer\modules\canvasRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\colliderRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\lightRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\meshRenderer.cpp" />
@@ -197,6 +198,7 @@
     <ClCompile Include="src\engine\renderer\Texture_Loader.cpp" />
     <ClCompile Include="src\engine\renderer\vsShaderLib.cpp" />
     <ClCompile Include="src\MicroMachines3D\common\materials.h" />
+    <ClCompile Include="src\MicroMachines3D\entities\hud\pauseScreen.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\app\application.h" />
@@ -216,12 +218,15 @@
     <ClInclude Include="src\engine\scene\components\aabbColliderComponent.h" />
     <ClInclude Include="src\engine\scene\components\cameraComponent.h" />
     <ClInclude Include="src\engine\scene\components\groupComponent.h" />
+    <ClInclude Include="src\engine\scene\components\canvasComponent.h" />
+    <ClInclude Include="src\engine\scene\components\imageComponent.h" />
     <ClInclude Include="src\engine\scene\components\lightComponent.h" />
     <ClInclude Include="src\engine\scene\components\meshComponent.h" />
     <ClInclude Include="src\engine\scene\components\parentComponent.h" />
     <ClInclude Include="src\engine\scene\components\rigidbodyComponent.h" />
     <ClInclude Include="src\engine\scene\components\scriptComponent.h" />
     <ClInclude Include="src\engine\scene\components\tagComponent.h" />
+    <ClInclude Include="src\engine\scene\components\textComponent.h" />
     <ClInclude Include="src\engine\scene\components\transformComponent.h" />
     <ClInclude Include="src\engine\scene\ecsRegistry.h" />
     <ClInclude Include="src\engine\scene\sceneEntity.h" />
@@ -262,7 +267,6 @@
     <ClInclude Include="src\engine\renderer\Texture_Loader.h" />
     <ClInclude Include="src\engine\renderer\VertexAttrDef.h" />
     <ClInclude Include="src\engine\renderer\vsShaderLib.h" />
-    <ClInclude Include="src\MicroMachines3D\scripts\manager\game\fogToggleScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\manager\game\globalLightScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\manager\game\raceManagerScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\oranges\orangesManagerScript.h" />
@@ -285,6 +289,7 @@
     <None Include="src\engine\renderer\shaders\text.vert" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="src\MicroMachines3D\textures\heart.png" />
     <Image Include="src\MicroMachines3D\textures\lightwood.tga" />
     <Image Include="src\MicroMachines3D\textures\orange\orange.jpg" />
     <Image Include="src\MicroMachines3D\textures\stone.tga" />

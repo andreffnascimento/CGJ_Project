@@ -2,7 +2,6 @@
 #define __engine_renderer_rendererData__
 
 
-#include <unordered_set>
 #include <unordered_map>
 
 #include "engine/renderer/rendererSettings.h"
@@ -17,7 +16,7 @@ class RendererData
 {
 
 private:
-	typedef std::unordered_map<const MeshData*, std::unordered_set<const TransformComponent*>> opaqueMeshInstances_t;
+	typedef std::unordered_map<const MeshData*, std::unordered_map<const MeshComponent*, const TransformComponent*>> opaqueMeshInstances_t;
 	typedef std::unordered_map<const MeshComponent*, const TransformComponent*> translucentMeshInstances_t;
 
 

@@ -13,6 +13,9 @@
 #include "engine/scene/components/lightComponent.h"
 #include "engine/scene/components/rigidbodyComponent.h"
 #include "engine/scene/components/aabbColliderComponent.h"
+#include "engine/scene/components/canvasComponent.h"
+#include "engine/scene/components/textComponent.h"
+#include "engine/scene/components/imageComponent.h"
 
 
 #endif // !__engine_scene_components__
