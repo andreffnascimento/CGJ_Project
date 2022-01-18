@@ -27,6 +27,7 @@ private:
 
 	RendererSettings::ReflectionCoefficients _reflectionCoefficients = RendererSettings::ReflectionCoefficients();
 	RendererSettings::Fog _fog = RendererSettings::Fog();
+	bool _bump = true;
 
 
 	
@@ -40,7 +41,7 @@ public:
 	static void setReflectionCoefficients(const RendererSettings::ReflectionCoefficients& reflectionCoefficients);
 	static void setFog(const RendererSettings::Fog& fog);
 	static void setFogActive(bool active);
-
+	static void setBumpActive(bool active);
 
 
 public:

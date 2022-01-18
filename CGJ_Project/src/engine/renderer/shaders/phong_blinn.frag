@@ -17,6 +17,8 @@ const uint FOG_TYPE_LINEAR = 1;
 const uint FOG_TYPE_EXP = 2;
 const uint FOG_TYPE_EXP2 = 3;
 
+const float NORMAL_BLEND_AMOUNT = 0.5;
+
 
 
 
@@ -36,6 +38,7 @@ struct TextureData {
 	uint textureIds[MAX_TEXTURES_PER_MESH];
 	uint normalIds[MAX_TEXTURES_PER_MESH];
 	sampler2D maps[MAX_TEXTURES];
+	bool bumpActive;
 };
 
 
@@ -172,6 +175,33 @@ vec4 processReplaceDiffuseTexture(FragLightingData fragLighting) {
 	return max(fragLighting.diffuseIntensity * texel + fragLighting.specular, lightingData.darkTextureCoefficient * texel);
 }
 
+vec3 processNormalMaps()
+{
+    vec3 currentMap;
+	vec3 normal = normalize(dataIn.normal);
+
+	if(!textureData.bumpActive)
+		return normal;
+
+
+	vec3 calculatedNormals = normal;
+
+	// Calculate normal if a normal map is provided
+	for (int i = 0; i < textureData.nNormals; i++)
+	{
+		float dirUp, dirFront;	
+	
+		currentMap = texture(textureData.maps[textureData.normalIds[i]], dataIn.textureCoords).rgb;
+
+		normal = normalize(mix(currentMap, calculatedNormals, NORMAL_BLEND_AMOUNT) * 2.0 - 1.0);
+
+		calculatedNormals = normalize(vec3(normal.xy + calculatedNormals.xy, normal.z));
+	}
+
+
+	return calculatedNormals;
+}
+
 
 vec4 processImageTexture(FragLightingData fragLighting) {
 	vec4 texel = vec4(1.0);
@@ -190,11 +220,8 @@ vec4 processImageTexture(FragLightingData fragLighting) {
 void main() {
 	colorOut = vec4(0.0);
 	vec3 eye = normalize(dataIn.eye);
-	vec3 normal = normalize(dataIn.normal);;
+	vec3 normal = processNormalMaps();
 	
-	// Calculate normal if a normal map is provided
-	for (int i = 0; i < textureData.nNormals; i++)
-		normal = normalize(2.0 * texture(textureData.maps[textureData.normalIds[i]], dataIn.textureCoords).rgb - 1.0);
 
 	// generate the fog color
 	float fogAmount = 1.0;

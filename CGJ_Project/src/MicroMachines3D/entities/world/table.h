@@ -19,6 +19,7 @@ public:
 		mesh.addTexture(Renderer::create2dTexture("src/MicroMachines3D/textures/table/lightwood.tga"));
 		mesh.addTexture(Renderer::create2dTexture("src/MicroMachines3D/textures/table/stone.tga"));
 		mesh.addNormal(Renderer::create2dTexture("src/MicroMachines3D/textures/table/normal.tga"));
+		mesh.addNormal(Renderer::create2dTexture("src/MicroMachines3D/textures/table/wood_normals.png"));
 
 		GroupComponent& group = addComponent<GroupComponent>();
 		createTop(scene, group, mesh);
