@@ -156,31 +156,6 @@ FragLightingData processSpotLight(FragLightingData fragLighting, uint index, vec
 }
 
 
-
-
-vec3 processNormalMaps()
-{
-    vec3 currentMap;
-	vec3 normal = normalize(dataIn.normal);
-
-	if(!textureData.bumpActive)
-		return normal;
-
-	// Calculate normal if a normal map is provided
-	vec3 calculatedNormals = normal;
-	for (int i = 0; i < textureData.nNormals; i++) {
-		float dirUp, dirFront;	
-		currentMap = texture(textureData.maps[textureData.normalIds[i]], dataIn.textureCoords).rgb;
-		normal = normalize(mix(currentMap, calculatedNormals, NORMAL_BLEND_AMOUNT) * 2.0 - 1.0);
-		calculatedNormals = normalize(vec3(normal.xy + calculatedNormals.xy, normal.z));
-	}
-
-	return calculatedNormals;
-}
-
-
-
-
 vec4 processModulateDiffuseTexture(FragLightingData fragLighting) {
 	vec4 texel = vec4(1.0);
 	for (int i = 0; i < textureData.nTextures; i++)
