@@ -31,6 +31,8 @@ public:
 
 	inline void setEnabled(bool enabled) { _enabled = enabled; }
 
+	void setBlendColor(const Coords4f& blendColor);
+
 };
 
 

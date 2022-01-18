@@ -30,9 +30,10 @@ public:
 
 	inline operator const std::string& () const { return text(); }
 
-	inline void setSize(float size)				{ _size = size; }
-	inline void setColor(const Coords3f& color) { _color = color; }
-	inline void setEnabled(bool enabled)		{ _enabled = enabled; }
+	inline void setText(const std::string& text)	{ _text = text; }
+	inline void setSize(float size)					{ _size = size; }
+	inline void setColor(const Coords3f& color)		{ _color = color; }
+	inline void setEnabled(bool enabled)			{ _enabled = enabled; }
 
 };
 

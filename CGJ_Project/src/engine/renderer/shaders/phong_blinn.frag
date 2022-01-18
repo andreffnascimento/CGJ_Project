@@ -207,7 +207,7 @@ vec4 processImageTexture(FragLightingData fragLighting) {
 	if (texel.a == 0.0)
 		discard;
 
-	return texel;
+	return vec4(texel.xyz * (1 - materialData.ambient.a) + materialData.ambient.xyz * materialData.ambient.a, texel.a);
 }
 
 
