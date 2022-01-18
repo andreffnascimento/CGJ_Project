@@ -42,7 +42,6 @@ private:
 		Entity textEntity = canvas.createTextEntity(scene, *this, "PauseText");
 		TextComponent& text = textEntity.getComponent<TextComponent>();
 		text.setText("Pause");
-		text.setColor({ 1.0f, 1.0f, 1.0f });
 		text.setSize(1.5f);
 		Transform::translateTo(textEntity, { windowCoords.x / 2.4f, windowCoords.y / 1.8f, 0.0f });
 	}

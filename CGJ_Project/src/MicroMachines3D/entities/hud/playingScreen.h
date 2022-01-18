@@ -23,6 +23,7 @@ public:
 		createHeartIcon(scene, canvas, windowCoords, 2);
 		createHeartIcon(scene, canvas, windowCoords, 3);
 		createHeartIcon(scene, canvas, windowCoords, 4);
+		createResetQuery(scene, canvas, windowCoords);
 	}
 
 
@@ -31,13 +32,24 @@ public:
 private:
 	void createHeartIcon(Scene* scene, CanvasComponent& canvas, const WindowCoords& windowCoords, unsigned int id)
 	{
-		Entity imageEntity = canvas.createImageEntity(scene, *this, "Heart_" + std::to_string(id));
-		ImageComponent& image = imageEntity.getComponent<ImageComponent>();
+		Entity heart = canvas.createImageEntity(scene, *this, "Heart_" + std::to_string(id));
+		ImageComponent& image = heart.getComponent<ImageComponent>();
 		image.addImage(Renderer::create2dTexture("src/MicroMachines3D/textures/hud/heart.png"));
 
 		float xHeartShift = HEART_SIZE.x * 1.2f * id;
-		Transform::scaleTo(imageEntity, HEART_SIZE);
-		Transform::translateTo(imageEntity, { HEART_SIZE.x / 1.8f + xHeartShift, windowCoords.y - HEART_SIZE.y / 1.8f, 0.0f });
+		Transform::scaleTo(heart, HEART_SIZE);
+		Transform::translateTo(heart, { HEART_SIZE.x / 1.8f + xHeartShift, windowCoords.y - HEART_SIZE.y / 1.8f, 0.0f });
+	}
+
+
+	void createResetQuery(Scene* scene, CanvasComponent& canvas, const WindowCoords& windowCoords)
+	{
+		Entity resetQuery = canvas.createTextEntity(scene, *this, "ResetQuery");
+		TextComponent& text = resetQuery.getComponent<TextComponent>();
+		text.setText("Press \'R\' again to reset the race!");
+		text.setSize(0.7f);
+		text.setEnabled(false);
+		Transform::translateTo(resetQuery, { windowCoords.x / 2.0f + 100.0f, windowCoords.y - 40.0f, 0.0f});
 	}
 
 };

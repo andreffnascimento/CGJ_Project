@@ -28,6 +28,7 @@ private:
 private:
 	static constexpr unsigned int MAX_LIVES = 5;
 	static constexpr float RESET_GAME_HEIGHT = -10.0f;
+	static constexpr float RESET_QUERY_TIMER = 2.0f;
 
 
 	
@@ -41,7 +42,10 @@ private:
 	CanvasComponent* _playingScreenCanvas = nullptr;
 	CanvasComponent* _pauseScreenCanvas = nullptr;
 	CanvasComponent* _gameoverScreenCanvas = nullptr;
+
 	ImageComponent* _hearts[RaceManagerScript::MAX_LIVES] = {};
+	TextComponent* _resetQuery = nullptr;
+	float _resetQueryTimer = 0.0f;
 
 	CarMovementScript* _carMovementScript = nullptr;
 	OrangesManagerScript* _orangesManagerScript = nullptr;
@@ -73,6 +77,7 @@ public:
 		_carMovementScript = dynamic_cast<CarMovementScript*>(_car.getComponent<ScriptComponent>().getScriptByTag("CarMovementScript"));
 		_orangesManagerScript = dynamic_cast<OrangesManagerScript*>(_scene->getEntityByTag("Oranges").getComponent<ScriptComponent>().getScriptByTag("OrangesManagerScript"));
 
+		_resetQuery = &_scene->getEntityByTag("PlayingScreen:ResetQuery").getComponent<TextComponent>();
 		for (int i = 0; i < RaceManagerScript::MAX_LIVES; i++)
 			_hearts[i] = &_scene->getEntityByTag("PlayingScreen:Heart_" + std::to_string(i)).getComponent<ImageComponent>();
 
@@ -86,15 +91,15 @@ public:
 		{
 
 		case RaceManagerScript::GameState::PLAYING:
-			_checkPlayingActions();
+			_checkPlayingActions(ts);
 			break;
 
 		case RaceManagerScript::GameState::PAUSED:
-			_checkPauseActions();
+			_checkPauseActions(ts);
 			break;
 
 		case RaceManagerScript::GameState::GAMEOVER:
-			_checkGameoverActions();
+			_checkGameoverActions(ts);
 			break;
 
 		case RaceManagerScript::GameState::RESPAWN:
@@ -120,7 +125,7 @@ public:
 
 
 private:
-	void _checkPlayingActions()
+	void _checkPlayingActions(float ts)
 	{
 		if (_eventHandler->keyState('S').pressed() || _eventHandler->keyState('s').pressed())
 		{
@@ -128,6 +133,10 @@ private:
 			Application::getInstance().setTimeScale(0.0f);
 			_pauseScreenCanvas->setEnabled(true);
 		}
+
+		_updateResetQuery(ts);
+		if (_eventHandler->keyState('R').pressed() || _eventHandler->keyState('r').pressed())
+			_processResetQueryClick(ts);
 
 		if (_eventHandler->keyState('F').pressed() || _eventHandler->keyState('f').pressed())
 			Renderer::setFogActive(_fogToggle = !_fogToggle);
@@ -148,7 +157,7 @@ private:
 	}
 
 
-	void _checkPauseActions()
+	void _checkPauseActions(float ts)
 	{
 		if (_eventHandler->keyState('S').pressed() || _eventHandler->keyState('s').pressed())
 		{
@@ -158,7 +167,7 @@ private:
 		}
 	}
 
-	void _checkGameoverActions()
+	void _checkGameoverActions(float ts)
 	{
 		if (_eventHandler->keyState('R').pressed() || _eventHandler->keyState('r').pressed())
 			_prepareRespawn();
@@ -168,6 +177,29 @@ private:
 
 
 private:
+	void _updateResetQuery(float ts)
+	{
+		if (_resetQueryTimer == 0.0f)
+			return;
+
+		_resetQueryTimer += ts;
+		if (_resetQueryTimer > RaceManagerScript::RESET_QUERY_TIMER)
+		{
+			_resetQueryTimer = 0.0f;
+			_resetQuery->setEnabled(false);
+		}
+	}
+
+
+	void _processResetQueryClick(float ts)
+	{
+		_resetQuery->setEnabled(true);
+		if (_resetQueryTimer > 0.0f)
+			_prepareRespawn();
+		_resetQueryTimer += ts;
+	}
+
+
 	void _decreaseLives()
 	{
 		_collideLastFrame = true;
@@ -208,6 +240,8 @@ private:
 		_pauseScreenCanvas->setEnabled(false);
 		//_gameoverScreenCanvas->setEnabled(false);
 
+		_resetQuery->setEnabled(false);
+		_resetQueryTimer = 0.0f;
 		for (int i = 0; i < RaceManagerScript::MAX_LIVES; i++)
 			_hearts[i]->setEnabled(true);
 	}
