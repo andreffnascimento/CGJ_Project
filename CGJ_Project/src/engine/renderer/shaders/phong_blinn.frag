@@ -187,16 +187,13 @@ vec3 processNormalMaps()
 
 	// Calculate normal if a normal map is provided
 	for (int i = 0; i < textureData.nNormals; i++)
-	{
-		float dirUp, dirFront;	
-	
+	{	
 		currentMap = texture(textureData.maps[textureData.normalIds[i]], dataIn.textureCoords).rgb;
 
-		normal = normalize(mix(currentMap, calculatedNormals, NORMAL_BLEND_AMOUNT) * 2.0 - 1.0);
+		normal = normalize(2.0 * currentMap - 1.0);
 
 		calculatedNormals = normalize(vec3(normal.xy + calculatedNormals.xy, normal.z));
 	}
-
 
 	return calculatedNormals;
 }
