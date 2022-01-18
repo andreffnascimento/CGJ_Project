@@ -18,9 +18,8 @@ private:
 	bool _enabled = true;
 
 public:
-	ImageComponent() = delete;
+	ImageComponent();
 	ImageComponent(const ImageComponent&) = default;
-	ImageComponent(unsigned int imageId);
 	~ImageComponent() = default;
 
 	inline const MeshData& meshData() const	{ return *_meshData; }
@@ -29,7 +28,8 @@ public:
 	inline const Texture& texture() const	{ return _meshData->texture(); }
 	inline bool enabled() const				{ return _enabled; }
 
-	inline void setEnabled(bool enabled) { _enabled = enabled; }
+	inline void addImage(unsigned int imageId)	{ _meshData->addTexture(imageId); }
+	inline void setEnabled(bool enabled)		{ _enabled = enabled; }
 
 	void setBlendColor(const Coords4f& blendColor);
 

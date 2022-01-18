@@ -251,36 +251,36 @@ AABBColliderComponent::~AABBColliderComponent()
 
 
 
-Entity CanvasComponent::createTextEntity(Scene* scene, const Entity& canvasEntity, const std::string& text, const std::string& tag)
+Entity CanvasComponent::createTextEntity(Scene* scene, const Entity& canvasEntity, const std::string& tag)
 {
 	Entity entity = scene->createEntity(canvasEntity.tag().tag() + ":" + tag);
-	TextComponent& textComponent = entity.addComponent<TextComponent>(text);
+	TextComponent& textComponent = entity.addComponent<TextComponent>();
 	_canvasText[&textComponent] = &entity.transform();
 	return entity;
 }
 
-Entity CanvasComponent::createTextEntity(Scene* scene, const Entity& canvasEntity, const std::string& text)
+Entity CanvasComponent::createTextEntity(Scene* scene, const Entity& canvasEntity)
 {
 	Entity entity = scene->createEntity(canvasEntity.tag(), true);
-	TextComponent& textComponent = entity.addComponent<TextComponent>(text);
+	TextComponent& textComponent = entity.addComponent<TextComponent>();
 	_canvasText[&textComponent] = &entity.transform();
 	return entity;
 }
 
 
-Entity CanvasComponent::createImageEntity(Scene* scene, const Entity& canvasEntity, unsigned int textureId, const std::string& tag)
+Entity CanvasComponent::createImageEntity(Scene* scene, const Entity& canvasEntity, const std::string& tag)
 {
 	Entity entity = scene->createEntity(canvasEntity.tag().tag() + ":" + tag);
-	ImageComponent& imageComponent = entity.addComponent<ImageComponent>(textureId);
+	ImageComponent& imageComponent = entity.addComponent<ImageComponent>();
 	_canvasImage[&imageComponent] = &entity.transform();
 	return entity;
 }
 
 
-Entity CanvasComponent::createImageEntity(Scene* scene, const Entity& canvasEntity, unsigned int textureId)
+Entity CanvasComponent::createImageEntity(Scene* scene, const Entity& canvasEntity)
 {
 	Entity entity = scene->createEntity(canvasEntity.tag(), true);
-	ImageComponent& imageComponent = entity.addComponent<ImageComponent>(textureId);
+	ImageComponent& imageComponent = entity.addComponent<ImageComponent>();
 	_canvasImage[&imageComponent] = &entity.transform();
 	return entity;
 }
@@ -288,18 +288,18 @@ Entity CanvasComponent::createImageEntity(Scene* scene, const Entity& canvasEnti
 
 
 
-ImageComponent::ImageComponent(unsigned int imageId)
+ImageComponent::ImageComponent()
 {
 	Material material = {
 		{ 0.0f, 0.0f, 0.0f, 0.0f },
 		{ 0.0f, 0.0f, 0.0f, 0.0f },
-		{ 0.0f, 0.0f, 0.0f, 0.0f, },
 		{ 0.0f, 0.0f, 0.0f, 0.0f },
-		100.0f,
+		{ 0.0f, 0.0f, 0.0f, 0.0f },
+		0.0f,
 	};
+
 	_meshData = std::make_shared<MeshData>(createQuad(1.0f, 1.0f), material);
-	_meshData->setTextureMode(Texture::TextureMode::IMAGE_TEXTURING);
-	_meshData->addTexture(imageId);
+	_meshData->setTextureMode(Texture::TextureMode::IMAGE_TEXTURING);	
 }
 
 

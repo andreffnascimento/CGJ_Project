@@ -32,11 +32,11 @@ public:
 
 	inline void setEnabled(bool enabled) { _enabled = enabled; }
 
-	Entity createTextEntity(Scene* scene, const Entity& canvasEntity, const std::string& text, const std::string& tag);
-	Entity createTextEntity(Scene* scene, const Entity& canvasEntity, const std::string& text);
+	Entity createTextEntity(Scene* scene, const Entity& canvasEntity, const std::string& tag);
+	Entity createTextEntity(Scene* scene, const Entity& canvasEntity);
 
-	Entity createImageEntity(Scene* scene, const Entity& canvasEntity, unsigned int textureId, const std::string& tag);
-	Entity createImageEntity(Scene* scene, const Entity& canvasEntity, unsigned int textureId);
+	Entity createImageEntity(Scene* scene, const Entity& canvasEntity, const std::string& tag);
+	Entity createImageEntity(Scene* scene, const Entity& canvasEntity);
 
 };
 

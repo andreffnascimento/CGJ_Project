@@ -12,15 +12,14 @@
 struct TextComponent
 {
 private:
-	std::string _text;
+	std::string _text = std::string("");
 	float _size = 1.0f;
 	Coords3f _color = Coords3f({ 1.0f, 1.0f, 1.0f });
 	bool _enabled = true;
 
 public:
-	TextComponent() = delete;
+	TextComponent() = default;
 	TextComponent(const TextComponent&) = default;
-	TextComponent(const std::string& text) : _text(text) {}
 	~TextComponent() = default;
 
 	inline const std::string& text() const	{ return _text; }

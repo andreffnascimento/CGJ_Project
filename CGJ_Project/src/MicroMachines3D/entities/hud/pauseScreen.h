@@ -27,11 +27,14 @@ public:
 private:
 	void createPauseText(Scene* scene, CanvasComponent& canvas, const WindowCoords& windowCoords)
 	{
-		canvas.createTextEntity(scene, *this, "Pause", "PauseText");
-		Entity img = canvas.createImageEntity(scene, *this, Renderer::create2dTexture("src/MicroMachines3D/textures/heart.png"), "HeartImg");
-		img.getComponent<ImageComponent>().setBlendColor({ 0.0f, 0.7f, 0.0f, 0.8f });
-		Transform::scaleTo(img, { 50.0f, 50.0f, 1.0f });
-		Transform::translateTo(img, { 1000.0f, 50.0f, 0.0f });
+		Entity textEntity = canvas.createTextEntity(scene, *this, "PauseText");
+		textEntity.getComponent<TextComponent>().setText("Pause");
+
+		Entity imageEntity = canvas.createImageEntity(scene, *this, "HeartImage");
+		imageEntity.getComponent<ImageComponent>().addImage(Renderer::create2dTexture("src/MicroMachines3D/textures/heart.png"));
+		imageEntity.getComponent<ImageComponent>().setBlendColor({ 0.0f, 0.7f, 0.0f, 0.8f });
+		Transform::scaleTo(imageEntity, { 50.0f, 50.0f, 1.0f });
+		Transform::translateTo(imageEntity, { 1000.0f, 50.0f, 0.0f });
 	}
 
 };

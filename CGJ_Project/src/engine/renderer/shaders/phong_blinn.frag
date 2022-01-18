@@ -200,6 +200,9 @@ vec4 processReplaceDiffuseTexture(FragLightingData fragLighting) {
 
 
 vec4 processImageTexture(FragLightingData fragLighting) {
+	if (textureData.nTextures == 0)
+		return materialData.ambient;
+
 	vec4 texel = vec4(1.0);
 	for (int i = 0; i < textureData.nTextures; i++)
 		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
