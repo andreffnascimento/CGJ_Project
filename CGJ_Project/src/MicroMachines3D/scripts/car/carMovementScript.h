@@ -19,7 +19,8 @@ private:
 	static constexpr float MAX_BACKWARDS_FORCE = 4000.0f;
 	static constexpr float STEERING_FORCE = 40000.0f;
 
-
+	ImageComponent* _gasPedal = {};
+	ImageComponent* _brakePedal = {};
 
 
 private:
@@ -53,7 +54,14 @@ public:
 	{
 		if (std::abs(_rigidbody->velocity().y) > 2.0f)	// car is not on top of the table
 			return;
-		
+
+		_gasPedal = &_scene->getEntityByTag("PlayingScreen:Gas_" + std::to_string(5)).getComponent<ImageComponent>();
+		_gasPedal->setEnabled(false);
+
+		_brakePedal = &_scene->getEntityByTag("PlayingScreen:Brake_" + std::to_string(6)).getComponent<ImageComponent>();
+		_brakePedal->setEnabled(false);
+
+
 		_calculateForwardForce(ts);
 		_calculateBackwardsForce(ts);
 
@@ -94,6 +102,7 @@ private:
 
 		if (_eventHandler->keyState('Q').down() || _eventHandler->keyState('q').down())
 		{
+			_gasPedal->setEnabled(true);
 			_forwardForce += CarMovementScript::ENGINE_ACCELERATION * ts;
 		}
 		else
@@ -114,6 +123,7 @@ private:
 
 		if (_eventHandler->keyState('A').down() || _eventHandler->keyState('a').down())
 		{
+			_brakePedal->setEnabled(true);
 			_backwardsForce += CarMovementScript::ENGINE_ACCELERATION * ts;
 		}
 		else

@@ -76,6 +76,7 @@ constexpr float BUTTER_HEIGHT = 0.25f;
 
 constexpr Coords3f HEART_SIZE = { 60.0f, 60.0f, 1.0f };
 constexpr Coords3f PAUSE_SIZE = { 140.0f, 100.0f, 1.0f };
+constexpr Coords3f GASPEDAL_SIZE = { 30.0f, 80.0f, 1.0f };
 
 
 #endif // !__mm3d_common_constants__

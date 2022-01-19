@@ -23,6 +23,8 @@ public:
 		createHeartIcon(scene, canvas, windowCoords, 2);
 		createHeartIcon(scene, canvas, windowCoords, 3);
 		createHeartIcon(scene, canvas, windowCoords, 4);
+		createGasPedalIcon(scene, canvas, windowCoords, 5);
+		createBrakePedalIcon(scene, canvas, windowCoords, 6);
 		createResetQuery(scene, canvas, windowCoords);
 	}
 
@@ -41,6 +43,25 @@ private:
 		Transform::translateTo(heart, { HEART_SIZE.x / 1.8f + xHeartShift, windowCoords.y - HEART_SIZE.y / 1.8f, 0.0f });
 	}
 
+	void createGasPedalIcon(Scene* scene, CanvasComponent& canvas, const WindowCoords& windowCoords, unsigned int id)
+	{
+		Entity gasPedal = canvas.createImageEntity(scene, *this, "Gas_" + std::to_string(id));
+		ImageComponent& image = gasPedal.getComponent<ImageComponent>();
+		image.addImage(Renderer::create2dTexture("src/MicroMachines3D/textures/hud/gasPedal.png"));
+
+		Transform::scaleTo(gasPedal, GASPEDAL_SIZE);
+		Transform::translateTo(gasPedal, { windowCoords.x - 2.0f * GASPEDAL_SIZE.x / 1.8f, GASPEDAL_SIZE.y / 1.8f, 0.0f });
+	}
+
+	void createBrakePedalIcon(Scene* scene, CanvasComponent& canvas, const WindowCoords& windowCoords, unsigned int id)
+	{
+		Entity brakePedal = canvas.createImageEntity(scene, *this, "Brake_" + std::to_string(id));
+		ImageComponent& image = brakePedal.getComponent<ImageComponent>();
+		image.addImage(Renderer::create2dTexture("src/MicroMachines3D/textures/hud/brakePedal.png"));
+
+		Transform::scaleTo(brakePedal, GASPEDAL_SIZE);
+		Transform::translateTo(brakePedal, { windowCoords.x - 4.0f * GASPEDAL_SIZE.x / 1.8f, GASPEDAL_SIZE.y / 1.8f, 0.0f });
+	}
 
 	void createResetQuery(Scene* scene, CanvasComponent& canvas, const WindowCoords& windowCoords)
 	{
