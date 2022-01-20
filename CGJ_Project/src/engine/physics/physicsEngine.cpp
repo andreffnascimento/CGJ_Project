@@ -133,84 +133,23 @@ void PhysicsEngine::_syncRigidbodyWithTransform(const Entity& entity, RigidbodyC
 
 
 
-void PhysicsEngine::_simulateRigidbodyMovement(const Scene& scene, float ts) const
+void PhysicsEngine::_simulateRigidbodyMovement(const Scene& scene, float ts)
 {
 	std::unordered_map<EntityHandle, RigidbodyComponent>& rigidbodyComponents = scene.getSceneComponents<RigidbodyComponent>();
 	for (auto& rigidbodyIterator : rigidbodyComponents)
 	{
 		RigidbodyComponent& rigidbody = rigidbodyIterator.second;
 		if (!rigidbody._sleeping || rigidbody._usesGravity)
-			_processRigidbodyMovement(scene, rigidbody, ts);
-	}
-}
-
-
-void PhysicsEngine::_simulateCollisions(const Scene& scene, float ts) const
-{
-	std::unordered_map<EntityHandle, AABBColliderComponent>& colliderComponents = scene.getSceneComponents<AABBColliderComponent>();
-	for (unsigned int i = 0; i < PhysicsEngine::COLLISION_ITERATIONS; i++)
-	{
-		_resetCollider(scene);
-		for (auto& entityColliderIterator : colliderComponents)
 		{
-			EntityHandle entityId = entityColliderIterator.first;
-			AABBColliderComponent& entityCollider = entityColliderIterator.second;
-
-			if (!entityCollider._collisionResolver->isMoving())
-				continue;
-
-			for (auto& otherColliderIterator : colliderComponents)
-			{
-				EntityHandle otherId = otherColliderIterator.first;
-				AABBColliderComponent& otherCollider = otherColliderIterator.second;
-				if (entityId != otherId && !entityCollider._collisionResolver->ignoreCollision(otherCollider))
-					_checkCollision(entityCollider, otherCollider, ts);
-			}
-		}
-		_resolveCollisions(scene, ts);
-	}
-}
-
-
-void PhysicsEngine::_resetCollider(const Scene& scene) const
-{
-	std::unordered_map<EntityHandle, AABBColliderComponent>& colliderComponents = scene.getSceneComponents<AABBColliderComponent>();
-	for (auto& colliderIterator : colliderComponents)
-	{
-		AABBColliderComponent& collider = colliderIterator.second;
-		if (!collider._rigidbody->_sleeping && !collider._fixedBoundingBox)
-			PhysicsEngine::rotateBoundingBox(collider, collider._rigidbody->_rotation);
-	}
-}
-
-
-void PhysicsEngine::_resolveCollisions(const Scene& scene, float ts) const
-{
-	std::unordered_map<EntityHandle, AABBColliderComponent>& colliderComponents = scene.getSceneComponents<AABBColliderComponent>();
-	for (auto& colliderIterator : colliderComponents)
-	{
-		AABBColliderComponent& collider = colliderIterator.second;
-		if (!collider._collisionResolver->collided())
-			continue;
-
-		collider._collisionResolver->processCollisions();
-		if (!collider._collisionResolver->updated())
-		{
-			RigidbodyComponent& rigidbody = *collider._rigidbody;
-			rigidbody._position -= rigidbody._velocity * ts;		// revert position update
-			collider._collisionResolver->updateVelocity(rigidbody._velocity);
-			rigidbody._position += rigidbody._velocity * ts;
-			rigidbody._sleeping = false;
+			Entity entity = scene.getEntityById(rigidbodyIterator.first);
+			_processRigidbodyMovement(entity, rigidbody, ts);
 		}
 	}
 }
 
 
-
-
-void PhysicsEngine::_processRigidbodyMovement(const Scene& scene, RigidbodyComponent& rigidbody, float ts) const
+void PhysicsEngine::_processRigidbodyMovement(const Entity& entity, RigidbodyComponent& rigidbody, float ts)
 {
-	rigidbody._sleeping = false;
 	if (rigidbody._type == RigidbodyComponent::RigidbodyType::DYNAMIC)
 	{
 		Coords3f linearForce = Coords3f();
@@ -224,7 +163,7 @@ void PhysicsEngine::_processRigidbodyMovement(const Scene& scene, RigidbodyCompo
 
 	rigidbody._position += rigidbody._velocity * ts;
 	rigidbody._rotation.rotate(rigidbody._angularVelocity * ts);
-	_processSleepThreshold(rigidbody);
+	_processSleepThreshold(entity, rigidbody);
 }
 
 
@@ -274,15 +213,80 @@ void PhysicsEngine::_calculateExpectedLinearVelocity(RigidbodyComponent& rigidbo
 }
 
 
-void PhysicsEngine::_processSleepThreshold(RigidbodyComponent& rigidbody) const
+void PhysicsEngine::_processSleepThreshold(const Entity& entity, RigidbodyComponent& rigidbody)
 {
 	rigidbody._forces.clear();
-	if (rigidbody._velocity.length() > rigidbody._sleepThreshold || rigidbody._angularVelocity.length() > rigidbody._sleepThreshold)
+	if (rigidbody._velocity.length() < rigidbody._sleepThreshold && rigidbody._angularVelocity.length() < rigidbody._sleepThreshold)
+	{
+		rigidbody._velocity = Coords3f();
+		rigidbody._angularVelocity = Coords3f();
+		rigidbody._sleeping = false;
 		return;
+	}
 
-	rigidbody._velocity = Coords3f();
-	rigidbody._angularVelocity = Coords3f();
-	rigidbody._sleeping = true;
+	_addActiveCollider(entity);
+}
+
+
+
+
+void PhysicsEngine::_simulateCollisions(const Scene& scene, float ts)
+{
+	std::unordered_map<EntityHandle, AABBColliderComponent>& colliderComponents = scene.getSceneComponents<AABBColliderComponent>();
+	for (unsigned int i = 0; i < PhysicsEngine::COLLISION_ITERATIONS; i++)
+	{
+		_resetCollider(scene);
+		for (auto& entityColliderIterator : _activeColliders)
+		{
+			EntityHandle entityId = entityColliderIterator.first;
+			AABBColliderComponent& entityCollider = *entityColliderIterator.second;
+			for (auto& otherColliderIterator : colliderComponents)
+			{
+				EntityHandle otherId = otherColliderIterator.first;
+				AABBColliderComponent& otherCollider = otherColliderIterator.second;
+				if (entityId != otherId && !entityCollider._collisionResolver->ignoreCollision(otherCollider))
+					_checkCollision(entityCollider, otherCollider, ts);
+			}
+		}
+		_resolveCollisions(scene, ts);
+	}
+
+	_activeColliders.clear();
+}
+
+
+void PhysicsEngine::_resetCollider(const Scene& scene) const
+{
+	for (auto& colliderIterator : _activeColliders)
+	{
+		AABBColliderComponent& collider = *colliderIterator.second;
+		if (!collider._fixedBoundingBox)
+			PhysicsEngine::rotateBoundingBox(collider, collider._rigidbody->_rotation);
+	}
+}
+
+
+void PhysicsEngine::_resolveCollisions(const Scene& scene, float ts)
+{
+	std::unordered_map<EntityHandle, AABBColliderComponent>& colliderComponents = scene.getSceneComponents<AABBColliderComponent>();
+	for (auto& colliderIterator : colliderComponents)
+	{
+		EntityHandle entityId = colliderIterator.first;
+		AABBColliderComponent& collider = colliderIterator.second;
+		if (!collider._collisionResolver->collided())
+			continue;
+
+		collider._collisionResolver->processCollisions();
+		if (!collider._collisionResolver->updated())
+		{
+			_activeColliders[entityId] = &collider;
+			RigidbodyComponent& rigidbody = *collider._rigidbody;
+			rigidbody._position -= rigidbody._velocity * ts;		// revert position update
+			collider._collisionResolver->updateVelocity(rigidbody._velocity);
+			rigidbody._position += rigidbody._velocity * ts;
+			rigidbody._sleeping = false;
+		}
+	}
 }
 
 
@@ -298,21 +302,24 @@ void PhysicsEngine::_checkCollision(AABBColliderComponent& entityCollider, AABBC
 	entityCoords[1] = entityRigidbody._position.x + entityCollider._boundingBox.x;
 	otherCoords[0] = otherRigidbody._position.x - otherCollider._boundingBox.x;
 	otherCoords[1] = otherRigidbody._position.x + otherCollider._boundingBox.x;
-	if (entityCoords[0] > otherCoords[1] || otherCoords[0] > entityCoords[1])
+	float xPenetration = std::min(otherCoords[1] - entityCoords[0], entityCoords[1] - otherCoords[0]);
+	if (xPenetration < 0.0f)
 		return;
 
 	entityCoords[2] = entityRigidbody._position.y - entityCollider._boundingBox.y;
 	entityCoords[3] = entityRigidbody._position.y + entityCollider._boundingBox.y;
 	otherCoords[2] = otherRigidbody._position.y - otherCollider._boundingBox.y;
 	otherCoords[3] = otherRigidbody._position.y + otherCollider._boundingBox.y;
-	if (entityCoords[2] > otherCoords[3] || otherCoords[2] > entityCoords[3])
+	float yPenetration = std::min(otherCoords[3] - entityCoords[2], entityCoords[3] - otherCoords[2]);
+	if (yPenetration < 0.0f)
 		return;
 
 	entityCoords[4] = entityRigidbody._position.z - entityCollider._boundingBox.z;
 	entityCoords[5] = entityRigidbody._position.z + entityCollider._boundingBox.z;
 	otherCoords[4] = otherRigidbody._position.z - otherCollider._boundingBox.z;
 	otherCoords[5] = otherRigidbody._position.z + otherCollider._boundingBox.z;
-	if (entityCoords[4] > otherCoords[5] || otherCoords[4] > entityCoords[5])
+	float zPenetration = std::min(otherCoords[5] - entityCoords[4], entityCoords[5] - otherCoords[4]);
+	if (zPenetration < 0.0f)
 		return;
 
 	bool contained[3] = {};
@@ -348,4 +355,11 @@ void PhysicsEngine::_resolveCollision(AABBColliderComponent& entityCollider, AAB
 
 	entityCollider._collisionResolver->addCollision(otherCollider,  collisionNormal, relativeVelocity, impulse);
 	otherCollider._collisionResolver->addCollision(entityCollider, -collisionNormal, relativeVelocity, impulse);
+}
+
+void PhysicsEngine::_addActiveCollider(const Entity& entity)
+{
+	AABBColliderComponent* collider = entity.getComponentIfExists<AABBColliderComponent>();
+	if (collider != nullptr)
+		_activeColliders[entity] = collider;
 }
