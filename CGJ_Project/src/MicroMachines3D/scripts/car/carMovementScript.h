@@ -55,10 +55,10 @@ public:
 		if (std::abs(_rigidbody->velocity().y) > 2.0f)	// car is not on top of the table
 			return;
 
-		_gasPedal = &_scene->getEntityByTag("PlayingScreen:Gas_" + std::to_string(5)).getComponent<ImageComponent>();
+		_gasPedal = &_scene->getEntityByTag("PlayingScreen:GasPedal").getComponent<ImageComponent>();
 		_gasPedal->setEnabled(false);
 
-		_brakePedal = &_scene->getEntityByTag("PlayingScreen:Brake_" + std::to_string(6)).getComponent<ImageComponent>();
+		_brakePedal = &_scene->getEntityByTag("PlayingScreen:BrakePedal").getComponent<ImageComponent>();
 		_brakePedal->setEnabled(false);
 
 
