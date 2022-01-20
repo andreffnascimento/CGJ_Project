@@ -6,6 +6,7 @@
 
 #include "MicroMachines3D/scripts/manager/game/raceManagerScript.h"
 #include "MicroMachines3D/scripts/butters/buttersDriftScript.h"
+#include "MicroMachines3D/scripts/boosters/boostersDriftScript.h"
 
 
 
@@ -18,6 +19,7 @@ private:
 
 	RaceManagerScript* _raceManagerScript = nullptr;
 	ButtersDriftScript* _buttersDriftScript = nullptr;
+	BoostersDriftScript* _boostersDriftScript = nullptr;
 
 	unsigned int _nCheerioCollisions = 0;
 
@@ -38,6 +40,7 @@ public:
 		_setBlacklist(0);	// car collides with everything
 
 		_buttersDriftScript = dynamic_cast<ButtersDriftScript*>(_scene->getEntityByTag("Butters").getComponent<ScriptComponent>().getScriptByTag("ButtersDriftScript"));
+		_boostersDriftScript = dynamic_cast<BoostersDriftScript*>(_scene->getEntityByTag("Boosters").getComponent<ScriptComponent>().getScriptByTag("BoostersDriftScript"));
 		_raceManagerScript = dynamic_cast<RaceManagerScript*>(_scene->getEntityByTag("GameManager").getComponent<ScriptComponent>().getScriptByTag("RaceManagerScript"));
 	}
 
@@ -62,6 +65,9 @@ protected:
 			_buttersDriftScript->addDriftingBody(_collider.rigidbody());
 			return;
 
+		case ColliderIds::BOOSTER:
+			_boostersDriftScript->addDriftingBody(_collider.rigidbody());
+			return;
 		}
 
 		CollisionResolver::_processCollision(collision);

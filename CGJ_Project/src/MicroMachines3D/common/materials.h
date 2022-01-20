@@ -119,6 +119,14 @@ constexpr Material BUTTER_MATERIAL = {
 	100.0f,
 };
 
+constexpr Material BOOSTER_MATERIAL = {
+	{ 0.09f, 0.25f, 0.0f, 1.0f },
+	{ 0.03f, 0.80f, 0.0f, 0.4f },
+	{ 0.90f, 0.90f, 0.20f, 1.0f },
+	{ 0.0f, 0.0f, 0.0f, 0.0f },
+	100.0f,
+};
+
 constexpr Material FLAG_MATERIAL = {
 	{ 1.0f, 1.0f, 1.0f, 1.0f },
 	{ 1.0f, 1.0f, 1.0f, 1.0f },

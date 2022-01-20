@@ -103,6 +103,8 @@
     <ClInclude Include="src\engine\scene\components\imageComponent.h" />
     <ClInclude Include="src\MicroMachines3D\entities\hud\playingScreen.h" />
     <ClInclude Include="src\MicroMachines3D\entities\hud\gameoverScreen.h" />
+    <ClInclude Include="src\MicroMachines3D\entities\world\boosters.h" />
+    <ClInclude Include="src\MicroMachines3D\scripts\boosters\boostersDriftScript.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />

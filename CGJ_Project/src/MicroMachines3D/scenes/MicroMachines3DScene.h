@@ -13,6 +13,7 @@
 #include "MicroMachines3D/entities/world/candels.h"
 #include "MicroMachines3D/entities/world/oranges.h"
 #include "MicroMachines3D/entities/world/butters.h"
+#include "MicroMachines3D/entities/world/boosters.h"
 #include "MicroMachines3D/entities/world/checkeredFlag.h"
 
 #include "MicroMachines3D/entities/hud/playingScreen.h"
@@ -61,6 +62,7 @@ private:
 		Candels candels = Candels(this);
 		Oranges oranges = Oranges(this);
 		Butters butters = Butters(this);
+		Boosters boosters = Boosters(this);
 		CheckeredFlag flag = CheckeredFlag(this);
 
 		PlayingScreen playingScreen = PlayingScreen(this);
