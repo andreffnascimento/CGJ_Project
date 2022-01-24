@@ -381,11 +381,19 @@ void PhysicsEngine::_simulateParticleGenerator(ParticleGeneratorComponent& parti
 	if (!particleGenerator.enabled())
 		return;
 
+	bool modified = false;
 	for (unsigned int i = 0; i < particleGenerator.nParticles(); i++)
 	{
 		ParticleGeneratorComponent::ParticleData& particle = particleGenerator.particle(i);
+		if (particle.life <= 0.0f)
+			continue;
+
 		particle.position += particle.velocity * ts;
 		particle.velocity += particle.acceleration * ts;
 		particle.life -= particle.fadeSpeed * ts;
+		modified = true;
 	}
+
+	if (!modified)
+		particleGenerator.setEnabled(false);
 }
