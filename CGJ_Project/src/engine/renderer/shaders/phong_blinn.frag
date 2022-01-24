@@ -95,6 +95,7 @@ in Data {
 	vec3 eye;
 	vec3 eyeDir;
 	vec2 textureCoords;
+	vec4 particleColor;
 } dataIn;
 
 
@@ -304,10 +305,7 @@ vec4 renderParticle() {
 	for (int i = 0; i < textureData.nTextures; i++)
 		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
 
-	if (texel.a < 0.25 || materialData.diffuse.a == 0)
-		discard;
-
-	return materialData.diffuse * texel;
+	return dataIn.particleColor * texel;
 }
 
 

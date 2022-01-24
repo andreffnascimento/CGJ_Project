@@ -162,6 +162,7 @@ void Renderer::renderScene(const Scene& scene)
 	renderLights(scene);
 	renderMeshes(scene);
 	renderColliders(scene);
+	renderParticles(scene);
 	renderCanvas(scene);
 	terminateSceneRendering();
 }
@@ -202,6 +203,7 @@ void Renderer::_setupMeshShader()
 	_uniformLocator[RendererUniformLocations::INSTANCE_PVM_MATRIX] = glGetUniformLocation(_meshShader.getProgramIndex(), "instanceData.pvmMatrix");
 	_uniformLocator[RendererUniformLocations::INSTANCE_VM_MATRIX] = glGetUniformLocation(_meshShader.getProgramIndex(), "instanceData.vmMatrix");
 	_uniformLocator[RendererUniformLocations::INSTANCE_NORMAL_MATRIX] = glGetUniformLocation(_meshShader.getProgramIndex(), "instanceData.normalMatrix");
+	_uniformLocator[RendererUniformLocations::INSTANCE_PARTICLE_COLOR] = glGetUniformLocation(_meshShader.getProgramIndex(), "instanceData.particleColor");
 
 	_uniformLocator[RendererUniformLocations::MATERIAL_AMBIENT] = glGetUniformLocation(_meshShader.getProgramIndex(), "materialData.ambient");
 	_uniformLocator[RendererUniformLocations::MATERIAL_DIFFUSE] = glGetUniformLocation(_meshShader.getProgramIndex(), "materialData.diffuse");

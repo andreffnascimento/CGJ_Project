@@ -68,6 +68,7 @@ public:
 	void renderLights(const Scene& scene) const;
 	void renderMeshes(const Scene& scene) const;
 	void renderColliders(const Scene& scene) const;
+	void renderParticles(const Scene& scene) const;
 
 
 
@@ -99,15 +100,12 @@ private:
 private:
 	void _enableTranslucentRendering() const;
 	void _disableTranslucentRendering() const;
-
 	void _sortTranslucentMeshInstancesInto(const Scene& scene, RendererData::translucentMeshInstances_t& sortedTranslucentMeshInstancesOut) const;
 
 	void _renderOpaqueMeshInstances() const;
 	void _renderTranslucentMeshInstances(const RendererData::translucentMeshInstances_t& translucentMeshInstances) const;
 
 	void _addToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform) const;
-	void _applyTransform(const TransformComponent& transform) const;
-
 	void _submitRenderableData(const MeshData& meshData, RendererData::SubmitInstanceBuffer& instanceBuffer) const;
 	void _submitMeshData(const MeshData& meshData) const;
 	void _submitInstanceBuffer(const RendererData::SubmitInstanceBuffer& instanceBuffer) const;
@@ -125,6 +123,14 @@ private:
 	void _terminateCanvasRendering() const;
 	void _renderTextInstances(const std::unordered_map<EntityHandle, CanvasComponent>&canvasComponents) const;
 	void _renderImageInstances(const std::unordered_map<EntityHandle, CanvasComponent>&canvasComponents) const;
+
+
+private:
+	void _initParticleRendering() const;
+	void _terminateParticleRendering() const;
+	void _submitParticleTextureData(const ParticleGeneratorComponent& particleGenerator) const;
+	void _addToParticleInstanceBuffer(RendererData::SubmitInstanceBuffer & instanceBuffer, const ParticleGeneratorComponent::ParticleData particle) const;
+	void _renderParticleGenerator(const ParticleGeneratorComponent& particleGenerator) const;
 
 };
 

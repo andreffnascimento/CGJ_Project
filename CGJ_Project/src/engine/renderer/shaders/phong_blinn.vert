@@ -10,6 +10,7 @@ struct InstanceData {
 	mat4 pvmMatrix[MAX_INSTANCES];
 	mat4 vmMatrix[MAX_INSTANCES];
 	mat3 normalMatrix[MAX_INSTANCES];
+	vec4 particleColor[MAX_INSTANCES];
 };
 
 
@@ -30,6 +31,7 @@ out Data {
 	vec3 eye;
 	vec3 eyeDir;
 	vec2 textureCoords;
+	vec4 particleColor;
 } dataOut;
 
 
@@ -42,6 +44,7 @@ void main () {
 	dataOut.eye = vec3(-dataOut.position);
 	dataOut.eyeDir = -vec3(instanceData.vmMatrix[gl_InstanceID] * position);
 	dataOut.textureCoords = textureCoords.st;
+	dataOut.particleColor = instanceData.particleColor[gl_InstanceID];
 	
 	gl_Position = instanceData.pvmMatrix[gl_InstanceID] * position;
 }

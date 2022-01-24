@@ -36,13 +36,15 @@ public:
 public:
 	void initializeParticleStorage(unsigned int nParticles);
 
-	inline unsigned int nParticles() const					{ return _nParticles;  }
-	inline const ParticleData* particles() const			{ return _particles; }
-	inline ParticleData& particle(unsigned int particle)	{ return _particles[particle]; }
-	inline const MeshData& meshData() const					{ return _meshData; }
-	inline const MyMesh& mesh()	const						{ return _meshData.mesh(); }
-	inline const Texture& texture() const					{ return _meshData.texture(); }
-	inline bool enabled() const								{ return _enabled; }
+	inline unsigned int nParticles() const								{ return _nParticles;  }
+	inline const ParticleData* particles() const						{ return _particles; }
+	inline const ParticleData& particle(unsigned int particle)	const	{ return _particles[particle]; }
+	inline const MeshData& meshData() const								{ return _meshData; }
+	inline const MyMesh& mesh()	const									{ return _meshData.mesh(); }
+	inline const Texture& texture() const								{ return _meshData.texture(); }
+	inline bool enabled() const											{ return _enabled; }
+
+	inline ParticleData& particle(unsigned int particle)				{ return _particles[particle]; }
 
 	inline void setTextureMode(const Texture::TextureMode& textureMode) { _meshData.setTextureMode(textureMode); }
 	inline void addTexture(unsigned int textureId)						{ _meshData.addTexture(textureId); }

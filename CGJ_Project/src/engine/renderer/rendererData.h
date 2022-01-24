@@ -53,6 +53,9 @@ private:
 		float pvmMatrix[RendererSettings::MAX_INSTANCES_PER_SUBMISSION][4][4] = {};
 		float vmMatrix[RendererSettings::MAX_INSTANCES_PER_SUBMISSION][4][4] = {};
 		float normalMatrix[RendererSettings::MAX_INSTANCES_PER_SUBMISSION][3][3] = {};
+		float particleColor[RendererSettings::MAX_INSTANCES_PER_SUBMISSION][4] = {};
+
+		bool usesParticles = false;
 	};
 
 

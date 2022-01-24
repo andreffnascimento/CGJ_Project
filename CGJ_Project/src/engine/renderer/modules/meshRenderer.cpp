@@ -46,8 +46,6 @@ void Renderer::_disableTranslucentRendering() const
 }
 
 
-
-
 void Renderer::_sortTranslucentMeshInstancesInto(const Scene& scene, RendererData::translucentMeshInstances_t& sortedTranslucentMeshInstancesOut) const
 {
 	Coords3f cameraPosition;
@@ -156,22 +154,16 @@ void Renderer::_renderTranslucentMeshInstances(const RendererData::translucentMe
 
 void Renderer::_addToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform) const
 {
-	_applyTransform(*transform);
+	pushMatrix(MODEL);
+	loadMatrix(MODEL, transform->transformMatrix());
+	computeDerivedMatrix(PROJ_VIEW_MODEL);
+	computeNormalMatrix3x3();
+
 	memcpy(instanceBuffer.pvmMatrix[instanceBuffer.nInstances],    mCompMatrix[PROJ_VIEW_MODEL], 4 * 4 * sizeof(float));
 	memcpy(instanceBuffer.vmMatrix[instanceBuffer.nInstances],     mCompMatrix[VIEW_MODEL],		 4 * 4 * sizeof(float));
 	memcpy(instanceBuffer.normalMatrix[instanceBuffer.nInstances], mNormal3x3,					 3 * 3 * sizeof(float));
 	instanceBuffer.nInstances++;
 }
-
-
-void Renderer::_applyTransform(const TransformComponent& transform) const
-{
-	pushMatrix(MODEL);
-	loadMatrix(MODEL, transform.transformMatrix());
-	computeDerivedMatrix(PROJ_VIEW_MODEL);
-	computeNormalMatrix3x3();
-}
-
 
 
 void Renderer::_submitRenderableData(const MeshData& meshData, RendererData::SubmitInstanceBuffer& instanceBuffer) const
@@ -205,6 +197,9 @@ void Renderer::_submitInstanceBuffer(const RendererData::SubmitInstanceBuffer& i
 	glUniformMatrix4fv(_uniformLocator[RendererUniformLocations::INSTANCE_PVM_MATRIX],    instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.pvmMatrix);
 	glUniformMatrix4fv(_uniformLocator[RendererUniformLocations::INSTANCE_VM_MATRIX],     instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.vmMatrix);
 	glUniformMatrix3fv(_uniformLocator[RendererUniformLocations::INSTANCE_NORMAL_MATRIX], instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.normalMatrix);
+
+	if (instanceBuffer.usesParticles)
+		glUniform4fv(_uniformLocator[RendererUniformLocations::INSTANCE_PARTICLE_COLOR], instanceBuffer.nInstances, (const float*)instanceBuffer.particleColor);
 }
 
 
