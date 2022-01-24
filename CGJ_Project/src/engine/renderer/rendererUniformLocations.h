@@ -45,6 +45,8 @@ public:
 		FOG_END_DISTANCE,
 		FOG_ACTIVE,
 
+		RENDER_MODE,
+
 		N_UNIFORMS
 	};
 

@@ -51,6 +51,17 @@ public:
 		bool active = false;
 	};
 
+
+
+
+public:
+	enum class RendererMode
+	{
+		MESH_RENDERER = 1,
+		IMAGE_RENDERER = 2,
+		PARTICLE_RENDERER = 3
+	};
+
 };
 
 

@@ -18,6 +18,7 @@ extern float mNormal3x3[9];
 
 void Renderer::renderMeshes(const Scene& scene) const
 {
+	glUniform1ui(_uniformLocator[RendererUniformLocations::RENDER_MODE], (unsigned int)RendererSettings::RendererMode::MESH_RENDERER);
 	_renderOpaqueMeshInstances();
 
 	_enableTranslucentRendering();

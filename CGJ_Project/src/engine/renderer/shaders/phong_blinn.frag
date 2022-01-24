@@ -11,13 +11,16 @@ const uint MAX_TEXTURES_PER_MESH = 2;
 const uint TEXTURE_MODE_NONE = 0;
 const uint TEXTURE_MODE_MODULATE_DIFFUSE = 1;
 const uint TEXTURE_MODE_REPLACE_DIFFUSE = 2;
-const uint TEXTURE_MODE_IMAGE_TEXTURING = 3;
 
 const uint FOG_TYPE_LINEAR = 1;
 const uint FOG_TYPE_EXP = 2;
 const uint FOG_TYPE_EXP2 = 3;
 
 const float NORMAL_BLEND_AMOUNT = 0.5;
+
+const uint RENDER_MODE_MESH = 1;
+const uint RENDER_MODE_IMAGE = 2;
+const uint RENDER_MODE_PARTICLE = 3;
 
 
 
@@ -83,6 +86,7 @@ uniform MaterialData materialData;
 uniform TextureData textureData;
 uniform LightingData lightingData;
 uniform FogData fogData;
+uniform uint renderMode;
 
 
 in Data {
@@ -156,37 +160,52 @@ FragLightingData processSpotLight(FragLightingData fragLighting, uint index, vec
 }
 
 
-vec4 processModulateDiffuseTexture(FragLightingData fragLighting) {
-	vec4 texel = vec4(1.0);
-	for (int i = 0; i < textureData.nTextures; i++)
-		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
-	
-	return max(fragLighting.diffuse * texel + fragLighting.specular, lightingData.darkTextureCoefficient * texel);
+FragLightingData processLighting(vec3 eye, vec3 normal) {
+	FragLightingData fragLighting;
+	fragLighting.ambient = materialData.ambient;
+	fragLighting.diffuse = materialData.diffuse;
+	fragLighting.specular = materialData.specular;
+	fragLighting.diffuseIntensity = 0.0;
+	fragLighting.specularIntensity = 0.0;
+
+	for (int i = 0; i < lightingData.nLights; i++) {
+		if (lightingData.type[i] == LIGHT_TYPE_DIRECTIONAL)
+			fragLighting = processDirectionalLight(fragLighting, i, normal, eye);
+
+		else if (lightingData.type[i] == LIGHT_TYPE_POINT)
+			fragLighting = processPointLight(fragLighting, i, normal, eye);
+
+		else if (lightingData.type[i] == LIGHT_TYPE_SPOT)
+			fragLighting = processSpotLight(fragLighting, i, normal, eye);
+	}
+
+	// generates the color of the fragment according to the texture mode
+	fragLighting.diffuseIntensity *= lightingData.diffuseCoefficient;
+	fragLighting.specularIntensity *= lightingData.specularCoefficient;
+	fragLighting.diffuse *= fragLighting.diffuseIntensity;
+	fragLighting.specular *= fragLighting.specularIntensity;
+	return fragLighting;
 }
 
 
-vec4 processReplaceDiffuseTexture(FragLightingData fragLighting) {
-	vec4 texel = vec4(1.0);
-	for (int i = 0; i < textureData.nTextures; i++)
-		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
 
-	return max(fragLighting.diffuseIntensity * texel + fragLighting.specular, lightingData.darkTextureCoefficient * texel);
+
+float processFogAmount() {
+	float fragDistance = sqrt(dot(dataIn.position, dataIn.position));
+	if (fogData.isActive) {
+		if (fogData.mode == FOG_TYPE_LINEAR)
+			return clamp((fogData.endDistance - fragDistance) / (fogData.endDistance - fogData.startDistance), 0.0, 1.0);
+
+		else if (fogData.mode == FOG_TYPE_EXP)
+			return exp(-fogData.density * fragDistance);
+
+		else if (fogData.mode == FOG_TYPE_EXP2)
+			return pow(exp(-fogData.density * fragDistance), 2);
+	}
 }
 
 
-vec4 processImageTexture(FragLightingData fragLighting) {
-	if (textureData.nTextures == 0)
-		return materialData.ambient;
 
-	vec4 texel = vec4(1.0);
-	for (int i = 0; i < textureData.nTextures; i++)
-		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
-
-	if (texel.a == 0.0)
-		discard;
-
-	return vec4(texel.xyz * (1 - materialData.ambient.a) + materialData.ambient.xyz * materialData.ambient.a, texel.a);
-}
 
 vec3 processNormalMaps()
 {
@@ -208,74 +227,97 @@ vec3 processNormalMaps()
 }
 
 
-void main() {
-	colorOut = vec4(0.0);
+
+
+vec4 processModulateDiffuseTexture(FragLightingData fragLighting) {
+	vec4 texel = vec4(1.0);
+	for (int i = 0; i < textureData.nTextures; i++)
+		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
+	
+	return max(fragLighting.diffuse * texel + fragLighting.specular, lightingData.darkTextureCoefficient * texel);
+}
+
+
+vec4 processReplaceDiffuseTexture(FragLightingData fragLighting) {
+	vec4 texel = vec4(1.0);
+	for (int i = 0; i < textureData.nTextures; i++)
+		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
+
+	return max(fragLighting.diffuseIntensity * texel + fragLighting.specular, lightingData.darkTextureCoefficient * texel);
+}
+
+
+
+
+vec4 renderMesh() {
 	vec3 eye = normalize(dataIn.eye);
 	vec3 normal = processNormalMaps();
 	
-
-	// generate the fog color
-	float fogAmount = 1.0;
-	float fragDistance = sqrt(dot(dataIn.position, dataIn.position));
-	if (fogData.isActive) {
-		if (fogData.mode == FOG_TYPE_LINEAR)
-			fogAmount = clamp((fogData.endDistance - fragDistance) / (fogData.endDistance - fogData.startDistance), 0.0, 1.0);
-
-		else if (fogData.mode == FOG_TYPE_EXP)
-			fogAmount = exp(-fogData.density * fragDistance);
-
-		else if (fogData.mode == FOG_TYPE_EXP2)
-			fogAmount = pow(exp(-fogData.density * fragDistance), 2);
-	}
-
-
-	// process all the lights of the scene
-	FragLightingData fragLighting;
-	fragLighting.ambient = materialData.ambient;
-	fragLighting.diffuse = materialData.diffuse;
-	fragLighting.specular = materialData.specular;
-	fragLighting.diffuseIntensity = 0.0;
-	fragLighting.specularIntensity = 0.0;
-
-	for (int i = 0; i < lightingData.nLights; i++) {
-		if (lightingData.type[i] == LIGHT_TYPE_DIRECTIONAL)
-			fragLighting = processDirectionalLight(fragLighting, i, normal, eye);
-
-		else if (lightingData.type[i] == LIGHT_TYPE_POINT)
-			fragLighting = processPointLight(fragLighting, i, normal, eye);
-
-		else if (lightingData.type[i] == LIGHT_TYPE_SPOT)
-			fragLighting = processSpotLight(fragLighting, i, normal, eye);
-	}
-
-
-	// generates the color of the fragment according to the texture mode
-	fragLighting.diffuseIntensity *= lightingData.diffuseCoefficient;
-	fragLighting.specularIntensity *= lightingData.specularCoefficient;
-	fragLighting.diffuse *= fragLighting.diffuseIntensity;
-	fragLighting.specular *= fragLighting.specularIntensity;
 	vec4 rgbColor = vec4(0.0);
+	float fogAmount = processFogAmount();
+	FragLightingData fragLighting = processLighting(eye, normal);
 	
 	if (textureData.mode == TEXTURE_MODE_NONE)
 	{
 		rgbColor = max(fragLighting.diffuse + fragLighting.specular, fragLighting.ambient);
-		colorOut = vec4(mix(fogData.color.rgb, rgbColor.rgb, fogAmount), materialData.diffuse.a);
+		return vec4(mix(fogData.color.rgb, rgbColor.rgb, fogAmount), materialData.diffuse.a);
 	}
 	
 	else if (textureData.mode == TEXTURE_MODE_MODULATE_DIFFUSE)
 	{
 		rgbColor = processModulateDiffuseTexture(fragLighting);
-		colorOut = vec4(mix(fogData.color.rgb, rgbColor.rgb, fogAmount), materialData.diffuse.a);
+		return vec4(mix(fogData.color.rgb, rgbColor.rgb, fogAmount), materialData.diffuse.a);
 	}
 	
 	else if (textureData.mode == TEXTURE_MODE_REPLACE_DIFFUSE)
 	{
 		rgbColor = processReplaceDiffuseTexture(fragLighting);
-		colorOut = vec4(mix(fogData.color.rgb, rgbColor.rgb, fogAmount), materialData.diffuse.a);
+		return vec4(mix(fogData.color.rgb, rgbColor.rgb, fogAmount), materialData.diffuse.a);
 	}
+}
 
-	else if (textureData.mode == TEXTURE_MODE_IMAGE_TEXTURING)
-	{
-		colorOut = processImageTexture(fragLighting);
-	}
+
+
+
+vec4 renderImage() {
+	if (textureData.nTextures == 0)
+		return materialData.ambient;
+
+	vec4 texel = vec4(1.0);
+	for (int i = 0; i < textureData.nTextures; i++)
+		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
+
+	if (texel.a == 0.0)
+		discard;
+
+	return vec4(texel.xyz * (1 - materialData.ambient.a) + materialData.ambient.xyz * materialData.ambient.a, texel.a);
+}
+
+
+
+
+vec4 renderParticle() {
+	if (textureData.nTextures == 0)
+		return materialData.ambient;
+
+	vec4 texel = vec4(1.0);
+	for (int i = 0; i < textureData.nTextures; i++)
+		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
+
+	if (texel.a < 0.25 || materialData.diffuse.a == 0)
+		discard;
+
+	return materialData.diffuse * texel;
+}
+
+
+
+
+void main() {
+	if (renderMode == RENDER_MODE_MESH)
+		colorOut = renderMesh();
+	else if (renderMode == RENDER_MODE_IMAGE)
+		colorOut = renderImage();
+	else if (renderMode == RENDER_MODE_PARTICLE)
+		colorOut = renderParticle();
 }

@@ -299,7 +299,6 @@ ImageComponent::ImageComponent()
 	};
 
 	_meshData = std::make_shared<MeshData>(createQuad(1.0f, 1.0f), material);
-	_meshData->setTextureMode(Texture::TextureMode::IMAGE_TEXTURING);	
 }
 
 
@@ -326,7 +325,7 @@ ParticleGeneratorComponent::ParticleGeneratorComponent(unsigned int textureId)
 ParticleGeneratorComponent::~ParticleGeneratorComponent()
 {
 	delete _particles;
-	_particles == nullptr;
+	_particles = nullptr;
 }
 
 

@@ -70,7 +70,7 @@ void Renderer::_renderTextInstances(const std::unordered_map<EntityHandle, Canva
 
 void Renderer::_renderImageInstances(const std::unordered_map<EntityHandle, CanvasComponent>& canvasComponents) const
 {
-	glUseProgram(_meshShader.getProgramIndex());
+	glUniform1ui(_uniformLocator[RendererUniformLocations::RENDER_MODE], (unsigned int)RendererSettings::RendererMode::IMAGE_RENDERER);
 	for (const auto& canvasIterator : canvasComponents)
 	{
 		const CanvasComponent& canvas = canvasIterator.second;
