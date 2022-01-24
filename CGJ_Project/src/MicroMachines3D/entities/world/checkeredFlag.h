@@ -30,6 +30,10 @@ private:
 		Entity flag = group.addNewEntity(scene, *this);
 		flag.addComponent<MeshComponent>(mesh, flag);
 
+		RigidbodyComponent& rigidbody = flag.addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::STATIC);
+		AABBColliderComponent& collider = flag.addComponent<AABBColliderComponent>(ColliderIds::FLAG, rigidbody, Coords3f({ xSize, BUTTER_HEIGHT, zSize }));
+		collider.setFixedBoundingBox(true);
+
 		Transform::translate(flag, Coords3f({ xPos, BUTTER_HEIGHT / 10.0f, zPos }));
 		Transform::scale(flag, Coords3f({ xSize, BUTTER_HEIGHT / 2.0f, zSize }));
 	}

@@ -51,7 +51,7 @@ private:
 	float _resetQueryTimer = 0.0f;
 
 	ParticleGeneratorComponent* _fireworksGenerator = nullptr;
-	bool _colliderWithFlag = false;
+	bool _collidedWithFlag = false;
 	float _resetFireworksTimer = 0.0f;
 
 	CarMovementScript* _carMovementScript = nullptr;
@@ -62,8 +62,8 @@ private:
 
 	RaceManagerScript::GameState _gameState = RaceManagerScript::GameState::PLAYING;
 	unsigned int _lives = RaceManagerScript::MAX_LIVES;
-	bool _collideLastFrame = false;
-	bool _colliderWithOrange = false;
+	bool _collidedWithOrangeLastFrame = false;
+	bool _collidedWithOrange = false;
 
 
 public:
@@ -131,8 +131,8 @@ public:
 
 
 public:
-	void setColliderWithOranges(bool colliderWithOranges) { _colliderWithOrange = colliderWithOranges; }
-	void setColliderWithFlag(bool colliderWithFlag) { _colliderWithFlag = colliderWithFlag; }
+	void setCollidedWithOranges(bool colliderWithOranges) { _collidedWithOrange = colliderWithOranges; }
+	void setCollidedWithFlag(bool colliderWithFlag) { _collidedWithFlag = colliderWithFlag; }
 
 
 
@@ -166,13 +166,20 @@ private:
 		if (_carRigidbody->position().y < RESET_GAME_HEIGHT)
 			_gameover();
 
-		if (!_colliderWithOrange)
-			_collideLastFrame = false;
+		if (!_collidedWithOrange)
+			_collidedWithOrangeLastFrame = false;
 
-		if (_colliderWithOrange && !_collideLastFrame)
+		if (_resetFireworksTimer != 0.0f)
+			_resetFireworksTimer = std::max(_resetFireworksTimer - ts, 0.0f);
+
+		if (_collidedWithFlag && _resetFireworksTimer == 0.0f)
+			_startFireworks();
+
+		if (_collidedWithOrange && !_collidedWithOrangeLastFrame)
 			_decreaseLives();
 
-		_colliderWithOrange = false;
+		_collidedWithOrange = false;
+		_collidedWithFlag = false;
 	}
 
 
@@ -221,7 +228,7 @@ private:
 
 	void _decreaseLives()
 	{
-		_collideLastFrame = true;
+		_collidedWithOrangeLastFrame = true;
 		_hearts[--_lives]->setEnabled(false);
 		if (_lives == 0)
 			_gameover();
@@ -253,7 +260,7 @@ private:
 		_orangesManagerScript->resetOranges();
 
 		_lives = RaceManagerScript::MAX_LIVES;
-		_colliderWithOrange = false;
+		_collidedWithOrange = false;
 		_gameState = RaceManagerScript::GameState::PLAYING;
 		_playingScreenCanvas->setEnabled(true);
 		_pauseScreenCanvas->setEnabled(false);
@@ -261,6 +268,7 @@ private:
 
 		_resetQuery->setEnabled(false);
 		_resetQueryTimer = 0.0f;
+		_resetFireworksTimer = 0.0f;
 		for (int i = 0; i < RaceManagerScript::MAX_LIVES; i++)
 			_hearts[i]->setEnabled(true);
 	}
@@ -269,8 +277,10 @@ private:
 
 
 private:
-	void _initializeParticles()
+	void _startFireworks()
 	{
+		_resetFireworksTimer = RaceManagerScript::RESET_FIREWORKS_TIMER;
+		_fireworksGenerator->setEnabled(true);
 		for (unsigned int i = 0; i < _fireworksGenerator->nParticles(); i++)
 		{
 			float v = 0.8f * _frand() + 0.2f;
