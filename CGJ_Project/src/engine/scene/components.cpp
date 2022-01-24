@@ -315,7 +315,8 @@ void ImageComponent::setBlendColor(const Coords4f& blendColor)
 
 
 
-ParticleGeneratorComponent::ParticleGeneratorComponent(unsigned int textureId)
+ParticleGeneratorComponent::ParticleGeneratorComponent(float size, unsigned int textureId)
+	: _meshData(MeshData(createQuad(size, size), Material()))
 {
 	_meshData.setTextureMode(Texture::TextureMode::MODULATE_DIFFUSE);
 	_meshData.addTexture(textureId);

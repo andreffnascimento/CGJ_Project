@@ -24,13 +24,13 @@ public:
 private:
 	unsigned int _nParticles = 0;
 	ParticleGeneratorComponent::ParticleData* _particles = nullptr;
-	MeshData _meshData = MeshData(createQuad(1.0f, 1.0f), Material());
+	MeshData _meshData = MeshData();
 	bool _enabled = false;
 
 public:
 	ParticleGeneratorComponent() = delete;
 	ParticleGeneratorComponent(const ParticleGeneratorComponent&) = default;
-	ParticleGeneratorComponent(unsigned int textureId);
+	ParticleGeneratorComponent(float size, unsigned int textureId);
 	~ParticleGeneratorComponent();
 
 public:
