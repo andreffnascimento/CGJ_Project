@@ -37,9 +37,9 @@ void CollisionResolver::updateVelocity(Coords3f& velocity)
 	Coords3f finalImpulse = Coords3f();
 	for (const auto& impulse : _impulses)
 	{
-		finalImpulse.x = std::abs(finalImpulse.x) > std::abs(impulse.x) ? finalImpulse.x + impulse.x * 0.3f : impulse.x + finalImpulse.x * 0.3f;
-		finalImpulse.y = std::abs(finalImpulse.y) > std::abs(impulse.y) ? finalImpulse.y + impulse.y * 0.3f : impulse.y + finalImpulse.y * 0.3f;
-		finalImpulse.z = std::abs(finalImpulse.z) > std::abs(impulse.z) ? finalImpulse.z + impulse.z * 0.3f : impulse.z + finalImpulse.z * 0.3f;
+		finalImpulse.x = std::abs(finalImpulse.x) > std::abs(impulse.x) ? finalImpulse.x + impulse.x * 0.2f : impulse.x + finalImpulse.x * 0.2f;
+		finalImpulse.y = std::abs(finalImpulse.y) > std::abs(impulse.y) ? finalImpulse.y + impulse.y * 0.2f : impulse.y + finalImpulse.y * 0.2f;
+		finalImpulse.z = std::abs(finalImpulse.z) > std::abs(impulse.z) ? finalImpulse.z + impulse.z * 0.2f : impulse.z + finalImpulse.z * 0.2f;
 	}
 
 	_impulses.clear();

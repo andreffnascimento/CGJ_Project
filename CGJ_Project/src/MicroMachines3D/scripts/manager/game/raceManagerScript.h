@@ -169,15 +169,13 @@ private:
 		if (!_collidedWithOrange)
 			_collidedWithOrangeLastFrame = false;
 
-		if (_resetFireworksTimer != 0.0f)
-			_resetFireworksTimer = std::max(_resetFireworksTimer - ts, 0.0f);
-
 		if (_collidedWithFlag && _resetFireworksTimer == 0.0f)
 			_startFireworks();
 
 		if (_collidedWithOrange && !_collidedWithOrangeLastFrame)
 			_decreaseLives();
 
+		_resetFireworksTimer = std::max(_resetFireworksTimer - ts, 0.0f);
 		_collidedWithOrange = false;
 		_collidedWithFlag = false;
 	}
@@ -268,7 +266,7 @@ private:
 
 		_resetQuery->setEnabled(false);
 		_resetQueryTimer = 0.0f;
-		_resetFireworksTimer = 0.0f;
+		_resetFireworksTimer = RaceManagerScript::RESET_FIREWORKS_TIMER;
 		for (int i = 0; i < RaceManagerScript::MAX_LIVES; i++)
 			_hearts[i]->setEnabled(true);
 	}

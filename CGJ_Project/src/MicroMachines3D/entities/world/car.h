@@ -25,7 +25,7 @@ public:
 		_initCarHeadlights(scene, group);
 
 		RigidbodyComponent& rigidbody = addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::DYNAMIC, 100.0f, 10.0f, 30.0f);
-		rigidbody.setDragThreshold(1.0f);
+		rigidbody.setDragThreshold(20.0f);
 		rigidbody.setUsesGravity(GRAVITY_ENABLED);
 
 		Coords3f carSize = { CAR_BOTTOM_SIZE.x, CAR_BOTTOM_SIZE.y + CAR_TOP_SIZE.y + CAR_FLOOR_DISTANCE - 0.2f, CAR_BOTTOM_SIZE.z + CAR_BUMPER_SIZE.z };
