@@ -35,6 +35,7 @@ public:
 	~ParticleGeneratorComponent();
 
 public:
+	inline unsigned int nParticles() const					{ return _nParticles;  }
 	inline const ParticleData* particles() const			{ return _particles; }
 	inline ParticleData& particle(unsigned int particle)	{ return _particles[particle]; }
 	inline const MeshData& meshData() const					{ return _meshData; }

@@ -89,6 +89,11 @@ private:
 	void _resolveCollision(AABBColliderComponent& entityCollider, AABBColliderComponent& otherCollider, const bool* contained, float ts) const;
 	void _addActiveCollider(const Entity& entity);
 
+
+private:
+	void _simulateParticles(const Scene& scene, float ts) const;
+	void _simulateParticleGenerator(ParticleGeneratorComponent& particleGenerator, float ts) const;
+
 };
 
 

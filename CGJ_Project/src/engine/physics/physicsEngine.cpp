@@ -52,6 +52,7 @@ void PhysicsEngine::simulate(const Scene& scene, float ts)
 {
 	_simulateRigidbodyMovement(scene, ts);
 	_simulateCollisions(scene, ts);
+	_simulateParticles(scene, ts);
 }
 
 
@@ -362,4 +363,26 @@ void PhysicsEngine::_addActiveCollider(const Entity& entity)
 	AABBColliderComponent* collider = entity.getComponentIfExists<AABBColliderComponent>();
 	if (collider != nullptr)
 		_activeColliders[entity] = collider;
+}
+
+
+
+
+void PhysicsEngine::_simulateParticles(const Scene& scene, float ts) const
+{
+	std::unordered_map<EntityHandle, ParticleGeneratorComponent>& particleGenerators = scene.getSceneComponents<ParticleGeneratorComponent>();
+	for (auto& particleGeneratorIterator : particleGenerators)
+		_simulateParticleGenerator(particleGeneratorIterator.second, ts);
+}
+
+
+void PhysicsEngine::_simulateParticleGenerator(ParticleGeneratorComponent& particleGenerator, float ts) const
+{
+	for (int i = 0; i < particleGenerator.nParticles(); i++)
+	{
+		ParticleGeneratorComponent::ParticleData& particle = particleGenerator.particle(i);
+		particle.position += particle.velocity * ts;
+		particle.velocity += particle.acceleration * ts;
+		particle.life -= particle.fadeSpeed * ts;
+	}
 }
