@@ -23,7 +23,7 @@ private:
 
 
 private:
-	enum ShaderUniformType {
+	enum MeshShaderUniformType {
 		INSTANCE_PVM_MATRIX,
 		INSTANCE_VM_MATRIX,
 		INSTANCE_NORMAL_MATRIX,

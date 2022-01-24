@@ -98,14 +98,14 @@ void Renderer::_formatSpotLight(const LightComponent& light, const Coords3f& tra
 
 void Renderer::_submitLightData(const RendererData::SubmitLightBuffer& lightBuffer) const
 {	
-	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::N_LIGHTS], lightBuffer.nLights);
-	glUniform1uiv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_TYPE], lightBuffer.nLights, lightBuffer.lightType);
-	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_POSITION], lightBuffer.nLights, lightBuffer.lightPosition);
-	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_DIRECTION], lightBuffer.nLights, lightBuffer.lightDirection);
-	glUniform1fv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_INTENSITY], lightBuffer.nLights, lightBuffer.lightIntensity);
-	glUniform1fv(_uniformLocation[RendererData::ShaderUniformType::LIGHT_CUTOFF], lightBuffer.nLights, lightBuffer.lightCutOff);
-	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::LIGHT_AMBIENT], lightBuffer.ambientCoefficient);
-	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::LIGHT_DIFFUSE], lightBuffer.diffuseCoefficient);
-	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::LIGHT_SPECULAR], lightBuffer.specularCoefficient);
-	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::LIGHT_DARK_TEXTURE], lightBuffer.darkTextureCoefficient);
+	glUniform1ui(_uniformLocation[RendererData::MeshShaderUniformType::N_LIGHTS], lightBuffer.nLights);
+	glUniform1uiv(_uniformLocation[RendererData::MeshShaderUniformType::LIGHT_TYPE], lightBuffer.nLights, lightBuffer.lightType);
+	glUniform4fv(_uniformLocation[RendererData::MeshShaderUniformType::LIGHT_POSITION], lightBuffer.nLights, lightBuffer.lightPosition);
+	glUniform4fv(_uniformLocation[RendererData::MeshShaderUniformType::LIGHT_DIRECTION], lightBuffer.nLights, lightBuffer.lightDirection);
+	glUniform1fv(_uniformLocation[RendererData::MeshShaderUniformType::LIGHT_INTENSITY], lightBuffer.nLights, lightBuffer.lightIntensity);
+	glUniform1fv(_uniformLocation[RendererData::MeshShaderUniformType::LIGHT_CUTOFF], lightBuffer.nLights, lightBuffer.lightCutOff);
+	glUniform1f(_uniformLocation[RendererData::MeshShaderUniformType::LIGHT_AMBIENT], lightBuffer.ambientCoefficient);
+	glUniform1f(_uniformLocation[RendererData::MeshShaderUniformType::LIGHT_DIFFUSE], lightBuffer.diffuseCoefficient);
+	glUniform1f(_uniformLocation[RendererData::MeshShaderUniformType::LIGHT_SPECULAR], lightBuffer.specularCoefficient);
+	glUniform1f(_uniformLocation[RendererData::MeshShaderUniformType::LIGHT_DARK_TEXTURE], lightBuffer.darkTextureCoefficient);
 }

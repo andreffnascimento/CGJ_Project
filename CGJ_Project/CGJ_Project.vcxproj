@@ -283,12 +283,8 @@
     <None Include="shaders\pointlight.vert" />
     <None Include="shaders\text.frag" />
     <None Include="shaders\text.vert" />
-    <None Include="src\engine\renderer\shaders\gouraud.frag" />
-    <None Include="src\engine\renderer\shaders\gouraud.vert" />
     <None Include="src\engine\renderer\shaders\phong_blinn.frag" />
     <None Include="src\engine\renderer\shaders\phong_blinn.vert" />
-    <None Include="src\engine\renderer\shaders\pointlight.frag" />
-    <None Include="src\engine\renderer\shaders\pointlight.vert" />
     <None Include="src\engine\renderer\shaders\text.frag" />
     <None Include="src\engine\renderer\shaders\text.vert" />
   </ItemGroup>

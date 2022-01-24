@@ -184,26 +184,26 @@ void Renderer::_submitRenderableData(const MeshData& meshData, RendererData::Sub
 void Renderer::_submitMeshData(const MeshData& meshData) const
 {
 	const Material& material = meshData.material();
-	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::MATERIAL_AMBIENT],  1, material.ambient);
-	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::MATERIAL_DIFFUSE],  1, material.diffuse);
-	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::MATERIAL_SPECULAR], 1, material.specular);
-	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::MATERIAL_EMISSIVE], 1, material.emissive);
-	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::MATERIAL_SHININESS],    material.shininess);
+	glUniform4fv(_uniformLocation[RendererData::MeshShaderUniformType::MATERIAL_AMBIENT],  1, material.ambient);
+	glUniform4fv(_uniformLocation[RendererData::MeshShaderUniformType::MATERIAL_DIFFUSE],  1, material.diffuse);
+	glUniform4fv(_uniformLocation[RendererData::MeshShaderUniformType::MATERIAL_SPECULAR], 1, material.specular);
+	glUniform4fv(_uniformLocation[RendererData::MeshShaderUniformType::MATERIAL_EMISSIVE], 1, material.emissive);
+	glUniform1f(_uniformLocation[RendererData::MeshShaderUniformType::MATERIAL_SHININESS],    material.shininess);
 
 	const Texture& texture = meshData.texture();
-	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::N_TEXTURES], (unsigned int)texture.nTextures());
-	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::N_NORMALS],   (unsigned int)texture.nNormals());
-	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MODE], (unsigned int)texture.textureMode());
-	glUniform1uiv(_uniformLocation[RendererData::ShaderUniformType::TEXTURE_IDS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.textureIds());
-	glUniform1uiv(_uniformLocation[RendererData::ShaderUniformType::NORMAL_IDS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.normalIds());
+	glUniform1ui(_uniformLocation[RendererData::MeshShaderUniformType::N_TEXTURES], (unsigned int)texture.nTextures());
+	glUniform1ui(_uniformLocation[RendererData::MeshShaderUniformType::N_NORMALS],   (unsigned int)texture.nNormals());
+	glUniform1ui(_uniformLocation[RendererData::MeshShaderUniformType::TEXTURE_MODE], (unsigned int)texture.textureMode());
+	glUniform1uiv(_uniformLocation[RendererData::MeshShaderUniformType::TEXTURE_IDS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.textureIds());
+	glUniform1uiv(_uniformLocation[RendererData::MeshShaderUniformType::NORMAL_IDS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.normalIds());
 }
 
 
 void Renderer::_submitInstanceBuffer(const RendererData::SubmitInstanceBuffer& instanceBuffer) const
 {
-	glUniformMatrix4fv(_uniformLocation[RendererData::ShaderUniformType::INSTANCE_PVM_MATRIX],    instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.pvmMatrix);
-	glUniformMatrix4fv(_uniformLocation[RendererData::ShaderUniformType::INSTANCE_VM_MATRIX],     instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.vmMatrix);
-	glUniformMatrix3fv(_uniformLocation[RendererData::ShaderUniformType::INSTANCE_NORMAL_MATRIX], instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.normalMatrix);
+	glUniformMatrix4fv(_uniformLocation[RendererData::MeshShaderUniformType::INSTANCE_PVM_MATRIX],    instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.pvmMatrix);
+	glUniformMatrix4fv(_uniformLocation[RendererData::MeshShaderUniformType::INSTANCE_VM_MATRIX],     instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.vmMatrix);
+	glUniformMatrix3fv(_uniformLocation[RendererData::MeshShaderUniformType::INSTANCE_NORMAL_MATRIX], instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.normalMatrix);
 }
 
 

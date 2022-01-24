@@ -107,15 +107,11 @@ void Renderer::init()
 
 	// initialization of DevIL
 	if (ilGetInteger(IL_VERSION_NUM) < IL_VERSION)
-	{
-		printf("wrong DevIL version \n");
-		exit(0);
-	}
-	ilInit();
+		throw std::string("Wrong DevIL version \n");
 
-	// setup shaders
-	if (!_setupShaders())
-		throw std::string("Unable to initialize the shaders");
+	ilInit();
+	_setupMeshShader();
+	_setupTextShader();
 
 	// generates the texture names
 	glGenTextures(RendererSettings::MAX_TEXTURES, _textures.textureData);
@@ -189,9 +185,8 @@ void Renderer::terminateSceneRendering() const
 
 
 
-GLuint Renderer::_setupShaders() 
+void Renderer::_setupMeshShader()
 {
-	// Shader for models
 	_shader.init();
 	_shader.loadShader(VSShaderLib::VERTEX_SHADER, "src/engine/renderer/shaders/phong_blinn.vert");
 	_shader.loadShader(VSShaderLib::FRAGMENT_SHADER, "src/engine/renderer/shaders/phong_blinn.frag");
@@ -204,74 +199,81 @@ GLuint Renderer::_setupShaders()
 
 	glLinkProgram(_shader.getProgramIndex());
 
-	_uniformLocation[RendererData::ShaderUniformType::INSTANCE_PVM_MATRIX]		= glGetUniformLocation(_shader.getProgramIndex(), "instanceData.pvmMatrix");
-	_uniformLocation[RendererData::ShaderUniformType::INSTANCE_VM_MATRIX]		= glGetUniformLocation(_shader.getProgramIndex(), "instanceData.vmMatrix");
-	_uniformLocation[RendererData::ShaderUniformType::INSTANCE_NORMAL_MATRIX]	= glGetUniformLocation(_shader.getProgramIndex(), "instanceData.normalMatrix");
+	_uniformLocation[RendererData::MeshShaderUniformType::INSTANCE_PVM_MATRIX] = glGetUniformLocation(_shader.getProgramIndex(), "instanceData.pvmMatrix");
+	_uniformLocation[RendererData::MeshShaderUniformType::INSTANCE_VM_MATRIX] = glGetUniformLocation(_shader.getProgramIndex(), "instanceData.vmMatrix");
+	_uniformLocation[RendererData::MeshShaderUniformType::INSTANCE_NORMAL_MATRIX] = glGetUniformLocation(_shader.getProgramIndex(), "instanceData.normalMatrix");
 
-	_uniformLocation[RendererData::ShaderUniformType::MATERIAL_AMBIENT]		= glGetUniformLocation(_shader.getProgramIndex(), "materialData.ambient");
-	_uniformLocation[RendererData::ShaderUniformType::MATERIAL_DIFFUSE]		= glGetUniformLocation(_shader.getProgramIndex(), "materialData.diffuse");
-	_uniformLocation[RendererData::ShaderUniformType::MATERIAL_SPECULAR]	= glGetUniformLocation(_shader.getProgramIndex(), "materialData.specular");
-	_uniformLocation[RendererData::ShaderUniformType::MATERIAL_SHININESS]	= glGetUniformLocation(_shader.getProgramIndex(), "materialData.shininess");
-	_uniformLocation[RendererData::ShaderUniformType::MATERIAL_EMISSIVE]	= glGetUniformLocation(_shader.getProgramIndex(), "materialData.emissive");
+	_uniformLocation[RendererData::MeshShaderUniformType::MATERIAL_AMBIENT] = glGetUniformLocation(_shader.getProgramIndex(), "materialData.ambient");
+	_uniformLocation[RendererData::MeshShaderUniformType::MATERIAL_DIFFUSE] = glGetUniformLocation(_shader.getProgramIndex(), "materialData.diffuse");
+	_uniformLocation[RendererData::MeshShaderUniformType::MATERIAL_SPECULAR] = glGetUniformLocation(_shader.getProgramIndex(), "materialData.specular");
+	_uniformLocation[RendererData::MeshShaderUniformType::MATERIAL_SHININESS] = glGetUniformLocation(_shader.getProgramIndex(), "materialData.shininess");
+	_uniformLocation[RendererData::MeshShaderUniformType::MATERIAL_EMISSIVE] = glGetUniformLocation(_shader.getProgramIndex(), "materialData.emissive");
 
-	_uniformLocation[RendererData::ShaderUniformType::N_TEXTURES]			= glGetUniformLocation(_shader.getProgramIndex(), "textureData.nTextures");
-	_uniformLocation[RendererData::ShaderUniformType::N_NORMALS]			= glGetUniformLocation(_shader.getProgramIndex(), "textureData.nNormals");
-	_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MODE]			= glGetUniformLocation(_shader.getProgramIndex(), "textureData.mode");
-	_uniformLocation[RendererData::ShaderUniformType::TEXTURE_IDS]			= glGetUniformLocation(_shader.getProgramIndex(), "textureData.textureIds");
-	_uniformLocation[RendererData::ShaderUniformType::NORMAL_IDS]			= glGetUniformLocation(_shader.getProgramIndex(), "textureData.normalIds");
-	_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAPS]			= glGetUniformLocation(_shader.getProgramIndex(), "textureData.maps");
-	_uniformLocation[RendererData::ShaderUniformType::BUMP_ACTIVE]			= glGetUniformLocation(_shader.getProgramIndex(), "textureData.bumpActive");
+	_uniformLocation[RendererData::MeshShaderUniformType::N_TEXTURES] = glGetUniformLocation(_shader.getProgramIndex(), "textureData.nTextures");
+	_uniformLocation[RendererData::MeshShaderUniformType::N_NORMALS] = glGetUniformLocation(_shader.getProgramIndex(), "textureData.nNormals");
+	_uniformLocation[RendererData::MeshShaderUniformType::TEXTURE_MODE] = glGetUniformLocation(_shader.getProgramIndex(), "textureData.mode");
+	_uniformLocation[RendererData::MeshShaderUniformType::TEXTURE_IDS] = glGetUniformLocation(_shader.getProgramIndex(), "textureData.textureIds");
+	_uniformLocation[RendererData::MeshShaderUniformType::NORMAL_IDS] = glGetUniformLocation(_shader.getProgramIndex(), "textureData.normalIds");
+	_uniformLocation[RendererData::MeshShaderUniformType::TEXTURE_MAPS] = glGetUniformLocation(_shader.getProgramIndex(), "textureData.maps");
+	_uniformLocation[RendererData::MeshShaderUniformType::BUMP_ACTIVE] = glGetUniformLocation(_shader.getProgramIndex(), "textureData.bumpActive");
 
-	_uniformLocation[RendererData::ShaderUniformType::N_LIGHTS]				= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.nLights");
-	_uniformLocation[RendererData::ShaderUniformType::LIGHT_TYPE]			= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.type");
-	_uniformLocation[RendererData::ShaderUniformType::LIGHT_POSITION]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.position");
-	_uniformLocation[RendererData::ShaderUniformType::LIGHT_DIRECTION]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.direction");
-	_uniformLocation[RendererData::ShaderUniformType::LIGHT_INTENSITY]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.intensity");
-	_uniformLocation[RendererData::ShaderUniformType::LIGHT_CUTOFF]			= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.cutOff");
-	_uniformLocation[RendererData::ShaderUniformType::LIGHT_AMBIENT]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.ambientCoefficient");
-	_uniformLocation[RendererData::ShaderUniformType::LIGHT_DIFFUSE]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.diffuseCoefficient");
-	_uniformLocation[RendererData::ShaderUniformType::LIGHT_SPECULAR]		= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.specularCoefficient");
-	_uniformLocation[RendererData::ShaderUniformType::LIGHT_DARK_TEXTURE]	= glGetUniformLocation(_shader.getProgramIndex(), "lightingData.darkTextureCoefficient");
+	_uniformLocation[RendererData::MeshShaderUniformType::N_LIGHTS] = glGetUniformLocation(_shader.getProgramIndex(), "lightingData.nLights");
+	_uniformLocation[RendererData::MeshShaderUniformType::LIGHT_TYPE] = glGetUniformLocation(_shader.getProgramIndex(), "lightingData.type");
+	_uniformLocation[RendererData::MeshShaderUniformType::LIGHT_POSITION] = glGetUniformLocation(_shader.getProgramIndex(), "lightingData.position");
+	_uniformLocation[RendererData::MeshShaderUniformType::LIGHT_DIRECTION] = glGetUniformLocation(_shader.getProgramIndex(), "lightingData.direction");
+	_uniformLocation[RendererData::MeshShaderUniformType::LIGHT_INTENSITY] = glGetUniformLocation(_shader.getProgramIndex(), "lightingData.intensity");
+	_uniformLocation[RendererData::MeshShaderUniformType::LIGHT_CUTOFF] = glGetUniformLocation(_shader.getProgramIndex(), "lightingData.cutOff");
+	_uniformLocation[RendererData::MeshShaderUniformType::LIGHT_AMBIENT] = glGetUniformLocation(_shader.getProgramIndex(), "lightingData.ambientCoefficient");
+	_uniformLocation[RendererData::MeshShaderUniformType::LIGHT_DIFFUSE] = glGetUniformLocation(_shader.getProgramIndex(), "lightingData.diffuseCoefficient");
+	_uniformLocation[RendererData::MeshShaderUniformType::LIGHT_SPECULAR] = glGetUniformLocation(_shader.getProgramIndex(), "lightingData.specularCoefficient");
+	_uniformLocation[RendererData::MeshShaderUniformType::LIGHT_DARK_TEXTURE] = glGetUniformLocation(_shader.getProgramIndex(), "lightingData.darkTextureCoefficient");
 
-	_uniformLocation[RendererData::ShaderUniformType::FOG_MODE]				= glGetUniformLocation(_shader.getProgramIndex(), "fogData.mode");
-	_uniformLocation[RendererData::ShaderUniformType::FOG_COLOR]			= glGetUniformLocation(_shader.getProgramIndex(), "fogData.color");
-	_uniformLocation[RendererData::ShaderUniformType::FOG_DENSITY]			= glGetUniformLocation(_shader.getProgramIndex(), "fogData.density");
-	_uniformLocation[RendererData::ShaderUniformType::FOG_START_DISTANCE]	= glGetUniformLocation(_shader.getProgramIndex(), "fogData.startDistance");
-	_uniformLocation[RendererData::ShaderUniformType::FOG_END_DISTANCE]		= glGetUniformLocation(_shader.getProgramIndex(), "fogData.endDistance");
-	_uniformLocation[RendererData::ShaderUniformType::FOG_ACTIVE]			= glGetUniformLocation(_shader.getProgramIndex(), "fogData.isActive");
+	_uniformLocation[RendererData::MeshShaderUniformType::FOG_MODE] = glGetUniformLocation(_shader.getProgramIndex(), "fogData.mode");
+	_uniformLocation[RendererData::MeshShaderUniformType::FOG_COLOR] = glGetUniformLocation(_shader.getProgramIndex(), "fogData.color");
+	_uniformLocation[RendererData::MeshShaderUniformType::FOG_DENSITY] = glGetUniformLocation(_shader.getProgramIndex(), "fogData.density");
+	_uniformLocation[RendererData::MeshShaderUniformType::FOG_START_DISTANCE] = glGetUniformLocation(_shader.getProgramIndex(), "fogData.startDistance");
+	_uniformLocation[RendererData::MeshShaderUniformType::FOG_END_DISTANCE] = glGetUniformLocation(_shader.getProgramIndex(), "fogData.endDistance");
+	_uniformLocation[RendererData::MeshShaderUniformType::FOG_ACTIVE] = glGetUniformLocation(_shader.getProgramIndex(), "fogData.isActive");
 
-	std::cout << "InfoLog for Per Fragment Phong Lightning Shader\n" << _shader.getAllInfoLogs().c_str()  << "\n\n";
+	std::cout << "InfoLog for Per Fragment Phong Lightning Shader\n" << _shader.getAllInfoLogs().c_str() << "\n\n";
+	if (!_shader.isProgramValid())
+		throw std::string("Invalid mesh shader program!");
+	if (!_shader.isProgramLinked())
+		throw std::string("Unable to link the mesh shader program!");
+}
 
+
+void Renderer::_setupTextShader()
+{
 	// Shader for bitmap Text
 	_textShader.init();
 	_textShader.loadShader(VSShaderLib::VERTEX_SHADER, "src/engine/renderer/shaders/text.vert");
 	_textShader.loadShader(VSShaderLib::FRAGMENT_SHADER, "src/engine/renderer/shaders/text.frag");
 
 	glLinkProgram(_textShader.getProgramIndex());
+
 	std::cout << "InfoLog for Text Rendering Shader\n" << _textShader.getAllInfoLogs().c_str() << "\n\n";
-
-	if (!_shader.isProgramValid())
-		throw std::string("Invalid shader program!");
-
 	if (!_textShader.isProgramValid())
 		throw std::string("Invalid text shader program!");
-
-	return _shader.isProgramLinked() && _textShader.isProgramLinked();
+	if (!_textShader.isProgramLinked())
+		throw std::string("Unable to link the text shader program!");
 }
+
+
 
 
 void Renderer::_submitFogData() const
 {
-	glUniform1i(_uniformLocation[RendererData::ShaderUniformType::FOG_ACTIVE], _fog.active);
+	glUniform1i(_uniformLocation[RendererData::MeshShaderUniformType::FOG_ACTIVE], _fog.active);
 	if (!_fog.active)
 		return;
 
 	float fogColor[4] = { _fog.color.x, _fog.color.y, _fog.color.z, _fog.color.w };
-	glUniform1ui(_uniformLocation[RendererData::ShaderUniformType::FOG_MODE], (unsigned int)_fog.mode);
-	glUniform4fv(_uniformLocation[RendererData::ShaderUniformType::FOG_COLOR], 4, fogColor);
-	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::FOG_START_DISTANCE], _fog.startDistance);
-	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::FOG_END_DISTANCE], _fog.endDistance);
-	glUniform1f(_uniformLocation[RendererData::ShaderUniformType::FOG_DENSITY], _fog.density);
+	glUniform1ui(_uniformLocation[RendererData::MeshShaderUniformType::FOG_MODE], (unsigned int)_fog.mode);
+	glUniform4fv(_uniformLocation[RendererData::MeshShaderUniformType::FOG_COLOR], 4, fogColor);
+	glUniform1f(_uniformLocation[RendererData::MeshShaderUniformType::FOG_START_DISTANCE], _fog.startDistance);
+	glUniform1f(_uniformLocation[RendererData::MeshShaderUniformType::FOG_END_DISTANCE], _fog.endDistance);
+	glUniform1f(_uniformLocation[RendererData::MeshShaderUniformType::FOG_DENSITY], _fog.density);
 }
 
 void Renderer::_submitTextureData() const
@@ -284,6 +286,6 @@ void Renderer::_submitTextureData() const
 		textureMaps[i] = i;
 	}
 	
-	glUniform1iv(_uniformLocation[RendererData::ShaderUniformType::TEXTURE_MAPS], _textures.nTextures, textureMaps);
-	glUniform1i(_uniformLocation[RendererData::ShaderUniformType::BUMP_ACTIVE], _enableBump);
+	glUniform1iv(_uniformLocation[RendererData::MeshShaderUniformType::TEXTURE_MAPS], _textures.nTextures, textureMaps);
+	glUniform1i(_uniformLocation[RendererData::MeshShaderUniformType::BUMP_ACTIVE], _enableBump);
 }

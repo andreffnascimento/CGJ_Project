@@ -19,7 +19,7 @@ class Renderer {
 private:
 	VSShaderLib _shader;
 	VSShaderLib _textShader;
-	int _uniformLocation[RendererData::ShaderUniformType::N_UNIFORMS] = {};
+	int _uniformLocation[RendererData::MeshShaderUniformType::N_UNIFORMS] = {};
 
 	RendererData::TextureData _textures = RendererData::TextureData();
 	RendererData::opaqueMeshInstances_t _opaqueMeshInstances = RendererData::opaqueMeshInstances_t();
@@ -71,7 +71,11 @@ public:
 
 
 private:
-	GLuint _setupShaders();
+	void _setupMeshShader();
+	void _setupTextShader();
+
+
+private:
 	void _submitFogData() const;
 	void _submitTextureData() const;
 
