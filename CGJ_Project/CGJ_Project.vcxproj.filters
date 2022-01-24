@@ -30,6 +30,7 @@
     <ClCompile Include="src\engine\renderer\mesh\meshData.cpp" />
     <ClCompile Include="src\MicroMachines3D\entities\hud\pauseScreen.h" />
     <ClCompile Include="src\engine\renderer\modules\canvasRenderer.cpp" />
+    <ClCompile Include="src\engine\renderer\rendererUniformLocations.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\app\application.h" />

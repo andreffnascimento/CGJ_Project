@@ -5,6 +5,7 @@
 #include "engine/renderer/vsShaderLib.h"
 #include "engine/renderer/rendererData.h"
 #include "engine/renderer/rendererSettings.h"
+#include "engine/renderer/rendererUniformLocations.h"
 
 #include "engine/scene/entity.h"
 #include "engine/scene/scene.h"
@@ -17,9 +18,10 @@
 class Renderer {
 
 private:
-	VSShaderLib _shader;
+	VSShaderLib _meshShader;
 	VSShaderLib _textShader;
-	int _uniformLocation[RendererData::MeshShaderUniformType::N_UNIFORMS] = {};
+
+	unsigned int _uniformLocator[RendererUniformLocations::N_UNIFORMS] = {};
 
 	RendererData::TextureData _textures = RendererData::TextureData();
 	RendererData::opaqueMeshInstances_t _opaqueMeshInstances = RendererData::opaqueMeshInstances_t();
@@ -57,9 +59,9 @@ public:
 
 
 public:
-	void renderScene(const Scene& scene) const;
-	void initSceneRendering() const;
-	void terminateSceneRendering() const;
+	void renderScene(const Scene& scene);
+	void initSceneRendering();
+	void terminateSceneRendering();
 	
 	void renderCanvas(const Scene& scene) const;
 	void renderCamera(const Scene& scene) const;
@@ -80,11 +82,6 @@ private:
 	void _submitTextureData() const;
 
 
-private:
-	void _initCanvasRendering() const;
-	void _terminateCanvasRendering() const;
-	void _renderTextInstances(const std::unordered_map<EntityHandle, CanvasComponent>& canvasComponents) const;
-	void _renderImageInstances(const std::unordered_map<EntityHandle, CanvasComponent>& canvasComponents) const;
 
 
 private:
@@ -121,6 +118,13 @@ private:
 	const MeshComponent& getColliderMesh() const;
 	void _addToColliderInstanceBuffer(RendererData::SubmitInstanceBuffer& colliderInstanceBuffer, const AABBColliderComponent& collider) const;
 	void _applyColliderTransform(const AABBColliderComponent& collider) const;
+
+
+private:
+	void _initCanvasRendering() const;
+	void _terminateCanvasRendering() const;
+	void _renderTextInstances(const std::unordered_map<EntityHandle, CanvasComponent>&canvasComponents) const;
+	void _renderImageInstances(const std::unordered_map<EntityHandle, CanvasComponent>&canvasComponents) const;
 
 };
 
