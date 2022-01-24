@@ -12,8 +12,8 @@ class MeshData
 {
 
 private:
-	MyMesh _mesh;
-	Texture _texture;
+	MyMesh _mesh = MyMesh();
+	Texture _texture = Texture();
 
 
 

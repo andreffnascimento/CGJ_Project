@@ -3,6 +3,7 @@
 #include <unordered_map>
 
 #include "engine/math/AVTmathLib.h"
+#include "engine/math/l3DBillboard.h"
 
 
 extern float mCompMatrix[COUNT_COMPUTED_MATRICES][16];
@@ -59,7 +60,9 @@ void Renderer::_addToParticleInstanceBuffer(RendererData::SubmitInstanceBuffer& 
 {
 	loadIdentity(MODEL);
 	translate(MODEL, particle.position.x, particle.position.y, particle.position.z);
-	computeDerivedMatrix(PROJ_VIEW_MODEL);
+	computeDerivedMatrix(VIEW_MODEL);
+	BillboardCheatSphericalBegin();
+	computeDerivedMatrix_PVM();
 	computeNormalMatrix3x3();
 	
 	float color[4] = { particle.color.x, particle.color.y, particle.color.z, particle.life };

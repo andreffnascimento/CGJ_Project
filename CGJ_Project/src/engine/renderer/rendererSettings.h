@@ -19,7 +19,7 @@ public:
 
 	constexpr static size_t MAX_INSTANCES_PER_SUBMISSION = 50;
 
-	constexpr static size_t MAX_PARTICLES_PER_GENERATOR = 10000;
+	constexpr static size_t MAX_PARTICLES_PER_GENERATOR = 5000;
 
 
 

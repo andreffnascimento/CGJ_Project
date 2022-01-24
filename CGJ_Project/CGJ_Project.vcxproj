@@ -172,6 +172,7 @@
   <ItemGroup>
     <ClCompile Include="src\engine\app\application.cpp" />
     <ClCompile Include="src\engine\app\eventHandler.cpp" />
+    <ClCompile Include="src\engine\math\l3dBillboard.cpp" />
     <ClCompile Include="src\engine\physics\collision.h" />
     <ClCompile Include="src\engine\physics\collisionResolver.cpp" />
     <ClCompile Include="src\engine\physics\force.cpp" />
@@ -206,6 +207,7 @@
     <ClInclude Include="src\engine\app\application.h" />
     <ClInclude Include="src\engine\app\callback.h" />
     <ClInclude Include="src\engine\app\eventHandler.h" />
+    <ClInclude Include="src\engine\math\l3DBillboard.h" />
     <ClInclude Include="src\engine\physics\collisionResolver.h" />
     <ClInclude Include="src\engine\physics\force.h" />
     <ClInclude Include="src\engine\physics\physicsEngine.h" />

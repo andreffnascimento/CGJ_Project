@@ -32,6 +32,7 @@
     <ClCompile Include="src\engine\renderer\modules\canvasRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\rendererUniformLocations.h" />
     <ClCompile Include="src\engine\renderer\modules\particleRenderer.cpp" />
+    <ClCompile Include="src\engine\math\l3dBillboard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\app\application.h" />
@@ -109,6 +110,7 @@
     <ClInclude Include="src\MicroMachines3D\scripts\boosters\boostersDriftScript.h" />
     <ClInclude Include="src\engine\scene\components\particleGeneratorComponent.h" />
     <ClInclude Include="src\MicroMachines3D\entities\particles\fireworks.h" />
+    <ClInclude Include="src\engine\math\l3DBillboard.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />
