@@ -40,10 +40,10 @@ public:
 	inline size_t nNormals() const { return _nNormals; }
 
 
-
-
 public:
-	friend class MeshData;
+	inline void setTextureMode(const Texture::TextureMode& textureMode) { _textureMode = textureMode; }
+	inline void addTexture(unsigned int textureId) { _textureIds[_nTextures++] = textureId; }
+	inline void addNormal(unsigned int normalId) { _normalIds[_nNormals++] = normalId; }
 
 };
 

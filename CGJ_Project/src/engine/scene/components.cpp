@@ -312,3 +312,20 @@ void ImageComponent::setBlendColor(const Coords4f& blendColor)
 	material.ambient[3] = blendColor.w;
 	_meshData->setMaterial(material);
 }
+
+
+
+
+ParticleGeneratorComponent::ParticleGeneratorComponent(unsigned int nParticles)
+	: _nParticles(nParticles)
+{
+	if (_nParticles > RendererSettings::MAX_PARTICLES_PER_GENERATOR)
+		throw std::string("Renderer only suports up to " + std::to_string(RendererSettings::MAX_PARTICLES_PER_GENERATOR) + " particles per generator!");
+	_particles = new ParticleGeneratorComponent::ParticleData[_nParticles];
+}
+
+
+ParticleGeneratorComponent::~ParticleGeneratorComponent()
+{
+	delete _particles;
+}

@@ -16,6 +16,7 @@
 #include "engine/scene/components/canvasComponent.h"
 #include "engine/scene/components/textComponent.h"
 #include "engine/scene/components/imageComponent.h"
+#include "engine/scene/components/particleGeneratorComponent.h"
 
 
 #endif // !__engine_scene_components__
