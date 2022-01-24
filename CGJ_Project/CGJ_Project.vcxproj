@@ -244,6 +244,7 @@
     <ClInclude Include="src\MicroMachines3D\entities\hud\gameoverScreen.h" />
     <ClInclude Include="src\MicroMachines3D\entities\hud\playingScreen.h" />
     <ClInclude Include="src\MicroMachines3D\entities\manager\gameManager.h" />
+    <ClInclude Include="src\MicroMachines3D\entities\particles\fireworks.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\butters.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\candels.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\checkeredFlag.h" />

@@ -79,4 +79,10 @@ constexpr Coords3f PAUSE_SIZE = { 140.0f, 100.0f, 1.0f };
 constexpr Coords3f GASPEDAL_SIZE = { 30.0f, 80.0f, 1.0f };
 
 
+
+
+constexpr unsigned int N_PARTICLES = 100;
+constexpr float PARTICLE_INITIAL_HEIGHT = 20.0f;
+
+
 #endif // !__mm3d_common_constants__

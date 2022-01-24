@@ -1,8 +1,10 @@
-#ifndef __mm3d_scripts_manager_game_raceManagerScript__
+﻿#ifndef __mm3d_scripts_manager_game_raceManagerScript__
 #define __mm3d_scripts_manager_game_raceManagerScript__
 
 
 #include "MicroMachines3D/common/include.h"
+
+#include <ctime>
 
 #include "MicroMachines3D/scripts/car/carMovementScript.h"
 #include "MicroMachines3D/scripts/oranges/orangesManagerScript.h"
@@ -29,6 +31,7 @@ private:
 	static constexpr unsigned int MAX_LIVES = 5;
 	static constexpr float RESET_GAME_HEIGHT = -10.0f;
 	static constexpr float RESET_QUERY_TIMER = 2.0f;
+	static constexpr float RESET_FIREWORKS_TIMER = 10.0f;
 
 
 	
@@ -46,6 +49,10 @@ private:
 	ImageComponent* _hearts[RaceManagerScript::MAX_LIVES] = {};
 	TextComponent* _resetQuery = nullptr;
 	float _resetQueryTimer = 0.0f;
+
+	ParticleGeneratorComponent* _fireworksGenerator = nullptr;
+	bool _colliderWithFlag = false;
+	float _resetFireworksTimer = 0.0f;
 
 	CarMovementScript* _carMovementScript = nullptr;
 	OrangesManagerScript* _orangesManagerScript = nullptr;
@@ -69,6 +76,8 @@ public:
 public:
 	void onCreate() override
 	{
+		std::srand((unsigned int)std::time(nullptr));
+
 		_eventHandler = &Application::getEventHandler();
 		_car = _scene->getEntityByTag("Car");
 		_carRigidbody = &_car.getComponent<RigidbodyComponent>();
@@ -81,6 +90,8 @@ public:
 		_resetQuery = &_scene->getEntityByTag("PlayingScreen:ResetQuery").getComponent<TextComponent>();
 		for (int i = 0; i < RaceManagerScript::MAX_LIVES; i++)
 			_hearts[i] = &_scene->getEntityByTag("PlayingScreen:Heart_" + std::to_string(i)).getComponent<ImageComponent>();
+
+		_fireworksGenerator = &_scene->getEntityByTag("Fireworks").getComponent<ParticleGeneratorComponent>();
 
 		_respawn();
 	}
@@ -121,6 +132,13 @@ public:
 
 public:
 	void setColliderWithOranges(bool colliderWithOranges) { _colliderWithOrange = colliderWithOranges; }
+	void setColliderWithFlag(bool colliderWithFlag) { _colliderWithFlag = colliderWithFlag; }
+
+
+
+
+private:
+	inline float _frand() { return (float)std::rand() / RAND_MAX; }
 
 
 
@@ -245,6 +263,28 @@ private:
 		_resetQueryTimer = 0.0f;
 		for (int i = 0; i < RaceManagerScript::MAX_LIVES; i++)
 			_hearts[i]->setEnabled(true);
+	}
+
+
+
+
+private:
+	void _initializeParticles()
+	{
+		for (unsigned int i = 0; i < _fireworksGenerator->nParticles(); i++)
+		{
+			float v = 0.8f * _frand() + 0.2f;
+			float phi = _frand() * (float)PI;
+			float theta = 2.0f * _frand() * (float)PI;
+			
+			ParticleGeneratorComponent::ParticleData& particle = _fireworksGenerator->particle(i);
+			particle.position = Coords3f({ 0.0f, PARTICLE_INITIAL_HEIGHT, TABLE_SIZE.z / 3.0f });
+			particle.velocity = Coords3f({ v * cos(theta) * sin(phi), v * cos(phi), v * sin(theta) * sin(phi) });
+			particle.acceleration = Coords3f({ 0.1f, -0.15f, 0.0f });
+			particle.color = Coords3f({ _frand(), _frand(), _frand() });
+			particle.fadeSpeed = 0.2f;
+			particle.life = 1.0f;
+		}
 	}
 
 };

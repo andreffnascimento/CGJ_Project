@@ -378,7 +378,10 @@ void PhysicsEngine::_simulateParticles(const Scene& scene, float ts) const
 
 void PhysicsEngine::_simulateParticleGenerator(ParticleGeneratorComponent& particleGenerator, float ts) const
 {
-	for (int i = 0; i < particleGenerator.nParticles(); i++)
+	if (!particleGenerator.enabled())
+		return;
+
+	for (unsigned int i = 0; i < particleGenerator.nParticles(); i++)
 	{
 		ParticleGeneratorComponent::ParticleData& particle = particleGenerator.particle(i);
 		particle.position += particle.velocity * ts;

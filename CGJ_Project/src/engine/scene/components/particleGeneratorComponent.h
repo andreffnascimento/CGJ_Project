@@ -23,18 +23,19 @@ public:
 
 private:
 	unsigned int _nParticles = 0;
-	ParticleData* _particles = nullptr;
+	ParticleGeneratorComponent::ParticleData* _particles = nullptr;
 	MeshData _meshData = MeshData(createQuad(1.0f, 1.0f), Material());
 	bool _enabled = false;
 
-
 public:
 	ParticleGeneratorComponent() = delete;
-	ParticleGeneratorComponent(const ParticleGeneratorComponent&) = delete;
-	ParticleGeneratorComponent(unsigned int nParticles);
+	ParticleGeneratorComponent(const ParticleGeneratorComponent&) = default;
+	ParticleGeneratorComponent(unsigned int textureId);
 	~ParticleGeneratorComponent();
 
 public:
+	void initializeParticleStorage(unsigned int nParticles);
+
 	inline unsigned int nParticles() const					{ return _nParticles;  }
 	inline const ParticleData* particles() const			{ return _particles; }
 	inline ParticleData& particle(unsigned int particle)	{ return _particles[particle]; }

@@ -107,6 +107,7 @@
     <ClInclude Include="src\MicroMachines3D\entities\world\boosters.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\boosters\boostersDriftScript.h" />
     <ClInclude Include="src\engine\scene\components\particleGeneratorComponent.h" />
+    <ClInclude Include="src\MicroMachines3D\entities\particles\fireworks.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />

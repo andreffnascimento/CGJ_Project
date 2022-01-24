@@ -20,6 +20,8 @@
 #include "MicroMachines3D/entities/hud/pauseScreen.h"
 #include "MicroMachines3D/entities/hud/gameoverScreen.h"
 
+#include "MicroMachines3D/entities/particles/fireworks.h"
+
 
 
 
@@ -68,6 +70,8 @@ private:
 		PlayingScreen playingScreen = PlayingScreen(this);
 		PauseScreen pauseScreen = PauseScreen(this);
 		GameoverScreen gameoverScreen = GameoverScreen(this);
+
+		Fireworks fireworks = Fireworks(this);
 	}
 };
 

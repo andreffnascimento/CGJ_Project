@@ -316,16 +316,24 @@ void ImageComponent::setBlendColor(const Coords4f& blendColor)
 
 
 
-ParticleGeneratorComponent::ParticleGeneratorComponent(unsigned int nParticles)
-	: _nParticles(nParticles)
+ParticleGeneratorComponent::ParticleGeneratorComponent(unsigned int textureId)
 {
-	if (_nParticles > RendererSettings::MAX_PARTICLES_PER_GENERATOR)
-		throw std::string("Renderer only suports up to " + std::to_string(RendererSettings::MAX_PARTICLES_PER_GENERATOR) + " particles per generator!");
-	_particles = new ParticleGeneratorComponent::ParticleData[_nParticles];
+	_meshData.setTextureMode(Texture::TextureMode::MODULATE_DIFFUSE);
+	_meshData.addTexture(textureId);
 }
 
 
 ParticleGeneratorComponent::~ParticleGeneratorComponent()
 {
 	delete _particles;
+	_particles == nullptr;
+}
+
+
+void ParticleGeneratorComponent::initializeParticleStorage(unsigned int nParticles)
+{
+	_nParticles = nParticles;
+	if (_nParticles > RendererSettings::MAX_PARTICLES_PER_GENERATOR)
+		throw std::string("Renderer only suports up to " + std::to_string(RendererSettings::MAX_PARTICLES_PER_GENERATOR) + " particles per generator!");
+	_particles = new ParticleGeneratorComponent::ParticleData[_nParticles];
 }
