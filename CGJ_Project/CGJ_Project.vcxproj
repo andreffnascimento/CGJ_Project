@@ -224,6 +224,7 @@
     <ClInclude Include="src\engine\scene\components\lightComponent.h" />
     <ClInclude Include="src\engine\scene\components\meshComponent.h" />
     <ClInclude Include="src\engine\scene\components\parentComponent.h" />
+    <ClInclude Include="src\engine\scene\components\particleGeneratorComponent.h" />
     <ClInclude Include="src\engine\scene\components\rigidbodyComponent.h" />
     <ClInclude Include="src\engine\scene\components\scriptComponent.h" />
     <ClInclude Include="src\engine\scene\components\tagComponent.h" />

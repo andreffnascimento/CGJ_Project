@@ -190,22 +190,17 @@ vec4 processImageTexture(FragLightingData fragLighting) {
 
 vec3 processNormalMaps()
 {
-    vec3 currentMap;
 	vec3 normal = normalize(dataIn.normal);
-
 	if(!textureData.bumpActive)
 		return normal;
 
-
+    vec3 currentMap;
 	vec3 calculatedNormals = normal;
 
 	// Calculate normal if a normal map is provided
-	for (int i = 0; i < textureData.nNormals; i++)
-	{	
+	for (int i = 0; i < textureData.nNormals; i++) {	
 		currentMap = texture(textureData.maps[textureData.normalIds[i]], dataIn.textureCoords).rgb;
-
 		normal = normalize(2.0 * currentMap - 1.0);
-
 		calculatedNormals = normalize(vec3(normal.xy + calculatedNormals.xy, normal.z));
 	}
 

@@ -24,7 +24,8 @@ public:
 private:
 	unsigned int _nParticles = 0;
 	ParticleData* _particles = nullptr;
-	Texture _texture = Texture();
+	MeshData _meshData = MeshData(createQuad(1.0f, 1.0f), Material());
+	bool _enabled = false;
 
 
 public:
@@ -34,12 +35,16 @@ public:
 	~ParticleGeneratorComponent();
 
 public:
-	inline const ParticleData* particles() const { return _particles; }
-	inline ParticleData& particle(unsigned int particle) { return _particles[particle]; }
-	inline const Texture& texture() const { return _texture; }
+	inline const ParticleData* particles() const			{ return _particles; }
+	inline ParticleData& particle(unsigned int particle)	{ return _particles[particle]; }
+	inline const MeshData& meshData() const					{ return _meshData; }
+	inline const MyMesh& mesh()	const						{ return _meshData.mesh(); }
+	inline const Texture& texture() const					{ return _meshData.texture(); }
+	inline bool enabled() const								{ return _enabled; }
 
-	inline void setTextureMode(const Texture::TextureMode& textureMode) { _texture.setTextureMode(textureMode); }
-	inline void addTexture(unsigned int textureId) { _texture.addTexture(textureId); }
+	inline void setTextureMode(const Texture::TextureMode& textureMode) { _meshData.setTextureMode(textureMode); }
+	inline void addTexture(unsigned int textureId)						{ _meshData.addTexture(textureId); }
+	inline void setEnabled(bool enabled)								{ _enabled = enabled; }
 };
 
 
