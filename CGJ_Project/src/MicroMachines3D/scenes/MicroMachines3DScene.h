@@ -15,6 +15,7 @@
 #include "MicroMachines3D/entities/world/butters.h"
 #include "MicroMachines3D/entities/world/boosters.h"
 #include "MicroMachines3D/entities/world/checkeredFlag.h"
+#include "MicroMachines3D/entities/world/planets.h"
 
 #include "MicroMachines3D/entities/hud/playingScreen.h"
 #include "MicroMachines3D/entities/hud/pauseScreen.h"
@@ -72,6 +73,8 @@ private:
 		GameoverScreen gameoverScreen = GameoverScreen(this);
 
 		Fireworks fireworks = Fireworks(this);
+
+		Planets planets = Planets(this);
 	}
 };
 
