@@ -287,8 +287,8 @@ Entity CanvasComponent::createImageEntity(Scene* scene, const Entity& canvasEnti
 
 
 
-ImageComponent::ImageComponent(const Entity& entity, const ImageComponent::ImageType& imageType)
-	: _entity(&entity)
+ImageComponent::ImageComponent(const Entity& entity, const ImageComponent::ImageType& type)
+	: _type(type), _entity(&entity)
 {
 	Material material = {
 		{ 0.0f, 0.0f, 0.0f, 0.0f },
@@ -299,7 +299,7 @@ ImageComponent::ImageComponent(const Entity& entity, const ImageComponent::Image
 	};
 
 	_meshData = std::make_shared<MeshData>(createQuad(1.0f, 1.0f), material);
-	if (imageType == ImageComponent::ImageType::BILLBOARD)
+	if (_type != ImageComponent::ImageType::CANVAS_IMAGE)
 		Application::getRenderer().submitRenderableImage(*this, *_entity);
 }
 

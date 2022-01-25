@@ -7,6 +7,7 @@
 #include "engine/renderer/mesh/texture.h"
 
 #include "engine/math/AVTmathLib.h"
+#include "engine/math/l3DBillboard.h"
 #include "engine/math/transform.h"
 
 
@@ -26,6 +27,11 @@ void Renderer::renderMeshes(const Scene& scene) const
 	_sortTranslucentMeshInstancesInto(scene, sortedTranslucentMeshInstances);
 	_renderTranslucentMeshInstances(sortedTranslucentMeshInstances);
 	_disableTranslucentRendering();
+
+	glUniform1ui(_uniformLocator[RendererUniformLocations::RENDER_MODE], (unsigned int)RendererSettings::RendererMode::IMAGE_RENDERER);
+	_enableBillboardRendering();
+	_renderImageMeshInstances();
+	_disableBillboardRendering();
 }
 
 
@@ -98,16 +104,32 @@ void Renderer::_sortTranslucentMeshInstancesInto(const Scene& scene, RendererDat
 
 
 
+
+void Renderer::_enableBillboardRendering() const
+{
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+
+void Renderer::_disableBillboardRendering() const
+{
+	glDisable(GL_BLEND);
+}
+
+
+
+
 void Renderer::_renderOpaqueMeshInstances() const
 {
 	for (const auto& meshIterator : _opaqueMeshInstances)
 	{
 		RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
 		const MeshData* meshData = meshIterator.first;
-		const std::unordered_map<const MeshComponent*, const TransformComponent*> mesheInstances = meshIterator.second;
+		const std::unordered_map<const MeshComponent*, const TransformComponent*> meshInstances = meshIterator.second;
 		_submitMeshData(*meshData);
 
-		for (const auto& meshInstanceIterator : mesheInstances)
+		for (const auto& meshInstanceIterator : meshInstances)
 		{
 			const MeshComponent* mesh = meshInstanceIterator.first;
 			const TransformComponent* transform = meshInstanceIterator.second;
@@ -117,7 +139,7 @@ void Renderer::_renderOpaqueMeshInstances() const
 			if (instanceBuffer.nInstances >= RendererSettings::MAX_INSTANCES_PER_SUBMISSION)
 				_submitRenderableData(*meshData, instanceBuffer);
 
-			_addToInstanceBuffer(instanceBuffer, transform);
+			_addObjectToInstanceBuffer(instanceBuffer, transform);
 		}
 
 		_submitRenderableData(*meshData, instanceBuffer);
@@ -142,7 +164,7 @@ void Renderer::_renderTranslucentMeshInstances(const RendererData::translucentMe
 			const MeshComponent* mesh = meshIterator->first;
 			const TransformComponent* transform = meshIterator->second;
 			if (mesh->enabled())
-				_addToInstanceBuffer(instanceBuffer, transform);
+				_addObjectToInstanceBuffer(instanceBuffer, transform);
 			meshIterator++;
 		}
 
@@ -151,8 +173,36 @@ void Renderer::_renderTranslucentMeshInstances(const RendererData::translucentMe
 }
 
 
+void Renderer::_renderImageMeshInstances() const
+{
+	for (const auto& imageIterator : _imageMeshInstances)
+	{
+		RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
+		const MeshData* meshData = imageIterator.first;
+		const std::unordered_map<const ImageComponent*, const TransformComponent*> meshInstances = imageIterator.second;
+		_submitMeshData(*meshData);
 
-void Renderer::_addToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform) const
+		for (const auto& meshInstanceIterator : meshInstances)
+		{
+			const ImageComponent* image = meshInstanceIterator.first;
+			const TransformComponent* transform = meshInstanceIterator.second;
+			if (!image->enabled())
+				continue;
+
+			if (instanceBuffer.nInstances >= RendererSettings::MAX_INSTANCES_PER_SUBMISSION)
+				_submitRenderableData(*meshData, instanceBuffer);
+
+			_addImageToInstanceBuffer(instanceBuffer, transform, image->type());
+		}
+
+		_submitRenderableData(*meshData, instanceBuffer);
+	}
+}
+
+
+
+
+void Renderer::_addObjectToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform) const
 {
 	pushMatrix(MODEL);
 	loadMatrix(MODEL, transform->transformMatrix());
@@ -164,6 +214,29 @@ void Renderer::_addToInstanceBuffer(RendererData::SubmitInstanceBuffer& instance
 	memcpy(instanceBuffer.normalMatrix[instanceBuffer.nInstances], mNormal3x3,					 3 * 3 * sizeof(float));
 	instanceBuffer.nInstances++;
 }
+
+
+void Renderer::_addImageToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform, ImageComponent::ImageType imageType) const
+{
+	pushMatrix(MODEL);
+	loadMatrix(MODEL, transform->transformMatrix());
+	computeDerivedMatrix(VIEW_MODEL);
+
+	if (imageType == ImageComponent::ImageType::CYLINDRICAL_BILLBOARD)
+		BillboardCheatCylindricalBegin();
+	else if (imageType == ImageComponent::ImageType::SPHERICAL_BILLBOARD)
+		BillboardCheatSphericalBegin();
+
+	computeDerivedMatrix_PVM();
+	computeNormalMatrix3x3();
+
+	memcpy(instanceBuffer.pvmMatrix[instanceBuffer.nInstances], mCompMatrix[PROJ_VIEW_MODEL], 4 * 4 * sizeof(float));
+	memcpy(instanceBuffer.vmMatrix[instanceBuffer.nInstances], mCompMatrix[VIEW_MODEL], 4 * 4 * sizeof(float));
+	memcpy(instanceBuffer.normalMatrix[instanceBuffer.nInstances], mNormal3x3, 3 * 3 * sizeof(float));
+	instanceBuffer.nInstances++;
+}
+
+
 
 
 void Renderer::_submitRenderableData(const MeshData& meshData, RendererData::SubmitInstanceBuffer& instanceBuffer) const

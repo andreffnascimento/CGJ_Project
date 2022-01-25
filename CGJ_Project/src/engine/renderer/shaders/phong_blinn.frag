@@ -307,6 +307,9 @@ vec4 renderParticle() {
 	for (int i = 0; i < textureData.nTextures; i++)
 		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
 
+	if (texel.a == 0.0)
+		discard;
+
 	return dataIn.particleColor * texel;
 }
 

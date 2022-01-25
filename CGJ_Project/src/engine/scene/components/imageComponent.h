@@ -15,12 +15,14 @@ struct ImageComponent
 {
 	enum class ImageType
 	{
-		BILLBOARD = 1,
-		CANVAS_IMAGE = 2,
+		NONE,
+		CYLINDRICAL_BILLBOARD,
+		SPHERICAL_BILLBOARD,
+		CANVAS_IMAGE
 	};
 
-
 private:
+	const ImageComponent::ImageType _type = ImageComponent::ImageType::NONE;
 	std::shared_ptr<MeshData> _meshData = nullptr;
 	const Entity* _entity = nullptr;
 	bool _enabled = true;
@@ -28,14 +30,15 @@ private:
 public:
 	ImageComponent() = delete;
 	ImageComponent(const ImageComponent&) = default;
-	ImageComponent(const Entity& entity, const ImageComponent::ImageType& imageType = ImageComponent::ImageType::BILLBOARD);
+	ImageComponent(const Entity& entity, const ImageComponent::ImageType& type = ImageComponent::ImageType::NONE);
 	~ImageComponent() = default;
 
-	inline const MeshData& meshData() const	{ return *_meshData; }
-	inline const MyMesh& mesh()	const		{ return _meshData->mesh(); }
-	inline const Material& material() const { return _meshData->material(); }
-	inline const Texture& texture() const	{ return _meshData->texture(); }
-	inline bool enabled() const				{ return _enabled; }
+	inline const ImageComponent::ImageType& type() const	{ return _type; }
+	inline const MeshData& meshData() const					{ return *_meshData; }
+	inline const MyMesh& mesh()	const						{ return _meshData->mesh(); }
+	inline const Material& material() const					{ return _meshData->material(); }
+	inline const Texture& texture() const					{ return _meshData->texture(); }
+	inline bool enabled() const								{ return _enabled; }
 
 	inline void addImage(unsigned int imageId)	{ _meshData->addTexture(imageId); }
 	inline void setEnabled(bool enabled)		{ _enabled = enabled; }

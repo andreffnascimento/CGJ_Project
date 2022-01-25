@@ -91,7 +91,7 @@ void Renderer::_renderImageInstances(const std::unordered_map<EntityHandle, Canv
 
 				const TransformComponent* transform = canvasImageIterator->second;
 				if (originalImage->enabled())
-					_addToInstanceBuffer(instanceBuffer, transform);
+					_addObjectToInstanceBuffer(instanceBuffer, transform);
 				canvasImageIterator++;
 			}
 

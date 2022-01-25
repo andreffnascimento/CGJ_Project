@@ -103,10 +103,16 @@ private:
 	void _disableTranslucentRendering() const;
 	void _sortTranslucentMeshInstancesInto(const Scene& scene, RendererData::translucentMeshInstances_t& sortedTranslucentMeshInstancesOut) const;
 
+	void _enableBillboardRendering() const;
+	void _disableBillboardRendering() const;
+
 	void _renderOpaqueMeshInstances() const;
 	void _renderTranslucentMeshInstances(const RendererData::translucentMeshInstances_t& translucentMeshInstances) const;
+	void _renderImageMeshInstances() const;
 
-	void _addToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform) const;
+	void _addObjectToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform) const;
+	void _addImageToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform, ImageComponent::ImageType imageType) const;
+
 	void _submitRenderableData(const MeshData& meshData, RendererData::SubmitInstanceBuffer& instanceBuffer) const;
 	void _submitMeshData(const MeshData& meshData) const;
 	void _submitInstanceBuffer(const RendererData::SubmitInstanceBuffer& instanceBuffer) const;
