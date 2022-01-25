@@ -108,10 +108,10 @@ private:
 
 	void _renderOpaqueMeshInstances() const;
 	void _renderTranslucentMeshInstances(const RendererData::translucentMeshInstances_t& translucentMeshInstances) const;
-	void _renderImageMeshInstances() const;
+	void _renderImageMeshInstances(const Scene& scene) const;
 
 	void _addObjectToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform) const;
-	void _addImageToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform, ImageComponent::ImageType imageType) const;
+	void _addImageToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform, const ImageComponent::ImageType& imageType, const Coords3f& cameraPos) const;
 
 	void _submitRenderableData(const MeshData& meshData, RendererData::SubmitInstanceBuffer& instanceBuffer) const;
 	void _submitMeshData(const MeshData& meshData) const;

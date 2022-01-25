@@ -61,7 +61,7 @@ void Renderer::_addToParticleInstanceBuffer(RendererData::SubmitInstanceBuffer& 
 	loadIdentity(MODEL);
 	translate(MODEL, particle.position.x, particle.position.y, particle.position.z);
 	computeDerivedMatrix(VIEW_MODEL);
-	BillboardCheatSphericalBegin();
+	BillboardCheatSphericalBegin(1.0f, 1.0f);
 	computeDerivedMatrix_PVM();
 	computeNormalMatrix3x3();
 	

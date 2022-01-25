@@ -284,6 +284,13 @@ Entity CanvasComponent::createImageEntity(Scene* scene, const Entity& canvasEnti
 
 
 
+ImageComponent::ImageComponent(const ImageComponent& image)
+	: _type(image._type), _meshData(image._meshData), _entity(image._entity), _enabled(image._enabled)
+{
+	if (_type != ImageComponent::ImageType::CANVAS_IMAGE)
+		Application::getRenderer().submitRenderableImage(*this, *_entity);
+}
+
 ImageComponent::ImageComponent(const Entity& entity, const ImageComponent::ImageType& type)
 	: _type(type), _entity(&entity)
 {
@@ -296,8 +303,6 @@ ImageComponent::ImageComponent(const Entity& entity, const ImageComponent::Image
 	};
 
 	_meshData = std::make_shared<MeshData>(createQuad(1.0f, 1.0f), material);
-	if (_type != ImageComponent::ImageType::CANVAS_IMAGE)
-		Application::getRenderer().submitRenderableImage(*this, *_entity);
 }
 
 

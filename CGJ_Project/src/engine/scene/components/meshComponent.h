@@ -23,7 +23,7 @@ private:
 
 public:
 	MeshComponent() = delete;
-	MeshComponent(const MeshComponent&);
+	MeshComponent(const MeshComponent& mesh);
 	MeshComponent(const MyMesh& mesh, const Material& material);							// initializes the mesh but doesn't set it up for rendering
 	MeshComponent(const MyMesh& mesh, const Material& material, const Entity& entity);	// initializes the mesh and sets it up for rendering
 	MeshComponent(const MeshComponent& mesh, const Entity& entity);						// sets the mesh up for rendering

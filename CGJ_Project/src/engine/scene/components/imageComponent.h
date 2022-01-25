@@ -18,6 +18,8 @@ struct ImageComponent
 		NONE,
 		CYLINDRICAL_BILLBOARD,
 		SPHERICAL_BILLBOARD,
+		FAST_CYLINDRICAL_BILLBOARD,
+		FAST_SPHERICAL_BILLBOARD,
 		CANVAS_IMAGE
 	};
 
@@ -29,7 +31,7 @@ private:
 
 public:
 	ImageComponent() = delete;
-	ImageComponent(const ImageComponent&) = default;
+	ImageComponent(const ImageComponent&);
 	ImageComponent(const Entity& entity, const ImageComponent::ImageType& type = ImageComponent::ImageType::NONE);
 	~ImageComponent() = default;
 

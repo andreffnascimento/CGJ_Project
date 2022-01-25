@@ -1,6 +1,9 @@
+#include "l3DBillboard.h"
+
 #include <math.h>
 #include "AVTmathLib.h"
 #include <GL/freeglut.h>
+
 
 extern float mCompMatrix[COUNT_COMPUTED_MATRICES][16];
 
@@ -9,15 +12,15 @@ The objects motion is restricted to a rotation on a predefined axis
 The function bellow does cylindrical billboarding on the Y axis, i.e.
 the object will be able to rotate on the Y axis only.
 -----------------------------------------------------------------*/
-void l3dBillboardCylindricalBegin(float *cam, float *worldPos) {
+void l3dBillboardCylindricalBegin(const Coords3f& cameraPos, const Coords3f& objectPos) {
 
 	float lookAt[3]={0,0,1},objToCamProj[3],upAux[3],angleCosine;
 
 // objToCamProj is the vector in world coordinates from the local origin to the camera
 // projected in the XZ plane
-	objToCamProj[0] = cam[0] - worldPos[0] ;
+	objToCamProj[0] = cameraPos.x - objectPos.x ;
 	objToCamProj[1] = 0;
-	objToCamProj[2] = cam[2] - worldPos[2] ;
+	objToCamProj[2] = cameraPos.z - objectPos.z ;
 
 
 // normalize both vectors to get the cosine directly afterwards
@@ -48,15 +51,15 @@ the cylindrical billboard though. The parameters camX,camY, and camZ,
 are the target, i.e. a 3D point to which the object will point.
 ----------------------------------------------------------------*/
 
-void l3dBillboardSphericalBegin(float *cam, float *worldPos) {
+void l3dBillboardSphericalBegin(const Coords3f& cameraPos, const Coords3f& objectPos) {
 
 	float lookAt[3]={0,0,1},objToCamProj[3],objToCam[3],upAux[3],angleCosine;
 
 // objToCamProj is the vector in world coordinates from the local origin to the camera
 // projected in the XZ plane
-	objToCamProj[0] = cam[0] - worldPos[0] ;
+	objToCamProj[0] = cameraPos.x - objectPos.x;
 	objToCamProj[1] = 0;
-	objToCamProj[2] = cam[2] - worldPos[2] ;
+	objToCamProj[2] = cameraPos.z - objectPos.z;
 
 // normalize both vectors to get the cosine directly afterwards
 	normalize(objToCamProj);
@@ -81,9 +84,9 @@ void l3dBillboardSphericalBegin(float *cam, float *worldPos) {
 // The second part tilts the object so that it faces the camera
 
 // objToCam is the vector in world coordinates from the local origin to the camera
-	objToCam[0] = cam[0] - worldPos[0] ;
-	objToCam[1] = cam[1] - worldPos[1] ;
-	objToCam[2] = cam[2] - worldPos[2] ;
+	objToCam[0] = cameraPos.x - objectPos.x;
+	objToCam[1] = cameraPos.y - objectPos.y;
+	objToCam[2] = cameraPos.z - objectPos.z;
 
 // Normalize to get the cosine afterwards
 	normalize(objToCam);
@@ -110,20 +113,15 @@ The object will face a plane perpendicular to the cameras
 "look at" vector. It is the fastest of them all though.
 ---------------------------------------------------------*/
 
-void BillboardCheatSphericalBegin() {
-	
-	
-	int i,j;
+void BillboardCheatSphericalBegin(float xScale, float yScale) 
+{
+	for(int i = 0; i < 3; i++) 
+		for(int j = 0; j < 3; j++)
+			mCompMatrix[VIEW_MODEL][i * 4 + j] = 0.0f;
 
-	// undo all rotations
-	// beware all scaling is lost as well 
-	for( i=0; i<3; i++ ) 
-		for( j=0; j<3; j++ ) {
-			if ( i==j )
-				mCompMatrix[VIEW_MODEL][i*4+j] = 1.0;
-			else
-				mCompMatrix[VIEW_MODEL][i*4+j] = 0.0;
-		}
+	mCompMatrix[VIEW_MODEL][0 * 4 + 0] = xScale;
+	mCompMatrix[VIEW_MODEL][1 * 4 + 1] = yScale;
+	mCompMatrix[VIEW_MODEL][2 * 4 + 2] = 1.0f;
 }
 
 
@@ -131,7 +129,7 @@ void BillboardCheatSphericalBegin() {
 The comments above apply in here as well but this is the
 cylindrical version, i.e. the up vector is not changed
 ---------------------------------------------------------*/
-void BillboardCheatCylindricalBegin() {
+void BillboardCheatCylindricalBegin(float xScale, float yScale) {
 
 	int i,j;
  
@@ -141,11 +139,10 @@ void BillboardCheatCylindricalBegin() {
 	// lookAt vector is [0,0,1] (3d column)
 	// leave the up vector unchanged (2nd column)
 	// notice the increment in i in the first cycle (i+=2)
-	for( i=0; i<3; i+=2 ) 
-		for( j=0; j<3; j++ ) {
-			if ( i==j )
-				mCompMatrix[VIEW_MODEL][i*4+j] = 1.0;
-			else
-				mCompMatrix[VIEW_MODEL][i*4+j] = 0.0;
-		}
+	for (int i = 0; i < 3; i += 2)
+		for (int j = 0; j < 3; j++)
+			mCompMatrix[VIEW_MODEL][i * 4 + j] = 0.0f;
+
+	mCompMatrix[VIEW_MODEL][0 * 4 + 0] = xScale;
+	mCompMatrix[VIEW_MODEL][2 * 4 + 2] = 1.0f;
 }

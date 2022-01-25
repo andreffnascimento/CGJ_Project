@@ -15,7 +15,7 @@ public:
 		
 		Entity planet = group.addNewEntity(scene, *this, "neptune");
 
-		ImageComponent& image = planet.addComponent<ImageComponent>(planet, ImageComponent::ImageType::CYLINDRICAL_BILLBOARD);
+		ImageComponent& image = planet.addComponent<ImageComponent>(planet, ImageComponent::ImageType::FAST_CYLINDRICAL_BILLBOARD);
 
 		image.addImage(Renderer::create2dTexture("src/MicroMachines3D/textures/planets/neptune.png"));
 
