@@ -135,5 +135,11 @@
     <Image Include="src\MicroMachines3D\textures\orange\orange.jpg" />
     <Image Include="src\MicroMachines3D\textures\hud\heart.png" />
     <Image Include="src\MicroMachines3D\textures\hud\pause.png" />
+    <Image Include="src\MicroMachines3D\textures\skybox\back.png" />
+    <Image Include="src\MicroMachines3D\textures\skybox\bottom.png" />
+    <Image Include="src\MicroMachines3D\textures\skybox\front.png" />
+    <Image Include="src\MicroMachines3D\textures\skybox\left.png" />
+    <Image Include="src\MicroMachines3D\textures\skybox\right.png" />
+    <Image Include="src\MicroMachines3D\textures\skybox\top.png" />
   </ItemGroup>
 </Project>

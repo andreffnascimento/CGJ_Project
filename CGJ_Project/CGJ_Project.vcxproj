@@ -300,6 +300,12 @@
     <Image Include="src\MicroMachines3D\textures\hud\pause.png" />
     <Image Include="src\MicroMachines3D\textures\lightwood.tga" />
     <Image Include="src\MicroMachines3D\textures\orange\orange.jpg" />
+    <Image Include="src\MicroMachines3D\textures\skybox\back.png" />
+    <Image Include="src\MicroMachines3D\textures\skybox\bottom.png" />
+    <Image Include="src\MicroMachines3D\textures\skybox\front.png" />
+    <Image Include="src\MicroMachines3D\textures\skybox\left.png" />
+    <Image Include="src\MicroMachines3D\textures\skybox\right.png" />
+    <Image Include="src\MicroMachines3D\textures\skybox\top.png" />
     <Image Include="src\MicroMachines3D\textures\stone.tga" />
     <Image Include="src\MicroMachines3D\textures\table\checker.png" />
     <Image Include="src\MicroMachines3D\textures\table\lightwood.tga" />
