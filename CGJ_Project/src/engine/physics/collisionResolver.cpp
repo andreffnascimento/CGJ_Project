@@ -13,13 +13,11 @@ CollisionResolver::CollisionResolver(AABBColliderComponent& collider)
 
 
 
-
+#include <iostream>
 void CollisionResolver::addCollision(const AABBColliderComponent& otherCollider, const Coords3f& collisionNormal, const Coords3f& relativeVelocity, float impulse)
 {
-	if (_collider.rigidbody()->type() == RigidbodyComponent::RigidbodyType::STATIC)
-		return;
-
-	_collisions.emplace_back(otherCollider, collisionNormal, relativeVelocity, impulse);
+	if (_collider.rigidbody()->type() != RigidbodyComponent::RigidbodyType::STATIC)
+		_collisions.emplace_back(otherCollider, collisionNormal, relativeVelocity, impulse);
 }
 
 
@@ -55,18 +53,18 @@ bool CollisionResolver::isMoving() const
 }
 
 
+bool CollisionResolver::checkCollisionId(unsigned long long colliderId) const
+{
+	bool whitelist = _computeListType == CollisionResolver::ComputeListType::WHITELIST;
+	return whitelist == (bool)(_computeIdsFlag & colliderId);
+}
+
+
 
 
 void CollisionResolver::init()
 {
 	// empty
-}
-
-
-bool CollisionResolver::ignoreCollision(const AABBColliderComponent& otherCollider) const
-{
-	bool whitelist = _computeListType == CollisionResolver::ComputeListType::WHITELIST;
-	return whitelist != (bool)(_computeIdsFlag & (unsigned long long)otherCollider.id());
 }
 
 

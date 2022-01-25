@@ -33,6 +33,7 @@ public:
 
 
 private:
+	std::unordered_map<unsigned int, std::unordered_map<EntityHandle, AABBColliderComponent*>> _collidersPerId = std::unordered_map<unsigned int, std::unordered_map<EntityHandle, AABBColliderComponent*>>();
 	std::unordered_map<EntityHandle, AABBColliderComponent*> _activeColliders = std::unordered_map<EntityHandle, AABBColliderComponent*>();
 
 
@@ -53,6 +54,10 @@ public:
 
 public:
 	inline constexpr bool showColliders() const { return PhysicsEngine::SHOW_COLLIDERS; }
+
+
+public:
+	void submitColliderComponent(AABBColliderComponent& collider, const Entity& entity);
 
 
 public:

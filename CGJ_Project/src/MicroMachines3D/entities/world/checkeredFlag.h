@@ -31,7 +31,7 @@ private:
 		flag.addComponent<MeshComponent>(mesh, flag);
 
 		RigidbodyComponent& rigidbody = flag.addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::STATIC);
-		AABBColliderComponent& collider = flag.addComponent<AABBColliderComponent>(ColliderIds::FLAG, rigidbody, Coords3f({ xSize, BUTTER_HEIGHT, zSize }));
+		AABBColliderComponent& collider = flag.addComponent<AABBColliderComponent>(flag, ColliderIds::FLAG, rigidbody, Coords3f({ xSize, BUTTER_HEIGHT, zSize }));
 		collider.setFixedBoundingBox(true);
 
 		Transform::translate(flag, Coords3f({ xPos, BUTTER_HEIGHT / 10.0f, zPos }));

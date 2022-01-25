@@ -36,7 +36,7 @@ private:
 		booster.addComponent<MeshComponent>(mesh, booster);
 
 		RigidbodyComponent& rigidbody = booster.addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::STATIC);
-		AABBColliderComponent& collider = booster.addComponent<AABBColliderComponent>(ColliderIds::BOOSTER, rigidbody, Coords3f({ xSize, BUTTER_HEIGHT, zSize }));
+		AABBColliderComponent& collider = booster.addComponent<AABBColliderComponent>(booster, ColliderIds::BOOSTER, rigidbody, Coords3f({ xSize, BUTTER_HEIGHT, zSize }));
 		collider.setFixedBoundingBox(true);
 
 		Transform::translate(booster, Coords3f({ xPos, BUTTER_HEIGHT / 2.0f, zPos }));

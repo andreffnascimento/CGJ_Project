@@ -71,10 +71,7 @@ MeshComponent::MeshComponent(const MeshComponent& mesh)
 	: _meshData(mesh._meshData), _entity(mesh._entity)
 {
 	if (_entity != nullptr)
-	{
-		Renderer& renderer = Application::getRenderer();
-		renderer.submitRenderableObject(*this, *_entity);
-	}
+		Application::getRenderer().submitRenderableObject(*this, *_entity);
 }
 
 
@@ -226,25 +223,25 @@ void RigidbodyComponent::addRelativeForce(const Force& force)
 
 
 
-AABBColliderComponent::AABBColliderComponent(RigidbodyComponent& rigidbody, const Coords3f& initialSize)
-	: _rigidbody(&rigidbody), _initialSize(initialSize / 2.0f)
+AABBColliderComponent::AABBColliderComponent(const AABBColliderComponent& collider)
+	: _id(collider._id), _entity(collider._entity), _initialSize(collider._initialSize), _boundingBox(collider._boundingBox),
+	  _fixedBoundingBox(collider._fixedBoundingBox), _restitutionCocoefficient(collider._restitutionCocoefficient),
+	  _rigidbody(collider._rigidbody), _collisionResolver(collider._collisionResolver)
+{
+	if (_entity != nullptr)
+		Application::getPhysicsEngine().submitColliderComponent(*this, *_entity);
+}
+
+AABBColliderComponent::AABBColliderComponent(const Entity& entity, RigidbodyComponent& rigidbody, const Coords3f& initialSize)
+	: _entity(&entity), _rigidbody(&rigidbody), _initialSize(initialSize / 2.0f)
 {
 	// empty
 }
 
-AABBColliderComponent::AABBColliderComponent(unsigned int id, RigidbodyComponent& rigidbody, const Coords3f& initialSize)
-	: _id(id), _rigidbody(&rigidbody), _initialSize(initialSize / 2.0f)
+AABBColliderComponent::AABBColliderComponent(const Entity& entity, unsigned int id, RigidbodyComponent& rigidbody, const Coords3f& initialSize)
+	: _id(id), _entity(&entity), _rigidbody(&rigidbody), _initialSize(initialSize / 2.0f)
 {
 	// empty
-}
-
-
-AABBColliderComponent::~AABBColliderComponent()
-{
-	if (_collisionResolver != nullptr)
-		delete _collisionResolver;
-
-	_collisionResolver = nullptr;
 }
 
 

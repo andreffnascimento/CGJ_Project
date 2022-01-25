@@ -126,7 +126,7 @@ void Renderer::_renderOpaqueMeshInstances() const
 	{
 		RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
 		const MeshData* meshData = meshIterator.first;
-		const std::unordered_map<const MeshComponent*, const TransformComponent*> meshInstances = meshIterator.second;
+		const std::unordered_map<const MeshComponent*, const TransformComponent*>& meshInstances = meshIterator.second;
 		_submitMeshData(*meshData);
 
 		for (const auto& meshInstanceIterator : meshInstances)

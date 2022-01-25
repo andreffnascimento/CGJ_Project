@@ -113,8 +113,8 @@ private:
 
 		Coords3f cheerioSize = Coords3f({ CHEERIO_SIZE.x, CHEERIO_OUTER_RADIUS * 3.0f, CHEERIO_SIZE.z });
 		RigidbodyComponent& rigidbody = cheerio.addComponent<RigidbodyComponent>(rigidbodyType, mass, drag, angularDrag);
-		AABBColliderComponent& collider = cheerio.addComponent<AABBColliderComponent>(ColliderIds::CHEERIO, rigidbody, cheerioSize);
-		collider.setCollisionResolver(new CheerioCollisionResolver(collider));
+		AABBColliderComponent& collider = cheerio.addComponent<AABBColliderComponent>(cheerio, ColliderIds::CHEERIO, rigidbody, cheerioSize);
+		collider.setCollisionResolver(std::make_shared<CheerioCollisionResolver>(collider));
 		collider.setFixedBoundingBox(true);
 		collider.setRestitutionCocoefficient(0.1f);
 
