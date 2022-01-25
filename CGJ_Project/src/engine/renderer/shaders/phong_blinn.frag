@@ -203,6 +203,8 @@ float processFogAmount() {
 		else if (fogData.mode == FOG_TYPE_EXP2)
 			return pow(exp(-fogData.density * fragDistance), 2);
 	}
+	
+	return 1.0;
 }
 
 
