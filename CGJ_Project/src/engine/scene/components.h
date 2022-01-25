@@ -9,6 +9,7 @@
 #include "engine/scene/components/parentComponent.h"
 #include "engine/scene/components/cameraComponent.h"
 #include "engine/scene/components/meshComponent.h"
+#include "engine/scene/components/mirrorComponent.h"
 #include "engine/scene/components/scriptComponent.h"
 #include "engine/scene/components/lightComponent.h"
 #include "engine/scene/components/rigidbodyComponent.h"

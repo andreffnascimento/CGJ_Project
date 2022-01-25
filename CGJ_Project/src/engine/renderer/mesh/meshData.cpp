@@ -37,3 +37,27 @@ void MeshData::addNormal(unsigned int normalId)
 {
 	_texture._normalIds[_texture._nNormals++] = normalId;
 }
+
+void MeshData::setIsMirror(bool isMirror)
+{
+	_isMirror = isMirror;
+}
+
+void MeshData::setStencilEnabled(bool enabled)
+{
+	_stencil._enabled = enabled;
+}
+
+void MeshData::addStencilFunc(GLenum func, GLint ref, GLint mask)
+{
+	_stencil._func = func;
+	_stencil._ref = ref;
+	_stencil._mask = mask;
+}
+
+void MeshData::addStencilOp(GLenum fail, GLenum zfail, GLenum zpass)
+{
+	_stencil._fail = fail;
+	_stencil._zfail = zfail;
+	_stencil._zpass = zpass;
+}

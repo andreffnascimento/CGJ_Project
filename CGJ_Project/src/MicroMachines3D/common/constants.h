@@ -68,6 +68,8 @@ constexpr Coords3f ORANGE_SIZE = { 6.0f, 6.0f, 6.0f };
 constexpr int N_ORANGES = 7;
 
 
+constexpr Coords3f MIRROR_SIZE = { 0.1f, 4.0f, 10.0f };
+
 
 
 constexpr float BUTTER_HEIGHT = 0.25f;

@@ -15,6 +15,7 @@
 #include "MicroMachines3D/entities/world/butters.h"
 #include "MicroMachines3D/entities/world/boosters.h"
 #include "MicroMachines3D/entities/world/checkeredFlag.h"
+#include "MicroMachines3D/entities/world/rearViewMirror.h"
 
 #include "MicroMachines3D/entities/hud/playingScreen.h"
 #include "MicroMachines3D/entities/hud/pauseScreen.h"
@@ -64,6 +65,8 @@ private:
 		Butters butters = Butters(this);
 		Boosters boosters = Boosters(this);
 		CheckeredFlag flag = CheckeredFlag(this);
+		RearViewMirror mirror = RearViewMirror(this);
+
 
 		PlayingScreen playingScreen = PlayingScreen(this);
 		PauseScreen pauseScreen = PauseScreen(this);

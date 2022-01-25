@@ -28,8 +28,6 @@ void Renderer::renderMeshes(const Scene& scene) const
 }
 
 
-
-
 void Renderer::_enableTranslucentRendering() const
 {
 	glDepthMask(GL_FALSE);
@@ -43,8 +41,6 @@ void Renderer::_disableTranslucentRendering() const
 	glDepthMask(GL_TRUE);
 	glDisable(GL_BLEND);
 }
-
-
 
 
 void Renderer::_sortTranslucentMeshInstancesInto(const Scene& scene, RendererData::translucentMeshInstances_t& sortedTranslucentMeshInstancesOut) const
@@ -150,7 +146,6 @@ void Renderer::_renderTranslucentMeshInstances(const RendererData::translucentMe
 		_submitRenderableData(*originalMesh, instanceBuffer);
 	}
 }
-
 
 
 void Renderer::_addToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform) const

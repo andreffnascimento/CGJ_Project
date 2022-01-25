@@ -24,6 +24,7 @@ private:
 	RendererData::TextureData _textures = RendererData::TextureData();
 	RendererData::opaqueMeshInstances_t _opaqueMeshInstances = RendererData::opaqueMeshInstances_t();
 	RendererData::translucentMeshInstances_t _translucentMeshInstances = RendererData::translucentMeshInstances_t();
+	RendererData::mirrorMeshInstances_t _mirrorMeshInstances = RendererData::mirrorMeshInstances_t();
 
 	RendererSettings::ReflectionCoefficients _reflectionCoefficients = RendererSettings::ReflectionCoefficients();
 	RendererSettings::Fog _fog = RendererSettings::Fog();
@@ -65,6 +66,8 @@ public:
 	void renderCamera(const Scene& scene) const;
 	void renderLights(const Scene& scene) const;
 	void renderMeshes(const Scene& scene) const;
+	void renderMirror(const Scene& scene) const;
+	void renderMirrors(const Scene& scene) const;
 	void renderColliders(const Scene& scene) const;
 
 
@@ -111,6 +114,14 @@ private:
 	void _submitMeshData(const MeshData& meshData) const;
 	void _submitInstanceBuffer(const RendererData::SubmitInstanceBuffer& instanceBuffer) const;
 	void _renderMesh(const MeshData& mesh, RendererData::SubmitInstanceBuffer& instanceBuffer) const;
+
+
+private:
+	void _enableShapeStenciling() const;
+	void _enableRenderingIntoStencil() const;
+	void _disableStencilRendering() const;
+
+	//void _stencilMesh(MeshComponent& mesh, TransformComponent& transform) const;
 
 
 private:

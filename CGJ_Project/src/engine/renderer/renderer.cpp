@@ -149,6 +149,9 @@ void Renderer::submitRenderableMesh(const MeshComponent& mesh)
 
 void Renderer::submitRenderableEntity(const MeshComponent& mesh, const Entity& entity)
 {
+	if (mesh.isMirror())
+		_mirrorMeshInstances[&mesh] = &entity.transform();
+
 	if (mesh.material().diffuse[3] == 1.0f)		// checks if the object is translucid
 		_opaqueMeshInstances[&mesh.meshData()][&mesh] = &entity.transform();
 	else
@@ -166,6 +169,7 @@ void Renderer::renderScene(const Scene& scene) const
 	renderLights(scene);
 	renderMeshes(scene);
 	renderColliders(scene);
+	renderMirror(scene);
 	renderCanvas(scene);
 	terminateSceneRendering();
 }

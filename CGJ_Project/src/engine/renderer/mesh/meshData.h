@@ -4,6 +4,7 @@
 
 #include "engine/renderer/mesh/geometry.h"
 #include "engine/renderer/mesh/texture.h"
+#include "engine/renderer/mesh/stencil.h"
 
 
 
@@ -14,6 +15,8 @@ class MeshData
 private:
 	MyMesh _mesh;
 	Texture _texture;
+	Stencil _stencil;
+	bool _isMirror = false;
 
 
 
@@ -26,9 +29,11 @@ public:
 
 
 public:
-	inline const MyMesh& mesh() const		{ return _mesh; }
+	inline const MyMesh& mesh() const { return _mesh; }
 	inline const Material& material() const { return _mesh.mat; }
-	inline const Texture& texture() const	{ return _texture; }
+	inline const Texture& texture()	  const	{ return _texture ; }
+	inline const Stencil& stencil()   const	{ return _stencil ; }
+	inline const bool isMirror()	  const	{ return _isMirror; }
 
 
 public:
@@ -36,6 +41,10 @@ public:
 	void setTextureMode(const Texture::TextureMode& textureMode);
 	void addTexture(unsigned int textureId);
 	void addNormal(unsigned int normalId);
+	void setIsMirror(bool isMirror);
+	void setStencilEnabled(bool enabled);
+	void addStencilFunc(GLenum func, GLint ref, GLint mask);
+	void addStencilOp(GLenum fail, GLenum zfail, GLenum zpass);
 
 };
 

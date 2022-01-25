@@ -7,6 +7,7 @@
 #include "engine/renderer/mesh/meshData.h"
 #include "engine/renderer/mesh/geometry.h"
 #include "engine/renderer/mesh/texture.h"
+#include "engine/renderer/mesh/stencil.h"
 
 class Entity;
 
@@ -32,7 +33,9 @@ public:
 	inline const MeshData& meshData() const { return *_meshData; }
 	inline const MyMesh& mesh()	const		{ return _meshData->mesh(); }
 	inline const Material& material() const { return _meshData->material(); }
-	inline const Texture& texture() const	{ return _meshData->texture(); }
+	inline const Texture& texture() const	{ return _meshData->texture() ; }
+	inline const Stencil& stencil() const	{ return _meshData->stencil() ; }
+	inline bool isMirror() const			{ return _meshData->isMirror(); }
 	inline bool enabled() const				{ return _enabled; }
 
 	inline void setMaterial(const Material& material)					{ _meshData->setMaterial(material); }
@@ -40,6 +43,8 @@ public:
 	inline void addTexture(unsigned int textureId)						{ _meshData->addTexture(textureId); }
 	inline void addNormal(unsigned int normalId)						{ _meshData->addNormal(normalId); }
 	inline void setEnabled(bool enabled)								{ _enabled = enabled; }
+	inline void setIsMirror(bool isMirror)								{ _meshData->setIsMirror(isMirror); }
+
 
 	inline operator const MeshData&() const { return *_meshData; }
 };
