@@ -341,3 +341,12 @@ void ParticleGeneratorComponent::initializeParticleStorage(unsigned int nParticl
 		throw std::string("Renderer only suports up to " + std::to_string(RendererSettings::MAX_PARTICLES_PER_GENERATOR) + " particles per generator!");
 	_particles = new ParticleGeneratorComponent::ParticleData[_nParticles];
 }
+
+
+
+
+SkyboxComponent::SkyboxComponent(const MyMesh& mesh, const Material& material)
+	: _meshData(MeshData(createCube(), material))
+{
+	// empty
+}

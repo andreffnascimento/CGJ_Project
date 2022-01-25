@@ -112,6 +112,7 @@
     <ClInclude Include="src\MicroMachines3D\entities\particles\fireworks.h" />
     <ClInclude Include="src\engine\math\l3DBillboard.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\planets.h" />
+    <ClInclude Include="src\engine\scene\components\skyboxComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />

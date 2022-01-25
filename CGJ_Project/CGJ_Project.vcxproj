@@ -230,6 +230,7 @@
     <ClInclude Include="src\engine\scene\components\particleGeneratorComponent.h" />
     <ClInclude Include="src\engine\scene\components\rigidbodyComponent.h" />
     <ClInclude Include="src\engine\scene\components\scriptComponent.h" />
+    <ClInclude Include="src\engine\scene\components\skyboxComponent.h" />
     <ClInclude Include="src\engine\scene\components\tagComponent.h" />
     <ClInclude Include="src\engine\scene\components\textComponent.h" />
     <ClInclude Include="src\engine\scene\components\transformComponent.h" />
