@@ -9,85 +9,84 @@ void Renderer::renderMirror(const Scene& scene) const
 {
 	Entity mirrorEntity = scene.getEntityByTag("RearViewMirror");
 
-	const MirrorComponent& mirror = mirrorEntity.getComponent<MirrorComponent>();
+	const MeshComponent& mirrorMesh = mirrorEntity.getComponent<MeshComponent>();
 
 
 	// -- Stencil mirror shape ------------------------------------------------- //
 	_enableShapeStenciling();
 
 	RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
-	const MeshData* meshData = &mirror.mesh()->meshData();
+	const MeshData* meshData = &mirrorMesh.meshData();
 
 	_submitMeshData(*meshData);
 
 
-	const MeshComponent* mesh = mirror.mesh();
 	const TransformComponent* transform = &mirrorEntity.transform();
 
 	_addToInstanceBuffer(instanceBuffer, transform);
 	_submitRenderableData(*meshData, instanceBuffer);
 
 
-	// -- Setup the mirror camera ---------------------------------------------- //
-	const Coords3f& cameraCoords = mirror.rigidbody()->position();
-	const Coords3f& targetCoords = scene.getEntityByTag("Car").getComponent<RigidbodyComponent>().position();  // shortcut for now
+	//// -- Setup the mirror camera ---------------------------------------------- //
+	//const Coords3f& cameraCoords = mirror.rigidbody()->position();
+	//const Coords3f& targetCoords = scene.getEntityByTag("Car").getComponent<RigidbodyComponent>().position();  // shortcut for now
 
 
-	Coords3f up = { 0.0f, 1.0f, 0.0f };
-	if (cameraCoords.x == 0.0f && cameraCoords.y != 0.0f && cameraCoords.z == 0.0f)
-		up = { 0.0f, 0.0f, -1.0f };
+	//Coords3f up = { 0.0f, 1.0f, 0.0f };
+	//if (cameraCoords.x == 0.0f && cameraCoords.y != 0.0f && cameraCoords.z == 0.0f)
+	//	up = { 0.0f, 0.0f, -1.0f };
 
 
-	loadIdentity(VIEW);
-	loadIdentity(MODEL);
-	loadIdentity(PROJECTION);
-	lookAt(cameraCoords.x, cameraCoords.y, cameraCoords.z,	// camera position
-		targetCoords.x, targetCoords.y, targetCoords.z,	// target position
-		up.x, up.y, up.z);
+	//loadIdentity(VIEW);
+	//loadIdentity(MODEL);
+	//loadIdentity(PROJECTION);
+	//lookAt(cameraCoords.x, cameraCoords.y, cameraCoords.z,	// camera position
+	//	targetCoords.x, targetCoords.y, targetCoords.z,	// target position
+	//	up.x, up.y, up.z);
 
 
-	// -- Draw scene into stenciled area -------------------------------------- //
-	_enableRenderingIntoStencil();
+	//// -- Draw scene into stenciled area -------------------------------------- //
+	//_enableRenderingIntoStencil();
 
-	Renderer::renderMeshes(scene);
+	//Renderer::renderMeshes(scene);
 
-	_disableStencilRendering();
+	//_disableStencilRendering();
 	
 }
 
 void Renderer::renderMirrors(const Scene& scene) const
 {
-	const auto& mirrorComponents = scene.getSceneComponents<MirrorComponent>();
+	//const auto& mirrorComponents = scene.getSceneComponents<MirrorComponent>();
 
-	for (const auto & mirrorIterator : mirrorComponents)
-	{
-		const MirrorComponent& mirror = mirrorIterator.first;
-		const TransformComponent* transform = mirrorIterator.second;
+	//for (const auto & mirrorIterator : mirrorComponents)
+	//{
+	//	const MirrorComponent& mirror = mirrorIterator.first;
+	//	const TransformComponent* transform = mirrorIterator.second;
 
-		_stencilMesh(mirror.mesh(), transform);
+	//	_stencilMesh(mirror.mesh(), transform);
 
-		const Coords3f& cameraCoords = mirror.rigidbody()->position(); 
-		//const Coords3f& targetCoords = cameraCoords + mirror.mirrorNormal();  // TODO rotate normal by mesh rotation
-		const Coords3f& targetCoords = scene.getEntityByTag("Car").getComponent<RigidbodyComponent>().position();  // shortcut for now
-
-
-		Coords3f up = { 0.0f, 1.0f, 0.0f };
-		if (cameraCoords.x == 0.0f && cameraCoords.y != 0.0f && cameraCoords.z == 0.0f)
-			up = { 0.0f, 0.0f, -1.0f };
+	//	const Coords3f& cameraCoords = mirror.rigidbody()->position(); 
+	//	//const Coords3f& targetCoords = cameraCoords + mirror.mirrorNormal();  // TODO rotate normal by mesh rotation
+	//	const Coords3f& targetCoords = scene.getEntityByTag("Car").getComponent<RigidbodyComponent>().position();  // shortcut for now
 
 
-		loadIdentity(VIEW);
-		loadIdentity(MODEL);
-		lookAt(cameraCoords.x, cameraCoords.y, cameraCoords.z,	// camera position
-			targetCoords.x, targetCoords.y, targetCoords.z,	// target position
-			up.x, up.y, up.z);								// up vector
-
-		Renderer::renderMeshes(scene);
+	//	Coords3f up = { 0.0f, 1.0f, 0.0f };
+	//	if (cameraCoords.x == 0.0f && cameraCoords.y != 0.0f && cameraCoords.z == 0.0f)
+	//		up = { 0.0f, 0.0f, -1.0f };
 
 
-	}
+	//	loadIdentity(VIEW);
+	//	loadIdentity(MODEL);
+	//	lookAt(cameraCoords.x, cameraCoords.y, cameraCoords.z,	// camera position
+	//		targetCoords.x, targetCoords.y, targetCoords.z,	// target position
+	//		up.x, up.y, up.z);								// up vector
 
-	_disableStencilRendering();
+	//	Renderer::renderMeshes(scene);
+
+
+	//}
+
+	//_disableStencilRendering();
 }
 
 void Renderer::_enableShapeStenciling() const
@@ -114,15 +113,13 @@ void Renderer::_disableStencilRendering() const
 }
 
 
-void Renderer::_stencilMesh(MeshComponent& mesh, TransformComponent& transform)
+void Renderer::_stencilMesh(MeshComponent& mesh, TransformComponent& transform) const
 {
-	_enableShapeStenciling();
+	//_enableShapeStenciling();
 
-	RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
+	//RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
 
-	_submitMeshData(mesh.meshData());
-	_addToInstanceBuffer(instanceBuffer, transform);
-
-
+	//_submitMeshData(mesh.meshData());
+	//_addToInstanceBuffer(instanceBuffer, transform);
 
 }

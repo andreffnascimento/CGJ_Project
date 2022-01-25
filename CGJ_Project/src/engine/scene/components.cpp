@@ -100,6 +100,12 @@ MeshComponent::MeshComponent(const MeshComponent& mesh, const Entity& entity)
 }
 
 
+MirrorComponent::MirrorComponent(const RigidbodyComponent& rigidbody, const MeshComponent& mesh)
+	: _rigidbody(&rigidbody), _mesh(&mesh)
+{
+	// empty
+}
+
 
 
 void ScriptComponent::onCreate() const

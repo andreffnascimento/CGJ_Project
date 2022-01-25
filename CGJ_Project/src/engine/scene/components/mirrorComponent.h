@@ -12,22 +12,22 @@ struct MirrorComponent
 {
 
 private:
-	RigidbodyComponent* _rigidbody = nullptr;
-	MeshComponent* _mesh = nullptr;
+	const RigidbodyComponent* _rigidbody = nullptr;
+	const MeshComponent* _mesh = nullptr;
 
-	Coords3f _mirrorNormal = { 0.0f, 0.0f, 1.0f };
+	Coords3f _mirrorNormal = Coords3f();
 
 public:
 	MirrorComponent() = delete;
 	MirrorComponent(const MirrorComponent&) = default;
-	MirrorComponent(RigidbodyComponent& rigidbody, MeshComponent& mesh, Coords3f mirrorNormal);
+	MirrorComponent(const RigidbodyComponent& rigidbody, const MeshComponent& mesh);
 	~MirrorComponent() = default;
 
 	inline const Coords3f& mirrorNormal() const { return _mirrorNormal; }
-	inline void mirrorNormal(const Coords3f& mirrorNormal) { _mirrorNormal = mirrorNormal; }
+	inline void serMirrorNormal(const Coords3f& mirrorNormal) { _mirrorNormal = mirrorNormal; }
 
-	inline RigidbodyComponent* rigidbody() const { return _rigidbody; }
-	inline MeshComponent* mesh() const { return _mesh; }
+	inline const RigidbodyComponent* rigidbody() const { return _rigidbody; }
+	inline const MeshComponent* mesh() const { return _mesh; }
 };
 
 

@@ -120,8 +120,7 @@ private:
 	void _enableShapeStenciling() const;
 	void _enableRenderingIntoStencil() const;
 	void _disableStencilRendering() const;
-
-	//void _stencilMesh(MeshComponent& mesh, TransformComponent& transform) const;
+	void _stencilMesh(MeshComponent& mesh, TransformComponent& transform) const;
 
 
 private:

@@ -30,6 +30,7 @@
     <ClCompile Include="src\engine\renderer\mesh\meshData.cpp" />
     <ClCompile Include="src\MicroMachines3D\entities\hud\pauseScreen.h" />
     <ClCompile Include="src\engine\renderer\modules\canvasRenderer.cpp" />
+    <ClCompile Include="..\..\..\..\..\Master%27s\Year1\CGJ\CGJ_Project\CGJ_Project\src\engine\renderer\modules\mirrorRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\app\application.h" />
@@ -105,6 +106,7 @@
     <ClInclude Include="src\MicroMachines3D\entities\hud\gameoverScreen.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\boosters.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\boosters\boostersDriftScript.h" />
+    <ClInclude Include="..\..\..\..\..\Master%27s\Year1\CGJ\CGJ_Project\CGJ_Project\src\engine\scene\components\mirrorComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />

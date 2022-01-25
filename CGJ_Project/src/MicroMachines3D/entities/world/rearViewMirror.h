@@ -13,11 +13,22 @@ public:
 	RearViewMirror(Scene* scene)
 		: SceneEntity(scene->createEntity("RearViewMirror"))
 	{
-		GroupComponent& group = addComponent<GroupComponent>();
+		//GroupComponent& group = addComponent<GroupComponent>();
 
-		MeshComponent mirrorMesh = MeshComponent(createCube(), TABLE_MATERIAL);
-		mirrorMesh.setIsMirror(true);
-		_createMirrorReflectiveArea(scene, group, mirrorMesh);
+		//RigidbodyComponent& rigidbody = addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::DYNAMIC, 100.0f, 10.0f, 30.0f);
+		MeshComponent mirrorMesh =  MeshComponent(createCube(), TABLE_MATERIAL);
+		
+		addComponent<MeshComponent>(mirrorMesh);
+
+		//mirrorMesh.setIsMirror(true);
+
+		Transform::scale(*this, MIRROR_SIZE);
+		Transform::translate(*this, { -4.0f, 7.5f, TABLE_SIZE.z / 3.0f });
+
+		//_createMirrorReflectiveArea(scene, group, mirrorMesh);
+
+		//MirrorComponent mirrorComponent = addComponent<MirrorComponent>(rigidbody, mirrorMesh);
+		// set mirror normal
 	}
 
 public: 
@@ -26,7 +37,7 @@ public:
 		Entity body = group.addNewEntity(scene, *this, "body");
 		body.addComponent<MeshComponent>(mesh, body);
 		Transform::scale(body, MIRROR_SIZE);
-		Transform::translate(body, { 2.0f, 4.5f, TABLE_SIZE.z / 3.0f });
+		Transform::translate(body, { -4.0f, 7.5f, TABLE_SIZE.z / 3.0f });
 
 	}
 
