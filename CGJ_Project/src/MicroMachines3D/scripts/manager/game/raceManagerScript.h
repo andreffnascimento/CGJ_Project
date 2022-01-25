@@ -293,6 +293,7 @@ private:
 			particle.velocity = Coords3f({ v * cos(theta) * sin(phi), v * cos(phi), v * sin(theta) * sin(phi) });
 			particle.acceleration = Coords3f({ 0.1f, -0.15f, 0.0f });
 			particle.color = Coords3f({ _frand(), _frand(), _frand() });
+			particle.size = FIREWORK_PARTICLE_SIZE;
 			particle.fadeSpeed = 0.5f +_frand() / 5.0f;
 			particle.life = 1.0f;
 		}

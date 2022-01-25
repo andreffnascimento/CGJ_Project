@@ -86,5 +86,7 @@ constexpr float FIREWORK_SIZE = 2.0f;
 constexpr float FIREWORK_INITIAL_HEIGHT = 12.0f;
 constexpr float FIREWORK_SPEED = 5.0f;
 
+constexpr Coords3f FIREWORK_PARTICLE_SIZE = { 0.2f, 0.2f, 0.2f };
+
 
 #endif // !__mm3d_common_constants__

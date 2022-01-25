@@ -17,6 +17,7 @@ public:
 		Coords3f velocity = Coords3f();
 		Coords3f acceleration = Coords3f();
 		Coords3f color = Coords3f();
+		Coords3f size = Coords3f();
 		float life = 1.0f;
 		float fadeSpeed = 0.1f;
 	};
