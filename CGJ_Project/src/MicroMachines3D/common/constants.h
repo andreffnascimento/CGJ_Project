@@ -89,4 +89,8 @@ constexpr float FIREWORK_SPEED = 5.0f;
 constexpr Coords3f FIREWORK_PARTICLE_SIZE = { 0.2f, 0.2f, 0.2f };
 
 
+
+constexpr Coords3f SKYBOX_SIZE = { 300.0f, 300.0f, 300.0f };
+
+
 #endif // !__mm3d_common_constants__

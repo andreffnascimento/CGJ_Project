@@ -345,8 +345,8 @@ void ParticleGeneratorComponent::initializeParticleStorage(unsigned int nParticl
 
 
 
-SkyboxComponent::SkyboxComponent(const MyMesh& mesh, const Material& material)
-	: _meshData(MeshData(createCube(), material))
+SkyboxComponent::SkyboxComponent(unsigned int textureId)
+	: _meshData(MeshData(createCube(), Material()))
 {
-	// empty
+	_meshData.addTexture(textureId);
 }

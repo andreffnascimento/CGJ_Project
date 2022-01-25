@@ -257,6 +257,7 @@
     <ClInclude Include="src\MicroMachines3D\entities\world\boosters.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\oranges.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\planets.h" />
+    <ClInclude Include="src\MicroMachines3D\entities\world\skybox.h" />
     <ClInclude Include="src\MicroMachines3D\scenes\MicroMachines3DScene.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\boosters\boostersDriftScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\butters\buttersDriftScript.h" />
