@@ -73,7 +73,7 @@ MeshComponent::MeshComponent(const MeshComponent& mesh)
 	if (_entity != nullptr)
 	{
 		Renderer& renderer = Application::getRenderer();
-		renderer.submitRenderableEntity(*this, *_entity);
+		renderer.submitRenderableObject(*this, *_entity);
 	}
 }
 
@@ -81,8 +81,7 @@ MeshComponent::MeshComponent(const MeshComponent& mesh)
 MeshComponent::MeshComponent(const MyMesh& mesh, const Material& material)
 	: _meshData(std::make_shared<MeshData>(mesh, material)), _entity(nullptr)
 {
-	Renderer& renderer = Application::getRenderer();
-	renderer.submitRenderableMesh(*this);
+	// empty
 }
 
 
@@ -271,7 +270,7 @@ Entity CanvasComponent::createTextEntity(Scene* scene, const Entity& canvasEntit
 Entity CanvasComponent::createImageEntity(Scene* scene, const Entity& canvasEntity, const std::string& tag)
 {
 	Entity entity = scene->createEntity(canvasEntity.tag().tag() + ":" + tag);
-	ImageComponent& imageComponent = entity.addComponent<ImageComponent>();
+	ImageComponent& imageComponent = entity.addComponent<ImageComponent>(entity, ImageComponent::ImageType::CANVAS_IMAGE);
 	_canvasImage[&imageComponent] = &entity.transform();
 	return entity;
 }
@@ -280,7 +279,7 @@ Entity CanvasComponent::createImageEntity(Scene* scene, const Entity& canvasEnti
 Entity CanvasComponent::createImageEntity(Scene* scene, const Entity& canvasEntity)
 {
 	Entity entity = scene->createEntity(canvasEntity.tag(), true);
-	ImageComponent& imageComponent = entity.addComponent<ImageComponent>();
+	ImageComponent& imageComponent = entity.addComponent<ImageComponent>(entity, ImageComponent::ImageType::CANVAS_IMAGE);
 	_canvasImage[&imageComponent] = &entity.transform();
 	return entity;
 }
@@ -288,7 +287,8 @@ Entity CanvasComponent::createImageEntity(Scene* scene, const Entity& canvasEnti
 
 
 
-ImageComponent::ImageComponent()
+ImageComponent::ImageComponent(const Entity& entity, const ImageComponent::ImageType& imageType)
+	: _entity(&entity)
 {
 	Material material = {
 		{ 0.0f, 0.0f, 0.0f, 0.0f },
@@ -299,6 +299,8 @@ ImageComponent::ImageComponent()
 	};
 
 	_meshData = std::make_shared<MeshData>(createQuad(1.0f, 1.0f), material);
+	if (imageType == ImageComponent::ImageType::BILLBOARD)
+		Application::getRenderer().submitRenderableImage(*this, *_entity);
 }
 
 

@@ -13,13 +13,22 @@
 
 struct ImageComponent
 {
+	enum class ImageType
+	{
+		BILLBOARD = 1,
+		CANVAS_IMAGE = 2,
+	};
+
+
 private:
 	std::shared_ptr<MeshData> _meshData = nullptr;
+	const Entity* _entity = nullptr;
 	bool _enabled = true;
 
 public:
-	ImageComponent();
+	ImageComponent() = delete;
 	ImageComponent(const ImageComponent&) = default;
+	ImageComponent(const Entity& entity, const ImageComponent::ImageType& imageType = ImageComponent::ImageType::BILLBOARD);
 	~ImageComponent() = default;
 
 	inline const MeshData& meshData() const	{ return *_meshData; }

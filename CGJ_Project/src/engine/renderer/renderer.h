@@ -26,6 +26,7 @@ private:
 	RendererData::TextureData _textures = RendererData::TextureData();
 	RendererData::opaqueMeshInstances_t _opaqueMeshInstances = RendererData::opaqueMeshInstances_t();
 	RendererData::translucentMeshInstances_t _translucentMeshInstances = RendererData::translucentMeshInstances_t();
+	RendererData::imageMeshInstances_t _imageMeshInstances = RendererData::imageMeshInstances_t();
 
 	RendererSettings::ReflectionCoefficients _reflectionCoefficients = RendererSettings::ReflectionCoefficients();
 	RendererSettings::Fog _fog = RendererSettings::Fog();
@@ -54,8 +55,8 @@ public:
 public:
 	void init();
 	void updateViewport(CameraComponent& camera, int width, int height) const;
-	void submitRenderableMesh(const MeshComponent& mesh);
-	void submitRenderableEntity(const MeshComponent& mesh, const Entity& entity);
+	void submitRenderableObject(const MeshComponent& mesh, const Entity& entity);
+	void submitRenderableImage(const ImageComponent& image, const Entity& entity);
 
 
 public:
