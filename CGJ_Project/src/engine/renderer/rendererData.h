@@ -32,6 +32,17 @@ private:
 	};
 
 
+	struct SkyboxData
+	{
+		const SkyboxComponent* skybox = nullptr;
+		const TransformComponent* transform = nullptr;
+	};
+
+
+
+
+private:
+
 	struct SubmitLightBuffer
 	{
 		unsigned int nLights = 0;
@@ -58,6 +69,7 @@ private:
 
 		bool usesParticles = false;
 	};
+
 
 
 

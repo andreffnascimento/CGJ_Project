@@ -24,6 +24,8 @@ private:
 	unsigned int _uniformLocator[RendererUniformLocations::N_UNIFORMS] = {};
 
 	RendererData::TextureData _textures = RendererData::TextureData();
+	RendererData::SkyboxData _skybox = RendererData::SkyboxData();
+
 	RendererData::opaqueMeshInstances_t _opaqueMeshInstances = RendererData::opaqueMeshInstances_t();
 	RendererData::translucentMeshInstances_t _translucentMeshInstances = RendererData::translucentMeshInstances_t();
 	RendererData::imageMeshInstances_t _imageMeshInstances = RendererData::imageMeshInstances_t();
@@ -45,6 +47,9 @@ public:
 	static void setFog(const RendererSettings::Fog& fog);
 	static void setFogActive(bool active);
 	static void setBumpActive(bool active);
+	static void setSkybox(const Entity& skyboxEntity);
+
+
 
 
 public:

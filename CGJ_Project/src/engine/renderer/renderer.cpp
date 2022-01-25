@@ -91,6 +91,14 @@ void Renderer::setBumpActive(bool active)
 }
 
 
+void Renderer::setSkybox(const Entity& skyboxEntity)
+{
+	Renderer& renderer = Application::getRenderer();
+	renderer._skybox.skybox = &skyboxEntity.getComponent<SkyboxComponent>();
+	renderer._skybox.transform = &skyboxEntity.transform();
+}
+
+
 
 
 void Renderer::init()
