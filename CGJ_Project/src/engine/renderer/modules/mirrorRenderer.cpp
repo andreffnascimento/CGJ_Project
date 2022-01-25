@@ -20,37 +20,46 @@ void Renderer::renderMirror(const Scene& scene) const
 
 	_submitMeshData(*meshData);
 
-
 	const TransformComponent* transform = &mirrorEntity.transform();
 
 	_addToInstanceBuffer(instanceBuffer, transform);
 	_submitRenderableData(*meshData, instanceBuffer);
 
 
-	//// -- Setup the mirror camera ---------------------------------------------- //
-	//const Coords3f& cameraCoords = mirror.rigidbody()->position();
-	//const Coords3f& targetCoords = scene.getEntityByTag("Car").getComponent<RigidbodyComponent>().position();  // shortcut for now
+	// -- Setup the mirror camera ---------------------------------------------- //
+	const Coords3f& cameraCoords = mirrorEntity.transform().translation();
+	const Coords3f& targetCoords = scene.getEntityByTag("Car").getComponent<RigidbodyComponent>().position();  // shortcut for now
 
 
-	//Coords3f up = { 0.0f, 1.0f, 0.0f };
-	//if (cameraCoords.x == 0.0f && cameraCoords.y != 0.0f && cameraCoords.z == 0.0f)
-	//	up = { 0.0f, 0.0f, -1.0f };
+	Coords3f up = { 0.0f, 1.0f, 0.0f };
+	if (cameraCoords.x == 0.0f && cameraCoords.y != 0.0f && cameraCoords.z == 0.0f)
+		up = { 0.0f, 0.0f, -1.0f };
 
 
-	//loadIdentity(VIEW);
-	//loadIdentity(MODEL);
-	//loadIdentity(PROJECTION);
-	//lookAt(cameraCoords.x, cameraCoords.y, cameraCoords.z,	// camera position
-	//	targetCoords.x, targetCoords.y, targetCoords.z,	// target position
-	//	up.x, up.y, up.z);
+	pushMatrix(MODEL);
+	loadIdentity(MODEL);
+	pushMatrix(PROJECTION);
+	loadIdentity(PROJECTION);
+	pushMatrix(VIEW);
+	loadIdentity(VIEW);
+
+	perspective(70, 1.2f, 0.1f, 1000.0f); // TODO correct aspect ratio based on viewport width and height
+
+	lookAt(cameraCoords.x, cameraCoords.y, cameraCoords.z,	// camera position
+		targetCoords.x, targetCoords.y + 4.0f, targetCoords.z,	// target position
+		up.x, up.y, up.z);
 
 
-	//// -- Draw scene into stenciled area -------------------------------------- //
-	//_enableRenderingIntoStencil();
+	// -- Draw scene into stenciled area -------------------------------------- //
+	_enableRenderingIntoStencil();
 
-	//Renderer::renderMeshes(scene);
+	Renderer::renderMeshes(scene);
 
-	//_disableStencilRendering();
+	popMatrix(PROJECTION);
+	popMatrix(VIEW);
+	popMatrix(MODEL);
+
+	_disableStencilRendering();
 	
 }
 

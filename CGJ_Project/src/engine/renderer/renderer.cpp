@@ -169,7 +169,7 @@ void Renderer::renderScene(const Scene& scene) const
 	renderLights(scene);
 	renderMeshes(scene);
 	renderColliders(scene);
-	//renderMirror(scene);
+	renderMirror(scene);
 	renderCanvas(scene);
 	terminateSceneRendering();
 }

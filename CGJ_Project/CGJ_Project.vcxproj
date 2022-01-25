@@ -170,7 +170,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\Master%27s\Year1\CGJ\CGJ_Project\CGJ_Project\src\engine\renderer\modules\mirrorRenderer.cpp" />
+    <ClCompile Include="src\engine\renderer\modules\mirrorRenderer.cpp" />
     <ClCompile Include="src\engine\app\application.cpp" />
     <ClCompile Include="src\engine\app\eventHandler.cpp" />
     <ClCompile Include="src\engine\physics\collision.h" />
@@ -202,7 +202,7 @@
     <ClCompile Include="src\MicroMachines3D\entities\hud\pauseScreen.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\Master%27s\Year1\CGJ\CGJ_Project\CGJ_Project\src\engine\scene\components\mirrorComponent.h" />
+    <ClInclude Include="src\engine\scene\components\mirrorComponent.h" />
     <ClInclude Include="src\engine\app\application.h" />
     <ClInclude Include="src\engine\app\callback.h" />
     <ClInclude Include="src\engine\app\eventHandler.h" />
