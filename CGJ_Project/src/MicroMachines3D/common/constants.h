@@ -81,9 +81,10 @@ constexpr Coords3f GASPEDAL_SIZE = { 30.0f, 80.0f, 1.0f };
 
 
 
-constexpr unsigned int N_PARTICLES = 2000;
-constexpr float PARTICLE_SIZE = 2.0f;
-constexpr float PARTICLE_INITIAL_HEIGHT = 10.0f;
+constexpr unsigned int N_FIREWORKS = 2000;
+constexpr float FIREWORK_SIZE = 2.0f;
+constexpr float FIREWORK_INITIAL_HEIGHT = 12.0f;
+constexpr float FIREWORK_SPEED = 5.0f;
 
 
 #endif // !__mm3d_common_constants__

@@ -163,6 +163,9 @@ private:
 		if (_eventHandler->keyState('B').pressed() || _eventHandler->keyState('b').pressed())
 			Renderer::setBumpActive(_bumpToggle = !_bumpToggle);
 
+		if (_eventHandler->keyState('G').pressed() || _eventHandler->keyState('g').pressed())
+			_startFireworks();
+
 		if (_carRigidbody->position().y < RESET_GAME_HEIGHT)
 			_gameover();
 
@@ -281,16 +284,16 @@ private:
 		_fireworksGenerator->setEnabled(true);
 		for (unsigned int i = 0; i < _fireworksGenerator->nParticles(); i++)
 		{
-			float v = 0.8f * _frand() + 0.2f;
+			float v = FIREWORK_SPEED * (0.8f * _frand() + 0.2f);
 			float phi = _frand() * (float)PI;
 			float theta = 2.0f * _frand() * (float)PI;
 			
 			ParticleGeneratorComponent::ParticleData& particle = _fireworksGenerator->particle(i);
-			particle.position = Coords3f({ 0.0f, PARTICLE_INITIAL_HEIGHT, TABLE_SIZE.z / 3.0f });
+			particle.position = Coords3f({ 0.0f, FIREWORK_INITIAL_HEIGHT, TABLE_SIZE.z / 3.0f });
 			particle.velocity = Coords3f({ v * cos(theta) * sin(phi), v * cos(phi), v * sin(theta) * sin(phi) });
 			particle.acceleration = Coords3f({ 0.1f, -0.15f, 0.0f });
 			particle.color = Coords3f({ _frand(), _frand(), _frand() });
-			particle.fadeSpeed = 0.15f +_frand() / 5.0f;
+			particle.fadeSpeed = 0.5f +_frand() / 5.0f;
 			particle.life = 1.0f;
 		}
 	}

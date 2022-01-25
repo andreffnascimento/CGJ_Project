@@ -15,8 +15,8 @@ public:
 		: SceneEntity(scene->createEntity("Fireworks"))
 	{
 		unsigned int fireworksTextureId = Renderer::create2dTexture("src/MicroMachines3D/textures/fireworks/fireworks.tga");
-		ParticleGeneratorComponent& particleGenerator = addComponent<ParticleGeneratorComponent>(PARTICLE_SIZE, fireworksTextureId);
-		particleGenerator.initializeParticleStorage(N_PARTICLES);
+		ParticleGeneratorComponent& particleGenerator = addComponent<ParticleGeneratorComponent>(FIREWORK_SIZE, fireworksTextureId);
+		particleGenerator.initializeParticleStorage(N_FIREWORKS);
 	}
 
 };
