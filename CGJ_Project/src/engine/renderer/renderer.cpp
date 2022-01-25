@@ -167,6 +167,7 @@ void Renderer::renderScene(const Scene& scene)
 	renderCamera(scene);
 	renderLights(scene);
 	renderMeshes(scene);
+	renderImages(scene);
 	renderColliders(scene);
 	renderParticles(scene);
 	renderCanvas(scene);

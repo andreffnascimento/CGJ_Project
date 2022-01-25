@@ -7,7 +7,6 @@
 #include "engine/renderer/mesh/texture.h"
 
 #include "engine/math/AVTmathLib.h"
-#include "engine/math/l3DBillboard.h"
 #include "engine/math/transform.h"
 
 
@@ -22,22 +21,17 @@ void Renderer::renderMeshes(const Scene& scene) const
 	glUniform1ui(_uniformLocator[RendererUniformLocations::RENDER_MODE], (unsigned int)RendererSettings::RendererMode::MESH_RENDERER);
 	_renderOpaqueMeshInstances();
 
-	_enableTranslucentRendering();
+	_initTranslucentRendering();
 	RendererData::translucentMeshInstances_t sortedTranslucentMeshInstances = RendererData::translucentMeshInstances_t();
 	_sortTranslucentMeshInstancesInto(scene, sortedTranslucentMeshInstances);
 	_renderTranslucentMeshInstances(sortedTranslucentMeshInstances);
-	_disableTranslucentRendering();
-
-	glUniform1ui(_uniformLocator[RendererUniformLocations::RENDER_MODE], (unsigned int)RendererSettings::RendererMode::IMAGE_RENDERER);
-	_enableBillboardRendering();
-	_renderImageMeshInstances(scene);
-	_disableBillboardRendering();
+	_terminateTranslucentRendering();
 }
 
 
 
 
-void Renderer::_enableTranslucentRendering() const
+void Renderer::_initTranslucentRendering() const
 {
 	glDepthMask(GL_FALSE);
 	glEnable(GL_BLEND);
@@ -45,7 +39,7 @@ void Renderer::_enableTranslucentRendering() const
 }
 
 
-void Renderer::_disableTranslucentRendering() const
+void Renderer::_terminateTranslucentRendering() const
 {
 	glDepthMask(GL_TRUE);
 	glDisable(GL_BLEND);
@@ -105,21 +99,6 @@ void Renderer::_sortTranslucentMeshInstancesInto(const Scene& scene, RendererDat
 
 
 
-void Renderer::_enableBillboardRendering() const
-{
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-}
-
-
-void Renderer::_disableBillboardRendering() const
-{
-	glDisable(GL_BLEND);
-}
-
-
-
-
 void Renderer::_renderOpaqueMeshInstances() const
 {
 	for (const auto& meshIterator : _opaqueMeshInstances)
@@ -173,38 +152,6 @@ void Renderer::_renderTranslucentMeshInstances(const RendererData::translucentMe
 }
 
 
-void Renderer::_renderImageMeshInstances(const Scene& scene) const
-{
-	Coords3f cameraPos;
-	Transform::decomposeTransformMatrix(scene.activeCamera(), cameraPos, Quaternion(), Coords3f());
-
-	for (const auto& imageIterator : _imageMeshInstances)
-	{
-		RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
-		const MeshData* meshData = imageIterator.first;
-		const std::unordered_map<const ImageComponent*, const TransformComponent*> meshInstances = imageIterator.second;
-		_submitMeshData(*meshData);
-
-		for (const auto& meshInstanceIterator : meshInstances)
-		{
-			const ImageComponent* image = meshInstanceIterator.first;
-			const TransformComponent* transform = meshInstanceIterator.second;
-			if (!image->enabled())
-				continue;
-
-			if (instanceBuffer.nInstances >= RendererSettings::MAX_INSTANCES_PER_SUBMISSION)
-				_submitRenderableData(*meshData, instanceBuffer);
-
-			_addImageToInstanceBuffer(instanceBuffer, transform, image->type(), cameraPos);
-		}
-
-		_submitRenderableData(*meshData, instanceBuffer);
-	}
-}
-
-
-
-
 void Renderer::_addObjectToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform) const
 {
 	loadIdentity(MODEL);
@@ -215,43 +162,6 @@ void Renderer::_addObjectToInstanceBuffer(RendererData::SubmitInstanceBuffer& in
 	memcpy(instanceBuffer.pvmMatrix[instanceBuffer.nInstances],    mCompMatrix[PROJ_VIEW_MODEL], 4 * 4 * sizeof(float));
 	memcpy(instanceBuffer.vmMatrix[instanceBuffer.nInstances],     mCompMatrix[VIEW_MODEL],		 4 * 4 * sizeof(float));
 	memcpy(instanceBuffer.normalMatrix[instanceBuffer.nInstances], mNormal3x3,					 3 * 3 * sizeof(float));
-	instanceBuffer.nInstances++;
-}
-
-
-void Renderer::_addImageToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform, const ImageComponent::ImageType& imageType, const Coords3f& cameraPos) const
-{
-	loadIdentity(MODEL);
-	loadMatrix(MODEL, transform->transformMatrix());
-
-	if (imageType == ImageComponent::ImageType::CYLINDRICAL_BILLBOARD)
-	{
-		l3dBillboardCylindricalBegin(cameraPos, Coords3f({ transform->transformMatrix()[3][0], transform->transformMatrix()[3][1], transform->transformMatrix()[3][2] }));
-		computeDerivedMatrix(PROJ_VIEW_MODEL);
-	}
-	else if (imageType == ImageComponent::ImageType::SPHERICAL_BILLBOARD)
-	{
-		l3dBillboardSphericalBegin(cameraPos, Coords3f({ transform->transformMatrix()[3][0], transform->transformMatrix()[3][1], transform->transformMatrix()[3][2] }));
-		computeDerivedMatrix(PROJ_VIEW_MODEL);
-	}
-	else if (imageType == ImageComponent::ImageType::FAST_CYLINDRICAL_BILLBOARD)
-	{
-		computeDerivedMatrix(VIEW_MODEL);
-		BillboardCheatCylindricalBegin(transform->scale().x, transform->scale().y);
-		computeDerivedMatrix_PVM();
-	}
-	else if (imageType == ImageComponent::ImageType::FAST_SPHERICAL_BILLBOARD)
-	{
-		computeDerivedMatrix(VIEW_MODEL);
-		BillboardCheatSphericalBegin(transform->scale().x, transform->scale().y);
-		computeDerivedMatrix_PVM();
-	}
-
-	computeNormalMatrix3x3();
-
-	memcpy(instanceBuffer.pvmMatrix[instanceBuffer.nInstances], mCompMatrix[PROJ_VIEW_MODEL], 4 * 4 * sizeof(float));
-	memcpy(instanceBuffer.vmMatrix[instanceBuffer.nInstances], mCompMatrix[VIEW_MODEL], 4 * 4 * sizeof(float));
-	memcpy(instanceBuffer.normalMatrix[instanceBuffer.nInstances], mNormal3x3, 3 * 3 * sizeof(float));
 	instanceBuffer.nInstances++;
 }
 

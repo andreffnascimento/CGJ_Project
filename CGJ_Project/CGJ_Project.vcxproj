@@ -187,6 +187,7 @@
     <ClCompile Include="src\engine\renderer\modules\lightRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\meshRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\particleRenderer.cpp" />
+    <ClCompile Include="src\engine\renderer\modules\imageRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\rendererUniformLocations.h" />
     <ClCompile Include="src\engine\scene\components.cpp" />
     <ClCompile Include="src\engine\scene\ecsRegistry.cpp" />

@@ -68,6 +68,7 @@ public:
 	void renderCamera(const Scene& scene) const;
 	void renderLights(const Scene& scene) const;
 	void renderMeshes(const Scene& scene) const;
+	void renderImages(const Scene& scene) const;
 	void renderColliders(const Scene& scene) const;
 	void renderParticles(const Scene& scene) const;
 
@@ -99,24 +100,25 @@ private:
 
 
 private:
-	void _enableTranslucentRendering() const;
-	void _disableTranslucentRendering() const;
+	void _initTranslucentRendering() const;
+	void _terminateTranslucentRendering() const;
 	void _sortTranslucentMeshInstancesInto(const Scene& scene, RendererData::translucentMeshInstances_t& sortedTranslucentMeshInstancesOut) const;
-
-	void _enableBillboardRendering() const;
-	void _disableBillboardRendering() const;
 
 	void _renderOpaqueMeshInstances() const;
 	void _renderTranslucentMeshInstances(const RendererData::translucentMeshInstances_t& translucentMeshInstances) const;
-	void _renderImageMeshInstances(const Scene& scene) const;
-
 	void _addObjectToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform) const;
-	void _addImageToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform, const ImageComponent::ImageType& imageType, const Coords3f& cameraPos) const;
 
 	void _submitRenderableData(const MeshData& meshData, RendererData::SubmitInstanceBuffer& instanceBuffer) const;
 	void _submitMeshData(const MeshData& meshData) const;
 	void _submitInstanceBuffer(const RendererData::SubmitInstanceBuffer& instanceBuffer) const;
 	void _renderMesh(const MeshData& mesh, RendererData::SubmitInstanceBuffer& instanceBuffer) const;
+
+
+private:
+	void _initImageRendering() const;
+	void _terminateImageRendering() const;
+	void _renderImageMeshInstances(const Scene& scene) const;
+	void _addImageToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform, const ImageComponent::ImageType& imageType, const Coords3f& cameraPos) const;
 
 
 private:
@@ -138,7 +140,6 @@ private:
 	void _submitParticleTextureData(const ParticleGeneratorComponent& particleGenerator) const;
 	void _addToParticleInstanceBuffer(RendererData::SubmitInstanceBuffer & instanceBuffer, const ParticleGeneratorComponent::ParticleData particle) const;
 	void _renderParticleGenerator(const ParticleGeneratorComponent& particleGenerator) const;
-
 };
 
 
