@@ -21,6 +21,7 @@ private:
 	std::shared_ptr<MeshData> _meshData = nullptr;
 	const Entity* _entity = nullptr;
 	bool _enabled = true;
+	bool _fixedPosition = false;
 
 public:
 	MeshComponent() = delete;
@@ -37,6 +38,7 @@ public:
 	inline const Stencil& stencil() const	{ return _meshData->stencil() ; }
 	inline bool isMirror() const			{ return _meshData->isMirror(); }
 	inline bool enabled() const				{ return _enabled; }
+	inline bool fixedPosition() const		{ return _fixedPosition; }
 
 	inline void setMaterial(const Material& material)					{ _meshData->setMaterial(material); }
 	inline void setTextureMode(const Texture::TextureMode& textureMode) { _meshData->setTextureMode(textureMode); }
@@ -44,6 +46,7 @@ public:
 	inline void addNormal(unsigned int normalId)						{ _meshData->addNormal(normalId); }
 	inline void setEnabled(bool enabled)								{ _enabled = enabled; }
 	inline void setIsMirror(bool isMirror)								{ _meshData->setIsMirror(isMirror); }
+	inline void setFixedPosition(bool fixedPosition)					{ _fixedPosition = fixedPosition; }
 
 
 	inline operator const MeshData&() const { return *_meshData; }

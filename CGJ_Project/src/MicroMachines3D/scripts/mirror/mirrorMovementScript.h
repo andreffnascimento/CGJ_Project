@@ -15,8 +15,8 @@ private:
 	static constexpr float ORIGINAL_R = 0.0f;
 
 private:
-	Entity _car = Entity();
-	const TransformComponent* _carTransform = nullptr;
+	CameraEntity _camera = Entity();
+	const TransformComponent* _cameraTransform = nullptr;
 	Entity _mirror = Entity();	
 	
 	float _alpha = MirrorMovementScript::MAX_ALPHA;
@@ -38,31 +38,35 @@ public:
 public:
 	void onCreate() override
 	{
-		_car = _scene->getEntityByTag("Car");
-		_carTransform = &_car.getComponent<TransformComponent>();
+		_camera = _scene->getEntityByTag("Camera3");
+		_cameraTransform = &_camera.getComponent<TransformComponent>();
 		_mirror = _scene->getEntityByTag("RearViewMirror");
-		_updateCameraTransform();
+		_updateMirrorTransform();
 	}
 
 	void onUpdate(float ts) override
 	{
-		_updateCameraTransform();
+		if (_scene->activeCamera() != _camera)
+			return;
+
+		_updateMirrorTransform();
 	}
 
 private:
-	void _updateCameraTransform()
+	void _updateMirrorTransform()
 	{
-		// TODO billboard effect
-		float orbitalCameraX = _rAux * sin(toRadians(_alphaAux)) * cos(toRadians(_betaAux));
-		float orbitalCameraZ = _rAux * cos(toRadians(_alphaAux)) * cos(toRadians(_betaAux));
-		float orbitalCameraY = _rAux * sin(toRadians(_betaAux));
+		
+		//float orbitalCameraX = _rAux * sin(toRadians(_alphaAux)) * cos(toRadians(_betaAux));
+		//float orbitalCameraZ = _rAux * cos(toRadians(_alphaAux)) * cos(toRadians(_betaAux));
+		//float orbitalCameraY = _rAux * sin(toRadians(_betaAux));
 
-		const Coords3f& carPosition = _carTransform->translation();
-		float mirrorX = carPosition.x + orbitalCameraX;
-		float mirrorY = carPosition.y + orbitalCameraY;
-		float mirrorZ = carPosition.z + orbitalCameraZ;
+		//const Coords3f& carPosition = _carTransform->translation();
+		//float mirrorX = carPosition.x + orbitalCameraX;
+		//float mirrorY = carPosition.y + orbitalCameraY;
+		//float mirrorZ = carPosition.z + orbitalCameraZ;
 
-		Transform::translateTo((Entity&)_mirror, { mirrorX, mirrorY, mirrorZ });
+		////Transform::rotate();
+		//Transform::translateTo((Entity&)_mirror, { mirrorX, mirrorY, mirrorZ });
 	}
 
 };

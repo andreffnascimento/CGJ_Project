@@ -18,7 +18,7 @@ public:
 
 		//RigidbodyComponent& rigidbody = addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::DYNAMIC, 100.0f, 10.0f, 30.0f);
 		MeshComponent mirrorMesh =  MeshComponent(createCube(), MIRROR_MATERIAL);
-		
+		mirrorMesh.setFixedPosition(true);
 		addComponent<MeshComponent>(mirrorMesh);
 
 		//mirrorMesh.setIsMirror(true);
@@ -26,7 +26,7 @@ public:
 		Transform::scale(*this, MIRROR_SIZE);
 		//Transform::translate(*this, { -4.0f, 7.5f, TABLE_SIZE.z / 3.0f });
 
-		addComponent<ScriptComponent>(std::make_shared<MirrorMovementScript>(scene));
+		//addComponent<ScriptComponent>(std::make_shared<MirrorMovementScript>(scene));
 		//_createMirrorReflectiveArea(scene, group, mirrorMesh);
 
 		//MirrorComponent mirrorComponent = addComponent<MirrorComponent>(rigidbody, mirrorMesh);
