@@ -285,6 +285,8 @@ void Renderer::_submitTextureData() const
 		glBindTexture(GL_TEXTURE_2D, _textures.textureData[i]);
 		texture2dMaps[i] = i;
 	}
+	for (unsigned int i = _textures.n2dTextures; i < RendererSettings::MAX_2D_TEXTURES; i++)
+		texture2dMaps[i] = i;
 
 	int textureCubeMaps[RendererSettings::MAX_CUBE_TEXTURES] = {};
 	for (unsigned int i = 0; i < _textures.nCubeTextures; i++)
@@ -294,9 +296,11 @@ void Renderer::_submitTextureData() const
 		glBindTexture(GL_TEXTURE_CUBE_MAP, _textures.textureData[j]);
 		textureCubeMaps[i] = j;
 	}
+	for (unsigned int i = _textures.nCubeTextures; i < RendererSettings::MAX_CUBE_TEXTURES; i++)
+		textureCubeMaps[i] = RendererSettings::MAX_2D_TEXTURES + i;
 	
-	glUniform1iv(_uniformLocator[RendererUniformLocations::TEXTURE_2D_MAPS], _textures.n2dTextures, texture2dMaps);
-	glUniform1iv(_uniformLocator[RendererUniformLocations::TEXTURE_CUBE_MAPS], _textures.nCubeTextures, textureCubeMaps);
+	glUniform1iv(_uniformLocator[RendererUniformLocations::TEXTURE_2D_MAPS], RendererSettings::MAX_2D_TEXTURES, texture2dMaps);
+	glUniform1iv(_uniformLocator[RendererUniformLocations::TEXTURE_CUBE_MAPS], RendererSettings::MAX_CUBE_TEXTURES, textureCubeMaps);
 	glUniform1i(_uniformLocator[RendererUniformLocations::BUMP_ACTIVE], _enableBump);
 }
 
@@ -305,6 +309,10 @@ void Renderer::_submitTextureData() const
 
 void Renderer::_initSceneRendering()
 {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glUseProgram(_meshShader.getProgramIndex());
+	_submitFogData();
+	_submitTextureData();
 
 #ifdef _DEBUG
 	if (!_meshShader.isProgramValid())
@@ -313,11 +321,6 @@ void Renderer::_initSceneRendering()
 	if (!_textShader.isProgramValid())
 		throw std::string("Invalid text shader program!" + _textShader.getAllInfoLogs());
 #endif
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	glUseProgram(_meshShader.getProgramIndex());
-	_submitFogData();
-	_submitTextureData();
 }
 
 
