@@ -184,6 +184,7 @@
     <ClCompile Include="src\engine\renderer\modules\cameraRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\canvasRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\colliderRenderer.cpp" />
+    <ClCompile Include="src\engine\renderer\modules\lensFlareRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\lightRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\meshRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\particleRenderer.cpp" />
@@ -198,6 +199,7 @@
     <ClCompile Include="src\engine\text\avtFreeType.cpp" />
     <ClCompile Include="src\engine\math\AVTmathLib.cpp" />
     <ClCompile Include="src\engine\renderer\mesh\basic_geometry.cpp" />
+    <ClCompile Include="src\engine\utils\flareUtils.cpp" />
     <ClCompile Include="src\engine\utils\mathUtils.cpp" />
     <ClCompile Include="src\MicroMachines3D.cpp" />
     <ClCompile Include="src\engine\renderer\Texture_Loader.cpp" />
@@ -226,6 +228,7 @@
     <ClInclude Include="src\engine\scene\components\groupComponent.h" />
     <ClInclude Include="src\engine\scene\components\canvasComponent.h" />
     <ClInclude Include="src\engine\scene\components\imageComponent.h" />
+    <ClInclude Include="src\engine\scene\components\lensFlareComponent.h" />
     <ClInclude Include="src\engine\scene\components\lightComponent.h" />
     <ClInclude Include="src\engine\scene\components\meshComponent.h" />
     <ClInclude Include="src\engine\scene\components\parentComponent.h" />
@@ -256,6 +259,7 @@
     <ClInclude Include="src\MicroMachines3D\entities\world\checkeredFlag.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\cheeriosTrack.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\boosters.h" />
+    <ClInclude Include="src\MicroMachines3D\entities\world\lensFlare.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\oranges.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\planets.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\skybox.h" />

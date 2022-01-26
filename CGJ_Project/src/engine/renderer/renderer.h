@@ -64,6 +64,17 @@ public:
 	void submitRenderableImage(const ImageComponent& image, const Entity& entity);
 	void renderScene(const Scene& scene);
 
+	void initSceneRendering();
+	void terminateSceneRendering();
+	
+	void renderCanvas(const Scene& scene) const;
+	void renderCamera(const Scene& scene) const;
+	void renderLights(const Scene& scene) const;
+	void renderMeshes(const Scene& scene) const;
+	void renderColliders(const Scene& scene) const;
+	void renderParticles(const Scene& scene) const;
+	void renderLensFlare(const Scene& scene) const;
+
 
 
 
@@ -144,6 +155,11 @@ private:
 	void _addToParticleInstanceBuffer(RendererData::SubmitInstanceBuffer & instanceBuffer, const ParticleGeneratorComponent::ParticleData particle) const;
 	void _renderParticleGenerator(const ParticleGeneratorComponent & particleGenerator) const;
 
+private:
+	void _initLensFlareRendering() const;
+	void _renderFlare(const LensFlareComponent::Flare flare, int locX, int locY, int* m_viewport) const;
+	void _terminateLensFlareRendering() const;
+  
 
 private:
 	void _initSkyboxRendering() const;
@@ -151,6 +167,7 @@ private:
 	void _submitSkyboxMeshData() const;
 	void _submitSkyboxTransform() const;
 	void _submitSkyboxData() const;
+
 };
 
 

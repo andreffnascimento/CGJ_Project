@@ -33,8 +33,11 @@
     <ClCompile Include="src\engine\renderer\rendererUniformLocations.h" />
     <ClCompile Include="src\engine\renderer\modules\particleRenderer.cpp" />
     <ClCompile Include="src\engine\math\l3dBillboard.cpp" />
+    <ClCompile Include="src\engine\utils\flareUtils.cpp" />
+    <ClCompile Include="src\engine\renderer\modules\lensFlareRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\imageRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\skyboxRenderer.cpp" />
+
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\app\application.h" />
@@ -114,8 +117,11 @@
     <ClInclude Include="src\MicroMachines3D\entities\particles\fireworks.h" />
     <ClInclude Include="src\engine\math\l3DBillboard.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\planets.h" />
+    <ClInclude Include="src\engine\scene\components\lensFlareComponent.h" />
+    <ClInclude Include="src\MicroMachines3D\entities\world\lensFlare.h" />
     <ClInclude Include="src\engine\scene\components\skyboxComponent.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\skybox.h" />
+
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />
