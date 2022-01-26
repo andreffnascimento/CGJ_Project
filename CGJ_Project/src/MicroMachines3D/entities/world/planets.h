@@ -19,13 +19,13 @@ public:
 
 	void bigBang(Scene* scene, GroupComponent& group) {
 
-		createPlanet(scene, group, 1, 299.0f, 99.0f, 69.0f, 3.0f, "src/MicroMachines3D/textures/planets/sun.png");
-		createPlanet(scene, group, 2, -299.0f, 99.0f, 69.0f, 1.0f, "src/MicroMachines3D/textures/planets/earth.png");
-		createPlanet(scene, group, 3, -299.0f, 99.0f, 169.0f, 1.0f, "src/MicroMachines3D/textures/planets/mars.png");
-		createPlanet(scene, group, 4, 299.0f, 99.0f, 169.0f, 2.0f, "src/MicroMachines3D/textures/planets/saturn.png");
-		createPlanet(scene, group, 5, 199.0f, 99.0f, 69.0f, 2.0f, "src/MicroMachines3D/textures/planets/jupiter.png");
-		createPlanet(scene, group, 6, -199.0f, 99.0f, 69.0f, 2.0f, "src/MicroMachines3D/textures/planets/neptune.png");
-		createPlanet(scene, group, 7, 199.0f, 99.0f, 169.0f, 0.7f, "src/MicroMachines3D/textures/planets/pluto.png");
+		createPlanet(scene, group, 1, 0.0f, 200.0f, -1000.0f, 35.0f, "src/MicroMachines3D/textures/planets/sun.png");
+		createPlanet(scene, group, 2, -175.0f, 15.0f, 15.0f, 3.0f, "src/MicroMachines3D/textures/planets/earth.png");
+		createPlanet(scene, group, 3, -300.0f, 30.0f, -65.0f, 2.5f, "src/MicroMachines3D/textures/planets/mars.png");
+		createPlanet(scene, group, 4, 350.0f, 10.0f, -80.0f, 9.0f, "src/MicroMachines3D/textures/planets/jupiter.png");
+		createPlanet(scene, group, 5, 450.0f, 30.0f, 80.0f, 8.0f, "src/MicroMachines3D/textures/planets/saturn.png");
+		createPlanet(scene, group, 6, 100.0f, 40.0f, 300.0f, 6.5f, "src/MicroMachines3D/textures/planets/neptune.png");
+		createPlanet(scene, group, 7, -50.0f, 20.0f, 100.0f, 1.5f, "src/MicroMachines3D/textures/planets/pluto.png");
 	}
 
 	void createPlanet(Scene* scene, GroupComponent& group, int id, float posX, float posY, float posZ, float sizeCoeficient, const char* texturePath) {
