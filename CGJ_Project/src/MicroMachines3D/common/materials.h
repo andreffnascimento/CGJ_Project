@@ -139,4 +139,5 @@ constexpr Material FLAG_MATERIAL = {
 	100.0f,
 };
 
+
 #endif // !__mm3d_common_materials__

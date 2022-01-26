@@ -6,7 +6,7 @@
 
 
 
-void Renderer::renderCamera(const Scene& scene) const
+void Renderer::_renderCamera(const Scene& scene) const
 {
 	const CameraEntity& camera = scene.activeCamera();
 	CameraComponent& cameraSettings = camera.getComponent<CameraComponent>();

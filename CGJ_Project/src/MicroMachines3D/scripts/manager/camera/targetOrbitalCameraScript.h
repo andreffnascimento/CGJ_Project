@@ -233,7 +233,7 @@ private:
 
 		const Coords3f& carPosition = _carTransform->translation();
 		float cameraX = carPosition.x + orbitalCameraX;
-		float cameraY = carPosition.y + orbitalCameraY;
+		float cameraY = carPosition.y + orbitalCameraY - 1.0f;
 		float cameraZ = carPosition.z + orbitalCameraZ;
 
 		Transform::translateTo((Entity&)_camera, { cameraX, cameraY, cameraZ });

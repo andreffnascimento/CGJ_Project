@@ -18,6 +18,7 @@
 #include "engine/scene/components/imageComponent.h"
 #include "engine/scene/components/particleGeneratorComponent.h"
 #include "engine/scene/components/LensFlareComponent.h"
+#include "engine/scene/components/skyboxComponent.h"
 
 
 #endif // !__engine_scene_components__

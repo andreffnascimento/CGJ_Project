@@ -6,7 +6,7 @@
 
 
 
-void Renderer::renderLights(const Scene& scene) const
+void Renderer::_renderLights(const Scene& scene) const
 {
 	RendererData::SubmitLightBuffer lightBuffer = RendererData::SubmitLightBuffer();
 

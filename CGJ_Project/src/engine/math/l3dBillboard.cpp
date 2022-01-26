@@ -40,7 +40,7 @@ void l3dBillboardCylindricalBegin(const Coords3f& cameraPos, const Coords3f& obj
 // if the lookAt and v vectors are too close together then |aux| could
 // be bigger than 1 due to lack of precision
 	if ((angleCosine < 0.99990) && (angleCosine > -0.9999))
-		rotate(MODEL,acos(angleCosine)*180/3.14,upAux[0], upAux[1], upAux[2]);
+		rotate(MODEL,acos(angleCosine)*180.0f/3.14f,upAux[0], upAux[1], upAux[2]);
 }
 
 
@@ -78,7 +78,7 @@ void l3dBillboardSphericalBegin(const Coords3f& cameraPos, const Coords3f& objec
 // if the lookAt and v vectors are too close together then |aux| could
 // be bigger than 1 due to lack of precision
 	if ((angleCosine < 0.99990) && (angleCosine > -0.9999))
-		rotate(MODEL,acos(angleCosine)*180/3.14,upAux[0], upAux[1], upAux[2]);
+		rotate(MODEL,acos(angleCosine)*180.0f/3.14f,upAux[0], upAux[1], upAux[2]);
 
 
 // The second part tilts the object so that it faces the camera
@@ -100,9 +100,9 @@ void l3dBillboardSphericalBegin(const Coords3f& cameraPos, const Coords3f& objec
 // angle between them
 	if ((angleCosine < 0.99990) && (angleCosine > -0.9999))
 		if (objToCam[1] < 0)
-			rotate(MODEL,acos(angleCosine)*180/3.14,1,0,0);
+			rotate(MODEL,acos(angleCosine)*180.0f/3.14f,1,0,0);
 		else
-			rotate(MODEL,acos(angleCosine)*180/3.14,-1,0,0);
+			rotate(MODEL,acos(angleCosine)*180.0f/3.14f,-1,0,0);
 
 }
 
@@ -130,8 +130,6 @@ The comments above apply in here as well but this is the
 cylindrical version, i.e. the up vector is not changed
 ---------------------------------------------------------*/
 void BillboardCheatCylindricalBegin(float xScale, float yScale) {
-
-	int i,j;
  
 	// Note that a row in the C convention is a column 
 	// in OpenGL convention (see the red book, pg.106 in version 1.2)
