@@ -35,7 +35,6 @@ public:
 	inline const MyMesh& mesh()	const		{ return _meshData->mesh(); }
 	inline const Material& material() const { return _meshData->material(); }
 	inline const Texture& texture() const	{ return _meshData->texture() ; }
-	inline const Stencil& stencil() const	{ return _meshData->stencil() ; }
 	inline bool isMirror() const			{ return _meshData->isMirror(); }
 	inline bool enabled() const				{ return _enabled; }
 	inline bool fixedPosition() const		{ return _fixedPosition; }

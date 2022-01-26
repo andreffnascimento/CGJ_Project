@@ -5,7 +5,7 @@
 
 
 
-void Renderer::renderMirror(const Scene& scene) const
+void Renderer::_renderMirror(const Scene& scene) const
 {
 	Entity mirrorEntity = scene.getEntityByTag("RearViewMirror");
 
@@ -22,7 +22,7 @@ void Renderer::renderMirror(const Scene& scene) const
 
 	const TransformComponent* transform = &mirrorEntity.transform();
 
-	_addToInstanceBuffer(instanceBuffer, transform);
+	_addObjectToInstanceBuffer(instanceBuffer, transform);
 	_submitRenderableData(*meshData, instanceBuffer);
 
 
@@ -53,7 +53,7 @@ void Renderer::renderMirror(const Scene& scene) const
 	// -- Draw scene into stenciled area -------------------------------------- //
 	_enableRenderingIntoStencil();
 
-	Renderer::renderMeshes(scene);
+	Renderer::_renderMeshes(scene);
 
 	popMatrix(PROJECTION);
 	popMatrix(VIEW);
@@ -63,7 +63,7 @@ void Renderer::renderMirror(const Scene& scene) const
 	
 }
 
-void Renderer::renderMirrors(const Scene& scene) const
+void Renderer::_renderMirrors(const Scene& scene) const
 {
 	//const auto& mirrorComponents = scene.getSceneComponents<MirrorComponent>();
 

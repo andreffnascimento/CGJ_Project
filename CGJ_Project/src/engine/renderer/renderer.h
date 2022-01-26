@@ -83,6 +83,8 @@ private:
 	void _renderCamera(const Scene& scene) const;
 	void _renderLights(const Scene& scene) const;
 	void _renderMeshes(const Scene& scene) const;
+	void _renderMirror(const Scene& scene) const;
+	void _renderMirrors(const Scene& scene) const;
 	void _renderImages(const Scene& scene) const;
 	void _renderColliders(const Scene& scene) const;
 	void _renderParticles(const Scene& scene) const;
@@ -125,6 +127,7 @@ private:
 
 
 private:
+
 	void _enableShapeStenciling() const;
 	void _enableRenderingIntoStencil() const;
 	void _disableStencilRendering() const;
