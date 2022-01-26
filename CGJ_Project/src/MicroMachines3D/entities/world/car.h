@@ -20,8 +20,9 @@ public:
 	{
 		GroupComponent& group = addComponent<GroupComponent>();
 
-		_initCarBody(scene, group);
-		_initCarWheels(scene, group);
+		ModelComponent& model = addComponent<ModelComponent>("src/MicroMachines3D/models/minicooper/minicooper.obj");
+		//_initCarBody(scene, group);                         
+		//_initCarWheels(scene, group);
 		_initCarHeadlights(scene, group);
 
 		RigidbodyComponent& rigidbody = addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::DYNAMIC, 100.0f, 10.0f, 30.0f);
@@ -42,6 +43,7 @@ public:
 
 
 private:
+
 	void _initCarBody(Scene* scene, GroupComponent& group)
 	{
 		MeshComponent mesh = MeshComponent(createCube(), CAR_BODY_MATERIAL);
