@@ -17,12 +17,11 @@
 unsigned int Renderer::create2dTexture(const char* texturePath)
 {
 	Renderer& renderer = Application::getRenderer();
-	if (renderer._textures.nTextures >= RendererSettings::MAX_TEXTURES)
-		throw std::string("The renderer only supports up to " + std::to_string(RendererSettings::MAX_TEXTURES) + " textures!");
+	if (renderer._textures.n2dTextures >= RendererSettings::MAX_2D_TEXTURES)
+		throw std::string("The renderer only supports up to " + std::to_string(RendererSettings::MAX_2D_TEXTURES) + " 2d textures!");
 
-	unsigned int textureId = (unsigned int)renderer._textures.nTextures++;
+	unsigned int textureId = (unsigned int)renderer._textures.n2dTextures++;
 	Texture2D_Loader(renderer._textures.textureData, texturePath, textureId);
-	renderer._textures.textureType[textureId] = GL_TEXTURE_2D;
 	return textureId;
 }
 
@@ -30,12 +29,11 @@ unsigned int Renderer::create2dTexture(const char* texturePath)
 unsigned int Renderer::createCubeMapTexture(const char** texturePaths)
 {
 	Renderer& renderer = Application::getRenderer();
-	if (renderer._textures.nTextures >= RendererSettings::MAX_TEXTURES)
-		throw std::string("The renderer only supports up to " + std::to_string(RendererSettings::MAX_TEXTURES) + " textures!");
+	if (renderer._textures.nCubeTextures >= RendererSettings::MAX_CUBE_TEXTURES)
+		throw std::string("The renderer only supports up to " + std::to_string(RendererSettings::MAX_CUBE_TEXTURES) + " cube map textures!");
 
-	unsigned int textureId = (unsigned int)renderer._textures.nTextures++;
+	unsigned int textureId = RendererSettings::MAX_2D_TEXTURES + (unsigned int)renderer._textures.nCubeTextures++;
 	TextureCubeMap_Loader(renderer._textures.textureData, texturePaths, textureId);
-	renderer._textures.textureType[textureId] = GL_TEXTURE_CUBE_MAP;
 	return textureId;
 }
 
@@ -122,7 +120,7 @@ void Renderer::init()
 	_setupTextShader();
 
 	// generates the texture names
-	glGenTextures(RendererSettings::MAX_TEXTURES, _textures.textureData);
+	glGenTextures(RendererSettings::MAX_2D_TEXTURES + RendererSettings::MAX_CUBE_TEXTURES, _textures.textureData);
 
 	// some GL settings
 	glEnable(GL_DEPTH_TEST);
@@ -167,35 +165,18 @@ void Renderer::submitRenderableImage(const ImageComponent& image, const Entity& 
 }
 
 
-
-
 void Renderer::renderScene(const Scene& scene)
 {
-	initSceneRendering();
-	renderCamera(scene);
-	renderLights(scene);
-	renderMeshes(scene);
-	renderImages(scene);
-	renderColliders(scene);
-	renderParticles(scene);
-	renderCanvas(scene);
-	terminateSceneRendering();
-}
-
-
-void Renderer::initSceneRendering()
-{
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glUseProgram(_meshShader.getProgramIndex());
-	_submitFogData();
-	_submitTextureData();
-}
-
-
-void Renderer::terminateSceneRendering()
-{
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	_initSceneRendering();
+	_renderCamera(scene);
+	_renderLights(scene);
+	_renderMeshes(scene);
+	_renderImages(scene);
+	_renderColliders(scene);
+	_renderParticles(scene);
+	_renderSkybox();
+	_renderCanvas(scene);
+	_terminateSceneRendering();
 }
 
 
@@ -220,6 +201,8 @@ void Renderer::_setupMeshShader()
 	_uniformLocator[RendererUniformLocations::INSTANCE_NORMAL_MATRIX] = glGetUniformLocation(_meshShader.getProgramIndex(), "instanceData.normalMatrix");
 	_uniformLocator[RendererUniformLocations::INSTANCE_PARTICLE_COLOR] = glGetUniformLocation(_meshShader.getProgramIndex(), "instanceData.particleColor");
 
+	_uniformLocator[RendererUniformLocations::SKYBOX_MODEL_MATRIX] = glGetUniformLocation(_meshShader.getProgramIndex(), "skyboxModelMatrix");
+
 	_uniformLocator[RendererUniformLocations::MATERIAL_AMBIENT] = glGetUniformLocation(_meshShader.getProgramIndex(), "materialData.ambient");
 	_uniformLocator[RendererUniformLocations::MATERIAL_DIFFUSE] = glGetUniformLocation(_meshShader.getProgramIndex(), "materialData.diffuse");
 	_uniformLocator[RendererUniformLocations::MATERIAL_SPECULAR] = glGetUniformLocation(_meshShader.getProgramIndex(), "materialData.specular");
@@ -231,7 +214,8 @@ void Renderer::_setupMeshShader()
 	_uniformLocator[RendererUniformLocations::TEXTURE_MODE] = glGetUniformLocation(_meshShader.getProgramIndex(), "textureData.mode");
 	_uniformLocator[RendererUniformLocations::TEXTURE_IDS] = glGetUniformLocation(_meshShader.getProgramIndex(), "textureData.textureIds");
 	_uniformLocator[RendererUniformLocations::NORMAL_IDS] = glGetUniformLocation(_meshShader.getProgramIndex(), "textureData.normalIds");
-	_uniformLocator[RendererUniformLocations::TEXTURE_MAPS] = glGetUniformLocation(_meshShader.getProgramIndex(), "textureData.maps");
+	_uniformLocator[RendererUniformLocations::TEXTURE_2D_MAPS] = glGetUniformLocation(_meshShader.getProgramIndex(), "textureData.maps");
+	_uniformLocator[RendererUniformLocations::TEXTURE_CUBE_MAPS] = glGetUniformLocation(_meshShader.getProgramIndex(), "textureData.cubeMaps");
 	_uniformLocator[RendererUniformLocations::BUMP_ACTIVE] = glGetUniformLocation(_meshShader.getProgramIndex(), "textureData.bumpActive");
 
 	_uniformLocator[RendererUniformLocations::N_LIGHTS] = glGetUniformLocation(_meshShader.getProgramIndex(), "lightingData.nLights");
@@ -255,10 +239,8 @@ void Renderer::_setupMeshShader()
 	_uniformLocator[RendererUniformLocations::RENDER_MODE] = glGetUniformLocation(_meshShader.getProgramIndex(), "renderMode");
 
 	std::cout << "InfoLog for Per Fragment Phong Lightning Shader\n" << _meshShader.getAllInfoLogs().c_str() << "\n\n";
-	if (!_meshShader.isProgramValid())
-		throw std::string("Invalid mesh shader program!");
 	if (!_meshShader.isProgramLinked())
-		throw std::string("Unable to link the mesh shader program!");
+		throw std::string("Unable to link the mesh shader program!" + _meshShader.getAllInfoLogs());
 }
 
 
@@ -272,10 +254,8 @@ void Renderer::_setupTextShader()
 	glLinkProgram(_textShader.getProgramIndex());
 
 	std::cout << "InfoLog for Text Rendering Shader\n" << _textShader.getAllInfoLogs().c_str() << "\n\n";
-	if (!_textShader.isProgramValid())
-		throw std::string("Invalid text shader program!");
 	if (!_textShader.isProgramLinked())
-		throw std::string("Unable to link the text shader program!");
+		throw std::string("Unable to link the text shader program!" + _textShader.getAllInfoLogs());
 }
 
 
@@ -298,14 +278,51 @@ void Renderer::_submitFogData() const
 
 void Renderer::_submitTextureData() const
 {
-	int textureMaps[RendererSettings::MAX_TEXTURES] = {};
-	for (unsigned int i = 0; i < _textures.nTextures; i++)
+	int texture2dMaps[RendererSettings::MAX_2D_TEXTURES] = {};
+	for (unsigned int i = 0; i < _textures.n2dTextures; i++)
 	{
 		glActiveTexture(GL_TEXTURE0 + i);
-		glBindTexture(_textures.textureType[i], _textures.textureData[i]);
-		textureMaps[i] = i;
+		glBindTexture(GL_TEXTURE_2D, _textures.textureData[i]);
+		texture2dMaps[i] = i;
+	}
+
+	int textureCubeMaps[RendererSettings::MAX_CUBE_TEXTURES] = {};
+	for (unsigned int i = 0; i < _textures.nCubeTextures; i++)
+	{
+		unsigned int j = RendererSettings::MAX_2D_TEXTURES + i;
+		glActiveTexture(GL_TEXTURE0 + j);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, _textures.textureData[j]);
+		textureCubeMaps[i] = j;
 	}
 	
-	glUniform1iv(_uniformLocator[RendererUniformLocations::TEXTURE_MAPS], _textures.nTextures, textureMaps);
+	glUniform1iv(_uniformLocator[RendererUniformLocations::TEXTURE_2D_MAPS], _textures.n2dTextures, texture2dMaps);
+	glUniform1iv(_uniformLocator[RendererUniformLocations::TEXTURE_CUBE_MAPS], _textures.nCubeTextures, textureCubeMaps);
 	glUniform1i(_uniformLocator[RendererUniformLocations::BUMP_ACTIVE], _enableBump);
+}
+
+
+
+
+void Renderer::_initSceneRendering()
+{
+
+#ifdef _DEBUG
+	if (!_meshShader.isProgramValid())
+		throw std::string("Invalid mesh shader program!" + _meshShader.getAllInfoLogs());
+
+	if (!_textShader.isProgramValid())
+		throw std::string("Invalid text shader program!" + _textShader.getAllInfoLogs());
+#endif
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glUseProgram(_meshShader.getProgramIndex());
+	_submitFogData();
+	_submitTextureData();
+}
+
+
+void Renderer::_terminateSceneRendering()
+{
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }

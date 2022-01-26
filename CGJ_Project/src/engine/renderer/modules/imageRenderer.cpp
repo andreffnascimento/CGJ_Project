@@ -10,9 +10,8 @@ extern float mNormal3x3[9];
 
 
 
-void Renderer::renderImages(const Scene& scene) const
+void Renderer::_renderImages(const Scene& scene) const
 {
-	glUniform1ui(_uniformLocator[RendererUniformLocations::RENDER_MODE], (unsigned int)RendererSettings::RendererMode::IMAGE_RENDERER);
 	_initImageRendering();
 	_renderImageMeshInstances(scene);
 	_terminateImageRendering();
@@ -23,6 +22,7 @@ void Renderer::renderImages(const Scene& scene) const
 
 void Renderer::_initImageRendering() const
 {
+	glUniform1ui(_uniformLocator[RendererUniformLocations::RENDER_MODE], (unsigned int)RendererSettings::RendererMode::IMAGE_RENDERER);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
@@ -31,36 +31,6 @@ void Renderer::_initImageRendering() const
 void Renderer::_terminateImageRendering() const
 {
 	glDisable(GL_BLEND);
-}
-
-
-void Renderer::_renderImageMeshInstances(const Scene& scene) const
-{
-	Coords3f cameraPos;
-	Transform::decomposeTransformMatrix(scene.activeCamera(), cameraPos, Quaternion(), Coords3f());
-
-	for (const auto& imageIterator : _imageMeshInstances)
-	{
-		RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
-		const MeshData* meshData = imageIterator.first;
-		const std::unordered_map<const ImageComponent*, const TransformComponent*> meshInstances = imageIterator.second;
-		_submitMeshData(*meshData);
-
-		for (const auto& meshInstanceIterator : meshInstances)
-		{
-			const ImageComponent* image = meshInstanceIterator.first;
-			const TransformComponent* transform = meshInstanceIterator.second;
-			if (!image->enabled())
-				continue;
-
-			if (instanceBuffer.nInstances >= RendererSettings::MAX_INSTANCES_PER_SUBMISSION)
-				_submitRenderableData(*meshData, instanceBuffer);
-
-			_addImageToInstanceBuffer(instanceBuffer, transform, image->type(), cameraPos);
-		}
-
-		_submitRenderableData(*meshData, instanceBuffer);
-	}
 }
 
 
@@ -98,4 +68,34 @@ void Renderer::_addImageToInstanceBuffer(RendererData::SubmitInstanceBuffer& ins
 	memcpy(instanceBuffer.vmMatrix[instanceBuffer.nInstances], mCompMatrix[VIEW_MODEL], 4 * 4 * sizeof(float));
 	memcpy(instanceBuffer.normalMatrix[instanceBuffer.nInstances], mNormal3x3, 3 * 3 * sizeof(float));
 	instanceBuffer.nInstances++;
+}
+
+
+void Renderer::_renderImageMeshInstances(const Scene& scene) const
+{
+	Coords3f cameraPos;
+	Transform::decomposeTransformMatrix(scene.activeCamera(), cameraPos, Quaternion(), Coords3f());
+
+	for (const auto& imageIterator : _imageMeshInstances)
+	{
+		RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
+		const MeshData* meshData = imageIterator.first;
+		const std::unordered_map<const ImageComponent*, const TransformComponent*> meshInstances = imageIterator.second;
+		_submitMeshData(*meshData);
+
+		for (const auto& meshInstanceIterator : meshInstances)
+		{
+			const ImageComponent* image = meshInstanceIterator.first;
+			const TransformComponent* transform = meshInstanceIterator.second;
+			if (!image->enabled())
+				continue;
+
+			if (instanceBuffer.nInstances >= RendererSettings::MAX_INSTANCES_PER_SUBMISSION)
+				_submitRenderableData(*meshData, instanceBuffer);
+
+			_addImageToInstanceBuffer(instanceBuffer, transform, image->type(), cameraPos);
+		}
+
+		_submitRenderableData(*meshData, instanceBuffer);
+	}
 }

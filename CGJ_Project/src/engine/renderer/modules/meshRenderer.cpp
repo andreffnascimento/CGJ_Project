@@ -16,7 +16,7 @@ extern float mNormal3x3[9];
 
 
 
-void Renderer::renderMeshes(const Scene& scene) const
+void Renderer::_renderMeshes(const Scene& scene) const
 {
 	glUniform1ui(_uniformLocator[RendererUniformLocations::RENDER_MODE], (unsigned int)RendererSettings::RendererMode::MESH_RENDERER);
 	_renderOpaqueMeshInstances();
@@ -99,6 +99,68 @@ void Renderer::_sortTranslucentMeshInstancesInto(const Scene& scene, RendererDat
 
 
 
+void Renderer::_addObjectToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform) const
+{
+	loadIdentity(MODEL);
+	loadMatrix(MODEL, transform->transformMatrix());
+	computeDerivedMatrix(PROJ_VIEW_MODEL);
+	computeNormalMatrix3x3();
+
+	memcpy(instanceBuffer.pvmMatrix[instanceBuffer.nInstances],    mCompMatrix[PROJ_VIEW_MODEL], 4 * 4 * sizeof(float));
+	memcpy(instanceBuffer.vmMatrix[instanceBuffer.nInstances],     mCompMatrix[VIEW_MODEL],		 4 * 4 * sizeof(float));
+	memcpy(instanceBuffer.normalMatrix[instanceBuffer.nInstances], mNormal3x3,					 3 * 3 * sizeof(float));
+	instanceBuffer.nInstances++;
+}
+
+
+void Renderer::_submitRenderableData(const MeshData& meshData, RendererData::SubmitInstanceBuffer& instanceBuffer) const
+{
+	_submitInstanceBuffer(instanceBuffer);
+	_renderMesh(meshData, instanceBuffer);
+	instanceBuffer.nInstances = 0;
+}
+
+
+void Renderer::_submitMeshData(const MeshData& meshData) const
+{
+	const Material& material = meshData.material();
+	glUniform4fv(_uniformLocator[RendererUniformLocations::MATERIAL_AMBIENT],  1, material.ambient);
+	glUniform4fv(_uniformLocator[RendererUniformLocations::MATERIAL_DIFFUSE],  1, material.diffuse);
+	glUniform4fv(_uniformLocator[RendererUniformLocations::MATERIAL_SPECULAR], 1, material.specular);
+	glUniform4fv(_uniformLocator[RendererUniformLocations::MATERIAL_EMISSIVE], 1, material.emissive);
+	glUniform1f(_uniformLocator[RendererUniformLocations::MATERIAL_SHININESS],    material.shininess);
+
+	const Texture& texture = meshData.texture();
+	glUniform1ui(_uniformLocator[RendererUniformLocations::N_TEXTURES], (unsigned int)texture.nTextures());
+	glUniform1ui(_uniformLocator[RendererUniformLocations::N_NORMALS],   (unsigned int)texture.nNormals());
+	glUniform1ui(_uniformLocator[RendererUniformLocations::TEXTURE_MODE], (unsigned int)texture.textureMode());
+	glUniform1uiv(_uniformLocator[RendererUniformLocations::TEXTURE_IDS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.textureIds());
+	glUniform1uiv(_uniformLocator[RendererUniformLocations::NORMAL_IDS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.normalIds());
+}
+
+
+void Renderer::_submitInstanceBuffer(const RendererData::SubmitInstanceBuffer& instanceBuffer) const
+{
+	glUniformMatrix4fv(_uniformLocator[RendererUniformLocations::INSTANCE_PVM_MATRIX],    instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.pvmMatrix);
+	glUniformMatrix4fv(_uniformLocator[RendererUniformLocations::INSTANCE_VM_MATRIX],     instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.vmMatrix);
+	glUniformMatrix3fv(_uniformLocator[RendererUniformLocations::INSTANCE_NORMAL_MATRIX], instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.normalMatrix);
+
+	if (instanceBuffer.usesParticles)
+		glUniform4fv(_uniformLocator[RendererUniformLocations::INSTANCE_PARTICLE_COLOR], instanceBuffer.nInstances, (const float*)instanceBuffer.particleColor);
+}
+
+
+void Renderer::_renderMesh(const MeshData& mesh, RendererData::SubmitInstanceBuffer& instanceBuffer) const
+{
+	const MyMesh& meshData = mesh.mesh();
+	glBindVertexArray(meshData.vao);
+	glDrawElementsInstanced(meshData.type, meshData.numIndexes, GL_UNSIGNED_INT, 0, instanceBuffer.nInstances);
+	glBindVertexArray(0);
+}
+
+
+
+
 void Renderer::_renderOpaqueMeshInstances() const
 {
 	for (const auto& meshIterator : _opaqueMeshInstances)
@@ -149,66 +211,4 @@ void Renderer::_renderTranslucentMeshInstances(const RendererData::translucentMe
 
 		_submitRenderableData(*originalMesh, instanceBuffer);
 	}
-}
-
-
-void Renderer::_addObjectToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform) const
-{
-	loadIdentity(MODEL);
-	loadMatrix(MODEL, transform->transformMatrix());
-	computeDerivedMatrix(PROJ_VIEW_MODEL);
-	computeNormalMatrix3x3();
-
-	memcpy(instanceBuffer.pvmMatrix[instanceBuffer.nInstances],    mCompMatrix[PROJ_VIEW_MODEL], 4 * 4 * sizeof(float));
-	memcpy(instanceBuffer.vmMatrix[instanceBuffer.nInstances],     mCompMatrix[VIEW_MODEL],		 4 * 4 * sizeof(float));
-	memcpy(instanceBuffer.normalMatrix[instanceBuffer.nInstances], mNormal3x3,					 3 * 3 * sizeof(float));
-	instanceBuffer.nInstances++;
-}
-
-
-
-
-void Renderer::_submitRenderableData(const MeshData& meshData, RendererData::SubmitInstanceBuffer& instanceBuffer) const
-{
-	_submitInstanceBuffer(instanceBuffer);
-	_renderMesh(meshData, instanceBuffer);
-	instanceBuffer.nInstances = 0;
-}
-
-
-void Renderer::_submitMeshData(const MeshData& meshData) const
-{
-	const Material& material = meshData.material();
-	glUniform4fv(_uniformLocator[RendererUniformLocations::MATERIAL_AMBIENT],  1, material.ambient);
-	glUniform4fv(_uniformLocator[RendererUniformLocations::MATERIAL_DIFFUSE],  1, material.diffuse);
-	glUniform4fv(_uniformLocator[RendererUniformLocations::MATERIAL_SPECULAR], 1, material.specular);
-	glUniform4fv(_uniformLocator[RendererUniformLocations::MATERIAL_EMISSIVE], 1, material.emissive);
-	glUniform1f(_uniformLocator[RendererUniformLocations::MATERIAL_SHININESS],    material.shininess);
-
-	const Texture& texture = meshData.texture();
-	glUniform1ui(_uniformLocator[RendererUniformLocations::N_TEXTURES], (unsigned int)texture.nTextures());
-	glUniform1ui(_uniformLocator[RendererUniformLocations::N_NORMALS],   (unsigned int)texture.nNormals());
-	glUniform1ui(_uniformLocator[RendererUniformLocations::TEXTURE_MODE], (unsigned int)texture.textureMode());
-	glUniform1uiv(_uniformLocator[RendererUniformLocations::TEXTURE_IDS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.textureIds());
-	glUniform1uiv(_uniformLocator[RendererUniformLocations::NORMAL_IDS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.normalIds());
-}
-
-
-void Renderer::_submitInstanceBuffer(const RendererData::SubmitInstanceBuffer& instanceBuffer) const
-{
-	glUniformMatrix4fv(_uniformLocator[RendererUniformLocations::INSTANCE_PVM_MATRIX],    instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.pvmMatrix);
-	glUniformMatrix4fv(_uniformLocator[RendererUniformLocations::INSTANCE_VM_MATRIX],     instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.vmMatrix);
-	glUniformMatrix3fv(_uniformLocator[RendererUniformLocations::INSTANCE_NORMAL_MATRIX], instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.normalMatrix);
-
-	if (instanceBuffer.usesParticles)
-		glUniform4fv(_uniformLocator[RendererUniformLocations::INSTANCE_PARTICLE_COLOR], instanceBuffer.nInstances, (const float*)instanceBuffer.particleColor);
-}
-
-
-void Renderer::_renderMesh(const MeshData& mesh, RendererData::SubmitInstanceBuffer& instanceBuffer) const
-{
-	const MyMesh& meshData = mesh.mesh();
-	glBindVertexArray(meshData.vao);
-	glDrawElementsInstanced(meshData.type, meshData.numIndexes, GL_UNSIGNED_INT, 0, instanceBuffer.nInstances);
-	glBindVertexArray(0);
 }

@@ -6,7 +6,8 @@ const uint LIGHT_TYPE_DIRECTIONAL = 1;
 const uint LIGHT_TYPE_POINT = 2;
 const uint LIGHT_TYPE_SPOT = 3;
 
-const uint MAX_TEXTURES = 32;
+const uint MAX_2D_TEXTURES = 30;
+const uint MAX_CUBE_TEXTURES = 2;
 const uint MAX_TEXTURES_PER_MESH = 2;
 const uint TEXTURE_MODE_NONE = 0;
 const uint TEXTURE_MODE_MODULATE_DIFFUSE = 1;
@@ -21,6 +22,7 @@ const float NORMAL_BLEND_AMOUNT = 0.5;
 const uint RENDER_MODE_MESH = 1;
 const uint RENDER_MODE_IMAGE = 2;
 const uint RENDER_MODE_PARTICLE = 3;
+const uint RENDER_MODE_SKYBOX = 4;
 
 
 
@@ -40,7 +42,8 @@ struct TextureData {
 	uint mode;
 	uint textureIds[MAX_TEXTURES_PER_MESH];
 	uint normalIds[MAX_TEXTURES_PER_MESH];
-	sampler2D maps[MAX_TEXTURES];
+	sampler2D maps[MAX_2D_TEXTURES];
+	samplerCube cubeMaps[MAX_CUBE_TEXTURES];
 	bool bumpActive;
 };
 
@@ -95,6 +98,7 @@ in Data {
 	vec3 eye;
 	vec3 eyeDir;
 	vec2 textureCoords;
+	vec3 skyboxTextureCoords;
 	vec4 particleColor;
 } dataIn;
 
@@ -316,6 +320,17 @@ vec4 renderParticle() {
 
 
 
+vec4 renderSkybox() {
+	if (textureData.nTextures == 0)
+		return materialData.ambient;
+
+	vec4 cubeTexel = texture(textureData.cubeMaps[MAX_2D_TEXTURES - textureData.textureIds[0]], dataIn.skyboxTextureCoords);
+	return vec4(cubeTexel.xyz * (1 - materialData.ambient.a) + materialData.ambient.xyz * materialData.ambient.a, cubeTexel.a);
+}
+
+
+
+
 void main() {
 	if (renderMode == RENDER_MODE_MESH)
 		colorOut = renderMesh();
@@ -323,4 +338,6 @@ void main() {
 		colorOut = renderImage();
 	else if (renderMode == RENDER_MODE_PARTICLE)
 		colorOut = renderParticle();
+	else if (renderMode == RENDER_MODE_SKYBOX)
+		colorOut = renderSkybox();
 }

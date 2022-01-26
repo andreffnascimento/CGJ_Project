@@ -12,7 +12,7 @@ extern float mNormal3x3[9];
 
 
 
-void Renderer::renderParticles(const Scene& scene) const
+void Renderer::_renderParticles(const Scene& scene) const
 {
 	_initParticleRendering();
 
@@ -35,6 +35,7 @@ void Renderer::renderParticles(const Scene& scene) const
 
 void Renderer::_initParticleRendering() const
 {
+	glUniform1ui(_uniformLocator[RendererUniformLocations::RENDER_MODE], (unsigned int)RendererSettings::RendererMode::PARTICLE_RENDERER);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDepthMask(GL_FALSE);
@@ -77,7 +78,6 @@ void Renderer::_addToParticleInstanceBuffer(RendererData::SubmitInstanceBuffer& 
 
 void Renderer::_renderParticleGenerator(const ParticleGeneratorComponent& particleGenerator) const
 {
-	glUniform1ui(_uniformLocator[RendererUniformLocations::RENDER_MODE], (unsigned int)RendererSettings::RendererMode::PARTICLE_RENDERER);
 	RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
 	instanceBuffer.usesParticles = true;
 	

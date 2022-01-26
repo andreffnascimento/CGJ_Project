@@ -17,6 +17,7 @@ public:
 	SkyboxComponent() = delete;
 	SkyboxComponent(const SkyboxComponent&) = default;
 	SkyboxComponent(unsigned int textureId);
+	SkyboxComponent(unsigned int textureId, const Material& material);
 	~SkyboxComponent() = default;
 
 	inline const MeshData& meshData() const { return _meshData; }
@@ -25,6 +26,7 @@ public:
 	inline const Texture& texture() const { return _meshData.texture(); }
 	inline bool enabled() const { return _enabled; }
 
+	inline void setMaterial(const Material& material) { _meshData.setMaterial(material); }
 	inline void setEnabled(bool enabled) { _enabled = enabled; }
 
 };

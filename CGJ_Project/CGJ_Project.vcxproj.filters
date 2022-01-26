@@ -34,6 +34,7 @@
     <ClCompile Include="src\engine\renderer\modules\particleRenderer.cpp" />
     <ClCompile Include="src\engine\math\l3dBillboard.cpp" />
     <ClCompile Include="src\engine\renderer\modules\imageRenderer.cpp" />
+    <ClCompile Include="src\engine\renderer\modules\skyboxRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\app\application.h" />
