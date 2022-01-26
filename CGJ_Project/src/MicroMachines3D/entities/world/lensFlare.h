@@ -10,10 +10,7 @@ public:
 	LensFlare(Scene* scene)
 		: SceneEntity(scene->createEntity("LensFlare"))
 	{
-
 		createLensFlare(scene);
-
-
 	}
 
 
