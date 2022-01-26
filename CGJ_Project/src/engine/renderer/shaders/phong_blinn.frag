@@ -6,18 +6,23 @@ const uint LIGHT_TYPE_DIRECTIONAL = 1;
 const uint LIGHT_TYPE_POINT = 2;
 const uint LIGHT_TYPE_SPOT = 3;
 
-const uint MAX_TEXTURES = 32;
+const uint MAX_2D_TEXTURES = 30;
+const uint MAX_CUBE_TEXTURES = 2;
 const uint MAX_TEXTURES_PER_MESH = 2;
 const uint TEXTURE_MODE_NONE = 0;
 const uint TEXTURE_MODE_MODULATE_DIFFUSE = 1;
 const uint TEXTURE_MODE_REPLACE_DIFFUSE = 2;
-const uint TEXTURE_MODE_IMAGE_TEXTURING = 3;
 
 const uint FOG_TYPE_LINEAR = 1;
 const uint FOG_TYPE_EXP = 2;
 const uint FOG_TYPE_EXP2 = 3;
 
 const float NORMAL_BLEND_AMOUNT = 0.5;
+
+const uint RENDER_MODE_MESH = 1;
+const uint RENDER_MODE_IMAGE = 2;
+const uint RENDER_MODE_PARTICLE = 3;
+const uint RENDER_MODE_SKYBOX = 4;
 
 
 
@@ -37,7 +42,8 @@ struct TextureData {
 	uint mode;
 	uint textureIds[MAX_TEXTURES_PER_MESH];
 	uint normalIds[MAX_TEXTURES_PER_MESH];
-	sampler2D maps[MAX_TEXTURES];
+	sampler2D maps[MAX_2D_TEXTURES];
+	samplerCube cubeMaps[MAX_CUBE_TEXTURES];
 	bool bumpActive;
 };
 
@@ -83,6 +89,7 @@ uniform MaterialData materialData;
 uniform TextureData textureData;
 uniform LightingData lightingData;
 uniform FogData fogData;
+uniform uint renderMode;
 
 
 in Data {
@@ -91,6 +98,8 @@ in Data {
 	vec3 eye;
 	vec3 eyeDir;
 	vec2 textureCoords;
+	vec3 skyboxTextureCoords;
+	vec4 particleColor;
 } dataIn;
 
 
@@ -156,85 +165,7 @@ FragLightingData processSpotLight(FragLightingData fragLighting, uint index, vec
 }
 
 
-vec4 processModulateDiffuseTexture(FragLightingData fragLighting) {
-	vec4 texel = vec4(1.0);
-	for (int i = 0; i < textureData.nTextures; i++)
-		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
-	
-	return max(fragLighting.diffuse * texel + fragLighting.specular, lightingData.darkTextureCoefficient * texel);
-}
-
-
-vec4 processReplaceDiffuseTexture(FragLightingData fragLighting) {
-	vec4 texel = vec4(1.0);
-	for (int i = 0; i < textureData.nTextures; i++)
-		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
-
-	return max(fragLighting.diffuseIntensity * texel + fragLighting.specular, lightingData.darkTextureCoefficient * texel);
-}
-
-
-vec4 processImageTexture(FragLightingData fragLighting) {
-	if (textureData.nTextures == 0)
-		return materialData.ambient;
-
-	vec4 texel = vec4(1.0);
-	for (int i = 0; i < textureData.nTextures; i++)
-		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
-
-	if (texel.a == 0.0)
-		discard;
-
-	return vec4(texel.xyz * (1 - materialData.ambient.a) + materialData.ambient.xyz * materialData.ambient.a, texel.a);
-}
-
-vec3 processNormalMaps()
-{
-    vec3 currentMap;
-	vec3 normal = normalize(dataIn.normal);
-
-	if(!textureData.bumpActive)
-		return normal;
-
-
-	vec3 calculatedNormals = normal;
-
-	// Calculate normal if a normal map is provided
-	for (int i = 0; i < textureData.nNormals; i++)
-	{	
-		currentMap = texture(textureData.maps[textureData.normalIds[i]], dataIn.textureCoords).rgb;
-
-		normal = normalize(2.0 * currentMap - 1.0);
-
-		calculatedNormals = normalize(vec3(normal.xy + calculatedNormals.xy, normal.z));
-	}
-
-	return calculatedNormals;
-}
-
-
-void main() {
-	colorOut = vec4(0.0);
-	vec3 eye = normalize(dataIn.eye);
-	vec3 normal = processNormalMaps();
-	
-
-	// generate the fog color
-	float fogAmount = 1.0;
-	float fragDistance = sqrt(dot(dataIn.position, dataIn.position));
-	if (fogData.isActive) {
-		if (fogData.mode == FOG_TYPE_LINEAR)
-			fogAmount = clamp((fogData.endDistance - fragDistance) / (fogData.endDistance - fogData.startDistance), 0.0, 1.0);
-
-		else if (fogData.mode == FOG_TYPE_EXP)
-			fogAmount = exp(-fogData.density * fragDistance);
-
-		else if (fogData.mode == FOG_TYPE_EXP2)
-			fogAmount = pow(exp(-fogData.density * fragDistance), 2);
-	}
-
-
-	// process all the lights of the scene
+FragLightingData processLighting(vec3 eye, vec3 normal) {
 	FragLightingData fragLighting;
 	fragLighting.ambient = materialData.ambient;
 	fragLighting.diffuse = materialData.diffuse;
@@ -253,34 +184,160 @@ void main() {
 			fragLighting = processSpotLight(fragLighting, i, normal, eye);
 	}
 
-
 	// generates the color of the fragment according to the texture mode
 	fragLighting.diffuseIntensity *= lightingData.diffuseCoefficient;
 	fragLighting.specularIntensity *= lightingData.specularCoefficient;
 	fragLighting.diffuse *= fragLighting.diffuseIntensity;
 	fragLighting.specular *= fragLighting.specularIntensity;
+	return fragLighting;
+}
+
+
+
+
+float processFogAmount() {
+	float fragDistance = sqrt(dot(dataIn.position, dataIn.position));
+	if (fogData.isActive) {
+		if (fogData.mode == FOG_TYPE_LINEAR)
+			return clamp((fogData.endDistance - fragDistance) / (fogData.endDistance - fogData.startDistance), 0.0, 1.0);
+
+		else if (fogData.mode == FOG_TYPE_EXP)
+			return exp(-fogData.density * fragDistance);
+
+		else if (fogData.mode == FOG_TYPE_EXP2)
+			return pow(exp(-fogData.density * fragDistance), 2);
+	}
+	
+	return 1.0;
+}
+
+
+
+
+vec3 processNormalMaps()
+{
+	vec3 normal = normalize(dataIn.normal);
+	if(!textureData.bumpActive)
+		return normal;
+
+    vec3 currentMap;
+	vec3 calculatedNormals = normal;
+
+	// Calculate normal if a normal map is provided
+	for (int i = 0; i < textureData.nNormals; i++) {	
+		currentMap = texture(textureData.maps[textureData.normalIds[i]], dataIn.textureCoords).rgb;
+		normal = normalize(2.0 * currentMap - 1.0);
+		calculatedNormals = normalize(vec3(normal.xy + calculatedNormals.xy, normal.z));
+	}
+
+	return calculatedNormals;
+}
+
+
+
+
+vec4 processModulateDiffuseTexture(FragLightingData fragLighting) {
+	vec4 texel = vec4(1.0);
+	for (int i = 0; i < textureData.nTextures; i++)
+		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
+	
+	return max(fragLighting.diffuse * texel + fragLighting.specular, lightingData.darkTextureCoefficient * texel);
+}
+
+
+vec4 processReplaceDiffuseTexture(FragLightingData fragLighting) {
+	vec4 texel = vec4(1.0);
+	for (int i = 0; i < textureData.nTextures; i++)
+		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
+
+	return max(fragLighting.diffuseIntensity * texel + fragLighting.specular, lightingData.darkTextureCoefficient * texel);
+}
+
+
+
+
+vec4 renderMesh() {
+	vec3 eye = normalize(dataIn.eye);
+	vec3 normal = processNormalMaps();
+	
 	vec4 rgbColor = vec4(0.0);
+	float fogAmount = processFogAmount();
+	FragLightingData fragLighting = processLighting(eye, normal);
 	
 	if (textureData.mode == TEXTURE_MODE_NONE)
 	{
 		rgbColor = max(fragLighting.diffuse + fragLighting.specular, fragLighting.ambient);
-		colorOut = vec4(mix(fogData.color.rgb, rgbColor.rgb, fogAmount), materialData.diffuse.a);
+		return vec4(mix(fogData.color.rgb, rgbColor.rgb, fogAmount), materialData.diffuse.a);
 	}
 	
 	else if (textureData.mode == TEXTURE_MODE_MODULATE_DIFFUSE)
 	{
 		rgbColor = processModulateDiffuseTexture(fragLighting);
-		colorOut = vec4(mix(fogData.color.rgb, rgbColor.rgb, fogAmount), materialData.diffuse.a);
+		return vec4(mix(fogData.color.rgb, rgbColor.rgb, fogAmount), materialData.diffuse.a);
 	}
 	
 	else if (textureData.mode == TEXTURE_MODE_REPLACE_DIFFUSE)
 	{
 		rgbColor = processReplaceDiffuseTexture(fragLighting);
-		colorOut = vec4(mix(fogData.color.rgb, rgbColor.rgb, fogAmount), materialData.diffuse.a);
+		return vec4(mix(fogData.color.rgb, rgbColor.rgb, fogAmount), materialData.diffuse.a);
 	}
+}
 
-	else if (textureData.mode == TEXTURE_MODE_IMAGE_TEXTURING)
-	{
-		colorOut = processImageTexture(fragLighting);
-	}
+
+
+
+vec4 renderImage() {
+	if (textureData.nTextures == 0)
+		return materialData.ambient;
+
+	vec4 texel = vec4(1.0);
+	for (int i = 0; i < textureData.nTextures; i++)
+		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
+
+	if (texel.a == 0.0)
+		discard;
+
+	return vec4(texel.xyz * (1 - materialData.ambient.a) + materialData.ambient.xyz * materialData.ambient.a, texel.a);
+}
+
+
+
+
+vec4 renderParticle() {
+	if (textureData.nTextures == 0)
+		return materialData.ambient;
+
+	vec4 texel = vec4(1.0);
+	for (int i = 0; i < textureData.nTextures; i++)
+		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
+
+	if (texel.a == 0.0)
+		discard;
+
+	return dataIn.particleColor * texel;
+}
+
+
+
+
+vec4 renderSkybox() {
+	if (textureData.nTextures == 0)
+		return materialData.ambient;
+
+	vec4 cubeTexel = texture(textureData.cubeMaps[MAX_2D_TEXTURES - textureData.textureIds[0]], dataIn.skyboxTextureCoords);
+	return vec4(cubeTexel.xyz * (1 - materialData.ambient.a) + materialData.ambient.xyz * materialData.ambient.a, cubeTexel.a);
+}
+
+
+
+
+void main() {
+	if (renderMode == RENDER_MODE_MESH)
+		colorOut = renderMesh();
+	else if (renderMode == RENDER_MODE_IMAGE)
+		colorOut = renderImage();
+	else if (renderMode == RENDER_MODE_PARTICLE)
+		colorOut = renderParticle();
+	else if (renderMode == RENDER_MODE_SKYBOX)
+		colorOut = renderSkybox();
 }

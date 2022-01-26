@@ -13,16 +13,14 @@ class MeshData
 {
 
 private:
-	MyMesh _mesh;
-	Texture _texture;
-	Stencil _stencil;
-	bool _isMirror = false;
+	MyMesh _mesh = MyMesh();
+	Texture _texture = Texture();
 
 
 
 
 public:
-	MeshData() = delete;
+	MeshData() = default;
 	MeshData(const MeshData& meshData) = default;
 	MeshData(const MyMesh& mesh, const Material& material);
 	~MeshData() = default;
@@ -38,13 +36,11 @@ public:
 
 public:
 	void setMaterial(const Material& material);
-	void setTextureMode(const Texture::TextureMode& textureMode);
-	void addTexture(unsigned int textureId);
-	void addNormal(unsigned int normalId);
-	void setIsMirror(bool isMirror);
-	void setStencilEnabled(bool enabled);
-	void addStencilFunc(GLenum func, GLint ref, GLint mask);
-	void addStencilOp(GLenum fail, GLenum zfail, GLenum zpass);
+
+public:
+	inline void setTextureMode(const Texture::TextureMode& textureMode) { return _texture.setTextureMode(textureMode); }
+	inline void addTexture(unsigned int textureId)						{ return _texture.addTexture(textureId); }
+	inline void addNormal(unsigned int normalId)						{ return _texture.addNormal(normalId); }
 
 };
 

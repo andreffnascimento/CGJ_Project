@@ -31,6 +31,11 @@
     <ClCompile Include="src\MicroMachines3D\entities\hud\pauseScreen.h" />
     <ClCompile Include="src\engine\renderer\modules\canvasRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\mirrorRenderer.cpp" />
+    <ClCompile Include="src\engine\renderer\rendererUniformLocations.h" />
+    <ClCompile Include="src\engine\renderer\modules\particleRenderer.cpp" />
+    <ClCompile Include="src\engine\math\l3dBillboard.cpp" />
+    <ClCompile Include="src\engine\renderer\modules\imageRenderer.cpp" />
+    <ClCompile Include="src\engine\renderer\modules\skyboxRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\app\application.h" />
@@ -107,6 +112,12 @@
     <ClInclude Include="src\MicroMachines3D\entities\world\boosters.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\boosters\boostersDriftScript.h" />
     <ClInclude Include="src\engine\scene\components\mirrorComponent.h" />
+    <ClInclude Include="src\engine\scene\components\particleGeneratorComponent.h" />
+    <ClInclude Include="src\MicroMachines3D\entities\particles\fireworks.h" />
+    <ClInclude Include="src\engine\math\l3DBillboard.h" />
+    <ClInclude Include="src\MicroMachines3D\entities\world\planets.h" />
+    <ClInclude Include="src\engine\scene\components\skyboxComponent.h" />
+    <ClInclude Include="src\MicroMachines3D\entities\world\skybox.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />
@@ -116,12 +127,8 @@
     <None Include="shaders\pointlight.vert" />
     <None Include="shaders\text.frag" />
     <None Include="shaders\text.vert" />
-    <None Include="src\engine\renderer\shaders\gouraud.frag" />
-    <None Include="src\engine\renderer\shaders\gouraud.vert" />
     <None Include="src\engine\renderer\shaders\phong_blinn.frag" />
     <None Include="src\engine\renderer\shaders\phong_blinn.vert" />
-    <None Include="src\engine\renderer\shaders\pointlight.frag" />
-    <None Include="src\engine\renderer\shaders\pointlight.vert" />
     <None Include="src\engine\renderer\shaders\text.frag" />
     <None Include="src\engine\renderer\shaders\text.vert" />
   </ItemGroup>
@@ -134,5 +141,11 @@
     <Image Include="src\MicroMachines3D\textures\orange\orange.jpg" />
     <Image Include="src\MicroMachines3D\textures\hud\heart.png" />
     <Image Include="src\MicroMachines3D\textures\hud\pause.png" />
+    <Image Include="src\MicroMachines3D\textures\skybox\back.png" />
+    <Image Include="src\MicroMachines3D\textures\skybox\bottom.png" />
+    <Image Include="src\MicroMachines3D\textures\skybox\front.png" />
+    <Image Include="src\MicroMachines3D\textures\skybox\left.png" />
+    <Image Include="src\MicroMachines3D\textures\skybox\right.png" />
+    <Image Include="src\MicroMachines3D\textures\skybox\top.png" />
   </ItemGroup>
 </Project>

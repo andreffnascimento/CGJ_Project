@@ -17,6 +17,8 @@
 #include "engine/scene/components/canvasComponent.h"
 #include "engine/scene/components/textComponent.h"
 #include "engine/scene/components/imageComponent.h"
+#include "engine/scene/components/particleGeneratorComponent.h"
+#include "engine/scene/components/skyboxComponent.h"
 
 
 #endif // !__engine_scene_components__

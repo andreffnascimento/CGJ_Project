@@ -45,7 +45,7 @@ private:
 		if (GRAVITY_ENABLED)
 		{
 			RigidbodyComponent& rigidbody = top.addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::STATIC);
-			AABBColliderComponent& collider = top.addComponent<AABBColliderComponent>(ColliderIds::TABLE, rigidbody, TABLE_SIZE);
+			AABBColliderComponent& collider = top.addComponent<AABBColliderComponent>(top, ColliderIds::TABLE, rigidbody, TABLE_SIZE);
 		}		
 	}
 

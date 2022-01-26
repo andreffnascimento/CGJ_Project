@@ -1,8 +1,10 @@
-#ifndef __mm3d_scripts_manager_game_raceManagerScript__
+﻿#ifndef __mm3d_scripts_manager_game_raceManagerScript__
 #define __mm3d_scripts_manager_game_raceManagerScript__
 
 
 #include "MicroMachines3D/common/include.h"
+
+#include <ctime>
 
 #include "MicroMachines3D/scripts/car/carMovementScript.h"
 #include "MicroMachines3D/scripts/oranges/orangesManagerScript.h"
@@ -29,6 +31,7 @@ private:
 	static constexpr unsigned int MAX_LIVES = 5;
 	static constexpr float RESET_GAME_HEIGHT = -10.0f;
 	static constexpr float RESET_QUERY_TIMER = 2.0f;
+	static constexpr float RESET_FIREWORKS_TIMER = 10.0f;
 
 
 	
@@ -47,6 +50,10 @@ private:
 	TextComponent* _resetQuery = nullptr;
 	float _resetQueryTimer = 0.0f;
 
+	ParticleGeneratorComponent* _fireworksGenerator = nullptr;
+	bool _collidedWithFlag = false;
+	float _resetFireworksTimer = 0.0f;
+
 	CarMovementScript* _carMovementScript = nullptr;
 	OrangesManagerScript* _orangesManagerScript = nullptr;
 
@@ -55,8 +62,8 @@ private:
 
 	RaceManagerScript::GameState _gameState = RaceManagerScript::GameState::PLAYING;
 	unsigned int _lives = RaceManagerScript::MAX_LIVES;
-	bool _collideLastFrame = false;
-	bool _colliderWithOrange = false;
+	bool _collidedWithOrangeLastFrame = false;
+	bool _collidedWithOrange = false;
 
 
 public:
@@ -69,6 +76,8 @@ public:
 public:
 	void onCreate() override
 	{
+		std::srand((unsigned int)std::time(nullptr));
+
 		_eventHandler = &Application::getEventHandler();
 		_car = _scene->getEntityByTag("Car");
 		_carRigidbody = &_car.getComponent<RigidbodyComponent>();
@@ -81,6 +90,8 @@ public:
 		_resetQuery = &_scene->getEntityByTag("PlayingScreen:ResetQuery").getComponent<TextComponent>();
 		for (int i = 0; i < RaceManagerScript::MAX_LIVES; i++)
 			_hearts[i] = &_scene->getEntityByTag("PlayingScreen:Heart_" + std::to_string(i)).getComponent<ImageComponent>();
+
+		_fireworksGenerator = &_scene->getEntityByTag("Fireworks").getComponent<ParticleGeneratorComponent>();
 
 		_respawn();
 	}
@@ -120,7 +131,14 @@ public:
 
 
 public:
-	void setColliderWithOranges(bool colliderWithOranges) { _colliderWithOrange = colliderWithOranges; }
+	void setCollidedWithOranges(bool colliderWithOranges) { _collidedWithOrange = colliderWithOranges; }
+	void setCollidedWithFlag(bool colliderWithFlag) { _collidedWithFlag = colliderWithFlag; }
+
+
+
+
+private:
+	inline float _frand() { return (float)std::rand() / RAND_MAX; }
 
 
 
@@ -145,16 +163,24 @@ private:
 		if (_eventHandler->keyState('B').pressed() || _eventHandler->keyState('b').pressed())
 			Renderer::setBumpActive(_bumpToggle = !_bumpToggle);
 
+		if (_eventHandler->keyState('G').pressed() || _eventHandler->keyState('g').pressed())
+			_startFireworks();
+
 		if (_carRigidbody->position().y < RESET_GAME_HEIGHT)
 			_gameover();
 
-		if (!_colliderWithOrange)
-			_collideLastFrame = false;
+		if (!_collidedWithOrange)
+			_collidedWithOrangeLastFrame = false;
 
-		if (_colliderWithOrange && !_collideLastFrame)
+		if (_collidedWithFlag && _resetFireworksTimer == 0.0f)
+			_startFireworks();
+
+		if (_collidedWithOrange && !_collidedWithOrangeLastFrame)
 			_decreaseLives();
 
-		_colliderWithOrange = false;
+		_resetFireworksTimer = std::max(_resetFireworksTimer - ts, 0.0f);
+		_collidedWithOrange = false;
+		_collidedWithFlag = false;
 	}
 
 
@@ -203,7 +229,7 @@ private:
 
 	void _decreaseLives()
 	{
-		_collideLastFrame = true;
+		_collidedWithOrangeLastFrame = true;
 		_hearts[--_lives]->setEnabled(false);
 		if (_lives == 0)
 			_gameover();
@@ -235,7 +261,7 @@ private:
 		_orangesManagerScript->resetOranges();
 
 		_lives = RaceManagerScript::MAX_LIVES;
-		_colliderWithOrange = false;
+		_collidedWithOrange = false;
 		_gameState = RaceManagerScript::GameState::PLAYING;
 		_playingScreenCanvas->setEnabled(true);
 		_pauseScreenCanvas->setEnabled(false);
@@ -243,8 +269,34 @@ private:
 
 		_resetQuery->setEnabled(false);
 		_resetQueryTimer = 0.0f;
+		_resetFireworksTimer = RaceManagerScript::RESET_FIREWORKS_TIMER;
 		for (int i = 0; i < RaceManagerScript::MAX_LIVES; i++)
 			_hearts[i]->setEnabled(true);
+	}
+
+
+
+
+private:
+	void _startFireworks()
+	{
+		_resetFireworksTimer = RaceManagerScript::RESET_FIREWORKS_TIMER;
+		_fireworksGenerator->setEnabled(true);
+		for (unsigned int i = 0; i < _fireworksGenerator->nParticles(); i++)
+		{
+			float v = FIREWORK_SPEED * (0.8f * _frand() + 0.2f);
+			float phi = _frand() * (float)PI;
+			float theta = 2.0f * _frand() * (float)PI;
+			
+			ParticleGeneratorComponent::ParticleData& particle = _fireworksGenerator->particle(i);
+			particle.position = Coords3f({ 0.0f, FIREWORK_INITIAL_HEIGHT, TABLE_SIZE.z / 3.0f });
+			particle.velocity = Coords3f({ v * cos(theta) * sin(phi), v * cos(phi), v * sin(theta) * sin(phi) });
+			particle.acceleration = Coords3f({ 0.1f, -0.15f, 0.0f });
+			particle.color = Coords3f({ _frand(), _frand(), _frand() });
+			particle.size = FIREWORK_PARTICLE_SIZE;
+			particle.fadeSpeed = 0.5f +_frand() / 5.0f;
+			particle.life = 1.0f;
+		}
 	}
 
 };

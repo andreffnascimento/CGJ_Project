@@ -58,7 +58,7 @@ protected:
 			break;
 		
 		case ColliderIds::ORANGES:
-			_raceManagerScript->setColliderWithOranges(true);
+			_raceManagerScript->setCollidedWithOranges(true);
 			return;
 
 		case ColliderIds::BUTTER:
@@ -67,6 +67,10 @@ protected:
 
 		case ColliderIds::BOOSTER:
 			_boostersDriftScript->addDriftingBody(_collider.rigidbody());
+			return;
+
+		case ColliderIds::FLAG:
+			_raceManagerScript->setCollidedWithFlag(true);
 			return;
 		}
 
