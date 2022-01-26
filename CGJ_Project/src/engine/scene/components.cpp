@@ -3,6 +3,7 @@
 #include "engine/app/application.h"
 #include "engine/physics/collisionResolver.h"
 #include "engine/physics/physicsEngine.h"
+#include "engine/utils/importer.h"
 
 
 
@@ -357,4 +358,11 @@ SkyboxComponent::SkyboxComponent(unsigned int textureId, const Material& materia
 	: _meshData(MeshData(createCube(), material))
 {
 	_meshData.addTexture(textureId);
+}
+
+
+
+ModelComponent::ModelComponent(const char* modelPath)
+{
+	Importer::importModel(*this, modelPath);
 }

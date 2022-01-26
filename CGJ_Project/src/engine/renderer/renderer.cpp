@@ -4,7 +4,6 @@
 
 #include "engine/renderer/VertexAttrDef.h"
 #include "engine/renderer/Texture_Loader.h"
-#include "engine/renderer/meshFromAssimp.h"
 
 #include "engine/app/application.h"
 #include "engine/text/avtFreeType.h"
