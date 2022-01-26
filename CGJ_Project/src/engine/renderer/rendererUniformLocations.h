@@ -1,0 +1,60 @@
+#ifndef __engine_renderer_rendererUniformLocations__
+#define __engine_renderer_rendererUniformLocations__
+
+
+
+
+class RendererUniformLocations
+{
+
+public:
+	enum {
+		INSTANCE_PVM_MATRIX,
+		INSTANCE_VM_MATRIX,
+		INSTANCE_NORMAL_MATRIX,
+		INSTANCE_PARTICLE_COLOR,
+
+		SKYBOX_MODEL_MATRIX,
+
+		MATERIAL_AMBIENT,
+		MATERIAL_DIFFUSE,
+		MATERIAL_SPECULAR,
+		MATERIAL_SHININESS,
+		MATERIAL_EMISSIVE,
+
+		N_TEXTURES,
+		N_NORMALS,
+		TEXTURE_MODE,
+		TEXTURE_IDS,
+		NORMAL_IDS,
+		TEXTURE_2D_MAPS,
+		TEXTURE_CUBE_MAPS,
+		BUMP_ACTIVE,
+
+		N_LIGHTS,
+		LIGHT_TYPE,
+		LIGHT_POSITION,
+		LIGHT_DIRECTION,
+		LIGHT_INTENSITY,
+		LIGHT_CUTOFF,
+		LIGHT_AMBIENT,
+		LIGHT_DIFFUSE,
+		LIGHT_SPECULAR,
+		LIGHT_DARK_TEXTURE,
+
+		FOG_MODE,
+		FOG_COLOR,
+		FOG_DENSITY,
+		FOG_START_DISTANCE,
+		FOG_END_DISTANCE,
+		FOG_ACTIVE,
+
+		RENDER_MODE,
+
+		N_UNIFORMS
+	};
+
+};
+
+
+#endif // !__engine_renderer_rendererUniformLocations__

@@ -71,18 +71,14 @@ MeshComponent::MeshComponent(const MeshComponent& mesh)
 	: _meshData(mesh._meshData), _entity(mesh._entity)
 {
 	if (_entity != nullptr)
-	{
-		Renderer& renderer = Application::getRenderer();
-		renderer.submitRenderableEntity(*this, *_entity);
-	}
+		Application::getRenderer().submitRenderableObject(*this, *_entity);
 }
 
 
 MeshComponent::MeshComponent(const MyMesh& mesh, const Material& material)
 	: _meshData(std::make_shared<MeshData>(mesh, material)), _entity(nullptr)
 {
-	Renderer& renderer = Application::getRenderer();
-	renderer.submitRenderableMesh(*this);
+	// empty
 }
 
 
@@ -227,25 +223,25 @@ void RigidbodyComponent::addRelativeForce(const Force& force)
 
 
 
-AABBColliderComponent::AABBColliderComponent(RigidbodyComponent& rigidbody, const Coords3f& initialSize)
-	: _rigidbody(&rigidbody), _initialSize(initialSize / 2.0f)
+AABBColliderComponent::AABBColliderComponent(const AABBColliderComponent& collider)
+	: _id(collider._id), _entity(collider._entity), _initialSize(collider._initialSize), _boundingBox(collider._boundingBox),
+	  _fixedBoundingBox(collider._fixedBoundingBox), _restitutionCocoefficient(collider._restitutionCocoefficient),
+	  _rigidbody(collider._rigidbody), _collisionResolver(collider._collisionResolver)
+{
+	if (_entity != nullptr)
+		Application::getPhysicsEngine().submitColliderComponent(*this, *_entity);
+}
+
+AABBColliderComponent::AABBColliderComponent(const Entity& entity, RigidbodyComponent& rigidbody, const Coords3f& initialSize)
+	: _entity(&entity), _rigidbody(&rigidbody), _initialSize(initialSize / 2.0f)
 {
 	// empty
 }
 
-AABBColliderComponent::AABBColliderComponent(unsigned int id, RigidbodyComponent& rigidbody, const Coords3f& initialSize)
-	: _id(id), _rigidbody(&rigidbody), _initialSize(initialSize / 2.0f)
+AABBColliderComponent::AABBColliderComponent(const Entity& entity, unsigned int id, RigidbodyComponent& rigidbody, const Coords3f& initialSize)
+	: _id(id), _entity(&entity), _rigidbody(&rigidbody), _initialSize(initialSize / 2.0f)
 {
 	// empty
-}
-
-
-AABBColliderComponent::~AABBColliderComponent()
-{
-	if (_collisionResolver != nullptr)
-		delete _collisionResolver;
-
-	_collisionResolver = nullptr;
 }
 
 
@@ -271,7 +267,7 @@ Entity CanvasComponent::createTextEntity(Scene* scene, const Entity& canvasEntit
 Entity CanvasComponent::createImageEntity(Scene* scene, const Entity& canvasEntity, const std::string& tag)
 {
 	Entity entity = scene->createEntity(canvasEntity.tag().tag() + ":" + tag);
-	ImageComponent& imageComponent = entity.addComponent<ImageComponent>();
+	ImageComponent& imageComponent = entity.addComponent<ImageComponent>(entity, ImageComponent::ImageType::CANVAS_IMAGE);
 	_canvasImage[&imageComponent] = &entity.transform();
 	return entity;
 }
@@ -280,7 +276,7 @@ Entity CanvasComponent::createImageEntity(Scene* scene, const Entity& canvasEnti
 Entity CanvasComponent::createImageEntity(Scene* scene, const Entity& canvasEntity)
 {
 	Entity entity = scene->createEntity(canvasEntity.tag(), true);
-	ImageComponent& imageComponent = entity.addComponent<ImageComponent>();
+	ImageComponent& imageComponent = entity.addComponent<ImageComponent>(entity, ImageComponent::ImageType::CANVAS_IMAGE);
 	_canvasImage[&imageComponent] = &entity.transform();
 	return entity;
 }
@@ -288,7 +284,15 @@ Entity CanvasComponent::createImageEntity(Scene* scene, const Entity& canvasEnti
 
 
 
-ImageComponent::ImageComponent()
+ImageComponent::ImageComponent(const ImageComponent& image)
+	: _type(image._type), _meshData(image._meshData), _entity(image._entity), _enabled(image._enabled)
+{
+	if (_type != ImageComponent::ImageType::CANVAS_IMAGE)
+		Application::getRenderer().submitRenderableImage(*this, *_entity);
+}
+
+ImageComponent::ImageComponent(const Entity& entity, const ImageComponent::ImageType& type)
+	: _type(type), _entity(&entity)
 {
 	Material material = {
 		{ 0.0f, 0.0f, 0.0f, 0.0f },
@@ -299,7 +303,6 @@ ImageComponent::ImageComponent()
 	};
 
 	_meshData = std::make_shared<MeshData>(createQuad(1.0f, 1.0f), material);
-	_meshData->setTextureMode(Texture::TextureMode::IMAGE_TEXTURING);	
 }
 
 
@@ -311,4 +314,47 @@ void ImageComponent::setBlendColor(const Coords4f& blendColor)
 	material.ambient[2] = blendColor.z;
 	material.ambient[3] = blendColor.w;
 	_meshData->setMaterial(material);
+}
+
+
+
+
+ParticleGeneratorComponent::ParticleGeneratorComponent(float size, unsigned int textureId)
+	: _meshData(MeshData(createQuad(size, size), Material()))
+{
+	_meshData.setTextureMode(Texture::TextureMode::MODULATE_DIFFUSE);
+	_meshData.addTexture(textureId);
+}
+
+
+ParticleGeneratorComponent::~ParticleGeneratorComponent()
+{
+	delete _particles;
+	_particles = nullptr;
+}
+
+
+void ParticleGeneratorComponent::initializeParticleStorage(unsigned int nParticles)
+{
+	_nParticles = nParticles;
+	if (_nParticles > RendererSettings::MAX_PARTICLES_PER_GENERATOR)
+		throw std::string("Renderer only suports up to " + std::to_string(RendererSettings::MAX_PARTICLES_PER_GENERATOR) + " particles per generator!");
+	_particles = new ParticleGeneratorComponent::ParticleData[_nParticles];
+}
+
+
+
+
+SkyboxComponent::SkyboxComponent(unsigned int textureId)
+{
+	Material material = Material();
+	material.ambient[3] = 0.0f;
+	_meshData = MeshData(createCube(), material);
+	_meshData.addTexture(textureId);
+}
+
+SkyboxComponent::SkyboxComponent(unsigned int textureId, const Material& material)
+	: _meshData(MeshData(createCube(), material))
+{
+	_meshData.addTexture(textureId);
 }

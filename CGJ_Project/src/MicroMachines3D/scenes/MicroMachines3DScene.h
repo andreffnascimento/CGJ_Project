@@ -15,10 +15,14 @@
 #include "MicroMachines3D/entities/world/butters.h"
 #include "MicroMachines3D/entities/world/boosters.h"
 #include "MicroMachines3D/entities/world/checkeredFlag.h"
+#include "MicroMachines3D/entities/world/planets.h"
+#include "MicroMachines3D/entities/world/skybox.h"
 
 #include "MicroMachines3D/entities/hud/playingScreen.h"
 #include "MicroMachines3D/entities/hud/pauseScreen.h"
 #include "MicroMachines3D/entities/hud/gameoverScreen.h"
+
+#include "MicroMachines3D/entities/particles/fireworks.h"
 
 
 
@@ -64,10 +68,17 @@ private:
 		Butters butters = Butters(this);
 		Boosters boosters = Boosters(this);
 		CheckeredFlag flag = CheckeredFlag(this);
+		Planets planets = Planets(this);
+
+		Skybox skybox = Skybox(this);
+
 
 		PlayingScreen playingScreen = PlayingScreen(this);
 		PauseScreen pauseScreen = PauseScreen(this);
 		GameoverScreen gameoverScreen = GameoverScreen(this);
+
+
+		Fireworks fireworks = Fireworks(this);
 	}
 };
 

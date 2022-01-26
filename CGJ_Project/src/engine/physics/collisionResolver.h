@@ -58,11 +58,11 @@ public:
 
 public:
 	bool isMoving() const;
+	bool checkCollisionId(unsigned long long colliderId) const;
 
 
 public:
 	virtual void init();
-	virtual bool ignoreCollision(const AABBColliderComponent& otherCollider) const;
 
 
 

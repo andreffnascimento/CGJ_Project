@@ -6,15 +6,13 @@
 
 
 
-void Renderer::renderCamera(const Scene& scene) const
+void Renderer::_renderCamera(const Scene& scene) const
 {
 	const CameraEntity& camera = scene.activeCamera();
 	CameraComponent& cameraSettings = camera.getComponent<CameraComponent>();
 
 	Coords3f translation;
-	Quaternion rotation;
-	Coords3f scale;
-	Transform::decomposeTransformMatrix(camera, translation, rotation, scale);
+	Transform::decomposeTransformMatrix(camera, translation, Quaternion(), Coords3f());
 
 	const Coords3f& cameraCoords = translation;
 	const Coords3f& targetCoords = cameraSettings.targetCoords();

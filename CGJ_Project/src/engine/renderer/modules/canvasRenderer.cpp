@@ -10,7 +10,7 @@
 
 
 
-void Renderer::renderCanvas(const Scene& scene) const
+void Renderer::_renderCanvas(const Scene& scene) const
 {
 	_initCanvasRendering();
 
@@ -70,7 +70,7 @@ void Renderer::_renderTextInstances(const std::unordered_map<EntityHandle, Canva
 
 void Renderer::_renderImageInstances(const std::unordered_map<EntityHandle, CanvasComponent>& canvasComponents) const
 {
-	glUseProgram(_shader.getProgramIndex());
+	glUniform1ui(_uniformLocator[RendererUniformLocations::RENDER_MODE], (unsigned int)RendererSettings::RendererMode::IMAGE_RENDERER);
 	for (const auto& canvasIterator : canvasComponents)
 	{
 		const CanvasComponent& canvas = canvasIterator.second;
@@ -91,7 +91,7 @@ void Renderer::_renderImageInstances(const std::unordered_map<EntityHandle, Canv
 
 				const TransformComponent* transform = canvasImageIterator->second;
 				if (originalImage->enabled())
-					_addToInstanceBuffer(instanceBuffer, transform);
+					_addObjectToInstanceBuffer(instanceBuffer, transform);
 				canvasImageIterator++;
 			}
 

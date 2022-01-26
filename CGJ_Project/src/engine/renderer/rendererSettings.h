@@ -14,10 +14,13 @@ public:
 	constexpr static const char* FONT_NAME = "fonts/arial.ttf";
 
 	constexpr static size_t MAX_LIGHTS = 32;
-	constexpr static size_t MAX_TEXTURES = 32;
+	constexpr static size_t MAX_2D_TEXTURES = 30;
+	constexpr static size_t MAX_CUBE_TEXTURES = 2;
 	constexpr static size_t MAX_TEXTURES_PER_MESH = 2;
 
 	constexpr static size_t MAX_INSTANCES_PER_SUBMISSION = 50;
+
+	constexpr static size_t MAX_PARTICLES_PER_GENERATOR = 5000;
 
 
 
@@ -47,6 +50,18 @@ public:
 		float startDistance = 0.0f;
 		float endDistance = 10.0f;
 		bool active = false;
+	};
+
+
+
+
+public:
+	enum class RendererMode
+	{
+		MESH_RENDERER = 1,
+		IMAGE_RENDERER = 2,
+		PARTICLE_RENDERER = 3,
+		SKYBOX_RENDERER = 4
 	};
 
 };

@@ -37,8 +37,8 @@ private:
 		orange.addComponent<MeshComponent>(mesh, orange);
 
 		RigidbodyComponent& rigidbody = orange.addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::KINEMATIC);
-		AABBColliderComponent& collider = orange.addComponent<AABBColliderComponent>(ColliderIds::ORANGES, rigidbody, ORANGE_SIZE);
-		collider.setCollisionResolver(new OrangeCollisionResolver(collider));
+		AABBColliderComponent& collider = orange.addComponent<AABBColliderComponent>(orange, ColliderIds::ORANGES, rigidbody, ORANGE_SIZE);
+		collider.setCollisionResolver(std::make_shared<OrangeCollisionResolver>(collider));
 		collider.setFixedBoundingBox(true);
 	}
 

@@ -33,6 +33,7 @@ public:
 
 
 private:
+	std::unordered_map<unsigned int, std::unordered_map<EntityHandle, AABBColliderComponent*>> _collidersPerId = std::unordered_map<unsigned int, std::unordered_map<EntityHandle, AABBColliderComponent*>>();
 	std::unordered_map<EntityHandle, AABBColliderComponent*> _activeColliders = std::unordered_map<EntityHandle, AABBColliderComponent*>();
 
 
@@ -53,6 +54,10 @@ public:
 
 public:
 	inline constexpr bool showColliders() const { return PhysicsEngine::SHOW_COLLIDERS; }
+
+
+public:
+	void submitColliderComponent(AABBColliderComponent& collider, const Entity& entity);
 
 
 public:
@@ -88,6 +93,11 @@ private:
 	void _checkCollision(AABBColliderComponent& entityCollider, AABBColliderComponent& otherCollider, float ts) const;
 	void _resolveCollision(AABBColliderComponent& entityCollider, AABBColliderComponent& otherCollider, const bool* contained, float ts) const;
 	void _addActiveCollider(const Entity& entity);
+
+
+private:
+	void _simulateParticles(const Scene& scene, float ts) const;
+	void _simulateParticleGenerator(ParticleGeneratorComponent& particleGenerator, float ts) const;
 
 };
 

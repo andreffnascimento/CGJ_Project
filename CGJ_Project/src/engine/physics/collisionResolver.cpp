@@ -13,13 +13,11 @@ CollisionResolver::CollisionResolver(AABBColliderComponent& collider)
 
 
 
-
+#include <iostream>
 void CollisionResolver::addCollision(const AABBColliderComponent& otherCollider, const Coords3f& collisionNormal, const Coords3f& relativeVelocity, float impulse)
 {
-	if (_collider.rigidbody()->type() == RigidbodyComponent::RigidbodyType::STATIC)
-		return;
-
-	_collisions.emplace_back(otherCollider, collisionNormal, relativeVelocity, impulse);
+	if (_collider.rigidbody()->type() != RigidbodyComponent::RigidbodyType::STATIC)
+		_collisions.emplace_back(otherCollider, collisionNormal, relativeVelocity, impulse);
 }
 
 
@@ -37,9 +35,9 @@ void CollisionResolver::updateVelocity(Coords3f& velocity)
 	Coords3f finalImpulse = Coords3f();
 	for (const auto& impulse : _impulses)
 	{
-		finalImpulse.x = std::abs(finalImpulse.x) > std::abs(impulse.x) ? finalImpulse.x + impulse.x * 0.3f : impulse.x + finalImpulse.x * 0.3f;
-		finalImpulse.y = std::abs(finalImpulse.y) > std::abs(impulse.y) ? finalImpulse.y + impulse.y * 0.3f : impulse.y + finalImpulse.y * 0.3f;
-		finalImpulse.z = std::abs(finalImpulse.z) > std::abs(impulse.z) ? finalImpulse.z + impulse.z * 0.3f : impulse.z + finalImpulse.z * 0.3f;
+		finalImpulse.x = std::abs(finalImpulse.x) > std::abs(impulse.x) ? finalImpulse.x + impulse.x * 0.2f : impulse.x + finalImpulse.x * 0.2f;
+		finalImpulse.y = std::abs(finalImpulse.y) > std::abs(impulse.y) ? finalImpulse.y + impulse.y * 0.2f : impulse.y + finalImpulse.y * 0.2f;
+		finalImpulse.z = std::abs(finalImpulse.z) > std::abs(impulse.z) ? finalImpulse.z + impulse.z * 0.2f : impulse.z + finalImpulse.z * 0.2f;
 	}
 
 	_impulses.clear();
@@ -55,18 +53,18 @@ bool CollisionResolver::isMoving() const
 }
 
 
+bool CollisionResolver::checkCollisionId(unsigned long long colliderId) const
+{
+	bool whitelist = _computeListType == CollisionResolver::ComputeListType::WHITELIST;
+	return whitelist == (bool)(_computeIdsFlag & colliderId);
+}
+
+
 
 
 void CollisionResolver::init()
 {
 	// empty
-}
-
-
-bool CollisionResolver::ignoreCollision(const AABBColliderComponent& otherCollider) const
-{
-	bool whitelist = _computeListType == CollisionResolver::ComputeListType::WHITELIST;
-	return whitelist != (bool)(_computeIdsFlag & (unsigned long long)otherCollider.id());
 }
 
 

@@ -23,7 +23,7 @@ public:
 	};
 
 private:
-	RigidbodyType _type = RigidbodyComponent::RigidbodyType::DYNAMIC;
+	RigidbodyComponent::RigidbodyType _type = RigidbodyComponent::RigidbodyType::DYNAMIC;
 	float _mass = 1.0f;
 	float _drag = 0.0f;
 	float _angularDrag = 0.0f;
@@ -48,18 +48,18 @@ public:
 	RigidbodyComponent(RigidbodyComponent::RigidbodyType type, float mass, float drag, float angularDrag);
 	~RigidbodyComponent() = default;
 
-	inline const RigidbodyComponent::RigidbodyType type() const { return _type; }
-	inline float mass() const						{ return  _mass == 0.0f ? std::numeric_limits<float>::max() : 1.0f / _mass; }
-	inline float invMass() const					{ return _mass; }
-	inline float drag() const						{ return _drag; }
-	inline float angularDrag() const				{ return _angularDrag; }
-	inline float dragThreshold() const				{ return _dragThreshold; }
-	inline bool usesGravity() const					{ return _usesGravity; }
-	inline const Coords3f& position() const			{ return _position; }
-	inline const Quaternion& rotation() const		{ return _rotation; }
-	inline const Coords3f& velocity() const			{ return _velocity; }
-	inline const Coords3f& angularVelocity() const	{ return _angularVelocity; }
-	inline bool sleeping() const					{ return _sleeping; }
+	inline const RigidbodyComponent::RigidbodyType& type() const{ return _type; }
+	inline float mass() const									{ return  _mass == 0.0f ? std::numeric_limits<float>::max() : 1.0f / _mass; }
+	inline float invMass() const								{ return _mass; }
+	inline float drag() const									{ return _drag; }
+	inline float angularDrag() const							{ return _angularDrag; }
+	inline float dragThreshold() const							{ return _dragThreshold; }
+	inline bool usesGravity() const								{ return _usesGravity; }
+	inline const Coords3f& position() const						{ return _position; }
+	inline const Quaternion& rotation() const					{ return _rotation; }
+	inline const Coords3f& velocity() const						{ return _velocity; }
+	inline const Coords3f& angularVelocity() const				{ return _angularVelocity; }
+	inline bool sleeping() const								{ return _sleeping; }
 
 	inline void setdrag(float drag)						{ _drag = drag; }
 	inline void setAngularDrag(float angularDrag)		{ _angularDrag = angularDrag; }

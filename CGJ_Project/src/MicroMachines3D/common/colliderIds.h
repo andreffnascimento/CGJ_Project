@@ -13,6 +13,7 @@ struct ColliderIds
 	constexpr static unsigned int ORANGES	= 0x1 << 4;
 	constexpr static unsigned int BUTTER	= 0x1 << 5;
 	constexpr static unsigned int BOOSTER	= 0x1 << 6;
+	constexpr static unsigned int FLAG		= 0x1 << 7;
 };
 
 

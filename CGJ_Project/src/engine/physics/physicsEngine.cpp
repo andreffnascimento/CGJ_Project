@@ -41,6 +41,16 @@ Coords3f PhysicsEngine::calculateDragForce(const Coords3f& velocity, float drag,
 
 
 
+void PhysicsEngine::submitColliderComponent(AABBColliderComponent& collider, const Entity& entity)
+{
+	if (_collidersPerId.find(collider.id()) == _collidersPerId.end())
+		_collidersPerId[collider.id()] = std::unordered_map<EntityHandle, AABBColliderComponent*>();
+	_collidersPerId[collider.id()][(EntityHandle)entity] = &collider;
+}
+
+
+
+
 void PhysicsEngine::initialize(const Scene& scene) const
 {
 	_initializeRigidbodies(scene);
@@ -52,6 +62,7 @@ void PhysicsEngine::simulate(const Scene& scene, float ts)
 {
 	_simulateRigidbodyMovement(scene, ts);
 	_simulateCollisions(scene, ts);
+	_simulateParticles(scene, ts);
 }
 
 
@@ -111,7 +122,7 @@ void PhysicsEngine::_initializeColliders(const Scene& scene) const
 		collider._boundingBox = collider._initialSize;
 
 		if (collider._collisionResolver == nullptr)
-			collider._collisionResolver = new CollisionResolver(collider);
+			collider._collisionResolver = std::make_shared<CollisionResolver>(collider);
 
 		collider._collisionResolver->init();
 		if (!collider._fixedBoundingBox)
@@ -240,12 +251,20 @@ void PhysicsEngine::_simulateCollisions(const Scene& scene, float ts)
 		{
 			EntityHandle entityId = entityColliderIterator.first;
 			AABBColliderComponent& entityCollider = *entityColliderIterator.second;
-			for (auto& otherColliderIterator : colliderComponents)
+
+			for (auto& collidersPerIdIterator : _collidersPerId)
 			{
-				EntityHandle otherId = otherColliderIterator.first;
-				AABBColliderComponent& otherCollider = otherColliderIterator.second;
-				if (entityId != otherId && !entityCollider._collisionResolver->ignoreCollision(otherCollider))
-					_checkCollision(entityCollider, otherCollider, ts);
+				if (!entityCollider._collisionResolver->checkCollisionId(collidersPerIdIterator.first))
+					continue;
+
+				std::unordered_map<EntityHandle, AABBColliderComponent*>& otherColliders = collidersPerIdIterator.second;
+				for (auto& otherColliderIterator : otherColliders)
+				{
+					EntityHandle otherId = otherColliderIterator.first;
+					AABBColliderComponent* otherCollider = otherColliderIterator.second;
+					if (entityId != otherId)
+						_checkCollision(entityCollider, *otherCollider, ts);
+				}
 			}
 		}
 		_resolveCollisions(scene, ts);
@@ -362,4 +381,37 @@ void PhysicsEngine::_addActiveCollider(const Entity& entity)
 	AABBColliderComponent* collider = entity.getComponentIfExists<AABBColliderComponent>();
 	if (collider != nullptr)
 		_activeColliders[entity] = collider;
+}
+
+
+
+
+void PhysicsEngine::_simulateParticles(const Scene& scene, float ts) const
+{
+	std::unordered_map<EntityHandle, ParticleGeneratorComponent>& particleGenerators = scene.getSceneComponents<ParticleGeneratorComponent>();
+	for (auto& particleGeneratorIterator : particleGenerators)
+		_simulateParticleGenerator(particleGeneratorIterator.second, ts);
+}
+
+
+void PhysicsEngine::_simulateParticleGenerator(ParticleGeneratorComponent& particleGenerator, float ts) const
+{
+	if (!particleGenerator.enabled())
+		return;
+
+	bool modified = false;
+	for (unsigned int i = 0; i < particleGenerator.nParticles(); i++)
+	{
+		ParticleGeneratorComponent::ParticleData& particle = particleGenerator.particle(i);
+		if (particle.life <= 0.0f)
+			continue;
+
+		particle.position += particle.velocity * ts;
+		particle.velocity += particle.acceleration * ts;
+		particle.life -= particle.fadeSpeed * ts;
+		modified = true;
+	}
+
+	if (!modified)
+		particleGenerator.setEnabled(false);
 }

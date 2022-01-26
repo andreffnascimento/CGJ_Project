@@ -18,50 +18,7 @@ class RendererData
 private:
 	typedef std::unordered_map<const MeshData*, std::unordered_map<const MeshComponent*, const TransformComponent*>> opaqueMeshInstances_t;
 	typedef std::unordered_map<const MeshComponent*, const TransformComponent*> translucentMeshInstances_t;
-
-
-
-
-private:
-	enum ShaderUniformType {
-		INSTANCE_PVM_MATRIX,
-		INSTANCE_VM_MATRIX,
-		INSTANCE_NORMAL_MATRIX,
-
-		MATERIAL_AMBIENT,
-		MATERIAL_DIFFUSE,
-		MATERIAL_SPECULAR,
-		MATERIAL_SHININESS,
-		MATERIAL_EMISSIVE,
-
-		N_TEXTURES,
-		N_NORMALS,
-		TEXTURE_MODE,
-		TEXTURE_IDS,
-		NORMAL_IDS,
-		TEXTURE_MAPS,
-		BUMP_ACTIVE,
-
-		N_LIGHTS,
-		LIGHT_TYPE,
-		LIGHT_POSITION,
-		LIGHT_DIRECTION,
-		LIGHT_INTENSITY,
-		LIGHT_CUTOFF,
-		LIGHT_AMBIENT,
-		LIGHT_DIFFUSE,
-		LIGHT_SPECULAR,
-		LIGHT_DARK_TEXTURE,
-
-		FOG_MODE,
-		FOG_COLOR,
-		FOG_DENSITY,
-		FOG_START_DISTANCE,
-		FOG_END_DISTANCE,
-		FOG_ACTIVE,
-
-		N_UNIFORMS
-	};
+	typedef std::unordered_map<const MeshData*, std::unordered_map<const ImageComponent*, const TransformComponent*>> imageMeshInstances_t;
 
 
 
@@ -69,11 +26,22 @@ private:
 private:
 	struct TextureData
 	{
-		unsigned int nTextures = 0;
-		unsigned int textureData[RendererSettings::MAX_TEXTURES] = {};
-		unsigned int textureType[RendererSettings::MAX_TEXTURES] = {};
+		unsigned int n2dTextures = 0;
+		unsigned int nCubeTextures = 0;
+		unsigned int textureData[RendererSettings::MAX_2D_TEXTURES + RendererSettings::MAX_CUBE_TEXTURES] = {};
 	};
 
+
+	struct SkyboxData
+	{
+		const SkyboxComponent* skybox = nullptr;
+		const TransformComponent* transform = nullptr;
+	};
+
+
+
+
+private:
 
 	struct SubmitLightBuffer
 	{
@@ -97,7 +65,11 @@ private:
 		float pvmMatrix[RendererSettings::MAX_INSTANCES_PER_SUBMISSION][4][4] = {};
 		float vmMatrix[RendererSettings::MAX_INSTANCES_PER_SUBMISSION][4][4] = {};
 		float normalMatrix[RendererSettings::MAX_INSTANCES_PER_SUBMISSION][3][3] = {};
+		float particleColor[RendererSettings::MAX_INSTANCES_PER_SUBMISSION][4] = {};
+
+		bool usesParticles = false;
 	};
+
 
 
 
