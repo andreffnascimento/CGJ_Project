@@ -70,7 +70,7 @@ public:
 	void renderMeshes(const Scene& scene) const;
 	void renderColliders(const Scene& scene) const;
 	void renderParticles(const Scene& scene) const;
-
+	void renderLensFlare(const Scene& scene) const;
 
 
 
@@ -138,6 +138,11 @@ private:
 	void _submitParticleTextureData(const ParticleGeneratorComponent& particleGenerator) const;
 	void _addToParticleInstanceBuffer(RendererData::SubmitInstanceBuffer & instanceBuffer, const ParticleGeneratorComponent::ParticleData particle) const;
 	void _renderParticleGenerator(const ParticleGeneratorComponent& particleGenerator) const;
+
+private:
+	void _initLensFlareRendering() const;
+	void _renderFlare(const LensFlareComponent::Flare flare, int locX, int locY, int* m_viewport) const;
+	void _terminateLensFlareRendering() const;
 
 };
 

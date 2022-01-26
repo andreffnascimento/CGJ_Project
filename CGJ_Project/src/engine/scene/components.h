@@ -17,6 +17,7 @@
 #include "engine/scene/components/textComponent.h"
 #include "engine/scene/components/imageComponent.h"
 #include "engine/scene/components/particleGeneratorComponent.h"
+#include "engine/scene/components/LensFlareComponent.h"
 
 
 #endif // !__engine_scene_components__

@@ -354,3 +354,6 @@ MigrationBackup/
 # Output directories
 bin/
 bin-int/
+
+# Dependencies
+CGJ_Project/Dependencies/
