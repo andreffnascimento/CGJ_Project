@@ -7,7 +7,6 @@
 #include "engine/renderer/mesh/texture.h"
 
 #include "engine/math/AVTmathLib.h"
-#include "engine/math/l3DBillboard.h"
 #include "engine/math/transform.h"
 
 
@@ -17,27 +16,22 @@ extern float mNormal3x3[9];
 
 
 
-void Renderer::renderMeshes(const Scene& scene) const
+void Renderer::_renderMeshes(const Scene& scene) const
 {
 	glUniform1ui(_uniformLocator[RendererUniformLocations::RENDER_MODE], (unsigned int)RendererSettings::RendererMode::MESH_RENDERER);
 	_renderOpaqueMeshInstances();
 
-	_enableTranslucentRendering();
+	_initTranslucentRendering();
 	RendererData::translucentMeshInstances_t sortedTranslucentMeshInstances = RendererData::translucentMeshInstances_t();
 	_sortTranslucentMeshInstancesInto(scene, sortedTranslucentMeshInstances);
 	_renderTranslucentMeshInstances(sortedTranslucentMeshInstances);
-	_disableTranslucentRendering();
-
-	glUniform1ui(_uniformLocator[RendererUniformLocations::RENDER_MODE], (unsigned int)RendererSettings::RendererMode::IMAGE_RENDERER);
-	_enableBillboardRendering();
-	_renderImageMeshInstances(scene);
-	_disableBillboardRendering();
+	_terminateTranslucentRendering();
 }
 
 
 
 
-void Renderer::_enableTranslucentRendering() const
+void Renderer::_initTranslucentRendering() const
 {
 	glDepthMask(GL_FALSE);
 	glEnable(GL_BLEND);
@@ -45,7 +39,7 @@ void Renderer::_enableTranslucentRendering() const
 }
 
 
-void Renderer::_disableTranslucentRendering() const
+void Renderer::_terminateTranslucentRendering() const
 {
 	glDepthMask(GL_TRUE);
 	glDisable(GL_BLEND);
@@ -105,16 +99,63 @@ void Renderer::_sortTranslucentMeshInstancesInto(const Scene& scene, RendererDat
 
 
 
-void Renderer::_enableBillboardRendering() const
+void Renderer::_addObjectToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform) const
 {
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	loadIdentity(MODEL);
+	loadMatrix(MODEL, transform->transformMatrix());
+	computeDerivedMatrix(PROJ_VIEW_MODEL);
+	computeNormalMatrix3x3();
+
+	memcpy(instanceBuffer.pvmMatrix[instanceBuffer.nInstances],    mCompMatrix[PROJ_VIEW_MODEL], 4 * 4 * sizeof(float));
+	memcpy(instanceBuffer.vmMatrix[instanceBuffer.nInstances],     mCompMatrix[VIEW_MODEL],		 4 * 4 * sizeof(float));
+	memcpy(instanceBuffer.normalMatrix[instanceBuffer.nInstances], mNormal3x3,					 3 * 3 * sizeof(float));
+	instanceBuffer.nInstances++;
 }
 
 
-void Renderer::_disableBillboardRendering() const
+void Renderer::_submitRenderableData(const MeshData& meshData, RendererData::SubmitInstanceBuffer& instanceBuffer) const
 {
-	glDisable(GL_BLEND);
+	_submitInstanceBuffer(instanceBuffer);
+	_renderMesh(meshData, instanceBuffer);
+	instanceBuffer.nInstances = 0;
+}
+
+
+void Renderer::_submitMeshData(const MeshData& meshData) const
+{
+	const Material& material = meshData.material();
+	glUniform4fv(_uniformLocator[RendererUniformLocations::MATERIAL_AMBIENT],  1, material.ambient);
+	glUniform4fv(_uniformLocator[RendererUniformLocations::MATERIAL_DIFFUSE],  1, material.diffuse);
+	glUniform4fv(_uniformLocator[RendererUniformLocations::MATERIAL_SPECULAR], 1, material.specular);
+	glUniform4fv(_uniformLocator[RendererUniformLocations::MATERIAL_EMISSIVE], 1, material.emissive);
+	glUniform1f(_uniformLocator[RendererUniformLocations::MATERIAL_SHININESS],    material.shininess);
+
+	const Texture& texture = meshData.texture();
+	glUniform1ui(_uniformLocator[RendererUniformLocations::N_TEXTURES], (unsigned int)texture.nTextures());
+	glUniform1ui(_uniformLocator[RendererUniformLocations::N_NORMALS],   (unsigned int)texture.nNormals());
+	glUniform1ui(_uniformLocator[RendererUniformLocations::TEXTURE_MODE], (unsigned int)texture.textureMode());
+	glUniform1uiv(_uniformLocator[RendererUniformLocations::TEXTURE_IDS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.textureIds());
+	glUniform1uiv(_uniformLocator[RendererUniformLocations::NORMAL_IDS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.normalIds());
+}
+
+
+void Renderer::_submitInstanceBuffer(const RendererData::SubmitInstanceBuffer& instanceBuffer) const
+{
+	glUniformMatrix4fv(_uniformLocator[RendererUniformLocations::INSTANCE_PVM_MATRIX],    instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.pvmMatrix);
+	glUniformMatrix4fv(_uniformLocator[RendererUniformLocations::INSTANCE_VM_MATRIX],     instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.vmMatrix);
+	glUniformMatrix3fv(_uniformLocator[RendererUniformLocations::INSTANCE_NORMAL_MATRIX], instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.normalMatrix);
+
+	if (instanceBuffer.usesParticles)
+		glUniform4fv(_uniformLocator[RendererUniformLocations::INSTANCE_PARTICLE_COLOR], instanceBuffer.nInstances, (const float*)instanceBuffer.particleColor);
+}
+
+
+void Renderer::_renderMesh(const MeshData& mesh, RendererData::SubmitInstanceBuffer& instanceBuffer) const
+{
+	const MyMesh& meshData = mesh.mesh();
+	glBindVertexArray(meshData.vao);
+	glDrawElementsInstanced(meshData.type, meshData.numIndexes, GL_UNSIGNED_INT, 0, instanceBuffer.nInstances);
+	glBindVertexArray(0);
 }
 
 
@@ -170,135 +211,4 @@ void Renderer::_renderTranslucentMeshInstances(const RendererData::translucentMe
 
 		_submitRenderableData(*originalMesh, instanceBuffer);
 	}
-}
-
-
-void Renderer::_renderImageMeshInstances(const Scene& scene) const
-{
-	Coords3f cameraPos;
-	Transform::decomposeTransformMatrix(scene.activeCamera(), cameraPos, Quaternion(), Coords3f());
-
-	for (const auto& imageIterator : _imageMeshInstances)
-	{
-		RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
-		const MeshData* meshData = imageIterator.first;
-		const std::unordered_map<const ImageComponent*, const TransformComponent*> meshInstances = imageIterator.second;
-		_submitMeshData(*meshData);
-
-		for (const auto& meshInstanceIterator : meshInstances)
-		{
-			const ImageComponent* image = meshInstanceIterator.first;
-			const TransformComponent* transform = meshInstanceIterator.second;
-			if (!image->enabled())
-				continue;
-
-			if (instanceBuffer.nInstances >= RendererSettings::MAX_INSTANCES_PER_SUBMISSION)
-				_submitRenderableData(*meshData, instanceBuffer);
-
-			_addImageToInstanceBuffer(instanceBuffer, transform, image->type(), cameraPos);
-		}
-
-		_submitRenderableData(*meshData, instanceBuffer);
-	}
-}
-
-
-
-
-void Renderer::_addObjectToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform) const
-{
-	loadIdentity(MODEL);
-	loadMatrix(MODEL, transform->transformMatrix());
-	computeDerivedMatrix(PROJ_VIEW_MODEL);
-	computeNormalMatrix3x3();
-
-	memcpy(instanceBuffer.pvmMatrix[instanceBuffer.nInstances],    mCompMatrix[PROJ_VIEW_MODEL], 4 * 4 * sizeof(float));
-	memcpy(instanceBuffer.vmMatrix[instanceBuffer.nInstances],     mCompMatrix[VIEW_MODEL],		 4 * 4 * sizeof(float));
-	memcpy(instanceBuffer.normalMatrix[instanceBuffer.nInstances], mNormal3x3,					 3 * 3 * sizeof(float));
-	instanceBuffer.nInstances++;
-}
-
-
-void Renderer::_addImageToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform, const ImageComponent::ImageType& imageType, const Coords3f& cameraPos) const
-{
-	loadIdentity(MODEL);
-	loadMatrix(MODEL, transform->transformMatrix());
-
-	if (imageType == ImageComponent::ImageType::CYLINDRICAL_BILLBOARD)
-	{
-		l3dBillboardCylindricalBegin(cameraPos, Coords3f({ transform->transformMatrix()[3][0], transform->transformMatrix()[3][1], transform->transformMatrix()[3][2] }));
-		computeDerivedMatrix(PROJ_VIEW_MODEL);
-	}
-	else if (imageType == ImageComponent::ImageType::SPHERICAL_BILLBOARD)
-	{
-		l3dBillboardSphericalBegin(cameraPos, Coords3f({ transform->transformMatrix()[3][0], transform->transformMatrix()[3][1], transform->transformMatrix()[3][2] }));
-		computeDerivedMatrix(PROJ_VIEW_MODEL);
-	}
-	else if (imageType == ImageComponent::ImageType::FAST_CYLINDRICAL_BILLBOARD)
-	{
-		computeDerivedMatrix(VIEW_MODEL);
-		BillboardCheatCylindricalBegin(transform->scale().x, transform->scale().y);
-		computeDerivedMatrix_PVM();
-	}
-	else if (imageType == ImageComponent::ImageType::FAST_SPHERICAL_BILLBOARD)
-	{
-		computeDerivedMatrix(VIEW_MODEL);
-		BillboardCheatSphericalBegin(transform->scale().x, transform->scale().y);
-		computeDerivedMatrix_PVM();
-	}
-
-	computeNormalMatrix3x3();
-
-	memcpy(instanceBuffer.pvmMatrix[instanceBuffer.nInstances], mCompMatrix[PROJ_VIEW_MODEL], 4 * 4 * sizeof(float));
-	memcpy(instanceBuffer.vmMatrix[instanceBuffer.nInstances], mCompMatrix[VIEW_MODEL], 4 * 4 * sizeof(float));
-	memcpy(instanceBuffer.normalMatrix[instanceBuffer.nInstances], mNormal3x3, 3 * 3 * sizeof(float));
-	instanceBuffer.nInstances++;
-}
-
-
-
-
-void Renderer::_submitRenderableData(const MeshData& meshData, RendererData::SubmitInstanceBuffer& instanceBuffer) const
-{
-	_submitInstanceBuffer(instanceBuffer);
-	_renderMesh(meshData, instanceBuffer);
-	instanceBuffer.nInstances = 0;
-}
-
-
-void Renderer::_submitMeshData(const MeshData& meshData) const
-{
-	const Material& material = meshData.material();
-	glUniform4fv(_uniformLocator[RendererUniformLocations::MATERIAL_AMBIENT],  1, material.ambient);
-	glUniform4fv(_uniformLocator[RendererUniformLocations::MATERIAL_DIFFUSE],  1, material.diffuse);
-	glUniform4fv(_uniformLocator[RendererUniformLocations::MATERIAL_SPECULAR], 1, material.specular);
-	glUniform4fv(_uniformLocator[RendererUniformLocations::MATERIAL_EMISSIVE], 1, material.emissive);
-	glUniform1f(_uniformLocator[RendererUniformLocations::MATERIAL_SHININESS],    material.shininess);
-
-	const Texture& texture = meshData.texture();
-	glUniform1ui(_uniformLocator[RendererUniformLocations::N_TEXTURES], (unsigned int)texture.nTextures());
-	glUniform1ui(_uniformLocator[RendererUniformLocations::N_NORMALS],   (unsigned int)texture.nNormals());
-	glUniform1ui(_uniformLocator[RendererUniformLocations::TEXTURE_MODE], (unsigned int)texture.textureMode());
-	glUniform1uiv(_uniformLocator[RendererUniformLocations::TEXTURE_IDS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.textureIds());
-	glUniform1uiv(_uniformLocator[RendererUniformLocations::NORMAL_IDS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.normalIds());
-}
-
-
-void Renderer::_submitInstanceBuffer(const RendererData::SubmitInstanceBuffer& instanceBuffer) const
-{
-	glUniformMatrix4fv(_uniformLocator[RendererUniformLocations::INSTANCE_PVM_MATRIX],    instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.pvmMatrix);
-	glUniformMatrix4fv(_uniformLocator[RendererUniformLocations::INSTANCE_VM_MATRIX],     instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.vmMatrix);
-	glUniformMatrix3fv(_uniformLocator[RendererUniformLocations::INSTANCE_NORMAL_MATRIX], instanceBuffer.nInstances, GL_FALSE, (const float*)instanceBuffer.normalMatrix);
-
-	if (instanceBuffer.usesParticles)
-		glUniform4fv(_uniformLocator[RendererUniformLocations::INSTANCE_PARTICLE_COLOR], instanceBuffer.nInstances, (const float*)instanceBuffer.particleColor);
-}
-
-
-void Renderer::_renderMesh(const MeshData& mesh, RendererData::SubmitInstanceBuffer& instanceBuffer) const
-{
-	const MyMesh& meshData = mesh.mesh();
-	glBindVertexArray(meshData.vao);
-	glDrawElementsInstanced(meshData.type, meshData.numIndexes, GL_UNSIGNED_INT, 0, instanceBuffer.nInstances);
-	glBindVertexArray(0);
 }

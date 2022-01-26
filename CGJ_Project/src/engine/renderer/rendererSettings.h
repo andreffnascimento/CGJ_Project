@@ -14,7 +14,8 @@ public:
 	constexpr static const char* FONT_NAME = "fonts/arial.ttf";
 
 	constexpr static size_t MAX_LIGHTS = 32;
-	constexpr static size_t MAX_TEXTURES = 32;
+	constexpr static size_t MAX_2D_TEXTURES = 30;
+	constexpr static size_t MAX_CUBE_TEXTURES = 2;
 	constexpr static size_t MAX_TEXTURES_PER_MESH = 2;
 
 	constexpr static size_t MAX_INSTANCES_PER_SUBMISSION = 50;
@@ -59,7 +60,8 @@ public:
 	{
 		MESH_RENDERER = 1,
 		IMAGE_RENDERER = 2,
-		PARTICLE_RENDERER = 3
+		PARTICLE_RENDERER = 3,
+		SKYBOX_RENDERER = 4
 	};
 
 };

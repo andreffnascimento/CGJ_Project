@@ -24,6 +24,8 @@ private:
 	unsigned int _uniformLocator[RendererUniformLocations::N_UNIFORMS] = {};
 
 	RendererData::TextureData _textures = RendererData::TextureData();
+	RendererData::SkyboxData _skybox = RendererData::SkyboxData();
+
 	RendererData::opaqueMeshInstances_t _opaqueMeshInstances = RendererData::opaqueMeshInstances_t();
 	RendererData::translucentMeshInstances_t _translucentMeshInstances = RendererData::translucentMeshInstances_t();
 	RendererData::imageMeshInstances_t _imageMeshInstances = RendererData::imageMeshInstances_t();
@@ -45,6 +47,9 @@ public:
 	static void setFog(const RendererSettings::Fog& fog);
 	static void setFogActive(bool active);
 	static void setBumpActive(bool active);
+	static void setSkybox(const Entity& skyboxEntity);
+
+
 
 
 public:
@@ -57,19 +62,7 @@ public:
 	void updateViewport(CameraComponent& camera, int width, int height) const;
 	void submitRenderableObject(const MeshComponent& mesh, const Entity& entity);
 	void submitRenderableImage(const ImageComponent& image, const Entity& entity);
-
-
-public:
 	void renderScene(const Scene& scene);
-	void initSceneRendering();
-	void terminateSceneRendering();
-	
-	void renderCanvas(const Scene& scene) const;
-	void renderCamera(const Scene& scene) const;
-	void renderLights(const Scene& scene) const;
-	void renderMeshes(const Scene& scene) const;
-	void renderColliders(const Scene& scene) const;
-	void renderParticles(const Scene& scene) const;
 
 
 
@@ -84,11 +77,29 @@ private:
 	void _submitTextureData() const;
 
 
+private:
+	void _initSceneRendering();
+	void _terminateSceneRendering();
+	void _renderCamera(const Scene& scene) const;
+	void _renderLights(const Scene& scene) const;
+	void _renderMeshes(const Scene& scene) const;
+	void _renderImages(const Scene& scene) const;
+	void _renderColliders(const Scene& scene) const;
+	void _renderParticles(const Scene& scene) const;
+	void _renderSkybox() const;
+	void _renderCanvas(const Scene& scene) const;
 
 
 private:
 	void _setOrthographicViewport(CameraComponent& camera, int width, int height) const;
 	void _setPerspectiveViewport(CameraComponent& camera, int width, int height) const;
+
+
+private:
+	void _initCanvasRendering() const;
+	void _terminateCanvasRendering() const;
+	void _renderTextInstances(const std::unordered_map<EntityHandle, CanvasComponent>& canvasComponents) const;
+	void _renderImageInstances(const std::unordered_map<EntityHandle, CanvasComponent>& canvasComponents) const;
 
 
 private:
@@ -99,24 +110,25 @@ private:
 
 
 private:
-	void _enableTranslucentRendering() const;
-	void _disableTranslucentRendering() const;
+	void _initTranslucentRendering() const;
+	void _terminateTranslucentRendering() const;
 	void _sortTranslucentMeshInstancesInto(const Scene& scene, RendererData::translucentMeshInstances_t& sortedTranslucentMeshInstancesOut) const;
 
-	void _enableBillboardRendering() const;
-	void _disableBillboardRendering() const;
-
-	void _renderOpaqueMeshInstances() const;
-	void _renderTranslucentMeshInstances(const RendererData::translucentMeshInstances_t& translucentMeshInstances) const;
-	void _renderImageMeshInstances(const Scene& scene) const;
-
 	void _addObjectToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform) const;
-	void _addImageToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform, const ImageComponent::ImageType& imageType, const Coords3f& cameraPos) const;
-
 	void _submitRenderableData(const MeshData& meshData, RendererData::SubmitInstanceBuffer& instanceBuffer) const;
 	void _submitMeshData(const MeshData& meshData) const;
 	void _submitInstanceBuffer(const RendererData::SubmitInstanceBuffer& instanceBuffer) const;
 	void _renderMesh(const MeshData& mesh, RendererData::SubmitInstanceBuffer& instanceBuffer) const;
+
+	void _renderOpaqueMeshInstances() const;
+	void _renderTranslucentMeshInstances(const RendererData::translucentMeshInstances_t& translucentMeshInstances) const;
+
+
+private:
+	void _initImageRendering() const;
+	void _terminateImageRendering() const;
+	void _addImageToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform, const ImageComponent::ImageType& imageType, const Coords3f& cameraPos) const;
+	void _renderImageMeshInstances(const Scene& scene) const;
 
 
 private:
@@ -126,19 +138,19 @@ private:
 
 
 private:
-	void _initCanvasRendering() const;
-	void _terminateCanvasRendering() const;
-	void _renderTextInstances(const std::unordered_map<EntityHandle, CanvasComponent>&canvasComponents) const;
-	void _renderImageInstances(const std::unordered_map<EntityHandle, CanvasComponent>&canvasComponents) const;
+	void _initParticleRendering() const;
+	void _terminateParticleRendering() const;
+	void _submitParticleTextureData(const ParticleGeneratorComponent & particleGenerator) const;
+	void _addToParticleInstanceBuffer(RendererData::SubmitInstanceBuffer & instanceBuffer, const ParticleGeneratorComponent::ParticleData particle) const;
+	void _renderParticleGenerator(const ParticleGeneratorComponent & particleGenerator) const;
 
 
 private:
-	void _initParticleRendering() const;
-	void _terminateParticleRendering() const;
-	void _submitParticleTextureData(const ParticleGeneratorComponent& particleGenerator) const;
-	void _addToParticleInstanceBuffer(RendererData::SubmitInstanceBuffer & instanceBuffer, const ParticleGeneratorComponent::ParticleData particle) const;
-	void _renderParticleGenerator(const ParticleGeneratorComponent& particleGenerator) const;
-
+	void _initSkyboxRendering() const;
+	void _terminateSkyboxRendering() const;
+	void _submitSkyboxMeshData() const;
+	void _submitSkyboxTransform() const;
+	void _submitSkyboxData() const;
 };
 
 

@@ -187,6 +187,8 @@
     <ClCompile Include="src\engine\renderer\modules\lightRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\meshRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\particleRenderer.cpp" />
+    <ClCompile Include="src\engine\renderer\modules\imageRenderer.cpp" />
+    <ClCompile Include="src\engine\renderer\modules\skyboxRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\rendererUniformLocations.h" />
     <ClCompile Include="src\engine\scene\components.cpp" />
     <ClCompile Include="src\engine\scene\ecsRegistry.cpp" />
@@ -230,6 +232,7 @@
     <ClInclude Include="src\engine\scene\components\particleGeneratorComponent.h" />
     <ClInclude Include="src\engine\scene\components\rigidbodyComponent.h" />
     <ClInclude Include="src\engine\scene\components\scriptComponent.h" />
+    <ClInclude Include="src\engine\scene\components\skyboxComponent.h" />
     <ClInclude Include="src\engine\scene\components\tagComponent.h" />
     <ClInclude Include="src\engine\scene\components\textComponent.h" />
     <ClInclude Include="src\engine\scene\components\transformComponent.h" />
@@ -255,6 +258,7 @@
     <ClInclude Include="src\MicroMachines3D\entities\world\boosters.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\oranges.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\planets.h" />
+    <ClInclude Include="src\MicroMachines3D\entities\world\skybox.h" />
     <ClInclude Include="src\MicroMachines3D\scenes\MicroMachines3DScene.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\boosters\boostersDriftScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\butters\buttersDriftScript.h" />
@@ -300,6 +304,12 @@
     <Image Include="src\MicroMachines3D\textures\hud\pause.png" />
     <Image Include="src\MicroMachines3D\textures\lightwood.tga" />
     <Image Include="src\MicroMachines3D\textures\orange\orange.jpg" />
+    <Image Include="src\MicroMachines3D\textures\skybox\back.png" />
+    <Image Include="src\MicroMachines3D\textures\skybox\bottom.png" />
+    <Image Include="src\MicroMachines3D\textures\skybox\front.png" />
+    <Image Include="src\MicroMachines3D\textures\skybox\left.png" />
+    <Image Include="src\MicroMachines3D\textures\skybox\right.png" />
+    <Image Include="src\MicroMachines3D\textures\skybox\top.png" />
     <Image Include="src\MicroMachines3D\textures\stone.tga" />
     <Image Include="src\MicroMachines3D\textures\table\checker.png" />
     <Image Include="src\MicroMachines3D\textures\table\lightwood.tga" />

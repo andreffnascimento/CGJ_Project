@@ -26,11 +26,22 @@ private:
 private:
 	struct TextureData
 	{
-		unsigned int nTextures = 0;
-		unsigned int textureData[RendererSettings::MAX_TEXTURES] = {};
-		unsigned int textureType[RendererSettings::MAX_TEXTURES] = {};
+		unsigned int n2dTextures = 0;
+		unsigned int nCubeTextures = 0;
+		unsigned int textureData[RendererSettings::MAX_2D_TEXTURES + RendererSettings::MAX_CUBE_TEXTURES] = {};
 	};
 
+
+	struct SkyboxData
+	{
+		const SkyboxComponent* skybox = nullptr;
+		const TransformComponent* transform = nullptr;
+	};
+
+
+
+
+private:
 
 	struct SubmitLightBuffer
 	{
@@ -58,6 +69,7 @@ private:
 
 		bool usesParticles = false;
 	};
+
 
 
 

@@ -10,7 +10,7 @@
 
 
 
-void Renderer::renderCanvas(const Scene& scene) const
+void Renderer::_renderCanvas(const Scene& scene) const
 {
 	_initCanvasRendering();
 
