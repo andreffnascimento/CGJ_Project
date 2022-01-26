@@ -96,6 +96,13 @@ private:
 
 
 private:
+	void _initCanvasRendering() const;
+	void _terminateCanvasRendering() const;
+	void _renderTextInstances(const std::unordered_map<EntityHandle, CanvasComponent>& canvasComponents) const;
+	void _renderImageInstances(const std::unordered_map<EntityHandle, CanvasComponent>& canvasComponents) const;
+
+
+private:
 	void _formatDirectionalLight(const LightComponent& light, const Coords3f& direction, RendererData::SubmitLightBuffer& lightBuffer) const;
 	void _formatPointLight(const LightComponent& light, const Coords3f& translation, RendererData::SubmitLightBuffer& lightBuffer) const;
 	void _formatSpotLight(const LightComponent& light, const Coords3f& translation, const Coords3f& direction, RendererData::SubmitLightBuffer& lightBuffer) const;
@@ -144,13 +151,6 @@ private:
 	void _submitSkyboxMeshData() const;
 	void _submitSkyboxTransform() const;
 	void _submitSkyboxData() const;
-
-
-private:
-	void _initCanvasRendering() const;
-	void _terminateCanvasRendering() const;
-	void _renderTextInstances(const std::unordered_map<EntityHandle, CanvasComponent>&canvasComponents) const;
-	void _renderImageInstances(const std::unordered_map<EntityHandle, CanvasComponent>&canvasComponents) const;
 };
 
 

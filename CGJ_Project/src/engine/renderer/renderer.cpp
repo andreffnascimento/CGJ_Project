@@ -169,12 +169,12 @@ void Renderer::renderScene(const Scene& scene)
 {
 	_initSceneRendering();
 	_renderCamera(scene);
+	_renderSkybox();
 	_renderLights(scene);
 	_renderMeshes(scene);
 	_renderImages(scene);
 	_renderColliders(scene);
 	_renderParticles(scene);
-	_renderSkybox();
 	_renderCanvas(scene);
 	_terminateSceneRendering();
 }
@@ -314,7 +314,7 @@ void Renderer::_initSceneRendering()
 		throw std::string("Invalid text shader program!" + _textShader.getAllInfoLogs());
 #endif
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glUseProgram(_meshShader.getProgramIndex());
 	_submitFogData();
 	_submitTextureData();
