@@ -12,14 +12,15 @@ Functions to handle with struct MyMesh based meshes from Assimp meshes:
 #include <unordered_map>
 
 // assimp include files. These three are usually needed.
-#include "assimp/Importer.hpp"	
-#include "assimp/postprocess.h"
-#include "assimp/scene.h"
+#include "src/engine/renderer/meshFromAssimp.h"
+#include "src/engine/renderer/VertexAttrDef.h"
+#include "src/engine/renderer/mesh/geometry.h"
+#include "src/engine/renderer/Texture_Loader.h"
 
-#include "AVTmathLib.h"
-#include "VertexAttrDef.h"
-#include "geometry.h"
-#include "Texture_Loader.h"
+#include "src/engine/math/AVTmathLib.h"
+
+
+char model_dir[50] = "/";
 
 
 using namespace std;
@@ -139,7 +140,7 @@ bool LoadGLTexturesTUs(const aiScene* scene)  // Create OGL textures objects and
 
 	}
 
-	int numTextures = textureIdMap.size();
+	int numTextures = (int)textureIdMap.size();
 	printf("numeros de mapas %d\n", numTextures);
 	if(numTextures) {
 		GLuint* textureIds = new GLuint[numTextures];
@@ -190,7 +191,7 @@ void color4_to_float4(const aiColor4D* c, float f[4])
 vector<struct MyMesh> createMeshFromAssimp(const aiScene* sc) {
 
 	vector<struct MyMesh> myMeshes;
-	struct MyMesh aMesh;
+	struct MyMesh aMesh = MyMesh();
 	GLuint buffer;
 
 	printf("Cena: numero total de malhas = %d\n", sc->mNumMeshes);
