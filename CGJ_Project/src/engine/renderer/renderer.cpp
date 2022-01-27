@@ -237,6 +237,9 @@ void Renderer::_setupMeshShader()
 	_uniformLocator[RendererUniformLocations::FOG_END_DISTANCE] = glGetUniformLocation(_meshShader.getProgramIndex(), "fogData.endDistance");
 	_uniformLocator[RendererUniformLocations::FOG_ACTIVE] = glGetUniformLocation(_meshShader.getProgramIndex(), "fogData.isActive");
 
+	_uniformLocator[RendererUniformLocations::LENS_FLARE_COLOR] = glGetUniformLocation(_meshShader.getProgramIndex(), "lensFlareData.color");
+	_uniformLocator[RendererUniformLocations::LENS_FLARE_COLOR_MAP_ID] = glGetUniformLocation(_meshShader.getProgramIndex(), "lensFlareData.colorMapId");
+
 	_uniformLocator[RendererUniformLocations::RENDER_MODE] = glGetUniformLocation(_meshShader.getProgramIndex(), "renderMode");
 
 	std::cout << "InfoLog for Per Fragment Phong Lightning Shader\n" << _meshShader.getAllInfoLogs().c_str() << "\n\n";

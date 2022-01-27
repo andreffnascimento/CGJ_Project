@@ -17,12 +17,15 @@ const uint FOG_TYPE_LINEAR = 1;
 const uint FOG_TYPE_EXP = 2;
 const uint FOG_TYPE_EXP2 = 3;
 
+const uint MAX_FLARE_ELEMENTS = 10;
+
 const float NORMAL_BLEND_AMOUNT = 0.5;
 
 const uint RENDER_MODE_MESH = 1;
 const uint RENDER_MODE_IMAGE = 2;
 const uint RENDER_MODE_PARTICLE = 3;
 const uint RENDER_MODE_SKYBOX = 4;
+const uint RENDER_MODE_LENS_FLARE = 5;
 
 
 
@@ -73,6 +76,12 @@ struct FogData {
 };
 
 
+struct LensFlareData {
+	vec4 color[MAX_FLARE_ELEMENTS];
+	uint colorMapId[MAX_FLARE_ELEMENTS];
+};
+
+
 struct FragLightingData {
 	vec4 ambient;
 	vec4 specular;
@@ -89,6 +98,7 @@ uniform MaterialData materialData;
 uniform TextureData textureData;
 uniform LightingData lightingData;
 uniform FogData fogData;
+uniform LensFlareData lensFlareData;
 uniform uint renderMode;
 
 
@@ -100,6 +110,7 @@ in Data {
 	vec2 textureCoords;
 	vec3 skyboxTextureCoords;
 	vec4 particleColor;
+	uint lensFlareElement;
 } dataIn;
 
 
@@ -331,6 +342,19 @@ vec4 renderSkybox() {
 
 
 
+vec4 renderLensFlare() {
+
+	vec4 lensFlareTexel = texture(textureData.maps[lensFlareData.colorMapId[dataIn.lensFlareElement]], dataIn.textureCoords);
+	if (lensFlareTexel.a == 0.0  || lensFlareData.color[dataIn.lensFlareElement].a == 0.0)
+		discard;
+
+	vec4 colorOut = lensFlareData.color[dataIn.lensFlareElement] * lensFlareTexel;
+	return vec4(1.0);
+}
+
+
+
+
 void main() {
 	if (renderMode == RENDER_MODE_MESH)
 		colorOut = renderMesh();
@@ -340,4 +364,6 @@ void main() {
 		colorOut = renderParticle();
 	else if (renderMode == RENDER_MODE_SKYBOX)
 		colorOut = renderSkybox();
+	else if (renderMode == RENDER_MODE_LENS_FLARE)
+		colorOut = renderLensFlare();
 }
