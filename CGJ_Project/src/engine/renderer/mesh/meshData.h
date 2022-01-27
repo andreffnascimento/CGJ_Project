@@ -4,7 +4,6 @@
 
 #include "engine/renderer/mesh/geometry.h"
 #include "engine/renderer/mesh/texture.h"
-#include "engine/renderer/mesh/stencil.h"
 
 
 
@@ -15,8 +14,6 @@ class MeshData
 private:
 	MyMesh _mesh = MyMesh();
 	Texture _texture = Texture();
-	bool _isMirror = false;
-
 
 
 
@@ -31,7 +28,6 @@ public:
 	inline const MyMesh& mesh() const { return _mesh; }
 	inline const Material& material() const { return _mesh.mat; }
 	inline const Texture& texture()	  const	{ return _texture ; }
-	inline const bool isMirror()	  const	{ return _isMirror; }
 
 
 public:
@@ -41,7 +37,6 @@ public:
 	inline void setTextureMode(const Texture::TextureMode& textureMode) { return _texture.setTextureMode(textureMode); }
 	inline void addTexture(unsigned int textureId)						{ return _texture.addTexture(textureId); }
 	inline void addNormal(unsigned int normalId)						{ return _texture.addNormal(normalId); }
-	inline void setIsMirror(bool isMirror)								{ _isMirror = isMirror; }
 
 };
 

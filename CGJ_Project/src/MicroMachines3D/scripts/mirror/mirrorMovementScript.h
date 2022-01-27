@@ -52,7 +52,7 @@ private:
 		float mirrorY = carPosition.y - cameraDir.y;
 		float mirrorZ = carPosition.z + cameraDir.y;
 
-		Transform::rotateTo((Entity&)_mirror, _camera.transform().rotation());
+		//Transform::rotateTo((Entity&)_mirror, _camera.transform().rotation());
 		Transform::translateTo((Entity&)_mirror, { mirrorX, mirrorY, mirrorZ });
 	}
 

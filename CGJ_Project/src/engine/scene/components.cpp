@@ -96,13 +96,6 @@ MeshComponent::MeshComponent(const MeshComponent& mesh, const Entity& entity)
 }
 
 
-MirrorComponent::MirrorComponent(const RigidbodyComponent& rigidbody, const MeshComponent& mesh)
-	: _rigidbody(&rigidbody), _mesh(&mesh)
-{
-	// empty
-}
-
-
 
 void ScriptComponent::onCreate() const
 {
@@ -363,4 +356,11 @@ SkyboxComponent::SkyboxComponent(unsigned int textureId, const Material& materia
 	: _meshData(MeshData(createCube(), material))
 {
 	_meshData.addTexture(textureId);
+}
+
+
+FixedMirrorComponent::FixedMirrorComponent(const MyMesh& mesh, const Material& material)
+	: _meshData(MeshData(mesh, material))
+{
+
 }

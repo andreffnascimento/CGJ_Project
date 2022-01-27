@@ -68,7 +68,7 @@ constexpr Coords3f ORANGE_SIZE = { 6.0f, 6.0f, 6.0f };
 constexpr int N_ORANGES = 7;
 
 
-constexpr Coords3f MIRROR_SIZE = { 10.0f, 4.0f, 0.01f };
+constexpr Coords3f MIRROR_SIZE = { 400.0f, 150.0f, 1.0f };
 
 
 
