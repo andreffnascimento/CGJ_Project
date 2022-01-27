@@ -31,7 +31,7 @@ private:
 	Entity _createGlobalLight(Entity entity)
 	{
 		LightComponent& lightComponent = entity.addComponent<LightComponent>(LightComponent::LightType::DIRECTIONAL, 2.0f);
-		Transform::rotateTo(entity, Coords3f({ 90.0f, 0.0f, 0.0f }));
+		Transform::rotateTo(entity, Coords3f({ 30.0f, 0.0f, 0.0f }));
 		return entity;	
 	}
 };

@@ -19,7 +19,7 @@ public:
 
 	void bigBang(Scene* scene, GroupComponent& group) {
 
-		createPlanet(scene, group, 1, 0.0f, 200.0f, -1000.0f, 35.0f, "src/MicroMachines3D/textures/planets/sun.png");
+		createPlanet(scene, group, 1, 0.0f, 300.0f, -500.0f, 25.0f, "src/MicroMachines3D/textures/planets/sun.png");
 		createPlanet(scene, group, 2, -175.0f, 15.0f, 15.0f, 3.0f, "src/MicroMachines3D/textures/planets/earth.png");
 		createPlanet(scene, group, 3, -300.0f, 30.0f, -65.0f, 2.5f, "src/MicroMachines3D/textures/planets/mars.png");
 		createPlanet(scene, group, 4, 350.0f, 10.0f, -80.0f, 9.0f, "src/MicroMachines3D/textures/planets/jupiter.png");

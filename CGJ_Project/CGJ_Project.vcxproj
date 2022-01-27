@@ -265,7 +265,7 @@
     <ClInclude Include="src\MicroMachines3D\entities\world\checkeredFlag.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\cheeriosTrack.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\boosters.h" />
-    <ClInclude Include="src\MicroMachines3D\entities\world\lensFlare.h" />
+    <ClInclude Include="src\MicroMachines3D\entities\flare\sunFlare.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\oranges.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\planets.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\skybox.h" />
