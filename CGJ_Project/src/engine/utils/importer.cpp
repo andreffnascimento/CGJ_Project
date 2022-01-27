@@ -61,9 +61,7 @@ void Importer::importLensFlare(LensFlareComponent& lensFlare, const char* lensFl
 		std::string lensFlareDir = std::string(lensFlarePath);
 		lensFlareDir.erase(lensFlareDir.rfind('/') + 1);
 
-		
-
-		LensFlareComponent::FlareElement flareElement = lensFlareData.elements[lensFlareData.nElements++];
+		LensFlareComponent::FlareElement& flareElement = lensFlareData.elements[lensFlareData.nElements++];
 		flareElement.color = { clamp(color[0] / 255.0f, 0.0f, 1.0f), clamp(color[1] / 255.0f, 0.0f, 1.0f), clamp(color[2] / 255.0f, 0.0f, 1.0f), clamp(color[3] / 255.0f, 0.0f, 1.0f) };
 		flareElement.distance = (float)distance;
 		flareElement.size = (float)size;

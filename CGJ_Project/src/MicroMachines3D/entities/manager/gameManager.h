@@ -33,7 +33,7 @@ private:
 		Entity globalLight = scene->createEntity("GlobalLight");
 		LightComponent& lightComponent = globalLight.addComponent<LightComponent>(LightComponent::LightType::DIRECTIONAL, 2.0f);
 		LensFlareComponent& lensFlare = globalLight.addComponent<LensFlareComponent>("src/MicroMachines3D/flares/sunFlare.txt");
-		lensFlare.setLightPosition({10.0f, 10.0f, 10.0f});
+		lensFlare.setLightPosition(PLANET_SUN_POSITION);
 		Transform::rotateTo(globalLight, Coords3f({ 30.0f, 0.0f, 0.0f }));
 	}
 };
