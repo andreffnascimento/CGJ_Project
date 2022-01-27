@@ -9,11 +9,18 @@
 
 class MirrorMovementScript : public Script
 {
+
+private:
+	static constexpr float CAM_DISTANCE = 10.0f;
+
+
+
 private:
 	Entity _car = Entity();
+	Entity _mirror = Entity();
 	CameraEntity _camera = CameraEntity();
 	const TransformComponent* _carTransform = nullptr;
-	Entity _mirror = Entity();
+	FixedMirrorComponent* _mirrorComponent = nullptr;
 
 
 public:
@@ -28,32 +35,31 @@ public:
 	{
 		_car = _scene->getEntityByTag("Car");
 		_camera = _scene->getEntityByTag("Camera3");
-		_carTransform = &_car.getComponent<TransformComponent>();
 		_mirror = _scene->getEntityByTag("RearViewMirror");
+		_carTransform = &_car.getComponent<TransformComponent>();
+		_mirrorComponent = &_mirror.getComponent<FixedMirrorComponent>();
 
-		_updateMirrorTransform();
+		_updateMirrorCameraPosition();
 	}
 
 	void onUpdate(float ts) override
 	{
-		_updateMirrorTransform();
+		_updateMirrorCameraPosition();
 	}
 
+
 private:
-	void _updateMirrorTransform()
+	void _updateMirrorCameraPosition()
 	{
 		const Coords3f& cameraPosition = _camera.transform().translation();
 		const Coords3f& carPosition = _carTransform->translation();
 
+		Coords3f cameraLookAt = carPosition + Coords3f{ 0.0f, 3.0f, 0.0f };
 		Coords3f cameraDir = carPosition - cameraPosition;
+		Coords3f mirrorCameraOffset = Coords3f{ cameraDir.x, 1.0f, cameraDir.z }.normalize() * CAM_DISTANCE;
 
-
-		float mirrorX = carPosition.x + cameraDir.x;
-		float mirrorY = carPosition.y - cameraDir.y;
-		float mirrorZ = carPosition.z + cameraDir.y;
-
-		//Transform::rotateTo((Entity&)_mirror, _camera.transform().rotation());
-		Transform::translateTo((Entity&)_mirror, { mirrorX, mirrorY, mirrorZ });
+		_mirrorComponent->setLookAt(_carTransform->translation());
+		_mirrorComponent->setCameraPosition(carPosition + mirrorCameraOffset);
 	}
 
 };

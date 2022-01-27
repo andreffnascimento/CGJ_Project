@@ -112,9 +112,8 @@ void Renderer::_renderFixedMirror(const Scene& scene) const
 	popMatrix(VIEW);
 
 	// -- Setup the mirror camera ---------------------------------------------- //
-	//const Coords3f& cameraCoords = mirrorEntity.transform().translation();
-	const Coords3f& targetCoords = scene.getEntityByTag("Car").getComponent<RigidbodyComponent>().position();  // shortcut for now
-	const Coords3f& cameraCoords = targetCoords + Coords3f{5.0f, 2.0f, 0.0f};
+	const Coords3f& targetCoords = fixedMirrorComponent.lookAt();
+	const Coords3f& cameraCoords = fixedMirrorComponent.cameraPosition();
 
 
 	Coords3f up = { 0.0f, 1.0f, 0.0f };
@@ -130,14 +129,16 @@ void Renderer::_renderFixedMirror(const Scene& scene) const
 	perspective(70, 1.2f, 0.1f, 1000.0f); // TODO correct aspect ratio based on viewport width and height
 
 	lookAt(cameraCoords.x, cameraCoords.y, cameraCoords.z,	// camera position
-		targetCoords.x, targetCoords.y + 4.0f, targetCoords.z,	// target position
+		targetCoords.x, targetCoords.y, targetCoords.z,	// target position
 		up.x, up.y, up.z);
 
 
 	// -- Draw scene into stenciled area -------------------------------------- //
 	_enableRenderingIntoStencil();
 
-	Renderer::_renderMeshes(scene);
+	_renderSkybox();
+	_renderMeshes(scene);
+	_renderParticles(scene);
 
 	popMatrix(PROJECTION);
 	popMatrix(VIEW);
