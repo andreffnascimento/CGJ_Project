@@ -10,10 +10,15 @@
 class Importer
 {
 
-
-
 public:
-	static void importModel(ModelComponent&, const char* modelPath);
+	static void importModel(ModelComponent& model, const char* modelPath);
+	static void importLensFlare(LensFlareComponent& lensFlare, const char* lensFlarePath);
+
+
+
+
+private:
+	static int _importLensFlareTexture(const std::string& lensFlareDir, const std::string& textureName, int flareTextureIds[]);
 
 };
 

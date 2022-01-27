@@ -2,6 +2,9 @@
 #define __engine_utils_mathUtils__
 
 
+#include <algorithm>
+
+
 
 
 static constexpr double HALF_PI = 1.5707963267948966192313216916397514420985846996875529104874722961;
@@ -21,6 +24,11 @@ inline float toDegrees(float radians)	{ return (float)(radians * (180.0 / PI)); 
 
 
 float invSqrt(float number);
+
+
+
+
+inline float clamp(float value, float min, float max) { return std::min(std::max(value, max), min); }
 
 
 #endif // !__engine_utils_mathUtils__

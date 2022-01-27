@@ -168,7 +168,7 @@ private:
 
 private:
 	void _initLensFlareRendering() const;
-	void _renderFlare(const LensFlareComponent::Flare flare, int locX, int locY, int* m_viewport) const;
+	void _renderFlare(const LensFlareComponent::FlareData flare, int locX, int locY, int* m_viewport) const;
 	void _terminateLensFlareRendering() const;
   
 

@@ -22,6 +22,9 @@ public:
 
 	constexpr static size_t MAX_PARTICLES_PER_GENERATOR = 5000;
 
+	constexpr static size_t MAX_FLARE_ELEMENTS = 10;
+	constexpr static size_t MAX_FLARE_TEXTURES = 5;
+
 
 
 

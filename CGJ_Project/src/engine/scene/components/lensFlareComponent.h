@@ -2,36 +2,45 @@
 #define __engine_scene_components_lensFlareComponent__
 
 
-#define MAXELEMENTSFLARE 10
-#define NTEXTURES 4
+#include "engine/renderer/rendererSettings.h"
+
+
+
 
 struct LensFlareComponent
 {
     struct FlareElement {
-        float			fDistance;        // Distance along ray from source (0.0-1.0)
-        float           fSize;            // Size relative to flare envelope (0.0-1.0)
-        float			matDiffuse[4];  // color
-        int				textureId;
+        Coords4f color = Coords4f();
+        float distance = 0.0f;
+        float size = 1.0f;
+        unsigned int textureId = 0;
     };
 
-    struct Flare {
-        float           fScale;     // Scale factor for adjusting overall size of flare elements.
-        float           fMaxSize;   // Max size of largest element, as proportion of screen width (0.0-1.0)
-        int             nPieces;    // Number of elements in use
-        FlareElement    element[MAXELEMENTSFLARE];
+    struct FlareData {
+        unsigned int nElements = 0;
+        LensFlareComponent::FlareElement elements[RendererSettings::MAX_FLARE_ELEMENTS];
+        float maxElementSize = 1.0f;
+        float scale = 1.0f;
     };
 
 private:
-    const LensFlareComponent::Flare _flare;
+    LensFlareComponent::FlareData _flareData = FlareData();
 
 public:
     LensFlareComponent() = delete;
+    LensFlareComponent(const LensFlareComponent&) = default;
+    LensFlareComponent(const char* lensFlarePath);
     ~LensFlareComponent() = default;
 
-    inline const LensFlareComponent::Flare flare() const { return _flare; }
+    inline const LensFlareComponent::FlareData& flareData() const                                   { return _flareData; }
+    inline const LensFlareComponent::FlareElement& flareElement(unsigned int flareElementId) const  { return _flareData.elements[flareElementId]; }
 
-    void loadFlareFile(Flare* flare, char* filename);
+private:
+    inline operator FlareData&() { return _flareData; }
+
+public:
+    friend class Importer;
 };
 
-#endif // !__engine_scene_components_lensFlareComponent__
 
+#endif // !__engine_scene_components_lensFlareComponent__

@@ -20,6 +20,7 @@
 #include "engine/scene/components/LensFlareComponent.h"
 #include "engine/scene/components/skyboxComponent.h"
 #include "engine/scene/components/modelComponent.h"
+#include "engine/scene/components/lensFlareComponent.h"
 
 
 #endif // !__engine_scene_components__

@@ -201,7 +201,6 @@
     <ClCompile Include="src\engine\text\avtFreeType.cpp" />
     <ClCompile Include="src\engine\math\AVTmathLib.cpp" />
     <ClCompile Include="src\engine\renderer\mesh\basic_geometry.cpp" />
-    <ClCompile Include="src\engine\utils\flareUtils.cpp" />
     <ClCompile Include="src\engine\utils\importer.cpp" />
     <ClCompile Include="src\engine\utils\mathUtils.cpp" />
     <ClCompile Include="src\MicroMachines3D.cpp" />
@@ -265,7 +264,6 @@
     <ClInclude Include="src\MicroMachines3D\entities\world\checkeredFlag.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\cheeriosTrack.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\boosters.h" />
-    <ClInclude Include="src\MicroMachines3D\entities\flare\sunFlare.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\oranges.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\planets.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\skybox.h" />
@@ -310,20 +308,8 @@
     <None Include="src\engine\renderer\shaders\text.vert" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="src\MicroMachines3D\textures\hud\heart.png" />
-    <Image Include="src\MicroMachines3D\textures\hud\pause.png" />
     <Image Include="src\MicroMachines3D\textures\lightwood.tga" />
-    <Image Include="src\MicroMachines3D\textures\orange\orange.jpg" />
-    <Image Include="src\MicroMachines3D\textures\skybox\back.png" />
-    <Image Include="src\MicroMachines3D\textures\skybox\bottom.png" />
-    <Image Include="src\MicroMachines3D\textures\skybox\front.png" />
-    <Image Include="src\MicroMachines3D\textures\skybox\left.png" />
-    <Image Include="src\MicroMachines3D\textures\skybox\right.png" />
-    <Image Include="src\MicroMachines3D\textures\skybox\top.png" />
     <Image Include="src\MicroMachines3D\textures\stone.tga" />
-    <Image Include="src\MicroMachines3D\textures\table\checker.png" />
-    <Image Include="src\MicroMachines3D\textures\table\lightwood.tga" />
-    <Image Include="src\MicroMachines3D\textures\table\stone.tga" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

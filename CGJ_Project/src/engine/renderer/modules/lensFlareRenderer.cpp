@@ -41,7 +41,7 @@ void Renderer::renderLensFlare(const Scene& scene) const
 
 		_initLensFlareRendering();
 
-		_renderFlare(lensFlare.flare(), flarePos[0], flarePos[0], m_viewport);
+		_renderFlare(lensFlare.flareData(), flarePos[0], flarePos[0], m_viewport);
 
 		_terminateLensFlareRendering();
 	}
@@ -57,9 +57,9 @@ void Renderer::_initLensFlareRendering() const
 }
 
 
-void Renderer::_renderFlare(LensFlareComponent::Flare flare, int locX, int locY, int* m_viewport) const
+void Renderer::_renderFlare(LensFlareComponent::FlareData flare, int locX, int locY, int* m_viewport) const
 {
-	int     dx, dy;          // Screen coordinates of "destination"
+	/*int     dx, dy;          // Screen coordinates of "destination"
 	int     px, py;          // Screen coordinates of flare element
 	int		cx, cy;
 	float    maxflaredist, flaredist, flaremaxsize, flarescale, scaleDistance;
@@ -135,8 +135,8 @@ void Renderer::_renderFlare(LensFlareComponent::Flare flare, int locX, int locY,
 			glDrawElements(myMeshes[6].type, myMeshes[6].numIndexes, GL_UNSIGNED_INT, 0);
 			glBindVertexArray(0);
 			popMatrix(MODEL);
-		}*/
-	}
+		}
+	}*/
 
 }
 

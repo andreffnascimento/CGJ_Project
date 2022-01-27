@@ -18,6 +18,7 @@ public:
 		: SceneEntity(scene->createEntity("GameManager"))
 	{
 		Entity globalLight = _createGlobalLight(scene->createEntity("GlobalLight"));
+		globalLight.addComponent<LensFlareComponent>("src/MicroMachines3D/flares/sunFlare.txt");
 
 		ScriptComponent& script = addComponent<ScriptComponent>();
 		script.addScriptInstance(std::make_shared<GlobalLightScript>(scene));

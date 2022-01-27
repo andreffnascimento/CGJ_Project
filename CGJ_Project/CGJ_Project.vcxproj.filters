@@ -33,7 +33,6 @@
     <ClCompile Include="src\engine\renderer\rendererUniformLocations.h" />
     <ClCompile Include="src\engine\renderer\modules\particleRenderer.cpp" />
     <ClCompile Include="src\engine\math\l3dBillboard.cpp" />
-    <ClCompile Include="src\engine\utils\flareUtils.cpp" />
     <ClCompile Include="src\engine\renderer\modules\lensFlareRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\imageRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\skyboxRenderer.cpp" />
@@ -120,7 +119,6 @@
     <ClInclude Include="src\engine\math\l3DBillboard.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\planets.h" />
     <ClInclude Include="src\engine\scene\components\lensFlareComponent.h" />
-    <ClInclude Include="src\MicroMachines3D\entities\flare\sunFlare.h" />
     <ClInclude Include="src\engine\scene\components\skyboxComponent.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\skybox.h" />
     <ClInclude Include="src\engine\renderer\mesh\meshFromAssimp.h" />
@@ -143,17 +141,5 @@
   <ItemGroup>
     <Image Include="src\MicroMachines3D\textures\lightwood.tga" />
     <Image Include="src\MicroMachines3D\textures\stone.tga" />
-    <Image Include="src\MicroMachines3D\textures\table\checker.png" />
-    <Image Include="src\MicroMachines3D\textures\table\lightwood.tga" />
-    <Image Include="src\MicroMachines3D\textures\table\stone.tga" />
-    <Image Include="src\MicroMachines3D\textures\orange\orange.jpg" />
-    <Image Include="src\MicroMachines3D\textures\hud\heart.png" />
-    <Image Include="src\MicroMachines3D\textures\hud\pause.png" />
-    <Image Include="src\MicroMachines3D\textures\skybox\back.png" />
-    <Image Include="src\MicroMachines3D\textures\skybox\bottom.png" />
-    <Image Include="src\MicroMachines3D\textures\skybox\front.png" />
-    <Image Include="src\MicroMachines3D\textures\skybox\left.png" />
-    <Image Include="src\MicroMachines3D\textures\skybox\right.png" />
-    <Image Include="src\MicroMachines3D\textures\skybox\top.png" />
   </ItemGroup>
 </Project>
