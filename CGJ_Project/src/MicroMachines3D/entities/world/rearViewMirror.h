@@ -14,9 +14,6 @@ public:
 	RearViewMirror(Scene* scene)
 		: SceneEntity(scene->createEntity("RearViewMirror"))
 	{
-		//GroupComponent& group = addComponent<GroupComponent>();
-
-		//RigidbodyComponent& rigidbody = addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::DYNAMIC, 100.0f, 10.0f, 30.0f);
 		MeshComponent mirrorMesh =  MeshComponent(createCube(), MIRROR_MATERIAL);
 		mirrorMesh.setFixedPosition(true);
 		addComponent<MeshComponent>(mirrorMesh);
@@ -24,13 +21,10 @@ public:
 		//mirrorMesh.setIsMirror(true);
 
 		Transform::scale(*this, MIRROR_SIZE);
-		//Transform::translate(*this, { -4.0f, 7.5f, TABLE_SIZE.z / 3.0f });
+		Transform::rotate(*this, { 0.0f, PI / 2.0f, 0.0f });
+		Transform::translate(*this, { -4.0f, 7.5f, TABLE_SIZE.z / 3.0f });
 
-		//addComponent<ScriptComponent>(std::make_shared<MirrorMovementScript>(scene));
-		//_createMirrorReflectiveArea(scene, group, mirrorMesh);
-
-		//MirrorComponent mirrorComponent = addComponent<MirrorComponent>(rigidbody, mirrorMesh);
-		// set mirror normal
+		addComponent<ScriptComponent>(std::make_shared<MirrorMovementScript>(scene));
 	}
 
 public: 

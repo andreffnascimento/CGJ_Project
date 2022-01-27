@@ -10,22 +10,10 @@
 class MirrorMovementScript : public Script
 {
 private:
-	static constexpr float MAX_ALPHA = 180.0f;
-	static constexpr float ORIGINAL_BETA = 0.0f;
-	static constexpr float ORIGINAL_R = 0.0f;
-
-private:
-	CameraEntity _camera = Entity();
-	const TransformComponent* _cameraTransform = nullptr;
-	Entity _mirror = Entity();	
-	
-	float _alpha = MirrorMovementScript::MAX_ALPHA;
-	float _beta = MirrorMovementScript::ORIGINAL_BETA;
-	float _r = MirrorMovementScript::ORIGINAL_R;
-
-	float _alphaAux = _alpha;
-	float _betaAux = _beta;
-	float _rAux = _r;
+	Entity _car = Entity();
+	CameraEntity _camera = CameraEntity();
+	const TransformComponent* _carTransform = nullptr;
+	Entity _mirror = Entity();
 
 
 public:
@@ -38,35 +26,34 @@ public:
 public:
 	void onCreate() override
 	{
+		_car = _scene->getEntityByTag("Car");
 		_camera = _scene->getEntityByTag("Camera3");
-		_cameraTransform = &_camera.getComponent<TransformComponent>();
+		_carTransform = &_car.getComponent<TransformComponent>();
 		_mirror = _scene->getEntityByTag("RearViewMirror");
+
 		_updateMirrorTransform();
 	}
 
 	void onUpdate(float ts) override
 	{
-		if (_scene->activeCamera() != _camera)
-			return;
-
 		_updateMirrorTransform();
 	}
 
 private:
 	void _updateMirrorTransform()
 	{
-		
-		//float orbitalCameraX = _rAux * sin(toRadians(_alphaAux)) * cos(toRadians(_betaAux));
-		//float orbitalCameraZ = _rAux * cos(toRadians(_alphaAux)) * cos(toRadians(_betaAux));
-		//float orbitalCameraY = _rAux * sin(toRadians(_betaAux));
+		const Coords3f& cameraPosition = _camera.transform().translation();
+		const Coords3f& carPosition = _carTransform->translation();
 
-		//const Coords3f& carPosition = _carTransform->translation();
-		//float mirrorX = carPosition.x + orbitalCameraX;
-		//float mirrorY = carPosition.y + orbitalCameraY;
-		//float mirrorZ = carPosition.z + orbitalCameraZ;
+		Coords3f cameraDir = carPosition - cameraPosition;
 
-		////Transform::rotate();
-		//Transform::translateTo((Entity&)_mirror, { mirrorX, mirrorY, mirrorZ });
+
+		float mirrorX = carPosition.x + cameraDir.x;
+		float mirrorY = carPosition.y - cameraDir.y;
+		float mirrorZ = carPosition.z + cameraDir.y;
+
+		Transform::rotateTo((Entity&)_mirror, _camera.transform().rotation());
+		Transform::translateTo((Entity&)_mirror, { mirrorX, mirrorY, mirrorZ });
 	}
 
 };

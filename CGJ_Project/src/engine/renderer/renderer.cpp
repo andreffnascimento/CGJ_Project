@@ -172,6 +172,7 @@ void Renderer::renderScene(const Scene& scene)
 	_renderSkybox();
 	_renderLights(scene);
 	_renderMeshes(scene);
+	_renderMirror(scene);
 	_renderImages(scene);
 	_renderColliders(scene);
 	_renderParticles(scene);
