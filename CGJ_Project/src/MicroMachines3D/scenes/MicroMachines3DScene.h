@@ -17,6 +17,7 @@
 #include "MicroMachines3D/entities/world/checkeredFlag.h"
 #include "MicroMachines3D/entities/world/planets.h"
 #include "MicroMachines3D/entities/world/skybox.h"
+#include "MicroMachines3D/entities/world/rearViewMirror.h"
 
 #include "MicroMachines3D/entities/hud/playingScreen.h"
 #include "MicroMachines3D/entities/hud/pauseScreen.h"
@@ -69,6 +70,7 @@ private:
 		Boosters boosters = Boosters(this);
 		CheckeredFlag flag = CheckeredFlag(this);
 		Planets planets = Planets(this);
+		RearViewMirror mirror = RearViewMirror(this);
 
 		Skybox skybox = Skybox(this);
 

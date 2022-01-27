@@ -87,4 +87,12 @@ constexpr Material FLAG_MATERIAL = {
 };
 
 
+constexpr Material MIRROR_MATERIAL = {
+	{ 0.0f, 0.0f, 0.0f, 1.0f },
+	{ 0.0f, 0.0f, 0.0f, 1.0f },
+	{ 0.0f, 0.0f, 0.0f, 1.0f },
+	{ 0.0f, 0.0f, 0.0f, 1.0f },
+	100.0f,
+};
+
 #endif // !__mm3d_common_materials__

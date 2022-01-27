@@ -98,7 +98,6 @@ MeshComponent::MeshComponent(const MeshComponent& mesh, const Entity& entity)
 
 
 
-
 void ScriptComponent::onCreate() const
 {
 	for (auto& script : _scripts)
@@ -358,6 +357,13 @@ SkyboxComponent::SkyboxComponent(unsigned int textureId, const Material& materia
 	: _meshData(MeshData(createCube(), material))
 {
 	_meshData.addColorMap(textureId);
+}
+
+
+FixedMirrorComponent::FixedMirrorComponent(const MyMesh& mesh, const Material& material)
+	: _meshData(MeshData(mesh, material))
+{
+
 }
 
 

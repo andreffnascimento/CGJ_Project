@@ -173,6 +173,7 @@ void Renderer::renderScene(const Scene& scene)
 	_renderLights(scene);
 	_renderMeshes(scene);
 	_renderModels(scene);
+	//_renderFixedMirror(scene);
 	_renderImages(scene);
 	_renderColliders(scene);
 	_renderParticles(scene);

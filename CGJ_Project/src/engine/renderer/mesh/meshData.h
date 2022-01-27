@@ -17,7 +17,6 @@ private:
 
 
 
-
 public:
 	MeshData() = default;
 	MeshData(const MeshData& meshData) = default;
@@ -26,9 +25,9 @@ public:
 
 
 public:
-	inline const MyMesh& mesh() const		{ return _mesh; }
+	inline const MyMesh& mesh() const { return _mesh; }
 	inline const Material& material() const { return _mesh.mat; }
-	inline const Texture& texture() const	{ return _texture; }
+	inline const Texture& texture()	  const	{ return _texture ; }
 
 
 public:

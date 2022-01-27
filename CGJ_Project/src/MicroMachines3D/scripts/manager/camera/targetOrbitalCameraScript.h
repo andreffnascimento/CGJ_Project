@@ -29,6 +29,7 @@ private:
 	static constexpr float MAX_ALPHA = 360.0f;
 	static constexpr float ORIGINAL_BETA = 30.0f;
 	static constexpr float ORIGINAL_R = 15.0f;
+	static constexpr float Y_OFFSET = 1.5f;
 
 
 private:
@@ -229,7 +230,7 @@ private:
 	{	
 		float orbitalCameraX = _rAux * sin(toRadians(_alphaAux)) * cos(toRadians(_betaAux));
 		float orbitalCameraZ = _rAux * cos(toRadians(_alphaAux)) * cos(toRadians(_betaAux));
-		float orbitalCameraY = _rAux * sin(toRadians(_betaAux));
+		float orbitalCameraY = _rAux * sin(toRadians(_betaAux)) - Y_OFFSET;
 
 		const Coords3f& carPosition = _carTransform->translation();
 		float cameraX = carPosition.x + orbitalCameraX;

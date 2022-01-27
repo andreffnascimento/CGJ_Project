@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\engine\app\application.cpp" />
@@ -30,6 +30,7 @@
     <ClCompile Include="src\engine\renderer\mesh\meshData.cpp" />
     <ClCompile Include="src\MicroMachines3D\entities\hud\pauseScreen.h" />
     <ClCompile Include="src\engine\renderer\modules\canvasRenderer.cpp" />
+    <ClCompile Include="src\engine\renderer\modules\mirrorRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\rendererUniformLocations.h" />
     <ClCompile Include="src\engine\renderer\modules\particleRenderer.cpp" />
     <ClCompile Include="src\engine\math\l3dBillboard.cpp" />
@@ -114,6 +115,7 @@
     <ClInclude Include="src\MicroMachines3D\entities\hud\gameoverScreen.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\boosters.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\boosters\boostersDriftScript.h" />
+    <ClInclude Include="src\engine\scene\components\mirrorComponent.h" />
     <ClInclude Include="src\engine\scene\components\particleGeneratorComponent.h" />
     <ClInclude Include="src\MicroMachines3D\entities\particles\fireworks.h" />
     <ClInclude Include="src\engine\math\l3DBillboard.h" />

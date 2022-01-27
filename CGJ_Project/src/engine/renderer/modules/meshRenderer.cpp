@@ -103,6 +103,7 @@ void Renderer::_addObjectToInstanceBuffer(RendererData::SubmitInstanceBuffer& in
 {
 	loadIdentity(MODEL);
 	loadMatrix(MODEL, transform->transformMatrix());
+
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
 	computeNormalMatrix3x3();
 
@@ -156,6 +157,7 @@ void Renderer::_renderMesh(const MeshData& mesh, RendererData::SubmitInstanceBuf
 	glBindVertexArray(meshData.vao);
 	glDrawElementsInstanced(meshData.type, meshData.numIndexes, GL_UNSIGNED_INT, 0, instanceBuffer.nInstances);
 	glBindVertexArray(0);
+
 }
 
 

@@ -20,6 +20,7 @@ private:
 	TransformMatrix _worldTransform;
 	bool _locallyUpdated = false;
 	bool _globallyUpdated = false;
+	bool _fixed = false;
 
 public:
 	TransformComponent() = default;
@@ -33,6 +34,9 @@ public:
 	inline const TransformMatrix& transformMatrix() const { return _worldTransform; }
 
 	inline bool updated() const { return _locallyUpdated && _globallyUpdated; }
+
+	inline bool fixed()	const { return _fixed; }
+	inline void setFixed(bool fixed) { _fixed = fixed; }
 
 public:
 	friend class Transform;
