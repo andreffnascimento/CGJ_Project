@@ -42,7 +42,6 @@ out Data {
 	vec2 textureCoords;
 	vec3 skyboxTextureCoords;
 	vec4 particleColor;
-	uint lensFlareElement;
 } dataOut;
 
 
@@ -55,14 +54,12 @@ void main () {
 	dataOut.eye = vec3(-dataOut.position);
 	dataOut.eyeDir = -vec3(instanceData.vmMatrix[gl_InstanceID] * position);
 	dataOut.textureCoords = textureCoords.st;
+	dataOut.particleColor = instanceData.particleColor[gl_InstanceID];
 
 	if (renderMode == RENDER_MODE_SKYBOX) {
 		dataOut.skyboxTextureCoords = vec3(skyboxModelMatrix * position);
 		dataOut.skyboxTextureCoords.x = -dataOut.skyboxTextureCoords.x;
 	}
-
-	dataOut.particleColor = instanceData.particleColor[gl_InstanceID];
-	dataOut.lensFlareElement = gl_InstanceID;
 
 	gl_Position = instanceData.pvmMatrix[gl_InstanceID] * position;
 }

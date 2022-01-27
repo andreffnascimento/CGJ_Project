@@ -17,8 +17,7 @@ public:
 	GameManager(Scene* scene)
 		: SceneEntity(scene->createEntity("GameManager"))
 	{
-		Entity globalLight = _createGlobalLight(scene->createEntity("GlobalLight"));
-		globalLight.addComponent<LensFlareComponent>("src/MicroMachines3D/flares/sunFlare.txt");
+		_createGlobalLight(scene);
 
 		ScriptComponent& script = addComponent<ScriptComponent>();
 		script.addScriptInstance(std::make_shared<GlobalLightScript>(scene));
@@ -29,11 +28,13 @@ public:
 
 
 private:
-	Entity _createGlobalLight(Entity entity)
+	void _createGlobalLight(Scene* scene)
 	{
-		LightComponent& lightComponent = entity.addComponent<LightComponent>(LightComponent::LightType::DIRECTIONAL, 2.0f);
-		Transform::rotateTo(entity, Coords3f({ 30.0f, 0.0f, 0.0f }));
-		return entity;	
+		Entity globalLight = scene->createEntity("GlobalLight");
+		LightComponent& lightComponent = globalLight.addComponent<LightComponent>(LightComponent::LightType::DIRECTIONAL, 2.0f);
+		LensFlareComponent& lensFlare = globalLight.addComponent<LensFlareComponent>("src/MicroMachines3D/flares/sunFlare.txt");
+		lensFlare.setLightPosition({10.0f, 10.0f, 10.0f});
+		Transform::rotateTo(globalLight, Coords3f({ 30.0f, 0.0f, 0.0f }));
 	}
 };
 

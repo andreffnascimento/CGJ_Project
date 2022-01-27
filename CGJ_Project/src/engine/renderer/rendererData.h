@@ -73,7 +73,6 @@ private:
 
 
 
-
 public:
 	friend class Renderer;
 	friend class RendererData;

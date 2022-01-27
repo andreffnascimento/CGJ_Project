@@ -82,4 +82,22 @@ constexpr Coords3f FIREWORK_PARTICLE_SIZE = { 0.2f, 0.2f, 0.2f };
 constexpr Coords3f SKYBOX_SIZE = { 300.0f, 300.0f, 300.0f };
 
 
+
+constexpr float PLANET_SUN_SIZE = 25.0f;
+constexpr float PLANET_EARTH_SIZE = 3.0f;
+constexpr float PLANET_MARS_SIZE = 2.5f;
+constexpr float PLANET_JUPITER_SIZE = 9.0f;
+constexpr float PLANET_SATURN_SIZE = 8.0f;
+constexpr float PLANET_NEPTUNE_SIZE = 6.5f;
+constexpr float PLANET_PLUTO_SIZE = 1.5f;
+
+constexpr Coords3f PLANET_SUN_POSITION = { 0.0f, 300.0f, -500.0f };
+constexpr Coords3f PLANET_EARTH_POSITION = { -175.0f, 15.0f, 15.0f };
+constexpr Coords3f PLANET_MARS_POSITION = { -300.0f, 30.0f, -65.0f };
+constexpr Coords3f PLANET_JUPITER_POSITION = { 350.0f, 10.0f, -80.0f };
+constexpr Coords3f PLANET_SATURN_POSITION = { 450.0f, 30.0f, 80.0f };
+constexpr Coords3f PLANET_NEPTUNE_POSITION = { 100.0f, 40.0f, 300.0f };
+constexpr Coords3f PLANET_PLUTO_POSITION = { -50.0f, 20.0f, 100.0f };
+
+
 #endif // !__mm3d_common_constants__

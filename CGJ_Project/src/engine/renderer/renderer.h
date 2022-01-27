@@ -95,13 +95,14 @@ private:
 	void _initSceneRendering();
 	void _terminateSceneRendering();
 	void _renderCamera(const Scene& scene) const;
+	void _renderSkybox() const;
 	void _renderLights(const Scene& scene) const;
 	void _renderMeshes(const Scene& scene) const;
 	void _renderModels(const Scene& scene) const;
 	void _renderImages(const Scene& scene) const;
 	void _renderColliders(const Scene& scene) const;
+	void _renderLensFlares(const Scene& scene) const;
 	void _renderParticles(const Scene& scene) const;
-	void _renderSkybox() const;
 	void _renderCanvas(const Scene& scene) const;
 
 
@@ -111,10 +112,11 @@ private:
 
 
 private:
-	void _initCanvasRendering() const;
-	void _terminateCanvasRendering() const;
-	void _renderTextInstances(const std::unordered_map<EntityHandle, CanvasComponent>& canvasComponents) const;
-	void _renderImageInstances(const std::unordered_map<EntityHandle, CanvasComponent>& canvasComponents) const;
+	void _initSkyboxRendering() const;
+	void _terminateSkyboxRendering() const;
+	void _submitSkyboxMeshData() const;
+	void _submitSkyboxTransform() const;
+	void _submitSkyboxMeshInstance() const;
 
 
 private:
@@ -168,16 +170,19 @@ private:
 
 private:
 	void _initLensFlareRendering() const;
-	void _renderFlare(const LensFlareComponent::FlareData flare, int locX, int locY, int* m_viewport) const;
 	void _terminateLensFlareRendering() const;
-  
+	WindowCoords _calculateLensFlareProjectedPos(const LensFlareComponent& lensFlare, int viewport[4]) const;
+	void _addLensFlareToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, WindowCoords flarePosition, int width, int height) const;
+	void _submitLensFlareBuffer(const Coords4f& color, unsigned int colorMapId, float scaleDistance) const;
+	void _renderLensFlare(const LensFlareComponent::FlareData& lensFlareData, const WindowCoords& flareProjectedPosition, int viewport[4]) const;
+
 
 private:
-	void _initSkyboxRendering() const;
-	void _terminateSkyboxRendering() const;
-	void _submitSkyboxMeshData() const;
-	void _submitSkyboxTransform() const;
-	void _submitSkyboxMeshInstance() const;
+	void _initCanvasRendering() const;
+	void _terminateCanvasRendering() const;
+	void _renderTextInstances(const std::unordered_map<EntityHandle, CanvasComponent>& canvasComponents) const;
+	void _renderImageInstances(const std::unordered_map<EntityHandle, CanvasComponent>& canvasComponents) const;
+
 };
 
 

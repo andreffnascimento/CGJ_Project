@@ -31,7 +31,7 @@ void Renderer::_initCanvasRendering() const
 	pushMatrix(PROJECTION);
 	loadIdentity(PROJECTION);
 	loadIdentity(VIEW);
-	ortho(0, (float)originalWindowSize.x, 0, (float)originalWindowSize.y, -1.0f, 1.0f);
+	ortho(0.0f, (float)originalWindowSize.x - 1.0f, 0.0f, (float)originalWindowSize.y - 1.0f, -1.0f, 1.0f);
 
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);

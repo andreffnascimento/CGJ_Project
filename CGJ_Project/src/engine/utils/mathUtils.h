@@ -28,7 +28,8 @@ float invSqrt(float number);
 
 
 
-inline float clamp(float value, float min, float max) { return std::min(std::max(value, max), min); }
+inline float clamp(float value, float min, float max)	{ return std::max(std::min(value, max), min); }
+inline int clamp(int value, int min, int max)			{ return std::max(std::min(value, max), min); }
 
 
 #endif // !__engine_utils_mathUtils__

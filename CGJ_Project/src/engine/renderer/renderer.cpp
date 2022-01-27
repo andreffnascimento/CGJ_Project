@@ -176,6 +176,7 @@ void Renderer::renderScene(const Scene& scene)
 	_renderImages(scene);
 	_renderColliders(scene);
 	_renderParticles(scene);
+	_renderLensFlares(scene);
 	_renderCanvas(scene);
 	_terminateSceneRendering();
 }

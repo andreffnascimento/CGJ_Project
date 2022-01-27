@@ -18,7 +18,7 @@ public:
 
 
 private:
-	static int _importLensFlareTexture(const std::string& lensFlareDir, const std::string& textureName, int flareTextureIds[]);
+	static int _importLensFlareColorMap(const std::string& lensFlareDir, const std::string& textureName, int flareTextureIds[]);
 
 };
 
