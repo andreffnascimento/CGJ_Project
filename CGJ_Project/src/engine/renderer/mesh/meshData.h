@@ -36,8 +36,8 @@ public:
 
 public:
 	inline void setTextureMode(const Texture::TextureMode& textureMode) { return _texture.setTextureMode(textureMode); }
-	inline void addTexture(unsigned int textureId)						{ return _texture.addTexture(textureId); }
-	inline void addNormal(unsigned int normalId)						{ return _texture.addNormal(normalId); }
+	inline void addColorMap(unsigned int colorMapId)					{ return _texture.addColorMap(colorMapId); }
+	inline void addNormalMap(unsigned int normalMapId)					{ return _texture.addNormalMap(normalMapId); }
 
 };
 

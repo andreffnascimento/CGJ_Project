@@ -2,10 +2,13 @@
 #define __engine_renderer_renderer__
 
 
+#include <vector>
+
 #include "engine/renderer/vsShaderLib.h"
 #include "engine/renderer/rendererData.h"
 #include "engine/renderer/rendererSettings.h"
 #include "engine/renderer/rendererUniformLocations.h"
+#include "engine/renderer/mesh/meshFromAssimp.h"
 
 #include "engine/scene/entity.h"
 #include "engine/scene/scene.h"
@@ -83,6 +86,7 @@ private:
 	void _renderCamera(const Scene& scene) const;
 	void _renderLights(const Scene& scene) const;
 	void _renderMeshes(const Scene& scene) const;
+	void _renderModels(const Scene& scene) const;
 	void _renderImages(const Scene& scene) const;
 	void _renderColliders(const Scene& scene) const;
 	void _renderParticles(const Scene& scene) const;
@@ -125,6 +129,13 @@ private:
 
 
 private:
+	void _applyRecursiveModelTransform(const aiNode* node) const;
+	void _submitModelMeshData(const MyMesh& mesh) const;
+	void _submitModelMeshInstance(const MyMesh& mesh) const;
+	void _recusiveModelRendering(const ModelComponent &model, const aiNode* node) const;
+
+
+private:
 	void _initImageRendering() const;
 	void _terminateImageRendering() const;
 	void _addImageToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform, const ImageComponent::ImageType& imageType, const Coords3f& cameraPos) const;
@@ -150,7 +161,7 @@ private:
 	void _terminateSkyboxRendering() const;
 	void _submitSkyboxMeshData() const;
 	void _submitSkyboxTransform() const;
-	void _submitSkyboxData() const;
+	void _submitSkyboxMeshInstance() const;
 };
 
 

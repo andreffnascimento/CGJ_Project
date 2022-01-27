@@ -17,7 +17,7 @@ void Renderer::_renderSkybox() const
 	_initSkyboxRendering();
 	_submitSkyboxMeshData();
 	_submitSkyboxTransform();
-	_submitSkyboxData();
+	_submitSkyboxMeshInstance();
 	_terminateSkyboxRendering();
 }
 
@@ -45,8 +45,8 @@ void Renderer::_submitSkyboxMeshData() const
 	glUniform4fv(_uniformLocator[RendererUniformLocations::MATERIAL_AMBIENT], 1, material.ambient);
 
 	const Texture& texture = _skybox.skybox->meshData().texture();
-	glUniform1ui(_uniformLocator[RendererUniformLocations::N_TEXTURES], (unsigned int)texture.nTextures());
-	glUniform1uiv(_uniformLocator[RendererUniformLocations::TEXTURE_IDS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.textureIds());
+	glUniform1ui(_uniformLocator[RendererUniformLocations::TEXTURE_N_COLOR_MAPS], (unsigned int)texture.nColorMaps());
+	glUniform1uiv(_uniformLocator[RendererUniformLocations::TEXTURE_COLOR_MAP_IDS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.colorMapIds());
 }
 
 
@@ -61,7 +61,7 @@ void Renderer::_submitSkyboxTransform() const
 }
 
 
-void Renderer::_submitSkyboxData() const
+void Renderer::_submitSkyboxMeshInstance() const
 {
 	const MyMesh& meshData = _skybox.skybox->meshData().mesh();
 	glBindVertexArray(meshData.vao);

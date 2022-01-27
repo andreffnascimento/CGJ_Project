@@ -37,6 +37,7 @@
     <ClCompile Include="src\engine\renderer\modules\skyboxRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\mesh\meshFromAssimp.cpp" />
     <ClCompile Include="src\engine\utils\importer.cpp" />
+    <ClCompile Include="src\engine\renderer\modules\moduleRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\app\application.h" />

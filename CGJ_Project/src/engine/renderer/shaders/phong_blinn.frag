@@ -7,7 +7,7 @@ const uint LIGHT_TYPE_POINT = 2;
 const uint LIGHT_TYPE_SPOT = 3;
 
 const uint MAX_2D_TEXTURES = 30;
-const uint MAX_CUBE_TEXTURES = 2;
+const uint MAX_CUBE_MAP_TEXTURES = 2;
 const uint MAX_TEXTURES_PER_MESH = 2;
 const uint TEXTURE_MODE_NONE = 0;
 const uint TEXTURE_MODE_MODULATE_DIFFUSE = 1;
@@ -37,13 +37,13 @@ struct MaterialData {
 
 
 struct TextureData {
-	uint nTextures;
-	uint nNormals;
 	uint mode;
-	uint textureIds[MAX_TEXTURES_PER_MESH];
-	uint normalIds[MAX_TEXTURES_PER_MESH];
+	uint nColorMaps;
+	uint nNormalMaps;
+	uint colorMapIds[MAX_TEXTURES_PER_MESH];
+	uint normalMapIds[MAX_TEXTURES_PER_MESH];
 	sampler2D maps[MAX_2D_TEXTURES];
-	samplerCube cubeMaps[MAX_CUBE_TEXTURES];
+	samplerCube cubeMaps[MAX_CUBE_MAP_TEXTURES];
 	bool bumpActive;
 };
 
@@ -224,8 +224,8 @@ vec3 processNormalMaps()
 	vec3 calculatedNormals = normal;
 
 	// Calculate normal if a normal map is provided
-	for (int i = 0; i < textureData.nNormals; i++) {	
-		currentMap = texture(textureData.maps[textureData.normalIds[i]], dataIn.textureCoords).rgb;
+	for (int i = 0; i < textureData.nNormalMaps; i++) {	
+		currentMap = texture(textureData.maps[textureData.normalMapIds[i]], dataIn.textureCoords).rgb;
 		normal = normalize(2.0 * currentMap - 1.0);
 		calculatedNormals = normalize(vec3(normal.xy + calculatedNormals.xy, normal.z));
 	}
@@ -238,8 +238,8 @@ vec3 processNormalMaps()
 
 vec4 processModulateDiffuseTexture(FragLightingData fragLighting) {
 	vec4 texel = vec4(1.0);
-	for (int i = 0; i < textureData.nTextures; i++)
-		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
+	for (int i = 0; i < textureData.nColorMaps; i++)
+		texel *= texture(textureData.maps[textureData.colorMapIds[i]], dataIn.textureCoords);
 	
 	return max(fragLighting.diffuse * texel + fragLighting.specular, lightingData.darkTextureCoefficient * texel);
 }
@@ -247,8 +247,8 @@ vec4 processModulateDiffuseTexture(FragLightingData fragLighting) {
 
 vec4 processReplaceDiffuseTexture(FragLightingData fragLighting) {
 	vec4 texel = vec4(1.0);
-	for (int i = 0; i < textureData.nTextures; i++)
-		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
+	for (int i = 0; i < textureData.nColorMaps; i++)
+		texel *= texture(textureData.maps[textureData.colorMapIds[i]], dataIn.textureCoords);
 
 	return max(fragLighting.diffuseIntensity * texel + fragLighting.specular, lightingData.darkTextureCoefficient * texel);
 }
@@ -287,12 +287,12 @@ vec4 renderMesh() {
 
 
 vec4 renderImage() {
-	if (textureData.nTextures == 0)
+	if (textureData.nColorMaps == 0)
 		return materialData.ambient;
 
 	vec4 texel = vec4(1.0);
-	for (int i = 0; i < textureData.nTextures; i++)
-		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
+	for (int i = 0; i < textureData.nColorMaps; i++)
+		texel *= texture(textureData.maps[textureData.colorMapIds[i]], dataIn.textureCoords);
 
 	if (texel.a == 0.0)
 		discard;
@@ -304,12 +304,12 @@ vec4 renderImage() {
 
 
 vec4 renderParticle() {
-	if (textureData.nTextures == 0)
-		return materialData.ambient;
+	if (textureData.nColorMaps == 0)
+		return dataIn.particleColor;
 
 	vec4 texel = vec4(1.0);
-	for (int i = 0; i < textureData.nTextures; i++)
-		texel *= texture(textureData.maps[textureData.textureIds[i]], dataIn.textureCoords);
+	for (int i = 0; i < textureData.nColorMaps; i++)
+		texel *= texture(textureData.maps[textureData.colorMapIds[i]], dataIn.textureCoords);
 
 	if (texel.a == 0.0)
 		discard;
@@ -321,10 +321,10 @@ vec4 renderParticle() {
 
 
 vec4 renderSkybox() {
-	if (textureData.nTextures == 0)
+	if (textureData.nColorMaps == 0)
 		return materialData.ambient;
 
-	vec4 cubeTexel = texture(textureData.cubeMaps[MAX_2D_TEXTURES - textureData.textureIds[0]], dataIn.skyboxTextureCoords);
+	vec4 cubeTexel = texture(textureData.cubeMaps[MAX_2D_TEXTURES - textureData.colorMapIds[0]], dataIn.skyboxTextureCoords);
 	return vec4(cubeTexel.xyz * (1 - materialData.ambient.a) + materialData.ambient.xyz * materialData.ambient.a, cubeTexel.a);
 }
 
