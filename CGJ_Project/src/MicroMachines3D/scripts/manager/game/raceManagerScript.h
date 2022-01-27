@@ -54,11 +54,14 @@ private:
 	bool _collidedWithFlag = false;
 	float _resetFireworksTimer = 0.0f;
 
+	LensFlareComponent* _sunLensFlare = nullptr;
+
 	CarMovementScript* _carMovementScript = nullptr;
 	OrangesManagerScript* _orangesManagerScript = nullptr;
 
 	bool _fogToggle = true;
 	bool _bumpToggle = true;
+	bool _lensFlareToggle = true;
 
 	RaceManagerScript::GameState _gameState = RaceManagerScript::GameState::PLAYING;
 	unsigned int _lives = RaceManagerScript::MAX_LIVES;
@@ -84,14 +87,15 @@ public:
 		_playingScreenCanvas = &_scene->getEntityByTag("PlayingScreen").getComponent<CanvasComponent>();
 		_pauseScreenCanvas = &_scene->getEntityByTag("PauseScreen").getComponent<CanvasComponent>();
 		_gameoverScreenCanvas = &_scene->getEntityByTag("GameoverScreen").getComponent<CanvasComponent>();
-		_carMovementScript = dynamic_cast<CarMovementScript*>(_car.getComponent<ScriptComponent>().getScriptByTag("CarMovementScript"));
-		_orangesManagerScript = dynamic_cast<OrangesManagerScript*>(_scene->getEntityByTag("Oranges").getComponent<ScriptComponent>().getScriptByTag("OrangesManagerScript"));
 
 		_resetQuery = &_scene->getEntityByTag("PlayingScreen:ResetQuery").getComponent<TextComponent>();
 		for (int i = 0; i < RaceManagerScript::MAX_LIVES; i++)
 			_hearts[i] = &_scene->getEntityByTag("PlayingScreen:Heart_" + std::to_string(i)).getComponent<ImageComponent>();
 
 		_fireworksGenerator = &_scene->getEntityByTag("Fireworks").getComponent<ParticleGeneratorComponent>();
+		_sunLensFlare = &_scene->getEntityByTag("GlobalLight").getComponent<LensFlareComponent>();
+		_carMovementScript = dynamic_cast<CarMovementScript*>(_car.getComponent<ScriptComponent>().getScriptByTag("CarMovementScript"));
+		_orangesManagerScript = dynamic_cast<OrangesManagerScript*>(_scene->getEntityByTag("Oranges").getComponent<ScriptComponent>().getScriptByTag("OrangesManagerScript"));
 
 		_respawn();
 	}
@@ -162,6 +166,9 @@ private:
 
 		if (_eventHandler->keyState('B').pressed() || _eventHandler->keyState('b').pressed())
 			Renderer::setBumpActive(_bumpToggle = !_bumpToggle);
+
+		if (_eventHandler->keyState('L').pressed() || _eventHandler->keyState('l').pressed())
+			_sunLensFlare->setEnabled(_lensFlareToggle = !_lensFlareToggle);
 
 		if (_eventHandler->keyState('G').pressed() || _eventHandler->keyState('g').pressed())
 			_startFireworks();
