@@ -37,8 +37,8 @@ public:
 
 	inline void setMaterial(const Material& material)					{ _meshData->setMaterial(material); }
 	inline void setTextureMode(const Texture::TextureMode& textureMode) { _meshData->setTextureMode(textureMode); }
-	inline void addTexture(unsigned int textureId)						{ _meshData->addTexture(textureId); }
-	inline void addNormal(unsigned int normalId)						{ _meshData->addNormal(normalId); }
+	inline void addTexture(unsigned int textureId)						{ _meshData->addColorMap(textureId); }
+	inline void addNormal(unsigned int normalId)						{ _meshData->addNormalMap(normalId); }
 	inline void setEnabled(bool enabled)								{ _enabled = enabled; }
 
 	inline operator const MeshData&() const { return *_meshData; }

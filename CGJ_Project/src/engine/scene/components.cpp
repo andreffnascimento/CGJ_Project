@@ -3,6 +3,7 @@
 #include "engine/app/application.h"
 #include "engine/physics/collisionResolver.h"
 #include "engine/physics/physicsEngine.h"
+#include "engine/utils/importer.h"
 
 
 
@@ -323,7 +324,7 @@ ParticleGeneratorComponent::ParticleGeneratorComponent(float size, unsigned int 
 	: _meshData(MeshData(createQuad(size, size), Material()))
 {
 	_meshData.setTextureMode(Texture::TextureMode::MODULATE_DIFFUSE);
-	_meshData.addTexture(textureId);
+	_meshData.addColorMap(textureId);
 }
 
 
@@ -350,11 +351,19 @@ SkyboxComponent::SkyboxComponent(unsigned int textureId)
 	Material material = Material();
 	material.ambient[3] = 0.0f;
 	_meshData = MeshData(createCube(), material);
-	_meshData.addTexture(textureId);
+	_meshData.addColorMap(textureId);
 }
 
 SkyboxComponent::SkyboxComponent(unsigned int textureId, const Material& material)
 	: _meshData(MeshData(createCube(), material))
 {
-	_meshData.addTexture(textureId);
+	_meshData.addColorMap(textureId);
+}
+
+
+
+ModelComponent::ModelComponent(const Entity& entity, const char* modelPath)
+	: _transform(&entity.transform())
+{
+	Importer::importModel(*this, modelPath);
 }

@@ -42,7 +42,7 @@ public:
 	inline const Texture& texture() const					{ return _meshData->texture(); }
 	inline bool enabled() const								{ return _enabled; }
 
-	inline void addImage(unsigned int imageId)	{ _meshData->addTexture(imageId); }
+	inline void addImage(unsigned int imageId)	{ _meshData->addColorMap(imageId); }
 	inline void setEnabled(bool enabled)		{ _enabled = enabled; }
 
 	void setBlendColor(const Coords4f& blendColor);

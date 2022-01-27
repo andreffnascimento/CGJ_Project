@@ -52,8 +52,8 @@ void Renderer::_terminateParticleRendering() const
 void Renderer::_submitParticleTextureData(const ParticleGeneratorComponent& particleGenerator) const
 {
 	const Texture& texture = particleGenerator.texture();
-	glUniform1ui(_uniformLocator[RendererUniformLocations::N_TEXTURES], (unsigned int)texture.nTextures());
-	glUniform1uiv(_uniformLocator[RendererUniformLocations::TEXTURE_IDS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.textureIds());
+	glUniform1ui(_uniformLocator[RendererUniformLocations::TEXTURE_N_COLOR_MAPS], (unsigned int)texture.nColorMaps());
+	glUniform1uiv(_uniformLocator[RendererUniformLocations::TEXTURE_COLOR_MAP_IDS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.colorMapIds());
 }
 
 

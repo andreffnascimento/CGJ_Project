@@ -28,7 +28,7 @@ private:
 	{
 		unsigned int n2dTextures = 0;
 		unsigned int nCubeTextures = 0;
-		unsigned int textureData[RendererSettings::MAX_2D_TEXTURES + RendererSettings::MAX_CUBE_TEXTURES] = {};
+		unsigned int textureData[RendererSettings::MAX_2D_TEXTURES + RendererSettings::MAX_CUBE_MAP_TEXTURES] = {};
 	};
 
 

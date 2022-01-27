@@ -131,11 +131,11 @@ void Renderer::_submitMeshData(const MeshData& meshData) const
 	glUniform1f(_uniformLocator[RendererUniformLocations::MATERIAL_SHININESS],    material.shininess);
 
 	const Texture& texture = meshData.texture();
-	glUniform1ui(_uniformLocator[RendererUniformLocations::N_TEXTURES], (unsigned int)texture.nTextures());
-	glUniform1ui(_uniformLocator[RendererUniformLocations::N_NORMALS],   (unsigned int)texture.nNormals());
 	glUniform1ui(_uniformLocator[RendererUniformLocations::TEXTURE_MODE], (unsigned int)texture.textureMode());
-	glUniform1uiv(_uniformLocator[RendererUniformLocations::TEXTURE_IDS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.textureIds());
-	glUniform1uiv(_uniformLocator[RendererUniformLocations::NORMAL_IDS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.normalIds());
+	glUniform1ui(_uniformLocator[RendererUniformLocations::TEXTURE_N_COLOR_MAPS], (unsigned int)texture.nColorMaps());
+	glUniform1ui(_uniformLocator[RendererUniformLocations::TEXTURE_N_NORMAL_MAPS],   (unsigned int)texture.nNormalMaps());
+	glUniform1uiv(_uniformLocator[RendererUniformLocations::TEXTURE_COLOR_MAP_IDS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.colorMapIds());
+	glUniform1uiv(_uniformLocator[RendererUniformLocations::TEXTURE_NORMAL_MAP_IDS], RendererSettings::MAX_TEXTURES_PER_MESH, texture.normalMapIds());
 }
 
 

@@ -23,26 +23,26 @@ public:
 
 private:
 	Texture::TextureMode _textureMode = TextureMode::NONE;
-	unsigned int _textureIds[RendererSettings::MAX_TEXTURES_PER_MESH] = {};
-	unsigned int _normalIds[RendererSettings::MAX_TEXTURES_PER_MESH] = {};
-	size_t _nTextures = 0;
-	size_t _nNormals = 0;
+	unsigned int _colorMapIds[RendererSettings::MAX_TEXTURES_PER_MESH] = {};
+	unsigned int _normalMapIds[RendererSettings::MAX_TEXTURES_PER_MESH] = {};
+	size_t _nColorMaps = 0;
+	size_t _nNormalMaps = 0;
 
 
 
 
 public:
-	inline const Texture::TextureMode& textureMode() const { return _textureMode; }
-	inline const unsigned int* textureIds() const { return _textureIds; }
-	inline const unsigned int* normalIds() const  { return _normalIds; }
-	inline size_t nTextures() const { return _nTextures; }
-	inline size_t nNormals() const { return _nNormals; }
+	inline const Texture::TextureMode& textureMode() const	{ return _textureMode; }
+	inline const unsigned int* colorMapIds() const			{ return _colorMapIds; }
+	inline const unsigned int* normalMapIds() const			{ return _normalMapIds; }
+	inline size_t nColorMaps() const						{ return _nColorMaps; }
+	inline size_t nNormalMaps() const						{ return _nNormalMaps; }
 
 
 public:
 	inline void setTextureMode(const Texture::TextureMode& textureMode) { _textureMode = textureMode; }
-	inline void addTexture(unsigned int textureId) { _textureIds[_nTextures++] = textureId; }
-	inline void addNormal(unsigned int normalId) { _normalIds[_nNormals++] = normalId; }
+	inline void addColorMap(unsigned int colorMapId)					{ _colorMapIds[_nColorMaps++] = colorMapId; }
+	inline void addNormalMap(unsigned int normalMapId)					{ _normalMapIds[_nNormalMaps++] = normalMapId; }
 
 };
 

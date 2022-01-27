@@ -18,11 +18,12 @@ public:
 		CanvasComponent& canvas = addComponent<CanvasComponent>();
 		canvas.setEnabled(true);
 
-		createHeartIcon(scene, canvas, windowCoords, 0);
-		createHeartIcon(scene, canvas, windowCoords, 1);
-		createHeartIcon(scene, canvas, windowCoords, 2);
-		createHeartIcon(scene, canvas, windowCoords, 3);
-		createHeartIcon(scene, canvas, windowCoords, 4);
+		unsigned int heartIconId = Renderer::create2dTexture("src/MicroMachines3D/textures/hud/heart.png");
+		createHeartIcon(scene, canvas, windowCoords, heartIconId, 0);
+		createHeartIcon(scene, canvas, windowCoords, heartIconId, 1);
+		createHeartIcon(scene, canvas, windowCoords, heartIconId, 2);
+		createHeartIcon(scene, canvas, windowCoords, heartIconId, 3);
+		createHeartIcon(scene, canvas, windowCoords, heartIconId, 4);
 		createGasPedalIcon(scene, canvas, windowCoords);
 		createBrakePedalIcon(scene, canvas, windowCoords);
 		createResetQuery(scene, canvas, windowCoords);
@@ -32,11 +33,11 @@ public:
 
 
 private:
-	void createHeartIcon(Scene* scene, CanvasComponent& canvas, const WindowCoords& windowCoords, unsigned int id)
+	void createHeartIcon(Scene* scene, CanvasComponent& canvas, const WindowCoords& windowCoords, unsigned int heartIconId, unsigned int id)
 	{
 		Entity heart = canvas.createImageEntity(scene, *this, "Heart_" + std::to_string(id));
 		ImageComponent& image = heart.getComponent<ImageComponent>();
-		image.addImage(Renderer::create2dTexture("src/MicroMachines3D/textures/hud/heart.png"));
+		image.addImage(heartIconId);
 
 		float xHeartShift = HEART_SIZE.x * 1.2f * id;
 		Transform::scaleTo(heart, HEART_SIZE);
