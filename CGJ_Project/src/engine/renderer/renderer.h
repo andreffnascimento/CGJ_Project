@@ -67,19 +67,6 @@ public:
 	void submitRenderableImage(const ImageComponent& image, const Entity& entity);
 	void renderScene(const Scene& scene);
 
-	void initSceneRendering();
-	void terminateSceneRendering();
-	
-	void renderCanvas(const Scene& scene) const;
-	void renderCamera(const Scene& scene) const;
-	void renderLights(const Scene& scene) const;
-	void renderMeshes(const Scene& scene) const;
-	void renderColliders(const Scene& scene) const;
-	void renderParticles(const Scene& scene) const;
-	void renderLensFlare(const Scene& scene) const;
-
-
-
 
 private:
 	void _setupMeshShader();
@@ -99,14 +86,13 @@ private:
 	void _renderLights(const Scene& scene) const;
 	void _renderMeshes(const Scene& scene) const;
 	void _renderModels(const Scene& scene) const;
-	void _renderMirror(const Scene& scene) const;
 	void _renderFixedMirror(const Scene& scene) const;	
-	void _renderMirrors(const Scene& scene) const;
 	void _renderImages(const Scene& scene) const;
 	void _renderColliders(const Scene& scene) const;
 	void _renderLensFlares(const Scene& scene) const;
 	void _renderParticles(const Scene& scene) const;
 	void _renderCanvas(const Scene& scene) const;
+	void _renderPlanarReflections(const Scene& scene) const;
 
 
 private:
@@ -145,13 +131,14 @@ private:
 
 
 private:
-
 	void _enableShapeStenciling() const;
 	void _enableRenderingIntoStencil() const;
 	void _disableStencilRendering() const;
-	void _stencilMesh(MeshComponent& mesh, TransformComponent& transform) const;
-	void _addFixedMirrorToInstanceBuffer(RendererData::SubmitInstanceBuffer & instanceBuffer, const TransformComponent * transform, const Coords3f & cameraPos) const;
 
+private:
+	void _enableReflectorPlaneStenciling() const;
+	void _enableReflectionsRendering() const;
+	void _disableReflectionsRendering() const;
 
 private:
 	void _applyRecursiveModelTransform(const aiNode* node) const;

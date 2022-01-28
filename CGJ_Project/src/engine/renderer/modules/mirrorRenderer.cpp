@@ -2,7 +2,6 @@
 
 #include "engine/app/application.h"
 #include "engine/math/AVTmathLib.h"
-#include "engine/math/l3DBillboard.h"
 #include "engine/math/transform.h"
 
 
@@ -10,88 +9,29 @@ extern float mCompMatrix[COUNT_COMPUTED_MATRICES][16];
 extern float mNormal3x3[9];
 
 
-void Renderer::_renderMirror(const Scene& scene) const
-{
-	Entity mirrorEntity = scene.getEntityByTag("RearViewMirror");
-
-	const MeshComponent& mirrorMesh = mirrorEntity.getComponent<MeshComponent>();
-
-
-	// -- Stencil mirror shape ------------------------------------------------- //
-	_enableShapeStenciling();
-
-	RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
-	const MeshData* meshData = &mirrorMesh.meshData();
-
-	_submitMeshData(*meshData);
-
-	const TransformComponent* transform = &mirrorEntity.transform();
-
-	_addObjectToInstanceBuffer(instanceBuffer, transform);
-	_submitRenderableData(*meshData, instanceBuffer);
-
-
-	// -- Setup the mirror camera ---------------------------------------------- //
-	const Coords3f& cameraCoords = mirrorEntity.transform().translation();
-	const Coords3f& targetCoords = scene.getEntityByTag("Car").getComponent<RigidbodyComponent>().position();  // shortcut for now
-
-
-	Coords3f up = { 0.0f, 1.0f, 0.0f };
-	if (cameraCoords.x == 0.0f && cameraCoords.y != 0.0f && cameraCoords.z == 0.0f)
-		up = { 0.0f, 0.0f, -1.0f };
-
-
-	pushMatrix(MODEL);
-	loadIdentity(MODEL);
-	pushMatrix(PROJECTION);
-	loadIdentity(PROJECTION);
-	pushMatrix(VIEW);
-	loadIdentity(VIEW);
-
-	perspective(70, 1.2f, 0.1f, 1000.0f); // TODO correct aspect ratio based on viewport width and height
-
-	lookAt(cameraCoords.x, cameraCoords.y, cameraCoords.z,	// camera position
-		targetCoords.x, targetCoords.y + 4.0f, targetCoords.z,	// target position
-		up.x, up.y, up.z);
-
-
-	// -- Draw scene into stenciled area -------------------------------------- //
-	_enableRenderingIntoStencil();
-
-	Renderer::_renderMeshes(scene);
-
-	popMatrix(PROJECTION);
-	popMatrix(VIEW);
-	popMatrix(MODEL);
-
-	_disableStencilRendering();
-	
-}
-
 void Renderer::_renderFixedMirror(const Scene& scene) const
 {
-	// scene.getComponents<FixedMirrorComponent>() ....
-	// iterate and render every mirror
-
-	Coords3f cameraPos;
-	Transform::decomposeTransformMatrix(scene.activeCamera(), cameraPos, Quaternion(), Coords3f());
+	CameraEntity camera = scene.getEntityByTag("Camera3");
+	if (scene.activeCamera() != camera)
+		return;
 
 	/* ------------------ INIT ------------------ */
 
-	WindowCoords originalWindowSize = Application::getInstance().getOriginalWindowSize();
+	// Set projection to orthographic so that the mirror is always in the same position on the screen
+	WindowCoords windowSize = Application::getInstance().getWindowSize();
 
 	pushMatrix(PROJECTION);
 	loadIdentity(PROJECTION);
 	pushMatrix(VIEW);
 	loadIdentity(VIEW);
-	ortho(0, (float)originalWindowSize.x, 0, (float)originalWindowSize.y, -1.0f, 1.0f);
+	ortho(0, (float)windowSize.x, 0, (float)windowSize.y, -1.0f, 1.0f);
 
 	/* INIT END -------------------------------- */
 
 
 
 	/* -------- Shortcut -------- */
-	Entity mirrorEntity = scene.getEntityByTag("RearViewMirror");
+	Entity mirrorEntity = scene.getEntityByTag("RearViewMirror");  
 
 	const FixedMirrorComponent& fixedMirrorComponent = mirrorEntity.getComponent<FixedMirrorComponent>();
 	const MeshData* meshData = &fixedMirrorComponent.meshData();
@@ -106,19 +46,20 @@ void Renderer::_renderFixedMirror(const Scene& scene) const
 
 	_addObjectToInstanceBuffer(instanceBuffer, transform);
 
-	_submitRenderableData(*meshData, instanceBuffer);
+	_submitRenderableData(*meshData, instanceBuffer);  // Stencil the mirror shape in orthographic projection
 
+	// Pop the matrices used for the orthographic effect
 	popMatrix(PROJECTION);
 	popMatrix(VIEW);
+
 
 	// -- Setup the mirror camera ---------------------------------------------- //
 	const Coords3f& targetCoords = fixedMirrorComponent.lookAt();
 	const Coords3f& cameraCoords = fixedMirrorComponent.cameraPosition();
 
-
 	Coords3f up = { 0.0f, 1.0f, 0.0f };
 
-
+	// Push new matrices onto the stack, since the scene will be rendered again
 	pushMatrix(MODEL);
 	loadIdentity(MODEL);
 	pushMatrix(PROJECTION);
@@ -126,7 +67,10 @@ void Renderer::_renderFixedMirror(const Scene& scene) const
 	pushMatrix(VIEW);
 	loadIdentity(VIEW);
 
-	perspective(70, 1.2f, 0.1f, 1000.0f); // TODO correct aspect ratio based on viewport width and height
+	float aspectRatio = windowSize.x / windowSize.y;
+	// This doesn't work correctly, however it would work if we weren't doing the orhto() shenanigans in order to 
+	// always show the mirror in the same place on the screen. It has something to do with the matrices if I had to guess.
+	perspective(70.0f, aspectRatio, 0.1f, 1000.0f);
 
 	lookAt(cameraCoords.x, cameraCoords.y, cameraCoords.z,	// camera position
 		targetCoords.x, targetCoords.y, targetCoords.z,	// target position
@@ -136,6 +80,7 @@ void Renderer::_renderFixedMirror(const Scene& scene) const
 	// -- Draw scene into stenciled area -------------------------------------- //
 	_enableRenderingIntoStencil();
 
+	// What's rendered here will appear in the mirror
 	_renderSkybox();
 	_renderMeshes(scene);
 	_renderParticles(scene);
@@ -145,44 +90,8 @@ void Renderer::_renderFixedMirror(const Scene& scene) const
 	popMatrix(MODEL);
 
 	_disableStencilRendering();
-
-
 }
 
-void Renderer::_renderMirrors(const Scene& scene) const
-{
-	//const auto& mirrorComponents = scene.getSceneComponents<MirrorComponent>();
-
-	//for (const auto & mirrorIterator : mirrorComponents)
-	//{
-	//	const MirrorComponent& mirror = mirrorIterator.first;
-	//	const TransformComponent* transform = mirrorIterator.second;
-
-	//	_stencilMesh(mirror.mesh(), transform);
-
-	//	const Coords3f& cameraCoords = mirror.rigidbody()->position(); 
-	//	//const Coords3f& targetCoords = cameraCoords + mirror.mirrorNormal();  // TODO rotate normal by mesh rotation
-	//	const Coords3f& targetCoords = scene.getEntityByTag("Car").getComponent<RigidbodyComponent>().position();  // shortcut for now
-
-
-	//	Coords3f up = { 0.0f, 1.0f, 0.0f };
-	//	if (cameraCoords.x == 0.0f && cameraCoords.y != 0.0f && cameraCoords.z == 0.0f)
-	//		up = { 0.0f, 0.0f, -1.0f };
-
-
-	//	loadIdentity(VIEW);
-	//	loadIdentity(MODEL);
-	//	lookAt(cameraCoords.x, cameraCoords.y, cameraCoords.z,	// camera position
-	//		targetCoords.x, targetCoords.y, targetCoords.z,	// target position
-	//		up.x, up.y, up.z);								// up vector
-
-	//	Renderer::renderMeshes(scene);
-
-
-	//}
-
-	//_disableStencilRendering();
-}
 
 void Renderer::_enableShapeStenciling() const
 {
@@ -205,16 +114,4 @@ void Renderer::_disableStencilRendering() const
 {
 	glDisable(GL_STENCIL_TEST);
 	glClear(GL_STENCIL_BUFFER_BIT);
-}
-
-
-void Renderer::_stencilMesh(MeshComponent& mesh, TransformComponent& transform) const
-{
-	//_enableShapeStenciling();
-
-	//RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
-
-	//_submitMeshData(mesh.meshData());
-	//_addToInstanceBuffer(instanceBuffer, transform);
-
 }

@@ -368,7 +368,6 @@ FixedMirrorComponent::FixedMirrorComponent(const MyMesh& mesh, const Material& m
 
 
 
-
 ModelComponent::ModelComponent(const Entity& entity, const char* modelPath)
 	: _transform(&entity.transform())
 {
@@ -381,3 +380,13 @@ LensFlareComponent::LensFlareComponent(const char* lensFlarePath)
 {
 	Importer::importLensFlare(*this, lensFlarePath);
 }
+
+
+
+ReflectorPlaneComponent::ReflectorPlaneComponent(const MyMesh& mesh, const Material& material)
+	: _meshData(MeshData(mesh, material))
+{
+
+}
+
+

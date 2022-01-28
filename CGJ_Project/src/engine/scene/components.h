@@ -23,6 +23,8 @@
 #include "engine/scene/components/skyboxComponent.h"
 #include "engine/scene/components/modelComponent.h"
 #include "engine/scene/components/lensFlareComponent.h"
+#include "engine/scene/components/reflectorPlaneComponent.h"
+
 
 
 #endif // !__engine_scene_components__

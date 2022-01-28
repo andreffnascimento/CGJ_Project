@@ -157,7 +157,6 @@ void Renderer::_renderMesh(const MeshData& mesh, RendererData::SubmitInstanceBuf
 	glBindVertexArray(meshData.vao);
 	glDrawElementsInstanced(meshData.type, meshData.numIndexes, GL_UNSIGNED_INT, 0, instanceBuffer.nInstances);
 	glBindVertexArray(0);
-
 }
 
 
