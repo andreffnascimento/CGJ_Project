@@ -12,7 +12,7 @@
 class BoostersDriftScript : public Script
 {
 private:
-	constexpr static float SPEED_INCREASE = 15000.0f;
+	constexpr static float SPEED_INCREASE = 10000.0f;
 
 
 

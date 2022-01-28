@@ -12,7 +12,7 @@
 class ButtersDriftScript : public Script
 {
 private:
-	constexpr static float SPEED_DECREASE = 30000.0f;
+	constexpr static float SPEED_DECREASE = 25000.0f;
 
 
 
