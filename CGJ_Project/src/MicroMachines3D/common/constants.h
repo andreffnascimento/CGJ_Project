@@ -22,7 +22,7 @@ constexpr float CAR_FLOOR_DISTANCE = 0.35f;
 constexpr float CAR_SPAWN_HEIGHT = GRAVITY_ENABLED ? 10.0f : 0.0f;
 constexpr float CAR_SCALE = 0.08f;
 
-constexpr Coords3f CAR_SIZE = { 3.0f, 2.8f, 7.7f };
+constexpr Coords3f CAR_SIZE = { 1.5f, 2.8f, 3.85f };
 
 
 
@@ -81,7 +81,7 @@ constexpr Coords3f FIREWORK_PARTICLE_SIZE = { 0.2f, 0.2f, 0.2f };
 
 
 
-constexpr Coords3f SKYBOX_SIZE = { 300.0f, 300.0f, 300.0f };
+constexpr Coords3f SKYBOX_SIZE = { 1000.0f, 1000.0f, 1000.0f };
 
 
 
