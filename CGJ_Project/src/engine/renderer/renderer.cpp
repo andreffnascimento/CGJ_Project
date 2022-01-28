@@ -170,12 +170,12 @@ void Renderer::renderScene(const Scene& scene)
 	_initSceneRendering();
 	_renderCamera(scene);
 	_renderSkybox();
+	_renderImages(scene);
 	//_renderPlanarReflections(scene);
 	_renderLights(scene);
 	_renderMeshes(scene);
 	_renderModels(scene);
 	_renderFixedMirror(scene);
-	_renderImages(scene);
 	_renderColliders(scene);
 	_renderParticles(scene);
 	_renderLensFlares(scene);
