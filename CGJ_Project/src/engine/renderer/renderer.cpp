@@ -172,8 +172,8 @@ void Renderer::renderScene(const Scene& scene)
 	_renderSkybox();
 	_renderImages(scene);
 	_renderLights(scene);
-	_renderMeshes(scene);
 	_renderModels(scene);
+	_renderMeshes(scene);
 	_renderColliders(scene);
 	_renderParticles(scene);
 	_renderFixedMirrors(scene);
@@ -195,7 +195,7 @@ void Renderer::_setupMeshShader()
 	glBindFragDataLocation(_meshShader.getProgramIndex(), 0, "colorOut");
 	glBindAttribLocation(_meshShader.getProgramIndex(), VERTEX_COORD_ATTRIB, "position");
 	glBindAttribLocation(_meshShader.getProgramIndex(), NORMAL_ATTRIB, "normal");
-	glBindAttribLocation(_meshShader.getProgramIndex(), TEXTURE_COORD_ATTRIB, "texCoord");
+	glBindAttribLocation(_meshShader.getProgramIndex(), TEXTURE_COORD_ATTRIB, "textureCoords");
 
 	glLinkProgram(_meshShader.getProgramIndex());
 

@@ -69,7 +69,7 @@ private:
 		Butters butters = Butters(this);
 		Boosters boosters = Boosters(this);
 		CheckeredFlag flag = CheckeredFlag(this);
-		RearViewMirror mirror = RearViewMirror(this);
+		//RearViewMirror mirror = RearViewMirror(this);
 
 		Skybox skybox = Skybox(this);
 		Planets planets = Planets(this);

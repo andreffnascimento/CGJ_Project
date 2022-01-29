@@ -49,8 +49,7 @@ void Renderer::_submitModelMeshData(const MyMesh& mesh) const
 	glUniform4fv(_uniformLocator[RendererUniformLocations::MATERIAL_EMISSIVE], 1, mesh.mat.emissive);
 	glUniform1f(_uniformLocator[RendererUniformLocations::MATERIAL_SHININESS], mesh.mat.shininess);
 
-	glUniform1d(_uniformLocator[RendererUniformLocations::TEXTURE_N_COLOR_MAPS], 0);
-	glUniform1d(_uniformLocator[RendererUniformLocations::TEXTURE_N_NORMAL_MAPS], 0);
+	glUniform1d(_uniformLocator[RendererUniformLocations::TEXTURE_MODE], 0);
 }
 
 

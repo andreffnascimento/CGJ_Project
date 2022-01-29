@@ -189,7 +189,7 @@
     <ClCompile Include="src\engine\renderer\modules\lensFlareRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\lightRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\meshRenderer.cpp" />
-    <ClCompile Include="src\engine\renderer\modules\moduleRenderer.cpp" />
+    <ClCompile Include="src\engine\renderer\modules\modelRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\particleRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\imageRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\reflectionRenderer.cpp" />
