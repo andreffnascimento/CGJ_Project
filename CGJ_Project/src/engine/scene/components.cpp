@@ -360,12 +360,6 @@ SkyboxComponent::SkyboxComponent(unsigned int textureId, const Material& materia
 }
 
 
-FixedMirrorComponent::FixedMirrorComponent(const MyMesh& mesh, const Material& material)
-	: _meshData(MeshData(mesh, material))
-{
-
-}
-
 
 
 ModelComponent::ModelComponent(const Entity& entity, const char* modelPath)
@@ -383,10 +377,9 @@ LensFlareComponent::LensFlareComponent(const char* lensFlarePath)
 
 
 
-ReflectorPlaneComponent::ReflectorPlaneComponent(const MyMesh& mesh, const Material& material)
+
+FixedMirrorComponent::FixedMirrorComponent(const MyMesh& mesh, const Material& material)
 	: _meshData(MeshData(mesh, material))
 {
-
+	// empty
 }
-
-

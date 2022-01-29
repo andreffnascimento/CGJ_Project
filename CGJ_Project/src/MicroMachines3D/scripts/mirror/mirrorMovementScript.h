@@ -4,6 +4,8 @@
 
 #include "MicroMachines3D/common/include.h"
 
+#include "MicroMachines3D/scripts/manager/game/raceManagerScript.h"
+
 
 
 
@@ -15,12 +17,20 @@ private:
 
 
 
+
 private:
-	Entity _car = Entity();
-	Entity _mirror = Entity();
+	const EventHandler* _eventHandler = nullptr;
+
 	CameraEntity _camera = CameraEntity();
-	const TransformComponent* _carTransform = nullptr;
+
 	FixedMirrorComponent* _mirrorComponent = nullptr;
+	const TransformComponent* _carTransform = nullptr;
+
+	const RaceManagerScript* _raceManagerScript = nullptr;
+
+	bool _mirrorEnabled = true;
+
+
 
 
 public:
@@ -33,19 +43,31 @@ public:
 public:
 	void onCreate() override
 	{
-		_car = _scene->getEntityByTag("Car");
+		_eventHandler = &Application::getEventHandler();
 		_camera = _scene->getEntityByTag("Camera3");
-		_mirror = _scene->getEntityByTag("RearViewMirror");
-		_carTransform = &_car.getComponent<TransformComponent>();
-		_mirrorComponent = &_mirror.getComponent<FixedMirrorComponent>();
+		_carTransform = &_scene->getEntityByTag("Car").getComponent<TransformComponent>();
+		_mirrorComponent = &_scene->getEntityByTag("RearViewMirror").getComponent<FixedMirrorComponent>();
+		_raceManagerScript = dynamic_cast<RaceManagerScript*>(_scene->getEntityByTag("GameManager").getComponent<ScriptComponent>().getScriptByTag("RaceManagerScript"));
 
 		_updateMirrorCameraPosition();
 	}
 
 	void onUpdate(float ts) override
 	{
-		_updateMirrorCameraPosition();
+		if (_raceManagerScript->paused())
+			return;
+
+		if (_scene->activeCamera() != _camera)
+			_mirrorComponent->setEnabled(_mirrorEnabled = false);
+
+		if (_eventHandler->keyState('M').pressed() || _eventHandler->keyState('m').pressed())
+			_mirrorComponent->setEnabled(_mirrorEnabled = !_mirrorEnabled);
+		
+		if (_mirrorEnabled)
+			_updateMirrorCameraPosition();
 	}
+
+
 
 
 private:

@@ -9,12 +9,14 @@ extern float mCompMatrix[COUNT_COMPUTED_MATRICES][16];
 extern float mNormal3x3[9];
 
 
+void Renderer::_renderFixedMirrors(const Scene& scene) const
+{
+
+}
+
+
 void Renderer::_renderFixedMirror(const Scene& scene) const
 {
-	CameraEntity camera = scene.getEntityByTag("Camera3");
-	if (scene.activeCamera() != camera)
-		return;
-
 	/* ------------------ INIT ------------------ */
 
 	// Set projection to orthographic so that the mirror is always in the same position on the screen

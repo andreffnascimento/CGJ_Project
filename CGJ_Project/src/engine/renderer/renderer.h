@@ -86,11 +86,11 @@ private:
 	void _renderLights(const Scene& scene) const;
 	void _renderMeshes(const Scene& scene) const;
 	void _renderModels(const Scene& scene) const;
-	void _renderFixedMirror(const Scene& scene) const;	
 	void _renderImages(const Scene& scene) const;
 	void _renderColliders(const Scene& scene) const;
-	void _renderLensFlares(const Scene& scene) const;
+	void _renderFixedMirrors(const Scene& scene) const;	
 	void _renderParticles(const Scene& scene) const;
+	void _renderLensFlares(const Scene& scene) const;
 	void _renderCanvas(const Scene& scene) const;
 	void _renderPlanarReflections(const Scene& scene) const;
 
@@ -131,16 +131,6 @@ private:
 
 
 private:
-	void _enableShapeStenciling() const;
-	void _enableRenderingIntoStencil() const;
-	void _disableStencilRendering() const;
-
-private:
-	void _enableReflectorPlaneStenciling() const;
-	void _enableReflectionsRendering() const;
-	void _disableReflectionsRendering() const;
-
-private:
 	void _applyRecursiveModelTransform(const aiNode* node) const;
 	void _submitModelMeshData(const MyMesh& mesh) const;
 	void _submitModelMeshInstance(const MyMesh& mesh) const;
@@ -166,6 +156,20 @@ private:
 	void _submitParticleTextureData(const ParticleGeneratorComponent & particleGenerator) const;
 	void _addToParticleInstanceBuffer(RendererData::SubmitInstanceBuffer & instanceBuffer, const ParticleGeneratorComponent::ParticleData particle) const;
 	void _renderParticleGenerator(const ParticleGeneratorComponent & particleGenerator) const;
+
+
+private:
+	void _renderFixedMirror(const Scene& scene) const;
+	void _enableShapeStenciling() const;
+	void _enableRenderingIntoStencil() const;
+	void _disableStencilRendering() const;
+
+
+private:
+	void _enableReflectorPlaneStenciling() const;
+	void _enableReflectionsRendering() const;
+	void _disableReflectionsRendering() const;
+
 
 private:
 	void _initLensFlareRendering() const;
