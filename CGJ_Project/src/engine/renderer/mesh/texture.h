@@ -14,9 +14,9 @@ public:
 	enum class TextureMode
 	{
 		NONE = 0,
-		MODULATE_DIFFUSE = 1,	// phong color is modulated with texel color
-		REPLACE_DIFFUSE = 2,	// diffuse color is replaced by texel color with specular area
-		CUBE_MAPPING = 3,
+		MODULATE_DIFFUSE = 1,			// phong color is modulated with texel color
+		REPLACE_DIFFUSE = 2,			// diffuse color is replaced by texel color with specular area
+		CUBE_ENVIRONMENTAL_MAPPING = 3,	// reflects the scene using a precomputed texture
 	};
 
 

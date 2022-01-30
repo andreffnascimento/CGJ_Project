@@ -4,6 +4,9 @@
 #include "engine/math/transform.h"
 
 
+extern float mMatrix[COUNT_MATRICES][16];
+
+
 
 
 void Renderer::_renderCamera(const CameraEntity& camera) const
@@ -25,6 +28,8 @@ void Renderer::_renderCamera(const CameraEntity& camera) const
 	lookAt(cameraCoords.x, cameraCoords.y, cameraCoords.z,	// camera position
 		targetCoords.x, targetCoords.y, targetCoords.z,	// target position
 		up.x, up.y, up.z);								// up vector
+
+	glUniformMatrix4fv(_uniformLocator[RendererUniformLocations::VIEW_MATRIX], 1, GL_FALSE, mMatrix[VIEW]);
 }
 
 

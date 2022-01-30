@@ -28,8 +28,8 @@ private:
 	{
 		MeshComponent mesh = MeshComponent(createTorus(CHEERIO_INNER_RADIUS, CHEERIO_OUTER_RADIUS, CHEERIO_RINGS, CHEERIO_SIDES), CHEERIO_MATERIAL);
 		mesh.setTextureMode(Texture::TextureMode::MODULATE_DIFFUSE);
-		mesh.addTexture(Renderer::create2dTexture("src/MicroMachines3D/textures/cheerios/tire.jpg"));
-		mesh.addNormal(Renderer::create2dTexture("src/MicroMachines3D/textures/cheerios/cheerio_normals.png"));
+		mesh.addColorMap(Renderer::create2dTexture("src/MicroMachines3D/textures/cheerios/tire.jpg"));
+		mesh.addNormalMap(Renderer::create2dTexture("src/MicroMachines3D/textures/cheerios/cheerio_normals.png"));
 
 		int currentId = 0;
 		float drawX = 18.0f;

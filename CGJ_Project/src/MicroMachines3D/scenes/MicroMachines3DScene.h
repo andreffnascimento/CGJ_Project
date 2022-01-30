@@ -57,12 +57,15 @@ private:
 
 		Renderer::setReflectionCoefficients(reflectionCoefficients);
 		Renderer::setFog(fog);
+		Renderer::setEnvironmentalMappingBlendingAmount(0.9f);
 
 		
 
 
 		GameManager gameManager = GameManager(this);
 		CameraManager cameraManager = CameraManager(this);
+
+		Skybox skybox = Skybox(this);
 
 		Table table = Table(this);
 		FloatingCube floater = FloatingCube(this);
@@ -74,18 +77,12 @@ private:
 		Butters butters = Butters(this);
 		Boosters boosters = Boosters(this);
 		CheckeredFlag flag = CheckeredFlag(this);
-		RearViewMirror mirror = RearViewMirror(this);
-
-		Skybox skybox = Skybox(this);
 		Planets planets = Planets(this);
-
+		RearViewMirror mirror = RearViewMirror(this);
 
 		PlayingScreen playingScreen = PlayingScreen(this);
 		PauseScreen pauseScreen = PauseScreen(this);
 		GameoverScreen gameoverScreen = GameoverScreen(this);
-
-
-
 
 		Fireworks fireworks = Fireworks(this);
 	}

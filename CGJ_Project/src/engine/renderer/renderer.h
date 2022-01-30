@@ -38,6 +38,8 @@ private:
 	RendererSettings::ModelTransforms _modelTransforms = RendererSettings::ModelTransforms();
 	bool _enableBump = true;
 
+	float _environmentalMappingBlendingAmount = 1.0f;
+
 
 
 	
@@ -52,6 +54,7 @@ public:
 	static void setFog(const RendererSettings::Fog& fog);
 	static void setFogActive(bool active);
 	static void setBumpActive(bool active);
+	static void setEnvironmentalMappingBlendingAmount(float environmentalMappingBlendingAmount);
 	static void setSkybox(const Entity& skyboxEntity);
 
 
@@ -78,6 +81,7 @@ private:
 private:
 	void _submitFogData() const;
 	void _submitTextureData() const;
+	void _submitEnvironmentalMappingData() const;
 
 
 private:

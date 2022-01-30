@@ -15,7 +15,7 @@ public:
 		GroupComponent& group = addComponent<GroupComponent>();
 		MeshComponent mesh = MeshComponent(createCube(2, 9), FLAG_MATERIAL);
 		mesh.setTextureMode(Texture::TextureMode::MODULATE_DIFFUSE);
-		mesh.addTexture(Renderer::create2dTexture("src/MicroMachines3D/textures/flag/flag.jpg"));
+		mesh.addColorMap(Renderer::create2dTexture("src/MicroMachines3D/textures/flag/flag.jpg"));
 
 		_createFlag(scene, group, mesh, -2.0f * CAR_SIZE.x, TABLE_SIZE.z / 3.0f, 3.0f, TRACK_WIDTH);
 

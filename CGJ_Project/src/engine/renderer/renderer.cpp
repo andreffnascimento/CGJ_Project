@@ -89,6 +89,13 @@ void Renderer::setBumpActive(bool active)
 }
 
 
+void Renderer::setEnvironmentalMappingBlendingAmount(float environmentalMappingBlendingAmount)
+{
+	Renderer& renderer = Application::getRenderer();
+	renderer._environmentalMappingBlendingAmount = environmentalMappingBlendingAmount;
+}
+
+
 void Renderer::setSkybox(const Entity& skyboxEntity)
 {
 	Renderer& renderer = Application::getRenderer();
@@ -204,6 +211,7 @@ void Renderer::_setupMeshShader()
 	_uniformLocator[RendererUniformLocations::INSTANCE_NORMAL_MATRIX] = glGetUniformLocation(_meshShader.getProgramIndex(), "instanceData.normalMatrix");
 	_uniformLocator[RendererUniformLocations::INSTANCE_PARTICLE_COLOR] = glGetUniformLocation(_meshShader.getProgramIndex(), "instanceData.particleColor");
 
+	_uniformLocator[RendererUniformLocations::VIEW_MATRIX] = glGetUniformLocation(_meshShader.getProgramIndex(), "viewMatrix");
 	_uniformLocator[RendererUniformLocations::SKYBOX_MODEL_MATRIX] = glGetUniformLocation(_meshShader.getProgramIndex(), "skyboxModelMatrix");
 
 	_uniformLocator[RendererUniformLocations::MATERIAL_AMBIENT] = glGetUniformLocation(_meshShader.getProgramIndex(), "materialData.ambient");
@@ -241,6 +249,8 @@ void Renderer::_setupMeshShader()
 
 	_uniformLocator[RendererUniformLocations::LENS_FLARE_COLOR] = glGetUniformLocation(_meshShader.getProgramIndex(), "lensFlareData.color");
 	_uniformLocator[RendererUniformLocations::LENS_FLARE_COLOR_MAP_ID] = glGetUniformLocation(_meshShader.getProgramIndex(), "lensFlareData.colorMapId");
+
+	_uniformLocator[RendererUniformLocations::ENVIRONMENTAL_MAPPING_BLENDING_AMOUNT] = glGetUniformLocation(_meshShader.getProgramIndex(), "environmentalMappingData.blendingAmount");
 
 	_uniformLocator[RendererUniformLocations::RENDER_MODE] = glGetUniformLocation(_meshShader.getProgramIndex(), "renderMode");
 
@@ -311,6 +321,12 @@ void Renderer::_submitTextureData() const
 }
 
 
+void Renderer::_submitEnvironmentalMappingData() const
+{
+	glUniform1f(_uniformLocator[RendererUniformLocations::ENVIRONMENTAL_MAPPING_BLENDING_AMOUNT], _environmentalMappingBlendingAmount);
+}
+
+
 
 
 void Renderer::_initSceneRendering()
@@ -323,6 +339,7 @@ void Renderer::_initSceneRendering()
 	glUseProgram(_meshShader.getProgramIndex());
 	_submitFogData();
 	_submitTextureData();
+	_submitEnvironmentalMappingData();
 
 #ifdef _DEBUG
 	if (!_meshShader.isProgramValid())

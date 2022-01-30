@@ -14,28 +14,17 @@ public:
 	FloatingCube(Scene* scene)
 		: SceneEntity(scene->createEntity("FloatingCube"))
 	{
+		unsigned int skyboxColorMap = scene->getEntityByTag("Skybox").getComponent<SkyboxComponent>().texture().colorMapIds()[0];
+		unsigned int lightwoodColorMap = scene->getEntityByTag("Table:top").getComponent<MeshComponent>().texture().colorMapIds()[0];
 
-		MeshComponent mesh = MeshComponent(createCube(7, 7), TABLE_MATERIAL);
-		mesh.setTextureMode(Texture::TextureMode::CUBE_MAPPING);
-		
-
-		GroupComponent& group = addComponent<GroupComponent>();
-		createTop(scene, group, mesh);
+		MeshComponent& mesh = addComponent<MeshComponent>(createCube(), FLOATING_CUBE_MATERIAL, *this);
+		mesh.setTextureMode(Texture::TextureMode::CUBE_ENVIRONMENTAL_MAPPING);
+		mesh.addColorMap(skyboxColorMap);		// first texture is required to be the cube map
+		mesh.addColorMap(lightwoodColorMap);	// second texture is required to be a normal texture
 
 		Transform::translate(*this, { 0.0f, 3.0f * TABLE_SIZE.y, 0.0f });
 		Transform::scale(*this, 2.0f * FLOATER_SIZE);
-
 	}
-
-
-
-private:
-	void createTop(Scene* scene, GroupComponent& group, const MeshComponent& mesh)
-	{
-		Entity cube = group.addNewEntity(scene, *this, "cube");
-		cube.addComponent<MeshComponent>(mesh, cube);
-	}
-
 
 };
 

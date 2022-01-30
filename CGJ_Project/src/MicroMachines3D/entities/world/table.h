@@ -16,10 +16,10 @@ public:
 	{	
 		MeshComponent mesh = MeshComponent(createCube(3, 7), TABLE_MATERIAL);
 		mesh.setTextureMode(Texture::TextureMode::MODULATE_DIFFUSE);
-		mesh.addTexture(Renderer::create2dTexture("src/MicroMachines3D/textures/table/lightwood.tga"));
-		mesh.addTexture(Renderer::create2dTexture("src/MicroMachines3D/textures/table/stone.tga"));
-		mesh.addNormal(Renderer::create2dTexture("src/MicroMachines3D/textures/table/normal.tga"));
-		mesh.addNormal(Renderer::create2dTexture("src/MicroMachines3D/textures/table/wood_normals.png"));
+		mesh.addColorMap(Renderer::create2dTexture("src/MicroMachines3D/textures/table/lightwood.tga"));
+		mesh.addColorMap(Renderer::create2dTexture("src/MicroMachines3D/textures/table/stone.tga"));
+		mesh.addNormalMap(Renderer::create2dTexture("src/MicroMachines3D/textures/table/normal.tga"));
+		mesh.addNormalMap(Renderer::create2dTexture("src/MicroMachines3D/textures/table/wood_normals.png"));
 
 		GroupComponent& group = addComponent<GroupComponent>();
 		createTop(scene, group, mesh);

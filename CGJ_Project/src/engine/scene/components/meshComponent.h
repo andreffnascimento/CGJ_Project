@@ -39,8 +39,8 @@ public:
 
 	inline void setMaterial(const Material& material)					{ _meshData->setMaterial(material); }
 	inline void setTextureMode(const Texture::TextureMode& textureMode) { _meshData->setTextureMode(textureMode); }
-	inline void addTexture(unsigned int textureId)						{ _meshData->addColorMap(textureId); }
-	inline void addNormal(unsigned int normalId)						{ _meshData->addNormalMap(normalId); }
+	inline void addColorMap(unsigned int colorMapId)					{ _meshData->addColorMap(colorMapId); }
+	inline void addNormalMap(unsigned int normalMapId)					{ _meshData->addNormalMap(normalMapId); }
 	inline void setEnabled(bool enabled)								{ _enabled = enabled; }
 	inline void setFixedPosition(bool fixedPosition)					{ _fixedPosition = fixedPosition; }
 

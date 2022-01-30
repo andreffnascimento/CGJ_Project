@@ -14,10 +14,10 @@ constexpr Material TABLE_MATERIAL = {
 	100.0f,
 };
 
-constexpr Material FLOATER_MATERIAL = {
-	{ 0.2f, 0.1f, 0.1f, 1.0f },
-	{ 0.8f, 0.6f, 0.4f, 1.0f },
-	{ 0.8f, 0.8f, 0.8f, 1.0f },
+constexpr Material FLOATING_CUBE_MATERIAL = {
+	{ 1.0f, 1.0f, 1.0f, 1.0f },
+	{ 1.0f, 1.0f, 1.0f, 1.0f },
+	{ 1.0f, 1.0f, 1.0f, 1.0f },
 	{ 0.0f, 0.0f, 0.0f, 1.0f },
 	100.0f,
 };

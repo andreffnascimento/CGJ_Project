@@ -12,13 +12,11 @@ const uint MAX_TEXTURES_PER_MESH = 2;
 const uint TEXTURE_MODE_NONE = 0;
 const uint TEXTURE_MODE_MODULATE_DIFFUSE = 1;
 const uint TEXTURE_MODE_REPLACE_DIFFUSE = 2;
-const uint TEXTURE_MODE_CUBE_MAPPING = 3;
+const uint TEXTURE_MODE_CUBE_ENVIRONMENTAL_MAPPING = 3;
 
 const uint FOG_TYPE_LINEAR = 1;
 const uint FOG_TYPE_EXP = 2;
 const uint FOG_TYPE_EXP2 = 3;
-
-const float NORMAL_BLEND_AMOUNT = 0.5;
 
 const uint RENDER_MODE_MESH = 1;
 const uint RENDER_MODE_IMAGE = 2;
@@ -80,6 +78,11 @@ struct LensFlareData {
 };
 
 
+struct EnvironmentalMappingData {
+	float blendingAmount;
+};
+
+
 struct FragLightingData {
 	vec4 ambient;
 	vec4 specular;
@@ -97,13 +100,8 @@ uniform TextureData textureData;
 uniform LightingData lightingData;
 uniform FogData fogData;
 uniform LensFlareData lensFlareData;
+uniform EnvironmentalMappingData environmentalMappingData;
 uniform uint renderMode;
-
-//Enviromental Mapping
-uniform mat4 m_View;
-uniform samplerCube cubeMap;
-uniform sampler2D texmap1;
-const float reflect_factor = 0.9;
 
 
 in Data {
@@ -269,6 +267,17 @@ vec4 processReplaceDiffuseTexture(FragLightingData fragLighting) {
 }
 
 
+vec4 processCubeEnvironmentalMapping(FragLightingData fragLighting) {
+	vec4 cubeTexel = texture(textureData.cubeMaps[MAX_2D_TEXTURES - textureData.colorMapIds[0]], dataIn.reflected);
+	if (textureData.nColorMaps == 2) {
+		vec4 texel = texture(textureData.maps[textureData.colorMapIds[1]], dataIn.textureCoords);
+		return mix(texel, cubeTexel, environmentalMappingData.blendingAmount);
+	}
+	else
+		return cubeTexel;	
+}
+
+
 
 
 vec4 renderMesh() {
@@ -297,31 +306,9 @@ vec4 renderMesh() {
 		return vec4(mix(fogData.color.rgb, rgbColor.rgb, fogAmount), materialData.diffuse.a);
 	}
 
-	else if (textureData.mode == TEXTURE_MODE_CUBE_MAPPING) {
-		vec3 e = normalize(dataIn.eye);
-		vec3 n = normalize(dataIn.normal);
-		vec3 l = normalize(dataIn.eyeDir);
-		vec4 spec = vec4(0.0);
-
-		float intensity = max(dot(n,l), 0.0);
-		if (intensity > 0.0) {
-			vec3 h = normalize(l + e);
-			float intSpec = max(dot(h,n), 0.0);
-			spec = materialData.specular * pow(intSpec, materialData.shininess);
-		}
-
-		vec4 cubeTexel = texture(textureData.cubeMaps[MAX_2D_TEXTURES - textureData.colorMapIds[0]], dataIn.reflected); //Use interpolated reflected vector calculated in vertex shader
-
-
-		vec4 texel = vec4(1.0);
-		for (int i = 0; i < textureData.nColorMaps; i++)
-			texel *= texture(textureData.maps[textureData.colorMapIds[i]], dataIn.textureCoords);  // texel from lighwood.tga
-
-		vec4 aux_color = mix(texel, cubeTexel, reflect_factor);
-		aux_color = max(intensity*aux_color + spec, 0.1*aux_color);
-		colorOut = vec4(aux_color.rgb, 1.0); 
-
-		return colorOut;
+	else if (textureData.mode == TEXTURE_MODE_CUBE_ENVIRONMENTAL_MAPPING) {
+		rgbColor = processCubeEnvironmentalMapping(fragLighting);
+		return vec4(mix(fogData.color.rgb, rgbColor.rgb, fogAmount), materialData.diffuse.a);
 	}
 }
 

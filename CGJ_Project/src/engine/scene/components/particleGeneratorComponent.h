@@ -48,7 +48,7 @@ public:
 	inline ParticleData& particle(unsigned int particle)				{ return _particles[particle]; }
 
 	inline void setTextureMode(const Texture::TextureMode& textureMode) { _meshData.setTextureMode(textureMode); }
-	inline void addTexture(unsigned int textureId)						{ _meshData.addColorMap(textureId); }
+	inline void addColorMap(unsigned int textureId)						{ _meshData.addColorMap(textureId); }
 	inline void setEnabled(bool enabled)								{ _enabled = enabled; }
 };
 

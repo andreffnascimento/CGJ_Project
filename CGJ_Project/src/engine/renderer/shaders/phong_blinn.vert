@@ -10,10 +10,8 @@ const uint RENDER_MODE_IMAGE = 2;
 const uint RENDER_MODE_PARTICLE = 3;
 const uint RENDER_MODE_SKYBOX = 4;
 const uint RENDER_MODE_LENS_FLARE = 5;
-const uint RENDER_MODE_REFLECT = 6;
 
 
-uniform mat4 m_View;
 
 
 struct InstanceData {
@@ -27,6 +25,7 @@ struct InstanceData {
 
 
 uniform InstanceData instanceData; 
+uniform mat4 viewMatrix;
 uniform mat4 skyboxModelMatrix;
 uniform uint renderMode;
 
@@ -59,15 +58,12 @@ void main () {
 	dataOut.eyeDir = -vec3(instanceData.vmMatrix[gl_InstanceID] * position);
 	dataOut.textureCoords = textureCoords.st;
 	dataOut.particleColor = instanceData.particleColor[gl_InstanceID];
-	dataOut.reflected = vec3 (transpose(m_View) * vec4 (vec3(reflect(-dataOut.eye, dataOut.normal)), 0.0)); //reflection vector in world coord
-	dataOut.reflected.x = -dataOut.reflected.x; // as texturas foram mapeadas no interior da skybox 
+	dataOut.reflected = vec3(transpose(viewMatrix) * vec4(vec3(reflect(-dataOut.eye, dataOut.normal)), 0.0));
 	
 	if (renderMode == RENDER_MODE_SKYBOX) {
 		dataOut.skyboxTextureCoords = vec3(skyboxModelMatrix * position);
 		dataOut.skyboxTextureCoords.x = -dataOut.skyboxTextureCoords.x;
 	}
-
-	
 
 	gl_Position = instanceData.pvmMatrix[gl_InstanceID] * position;
 }
