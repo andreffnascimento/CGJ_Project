@@ -9,8 +9,6 @@
 #include "engine/scene/components/parentComponent.h"
 #include "engine/scene/components/cameraComponent.h"
 #include "engine/scene/components/meshComponent.h"
-#include "engine/scene/components/mirrorComponent.h"
-#include "engine/scene/components/fixedMirrorComponent.h"
 #include "engine/scene/components/scriptComponent.h"
 #include "engine/scene/components/lightComponent.h"
 #include "engine/scene/components/rigidbodyComponent.h"
@@ -23,8 +21,7 @@
 #include "engine/scene/components/skyboxComponent.h"
 #include "engine/scene/components/modelComponent.h"
 #include "engine/scene/components/lensFlareComponent.h"
-#include "engine/scene/components/reflectorPlaneComponent.h"
-
+#include "engine/scene/components/flatMirrorComponent.h"
 
 
 #endif // !__engine_scene_components__

@@ -42,7 +42,7 @@ Application& Application::init(const ApplicationData& applicationData, int argc,
 
 	//  GLUT initialization
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE);
+	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_MULTISAMPLE | GLUT_STENCIL);
 
 	glutInitContextVersion(4, 3);
 	glutInitContextProfile(GLUT_CORE_PROFILE);

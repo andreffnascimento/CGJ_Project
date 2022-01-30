@@ -189,7 +189,7 @@
     <ClCompile Include="src\engine\renderer\modules\lensFlareRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\lightRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\meshRenderer.cpp" />
-    <ClCompile Include="src\engine\renderer\modules\moduleRenderer.cpp" />
+    <ClCompile Include="src\engine\renderer\modules\modelRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\particleRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\imageRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\reflectionRenderer.cpp" />
@@ -212,7 +212,7 @@
     <ClCompile Include="src\MicroMachines3D\entities\hud\pauseScreen.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\engine\scene\components\mirrorComponent.h" />
+    <ClInclude Include="src\engine\scene\components\flatMirrorComponent.h" />
     <ClInclude Include="src\engine\app\application.h" />
     <ClInclude Include="src\engine\app\callback.h" />
     <ClInclude Include="src\engine\app\eventHandler.h" />
@@ -270,6 +270,7 @@
     <ClInclude Include="src\MicroMachines3D\entities\world\floatingCube.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\oranges.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\planets.h" />
+    <ClInclude Include="src\MicroMachines3D\entities\world\rearViewMirror.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\skybox.h" />
     <ClInclude Include="src\MicroMachines3D\scenes\MicroMachines3DScene.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\boosters\boostersDriftScript.h" />
@@ -296,6 +297,7 @@
     <ClInclude Include="src\engine\renderer\vsShaderLib.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\manager\game\globalLightScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\manager\game\raceManagerScript.h" />
+    <ClInclude Include="src\MicroMachines3D\scripts\mirror\rearViewMirrorMovementScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\oranges\orangesManagerScript.h" />
   </ItemGroup>
   <ItemGroup>

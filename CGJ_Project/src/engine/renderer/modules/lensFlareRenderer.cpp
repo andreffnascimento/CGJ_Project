@@ -9,7 +9,7 @@ extern float mNormal3x3[9];
 
 
 
-
+#include <iostream>
 void Renderer::_renderLensFlares(const Scene& scene) const 
 {
 	int viewport[4] = {};
@@ -20,10 +20,15 @@ void Renderer::_renderLensFlares(const Scene& scene) const
 	{
 		const LensFlareComponent& lensFlare = lensFlareIterator.second;
 		if (!lensFlare.enabled())
-			return;
+			continue;
+		
+		Coords3f cameraTranslation;
+		Transform::decomposeTransformMatrix(scene.activeCamera(), cameraTranslation, Quaternion(), Coords3f());
+		const Coords3f& cameraLookAt = (scene.activeCamera().getComponent<CameraComponent>().targetCoords() - cameraTranslation).normalized();
+		if (cameraLookAt.dot(lensFlare.lightPosition()) < 0)
+			continue;
 
 		WindowCoords flareProjectedPosition = _calculateLensFlareProjectedPos(lensFlare, viewport);
-
 		pushMatrix(PROJECTION);
 		loadIdentity(PROJECTION);
 		pushMatrix(VIEW);

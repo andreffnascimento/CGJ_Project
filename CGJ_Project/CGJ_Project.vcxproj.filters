@@ -40,7 +40,7 @@
     <ClCompile Include="src\engine\renderer\modules\skyboxRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\mesh\meshFromAssimp.cpp" />
     <ClCompile Include="src\engine\utils\importer.cpp" />
-    <ClCompile Include="src\engine\renderer\modules\moduleRenderer.cpp" />
+    <ClCompile Include="src\engine\renderer\modules\modelRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\app\application.h" />
@@ -116,7 +116,6 @@
     <ClInclude Include="src\MicroMachines3D\entities\hud\gameoverScreen.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\boosters.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\boosters\boostersDriftScript.h" />
-    <ClInclude Include="src\engine\scene\components\mirrorComponent.h" />
     <ClInclude Include="src\engine\scene\components\particleGeneratorComponent.h" />
     <ClInclude Include="src\MicroMachines3D\entities\particles\fireworks.h" />
     <ClInclude Include="src\engine\math\l3DBillboard.h" />
@@ -127,6 +126,9 @@
     <ClInclude Include="src\engine\renderer\mesh\meshFromAssimp.h" />
     <ClInclude Include="src\engine\scene\components\modelComponent.h" />
     <ClInclude Include="src\engine\utils\importer.h" />
+    <ClInclude Include="src\MicroMachines3D\entities\world\rearViewMirror.h" />
+    <ClInclude Include="src\engine\scene\components\flatMirrorComponent.h" />
+    <ClInclude Include="src\MicroMachines3D\scripts\mirror\rearViewMirrorMovementScript.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\floatingCube.h" />
   </ItemGroup>
   <ItemGroup>
