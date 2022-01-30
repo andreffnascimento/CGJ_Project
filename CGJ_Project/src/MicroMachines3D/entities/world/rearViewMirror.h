@@ -24,7 +24,7 @@ public:
 		flatMirrorComponent.setCamera(camera);
 
 		Transform::scale(*this, MIRROR_SIZE);
-		Transform::translateTo(*this, { windowCoords.x / 2.0f, windowCoords.y / 2.0f, 0.0f });
+		Transform::translateTo(*this, { windowCoords.x / 2.0f , windowCoords.y - MIRROR_SIZE.y / 2.0f, 0.0f });
 
 		addComponent<ScriptComponent>(std::make_shared<RearViewMirrorMovementScript>(scene));
 	}
