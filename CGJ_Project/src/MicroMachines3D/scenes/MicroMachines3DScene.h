@@ -8,6 +8,7 @@
 #include "MicroMachines3D/entities/manager/cameraManager.h"
 
 #include "MicroMachines3D/entities/world/table.h"
+#include "MicroMachines3D/entities/world/floatingCube.h"
 #include "MicroMachines3D/entities/world/car.h"
 #include "MicroMachines3D/entities/world/cheeriosTrack.h"
 #include "MicroMachines3D/entities/world/candels.h"
@@ -18,6 +19,8 @@
 #include "MicroMachines3D/entities/world/planets.h"
 #include "MicroMachines3D/entities/world/skybox.h"
 #include "MicroMachines3D/entities/world/rearViewMirror.h"
+
+#include "MicroMachines3D/entities/world/floatingCube.h"
 
 #include "MicroMachines3D/entities/hud/playingScreen.h"
 #include "MicroMachines3D/entities/hud/pauseScreen.h"
@@ -62,6 +65,8 @@ private:
 		CameraManager cameraManager = CameraManager(this);
 
 		Table table = Table(this);
+		FloatingCube floater = FloatingCube(this);
+
 		Car car = Car(this);
 		CheeriosTrack cheeriosTrack = CheeriosTrack(this);
 		Candels candels = Candels(this);
