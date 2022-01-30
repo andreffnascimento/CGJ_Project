@@ -378,8 +378,8 @@ LensFlareComponent::LensFlareComponent(const char* lensFlarePath)
 
 
 
-FixedMirrorComponent::FixedMirrorComponent(const MyMesh& mesh, const Material& material)
-	: _meshData(MeshData(mesh, material))
+FlatMirrorComponent::FlatMirrorComponent(const Entity& entity, const MyMesh& mesh, const Material& material)
+	: _mirrorTransform(&entity.transform()), _meshData(MeshData(mesh, material))
 {
 	// empty
 }

@@ -127,8 +127,8 @@
     <ClInclude Include="src\engine\scene\components\modelComponent.h" />
     <ClInclude Include="src\engine\utils\importer.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\rearViewMirror.h" />
-    <ClInclude Include="src\engine\scene\components\fixedMirrorComponent.h" />
-    <ClInclude Include="src\MicroMachines3D\scripts\mirror\mirrorMovementScript.h" />
+    <ClInclude Include="src\engine\scene\components\flatMirrorComponent.h" />
+    <ClInclude Include="src\MicroMachines3D\scripts\mirror\rearViewMirrorMovementScript.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />

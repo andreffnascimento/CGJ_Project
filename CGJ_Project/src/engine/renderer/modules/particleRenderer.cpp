@@ -59,8 +59,11 @@ void Renderer::_submitParticleTextureData(const ParticleGeneratorComponent& part
 
 void Renderer::_addToParticleInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const ParticleGeneratorComponent::ParticleData particle) const
 {
-	loadIdentity(MODEL);
+	loadMatrix(MODEL, _modelTransforms.preModelTransform);
 	translate(MODEL, particle.position.x, particle.position.y, particle.position.z);
+	if (_modelTransforms.applyPostMatrix)
+		multMatrix(MODEL, _modelTransforms.postModelTransform);
+
 	computeDerivedMatrix(VIEW_MODEL);
 	BillboardCheatSphericalBegin(particle.size.x, particle.size.y);
 	computeDerivedMatrix_PVM();

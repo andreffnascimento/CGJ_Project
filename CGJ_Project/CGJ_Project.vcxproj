@@ -212,7 +212,7 @@
     <ClCompile Include="src\MicroMachines3D\entities\hud\pauseScreen.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\engine\scene\components\fixedMirrorComponent.h" />
+    <ClInclude Include="src\engine\scene\components\flatMirrorComponent.h" />
     <ClInclude Include="src\engine\app\application.h" />
     <ClInclude Include="src\engine\app\callback.h" />
     <ClInclude Include="src\engine\app\eventHandler.h" />
@@ -296,7 +296,7 @@
     <ClInclude Include="src\engine\renderer\vsShaderLib.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\manager\game\globalLightScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\manager\game\raceManagerScript.h" />
-    <ClInclude Include="src\MicroMachines3D\scripts\mirror\mirrorMovementScript.h" />
+    <ClInclude Include="src\MicroMachines3D\scripts\mirror\rearViewMirrorMovementScript.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\oranges\orangesManagerScript.h" />
   </ItemGroup>
   <ItemGroup>

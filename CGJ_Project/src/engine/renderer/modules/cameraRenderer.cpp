@@ -6,9 +6,8 @@
 
 
 
-void Renderer::_renderCamera(const Scene& scene) const
+void Renderer::_renderCamera(const CameraEntity& camera) const
 {
-	const CameraEntity& camera = scene.activeCamera();
 	CameraComponent& cameraSettings = camera.getComponent<CameraComponent>();
 
 	Coords3f translation;

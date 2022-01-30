@@ -35,7 +35,9 @@ private:
 
 	RendererSettings::ReflectionCoefficients _reflectionCoefficients = RendererSettings::ReflectionCoefficients();
 	RendererSettings::Fog _fog = RendererSettings::Fog();
+	RendererSettings::ModelTransforms _modelTransforms = RendererSettings::ModelTransforms();
 	bool _enableBump = true;
+
 
 
 	
@@ -81,14 +83,14 @@ private:
 private:
 	void _initSceneRendering();
 	void _terminateSceneRendering();
-	void _renderCamera(const Scene& scene) const;
+	void _renderCamera(const CameraEntity& camera) const;
 	void _renderSkybox() const;
 	void _renderLights(const Scene& scene) const;
 	void _renderMeshes(const Scene& scene) const;
 	void _renderModels(const Scene& scene) const;
 	void _renderImages(const Scene& scene) const;
 	void _renderColliders(const Scene& scene) const;
-	void _renderFixedMirrors(const Scene& scene) const;	
+	void _renderFixedMirrors(const Scene& scene);	
 	void _renderParticles(const Scene& scene) const;
 	void _renderLensFlares(const Scene& scene) const;
 	void _renderCanvas(const Scene& scene) const;
@@ -143,7 +145,6 @@ private:
 	void _addImageToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform, const ImageComponent::ImageType& imageType, const Coords3f& cameraPos) const;
 	void _renderImageMeshInstances(const Scene& scene) const;
 
-
 private:
 	const MeshComponent& getColliderMesh() const;
 	void _addToColliderInstanceBuffer(RendererData::SubmitInstanceBuffer& colliderInstanceBuffer, const AABBColliderComponent& collider) const;
@@ -159,13 +160,7 @@ private:
 
 
 private:
-	void _renderFixedMirror(const Scene& scene) const;
-	void _enableShapeStenciling() const;
-	void _enableRenderingIntoStencil() const;
-	void _disableStencilRendering() const;
-
-
-private:
+	
 	void _enableReflectorPlaneStenciling() const;
 	void _enableReflectionsRendering() const;
 	void _disableReflectionsRendering() const;
@@ -178,6 +173,15 @@ private:
 	void _addLensFlareToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, WindowCoords flarePosition, int width, int height) const;
 	void _submitLensFlareBuffer(const Coords4f& color, unsigned int colorMapId, float scaleDistance) const;
 	void _renderLensFlare(const LensFlareComponent::FlareData& lensFlareData, const WindowCoords& flareProjectedPosition, int viewport[4]) const;
+
+
+private:
+	void _initMirrorShape(const WindowCoords& windowSize) const;
+	void _initMirrorCamera(const FlatMirrorComponent& flatMirror);
+	void _terminateMirrorRendering();
+
+	void _renderMirrorShape(const FlatMirrorComponent& flatMirror) const;
+	void _renderMirrorView(const Scene& scene, const FlatMirrorComponent& flatMirror);
 
 
 private:

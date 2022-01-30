@@ -36,8 +36,10 @@ void Renderer::_terminateImageRendering() const
 
 void Renderer::_addImageToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform, const ImageComponent::ImageType& imageType, const Coords3f& cameraPos) const
 {
-	loadIdentity(MODEL);
-	loadMatrix(MODEL, transform->transformMatrix());
+	loadMatrix(MODEL, _modelTransforms.preModelTransform);
+	multMatrix(MODEL, transform->transformMatrix());
+	if (_modelTransforms.applyPostMatrix)
+		multMatrix(MODEL, _modelTransforms.postModelTransform);
 
 	if (imageType == ImageComponent::ImageType::CYLINDRICAL_BILLBOARD)
 	{

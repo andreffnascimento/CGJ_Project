@@ -9,111 +9,87 @@ extern float mCompMatrix[COUNT_COMPUTED_MATRICES][16];
 extern float mNormal3x3[9];
 
 
-void Renderer::_renderFixedMirrors(const Scene& scene) const
+void Renderer::_renderFixedMirrors(const Scene& scene)
 {
+	glUniform1ui(_uniformLocator[RendererUniformLocations::RENDER_MODE], (unsigned int)RendererSettings::RendererMode::MESH_RENDERER);
+	for (auto& flatMirrorsIterator : scene.getSceneComponents<FlatMirrorComponent>())
+	{
+		const FlatMirrorComponent& flatMirror = flatMirrorsIterator.second;
+		if (!flatMirror.enabled())
+			continue;
 
+		_renderMirrorShape(flatMirror);
+		_renderMirrorView(scene, flatMirror);
+	}
 }
 
 
-void Renderer::_renderFixedMirror(const Scene& scene) const
-{
-	/* ------------------ INIT ------------------ */
 
-	// Set projection to orthographic so that the mirror is always in the same position on the screen
-	WindowCoords windowSize = Application::getInstance().getWindowSize();
+
+void Renderer::_initMirrorShape(const WindowCoords& windowSize) const
+{
+	glClearStencil(0x0);
+
+	glEnable(GL_STENCIL_TEST);
+	glStencilFunc(GL_ALWAYS, 1, 0x1);
+	glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
 
 	pushMatrix(PROJECTION);
 	loadIdentity(PROJECTION);
 	pushMatrix(VIEW);
 	loadIdentity(VIEW);
 	ortho(0, (float)windowSize.x, 0, (float)windowSize.y, -1.0f, 1.0f);
-
-	/* INIT END -------------------------------- */
-
+}
 
 
-	/* -------- Shortcut -------- */
-	Entity mirrorEntity = scene.getEntityByTag("RearViewMirror");  
+void Renderer::_initMirrorCamera(const FlatMirrorComponent& flatMirror)
+{
+	glClear(GL_DEPTH_BUFFER_BIT);
 
-	const FixedMirrorComponent& fixedMirrorComponent = mirrorEntity.getComponent<FixedMirrorComponent>();
-	const MeshData* meshData = &fixedMirrorComponent.meshData();
-	const TransformComponent* transform = &mirrorEntity.transform();
+	glStencilFunc(GL_EQUAL, 1, 0x1);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 
-	// -- Stencil mirror shape ------------------------------------------------- //
-	_enableShapeStenciling();
+	WindowCoords windowSize = Application::getInstance().getWindowSize();
+	const TransformComponent& mirrorTransform = flatMirror.transform();
+	const CameraEntity& mirrorCamera = flatMirror.camera();
+	const CameraComponent& cameraComponent = mirrorCamera.getComponent<CameraComponent>();
 
-	RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
-
-	_submitMeshData(*meshData);
-
-	_addObjectToInstanceBuffer(instanceBuffer, transform);
-
-	_submitRenderableData(*meshData, instanceBuffer);  // Stencil the mirror shape in orthographic projection
-
-	// Pop the matrices used for the orthographic effect
-	popMatrix(PROJECTION);
-	popMatrix(VIEW);
-
-
-	// -- Setup the mirror camera ---------------------------------------------- //
-	const Coords3f& targetCoords = fixedMirrorComponent.lookAt();
-	const Coords3f& cameraCoords = fixedMirrorComponent.cameraPosition();
-
-	Coords3f up = { 0.0f, 1.0f, 0.0f };
-
-	// Push new matrices onto the stack, since the scene will be rendered again
-	pushMatrix(MODEL);
-	loadIdentity(MODEL);
-	pushMatrix(PROJECTION);
 	loadIdentity(PROJECTION);
-	pushMatrix(VIEW);
-	loadIdentity(VIEW);
-
-	float aspectRatio = windowSize.x / windowSize.y;
-	// This doesn't work correctly, however it would work if we weren't doing the orhto() shenanigans in order to 
-	// always show the mirror in the same place on the screen. It has something to do with the matrices if I had to guess.
-	perspective(70.0f, aspectRatio, 0.1f, 1000.0f);
-
-	lookAt(cameraCoords.x, cameraCoords.y, cameraCoords.z,	// camera position
-		targetCoords.x, targetCoords.y, targetCoords.z,	// target position
-		up.x, up.y, up.z);
-
-
-	// -- Draw scene into stenciled area -------------------------------------- //
-	_enableRenderingIntoStencil();
-
-	// What's rendered here will appear in the mirror
-	_renderSkybox();
-	_renderMeshes(scene);
-	_renderParticles(scene);
-
-	popMatrix(PROJECTION);
-	popMatrix(VIEW);
-	popMatrix(MODEL);
-
-	_disableStencilRendering();
+	float ratio = (float)windowSize.x / (float)windowSize.y;
+	perspective(cameraComponent.fov(), ratio, cameraComponent.clippingPlanes().near, cameraComponent.clippingPlanes().far);
+	_renderCamera(mirrorCamera);
 }
 
 
-void Renderer::_enableShapeStenciling() const
-{
-	glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	glEnable(GL_STENCIL_TEST);
-
-	glStencilFunc(GL_ALWAYS, 0x1, 0x0); // Stenciled area = 1
-	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-}
-
-
-void Renderer::_enableRenderingIntoStencil() const
-{
-	glStencilFunc(GL_EQUAL, 0x1, 0x1);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP); // Don't change stencil buffer
-}
-
-
-void Renderer::_disableStencilRendering() const
+void Renderer::_terminateMirrorRendering()
 {
 	glDisable(GL_STENCIL_TEST);
-	glClear(GL_STENCIL_BUFFER_BIT);
+	popMatrix(PROJECTION);
+	popMatrix(VIEW);
+}
+
+
+
+void Renderer::_renderMirrorShape(const FlatMirrorComponent& flatMirror) const
+{
+	WindowCoords windowSize = Application::getInstance().getWindowSize();
+	_initMirrorShape(windowSize);
+
+	RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
+	_submitMeshData(flatMirror.meshData());
+	_addObjectToInstanceBuffer(instanceBuffer, &flatMirror.transform());
+	_submitRenderableData(flatMirror.meshData(), instanceBuffer);
+}
+
+
+void Renderer::_renderMirrorView(const Scene& scene, const FlatMirrorComponent& flatMirror)
+{
+	_initMirrorCamera(flatMirror);
+	_renderSkybox();
+	_renderImages(scene);
+	_renderModels(scene);
+	_renderMeshes(scene);
+	_renderColliders(scene);
+	_renderParticles(scene);
+	_terminateMirrorRendering();
 }

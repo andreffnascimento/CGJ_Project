@@ -168,7 +168,7 @@ void Renderer::submitRenderableImage(const ImageComponent& image, const Entity& 
 void Renderer::renderScene(const Scene& scene)
 {
 	_initSceneRendering();
-	_renderCamera(scene);
+	_renderCamera(scene.activeCamera());
 	_renderSkybox();
 	_renderImages(scene);
 	_renderLights(scene);
@@ -176,8 +176,8 @@ void Renderer::renderScene(const Scene& scene)
 	_renderMeshes(scene);
 	_renderColliders(scene);
 	_renderParticles(scene);
+	_renderLensFlares(scene);
 	_renderFixedMirrors(scene);
-	//_renderLensFlares(scene);
 	_renderCanvas(scene);
 	_terminateSceneRendering();
 }
@@ -316,6 +316,10 @@ void Renderer::_submitTextureData() const
 void Renderer::_initSceneRendering()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_STENCIL_TEST);
+	glEnable(GL_CULL_FACE);
+
 	glUseProgram(_meshShader.getProgramIndex());
 	_submitFogData();
 	_submitTextureData();
