@@ -2,8 +2,8 @@
 #define __engine_scene_cameraEntity__
 
 
-#include "engine/scene/components.h"
 #include "engine/scene/entity.h"
+#include "engine/scene/components/cameraComponent.h"
 
 
 

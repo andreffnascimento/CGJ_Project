@@ -52,8 +52,11 @@ void Renderer::_submitSkyboxMeshData() const
 
 void Renderer::_submitSkyboxTransform() const
 {
-	loadIdentity(MODEL);
-	loadMatrix(MODEL, _skybox.transform->transformMatrix());
+	loadMatrix(MODEL, _modelTransforms.preModelTransform);
+	multMatrix(MODEL, _skybox.transform->transformMatrix());
+	if (_modelTransforms.applyPostMatrix)
+		multMatrix(MODEL, _modelTransforms.postModelTransform);
+
 	
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
 	glUniformMatrix4fv(_uniformLocator[RendererUniformLocations::SKYBOX_MODEL_MATRIX], 1, GL_FALSE, mMatrix[MODEL]);

@@ -168,18 +168,16 @@ void Renderer::submitRenderableImage(const ImageComponent& image, const Entity& 
 void Renderer::renderScene(const Scene& scene)
 {
 	_initSceneRendering();
-	_renderCamera(scene);
+	_renderCamera(scene.activeCamera());
 	_renderSkybox();
-	//_renderImages(scene);
-	//_renderPlanarReflections(scene);
-	//_renderLights(scene);
-	_renderShadows(scene);
-	//_renderMeshes(scene);
-	//_renderModels(scene);
-	//_renderFixedMirror(scene);
+	_renderImages(scene);
+	_renderLights(scene);
+	_renderModels(scene);
+	_renderMeshes(scene);
 	_renderColliders(scene);
 	_renderParticles(scene);
-	//_renderLensFlares(scene);
+	_renderLensFlares(scene);
+	_renderFixedMirrors(scene);
 	_renderCanvas(scene);
 	_terminateSceneRendering();
 }
@@ -197,7 +195,7 @@ void Renderer::_setupMeshShader()
 	glBindFragDataLocation(_meshShader.getProgramIndex(), 0, "colorOut");
 	glBindAttribLocation(_meshShader.getProgramIndex(), VERTEX_COORD_ATTRIB, "position");
 	glBindAttribLocation(_meshShader.getProgramIndex(), NORMAL_ATTRIB, "normal");
-	glBindAttribLocation(_meshShader.getProgramIndex(), TEXTURE_COORD_ATTRIB, "texCoord");
+	glBindAttribLocation(_meshShader.getProgramIndex(), TEXTURE_COORD_ATTRIB, "textureCoords");
 
 	glLinkProgram(_meshShader.getProgramIndex());
 
@@ -318,6 +316,10 @@ void Renderer::_submitTextureData() const
 void Renderer::_initSceneRendering()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_STENCIL_TEST);
+	glEnable(GL_CULL_FACE);
+
 	glUseProgram(_meshShader.getProgramIndex());
 	_submitFogData();
 	_submitTextureData();

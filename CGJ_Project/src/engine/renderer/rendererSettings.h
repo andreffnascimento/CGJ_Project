@@ -2,6 +2,7 @@
 #define __engine_renderer_rendererDatatypes__
 
 
+#include "engine/math/transformMatrix.h"
 #include "engine/utils/coords.h"
 
 
@@ -53,6 +54,14 @@ public:
 		float startDistance = 0.0f;
 		float endDistance = 10.0f;
 		bool active = false;
+	};
+
+
+	struct ModelTransforms
+	{
+		TransformMatrix preModelTransform = TransformMatrix();
+		TransformMatrix postModelTransform = TransformMatrix();
+		bool applyPostMatrix = false;
 	};
 
 
