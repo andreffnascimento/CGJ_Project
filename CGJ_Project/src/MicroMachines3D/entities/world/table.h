@@ -46,7 +46,9 @@ private:
 		{
 			RigidbodyComponent& rigidbody = top.addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::STATIC);
 			AABBColliderComponent& collider = top.addComponent<AABBColliderComponent>(top, ColliderIds::TABLE, rigidbody, TABLE_SIZE);
-		}		
+		}
+
+		top.getComponent<MeshComponent>().setEnabled(false);
 	}
 
 

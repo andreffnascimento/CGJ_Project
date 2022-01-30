@@ -36,6 +36,7 @@
     <ClCompile Include="src\engine\math\l3dBillboard.cpp" />
     <ClCompile Include="src\engine\renderer\modules\lensFlareRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\imageRenderer.cpp" />
+    <ClCompile Include="src\engine\renderer\modules\shadowRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\reflectionRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\skyboxRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\mesh\meshFromAssimp.cpp" />

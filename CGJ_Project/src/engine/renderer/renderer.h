@@ -53,7 +53,8 @@ public:
 	static void setSkybox(const Entity& skyboxEntity);
 
 
-
+public:
+	void setMat(float m[16]) const;
 
 public:
 	Renderer() = default;
@@ -83,6 +84,7 @@ private:
 	void _terminateSceneRendering();
 	void _renderCamera(const Scene& scene) const;
 	void _renderSkybox() const;
+	void _renderShadows(const Scene& scene) const;
 	void _renderLights(const Scene& scene) const;
 	void _renderMeshes(const Scene& scene) const;
 	void _renderModels(const Scene& scene) const;
@@ -139,6 +141,10 @@ private:
 	void _enableReflectorPlaneStenciling() const;
 	void _enableReflectionsRendering() const;
 	void _disableReflectionsRendering() const;
+
+private:
+	void _enableShadowsRendering() const;
+	void _disableShadowsRendering() const;
 
 private:
 	void _applyRecursiveModelTransform(const aiNode* node) const;
