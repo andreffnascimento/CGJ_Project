@@ -172,12 +172,14 @@ void Renderer::renderScene(const Scene& scene)
 	_renderSkybox();
 	_renderImages(scene);
 	_renderLights(scene);
-	_renderModels(scene);
-	_renderMeshes(scene);
+	_renderShadows(scene);
+	//_renderPlanarReflections(scene);
+	//_renderModels(scene);
+	//_renderMeshes(scene);
 	_renderColliders(scene);
 	_renderParticles(scene);
 	_renderLensFlares(scene);
-	_renderFixedMirrors(scene);
+	//_renderFixedMirrors(scene);
 	_renderCanvas(scene);
 	_terminateSceneRendering();
 }

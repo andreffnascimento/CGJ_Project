@@ -6,7 +6,7 @@
 
 
 
-void Renderer::_renderShadows(const Scene& scene) const
+void Renderer::_renderShadows(const Scene& scene)
 {
 	Entity table = scene.getEntityByTag("Table:top");
 
@@ -54,22 +54,23 @@ void Renderer::_renderShadows(const Scene& scene) const
 		Coords3f scale;
 		Transform::decomposeTransformMatrix(lightEntity, translation, rotation, scale);
 
-		if (light.lightType() == LightComponent::LightType::SPOT)
-			continue;
-		else if (light.lightType() == LightComponent::LightType::DIRECTIONAL)  // TODO check if light is enabled
+		if (light.lightType() == LightComponent::LightType::DIRECTIONAL)  // TODO check if light is enabled
 		{
-			float lightPos[4] = { 0.0f, 10.0f, 0.0f, 1.0f };
+			float lightPos[4] = {0.0f, 10.0f, 0.0f, 1.0f };
 
 			float mat[16];
-
 
 			shadow_matrix(mat, floor_plane, lightPos);
 
 
+			_modelTransforms.applyPostMatrix = true;
+			_modelTransforms.postModelTransform = TransformMatrix(mat);
 
-			_renderMeshes(scene);		
+			//_renderMeshes(scene);		
+			_renderOpaqueMeshInstances();
 
-			//popMatrix(MODEL);
+			_modelTransforms.applyPostMatrix = false;
+
 		}
 		//else if (light.lightType() == LightComponent::LightType::POINT)
 		//{

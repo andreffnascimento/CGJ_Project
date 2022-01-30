@@ -82,7 +82,7 @@ private:
 	void _terminateSceneRendering();
 	void _renderCamera(const CameraEntity& camera) const;
 	void _renderSkybox() const;
-	void _renderShadows(const Scene& scene) const;
+	void _renderShadows(const Scene& scene);
 	void _renderLights(const Scene& scene) const;
 	void _renderMeshes(const Scene& scene) const;
 	void _renderModels(const Scene& scene) const;
