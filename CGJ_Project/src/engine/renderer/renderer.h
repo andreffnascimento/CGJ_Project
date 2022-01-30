@@ -54,10 +54,6 @@ public:
 	static void setBumpActive(bool active);
 	static void setSkybox(const Entity& skyboxEntity);
 
-
-public:
-	void setMat(float m[16]) const;
-
 public:
 	Renderer() = default;
 	~Renderer() = default;
@@ -173,14 +169,6 @@ private:
 	void _submitParticleTextureData(const ParticleGeneratorComponent & particleGenerator) const;
 	void _addToParticleInstanceBuffer(RendererData::SubmitInstanceBuffer & instanceBuffer, const ParticleGeneratorComponent::ParticleData particle) const;
 	void _renderParticleGenerator(const ParticleGeneratorComponent & particleGenerator) const;
-
-
-private:
-	
-	void _enableReflectorPlaneStenciling() const;
-	void _enableReflectionsRendering() const;
-	void _disableReflectionsRendering() const;
-
 
 private:
 	void _initLensFlareRendering() const;

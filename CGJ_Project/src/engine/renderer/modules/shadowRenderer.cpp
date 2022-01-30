@@ -64,7 +64,7 @@ void Renderer::_renderShadows(const Scene& scene) const
 
 
 			shadow_matrix(mat, floor_plane, lightPos);
-			setMat(mat);
+
 
 
 			_renderMeshes(scene);		
