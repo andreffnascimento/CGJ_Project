@@ -71,15 +71,13 @@ public:
 private:
 	void _updateMirrorCameraPosition()
 	{
-
-
 		float carRotation = _carTransform->rotation().toEulerAngles().y;
 		Coords3f mirrorLookAt = Quaternion(Coords3f({ 0.0f, 1.0f, 0.0f }), carRotation - 90.0f).calculatePointRotation(Coords3f({1.0f, 0.0f, 0.0f}));
 
-		Coords3f cameraPosition = _carTransform->translation() - mirrorLookAt * 5.0f;
-		cameraPosition.y += 1.0f;
+		Coords3f cameraPosition = _carTransform->translation() + mirrorLookAt * 5.0f;
+		cameraPosition.y += 3.0f;
 
-		_mirrorComponent->cameraComponent().setTargetCoords(cameraPosition - mirrorLookAt);
+		_mirrorComponent->cameraComponent().setTargetCoords(_carTransform->translation());
 		Transform::translateTo(_mirrorComponent->camera(), cameraPosition);
 	}
 
