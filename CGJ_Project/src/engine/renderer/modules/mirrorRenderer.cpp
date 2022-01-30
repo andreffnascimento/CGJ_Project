@@ -49,7 +49,7 @@ void Renderer::_initMirrorCamera(const FlatMirrorComponent& flatMirror)
 	glStencilFunc(GL_EQUAL, 1, 0x1);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 
-	WindowCoords windowSize = Application::getInstance().getWindowSize();
+	WindowCoords windowSize = Application::getInstance().getOriginalWindowSize();
 	const TransformComponent& mirrorTransform = flatMirror.transform();
 	const CameraEntity& mirrorCamera = flatMirror.camera();
 	const CameraComponent& cameraComponent = mirrorCamera.getComponent<CameraComponent>();
@@ -72,7 +72,7 @@ void Renderer::_terminateMirrorRendering()
 
 void Renderer::_renderMirrorShape(const FlatMirrorComponent& flatMirror) const
 {
-	WindowCoords windowSize = Application::getInstance().getWindowSize();
+	WindowCoords windowSize = Application::getInstance().getOriginalWindowSize();
 	_initMirrorShape(windowSize);
 
 	RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();

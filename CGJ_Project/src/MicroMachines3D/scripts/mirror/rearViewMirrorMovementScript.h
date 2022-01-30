@@ -13,7 +13,7 @@ class RearViewMirrorMovementScript : public Script
 {
 
 private:
-	static constexpr float CAM_Y_OFFSET = -20.0f;
+	static constexpr float CAM_Y_OFFSET = 3.0f;
 
 
 
@@ -75,7 +75,7 @@ private:
 		Coords3f mirrorLookAt = Quaternion(Coords3f({ 0.0f, 1.0f, 0.0f }), carRotation - 90.0f).calculatePointRotation(Coords3f({1.0f, 0.0f, 0.0f}));
 
 		Coords3f cameraPosition = _carTransform->translation() + mirrorLookAt * 5.0f;
-		cameraPosition.y += 3.0f;
+		cameraPosition.y += RearViewMirrorMovementScript::CAM_Y_OFFSET;
 
 		_mirrorComponent->cameraComponent().setTargetCoords(_carTransform->translation());
 		Transform::translateTo(_mirrorComponent->camera(), cameraPosition);
