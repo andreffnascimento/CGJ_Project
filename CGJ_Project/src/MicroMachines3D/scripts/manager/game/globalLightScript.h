@@ -46,6 +46,7 @@ public:
 
 		if (_eventHandler->keyState('N').pressed() || _eventHandler->keyState('n').pressed())
 			_globalLight->setEnabled(!_globalLight->isEnabled());
+
 	}
 
 };

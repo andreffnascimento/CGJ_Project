@@ -14,6 +14,7 @@ constexpr Coords3f FLOATER_SIZE = { 10.0f, 10.0f, 10.0f };
 
 
 constexpr Coords3f TABLE_SIZE = { 150.0f, 5.0f, 75.0f };
+
 constexpr Coords3f LEG_SIZE = { 5.0f, 50.0f, 5.0f };
 
 

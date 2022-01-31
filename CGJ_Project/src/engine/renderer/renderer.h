@@ -57,9 +57,6 @@ public:
 	static void setEnvironmentalMappingBlendingAmount(float environmentalMappingBlendingAmount);
 	static void setSkybox(const Entity& skyboxEntity);
 
-
-
-
 public:
 	Renderer() = default;
 	~Renderer() = default;
@@ -89,16 +86,17 @@ private:
 	void _terminateSceneRendering();
 	void _renderCamera(const CameraEntity& camera) const;
 	void _renderSkybox() const;
+	void _renderShadows(const Scene& scene);
 	void _renderLights(const Scene& scene) const;
-	void _renderMeshes(const Scene& scene) const;
-	void _renderModels(const Scene& scene) const;
+	void _renderMeshes(const Scene& scene, RendererSettings::RendererMode renderMode) const;
+	void _renderModels(const Scene& scene, RendererSettings::RendererMode renderMode) const;
 	void _renderImages(const Scene& scene) const;
 	void _renderColliders(const Scene& scene) const;
 	void _renderFixedMirrors(const Scene& scene);	
 	void _renderParticles(const Scene& scene) const;
 	void _renderLensFlares(const Scene& scene) const;
 	void _renderCanvas(const Scene& scene) const;
-	void _renderPlanarReflections(const Scene& scene) const;
+	void _renderPlanarReflections(const Scene& scene);
 
 
 private:
@@ -135,6 +133,18 @@ private:
 	void _renderOpaqueMeshInstances() const;
 	void _renderTranslucentMeshInstances(const RendererData::translucentMeshInstances_t& translucentMeshInstances) const;
 
+private:
+	void _enableReflectorPlaneStenciling();
+	void _enableReflectionsRendering();
+	void _disableReflectionsRendering();
+	void _stencilReflectorPlane(const Scene & scene);
+	void _blendReflections(const Scene & scene);
+
+private:
+	void _enableShadowsRendering();
+	void _disableShadowsRendering();
+	void _blendShadows(const Scene & scene);
+	void _renderActiveShadows(const Scene & scene);
 
 private:
 	void _submitModelMeshData(const MyMesh& mesh) const;
@@ -161,14 +171,6 @@ private:
 	void _addToParticleInstanceBuffer(RendererData::SubmitInstanceBuffer & instanceBuffer, const ParticleGeneratorComponent::ParticleData particle) const;
 	void _renderParticleGenerator(const ParticleGeneratorComponent & particleGenerator) const;
 
-
-private:
-	
-	void _enableReflectorPlaneStenciling() const;
-	void _enableReflectionsRendering() const;
-	void _disableReflectionsRendering() const;
-
-
 private:
 	void _initLensFlareRendering() const;
 	void _terminateLensFlareRendering() const;
@@ -185,6 +187,8 @@ private:
 
 	void _renderMirrorShape(const FlatMirrorComponent& flatMirror) const;
 	void _renderMirrorView(const Scene& scene, const FlatMirrorComponent& flatMirror);
+	void _enableTableTop(const Scene& scene);
+	void _disableTableTop(const Scene& scene);
 
 
 private:

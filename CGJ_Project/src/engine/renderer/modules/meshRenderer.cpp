@@ -16,9 +16,9 @@ extern float mNormal3x3[9];
 
 
 
-void Renderer::_renderMeshes(const Scene& scene) const
+void Renderer::_renderMeshes(const Scene& scene, RendererSettings::RendererMode renderMode) const
 {
-	glUniform1ui(_uniformLocator[RendererUniformLocations::RENDER_MODE], (unsigned int)RendererSettings::RendererMode::MESH_RENDERER);
+	glUniform1ui(_uniformLocator[RendererUniformLocations::RENDER_MODE], (unsigned int)renderMode);
 	_renderOpaqueMeshInstances();
 
 	_initTranslucentRendering();
@@ -100,11 +100,12 @@ void Renderer::_sortTranslucentMeshInstancesInto(const Scene& scene, RendererDat
 
 
 void Renderer::_addObjectToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform) const
-{
+{ 
 	loadMatrix(MODEL, _modelTransforms.preModelTransform);
 	multMatrix(MODEL, transform->transformMatrix());
-	if (_modelTransforms.applyPostMatrix)
-		multMatrix(MODEL, _modelTransforms.postModelTransform);
+	//if (_modelTransforms.applyPostMatrix) 
+		//multMatrix(MODEL, _modelTransforms.postModelTransform);
+
 
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
 	computeNormalMatrix3x3();

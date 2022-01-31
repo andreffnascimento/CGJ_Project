@@ -20,6 +20,7 @@ public:
 public:
 	TransformMatrix();
 	TransformMatrix(const TransformMatrix& matrix);
+	TransformMatrix(float matrix[16]);
 	~TransformMatrix() = default;
 
 

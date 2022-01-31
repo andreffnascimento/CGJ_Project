@@ -6,52 +6,55 @@
 
 
 
-void Renderer::_renderPlanarReflections(const Scene& scene) const
+void Renderer::_renderPlanarReflections(const Scene& scene)
 {
-	Entity table = scene.getEntityByTag("Table:top"); 
-
-	// How to render reflections:
-	// 1. Render "Table:top" into stencil buffer, without sending it to the color buffer
-	// 2. Render the flipped meshes into the stenciled area
-	// 3. Enable blending, render the "top" into the color buffer so that the reflections blend with it
-	// 4. Disable blending, render all the meshes normally
-
-	const MeshData* tableMesh = &table.getComponent<MeshComponent>().meshData();
-
-	// -- Stencil plane shape ------------------------------------------------- //
-	_enableReflectorPlaneStenciling();
-
-	RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
-
-	_submitMeshData(*tableMesh);
-
-	_addObjectToInstanceBuffer(instanceBuffer, &table.transform());
-	_submitRenderableData(*tableMesh, instanceBuffer);
-
-
-	// -- Draw scene into stenciled area -------------------------------------- //
+	_disableTableTop(scene);
+	_stencilReflectorPlane(scene);
 	_enableReflectionsRendering();
 
-	//TODO: scale all meshes by (1, -1, 1)
+	// TODO flip position of all lightsources on y axis -> lightPos.y *= -1.0f
 
-	_renderLights(scene);  // light position needs to be flipped -> lightPos[1] *= (-1.0f)
-	_renderMeshes(scene);  // should render meshes excluding the table mesh -> a clipping plane could be used to not render anything below table top
-	_renderModels(scene);
+	_renderMeshes(scene, RendererSettings::RendererMode::MESH_RENDERER);
+	_renderModels(scene, RendererSettings::RendererMode::MESH_RENDERER);
 
 	_disableReflectionsRendering();
+	_blendReflections(scene);
+}
 
-	// -- Blend the table color with the reflected meshes  ------------------- //
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+void Renderer::_stencilReflectorPlane(const Scene& scene)
+{
+	Entity table = scene.getEntityByTag("Table:top");
 
+	const MeshData* tableMesh = &table.getComponent<MeshComponent>().meshData();
+	RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
+
+	_enableReflectorPlaneStenciling();
+
+	_submitMeshData(*tableMesh);
+	_addObjectToInstanceBuffer(instanceBuffer, &table.transform());
 	_submitRenderableData(*tableMesh, instanceBuffer);
-
-	glDisable(GL_BLEND);
-
 }
 
 
-void Renderer::_enableReflectorPlaneStenciling() const
+void Renderer::_blendReflections(const Scene& scene)
+{
+	Entity table = scene.getEntityByTag("Table:top");
+
+	const MeshData* tableMesh = &table.getComponent<MeshComponent>().meshData();
+	RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	_submitMeshData(*tableMesh);
+	_addObjectToInstanceBuffer(instanceBuffer, &table.transform());
+	_submitRenderableData(*tableMesh, instanceBuffer);
+
+	glDisable(GL_BLEND);
+}
+
+
+void Renderer::_enableReflectorPlaneStenciling()
 {
 	glEnable(GL_STENCIL_TEST);
 	glStencilFunc(GL_NEVER, 0x1, 0x1);
@@ -59,21 +62,25 @@ void Renderer::_enableReflectorPlaneStenciling() const
 }
 
 
-void Renderer::_enableReflectionsRendering() const
+void Renderer::_enableReflectionsRendering()
 {
+	//_modelTransforms.applyPostMatrix = true;
+	//_modelTransforms.postModelTransform = TransformMatrix().setScaleMatrix({ 1.0f, -1.0f, 1.0f });
+	_modelTransforms.preModelTransform = TransformMatrix().setScaleMatrix({ 1.0f, -1.0f, 1.0f });
+
 	// Draw the reflected objects where stencil is 1
 	glStencilFunc(GL_EQUAL, 0x1, 0x1);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 
-	//pushMatrix(MODEL);
-	//scale(MODEL, 1.0f, -1.0f, 1.0f);
 	glCullFace(GL_FRONT);
 }
 
 
-void Renderer::_disableReflectionsRendering() const
+void Renderer::_disableReflectionsRendering()
 {
-	//popMatrix(MODEL);
+	//_modelTransforms.applyPostMatrix = false;
+	_modelTransforms.preModelTransform = TransformMatrix().setIdentityMatrix();
+
 	glCullFace(GL_BACK);
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);

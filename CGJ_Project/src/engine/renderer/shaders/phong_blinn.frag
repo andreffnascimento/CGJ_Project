@@ -23,6 +23,7 @@ const uint RENDER_MODE_IMAGE = 2;
 const uint RENDER_MODE_PARTICLE = 3;
 const uint RENDER_MODE_SKYBOX = 4;
 const uint RENDER_MODE_LENS_FLARE = 5;
+const uint RENDER_MODE_SHADOWS = 7;
 
 
 
@@ -369,6 +370,14 @@ vec4 renderLensFlare() {
 }
 
 
+vec4 renderShadows() 
+{
+	vec4 shadowColor = vec4(0.02, 0.02, 0.05, 0.8);
+
+	return shadowColor;
+}
+
+
 void main() {
 	if (renderMode == RENDER_MODE_MESH)
 		colorOut = renderMesh();
@@ -380,4 +389,6 @@ void main() {
 		colorOut = renderSkybox();
 	else if (renderMode == RENDER_MODE_LENS_FLARE)
 		colorOut = renderLensFlare();
+	else if (renderMode == RENDER_MODE_SHADOWS)
+		colorOut = renderShadows();
 }

@@ -193,6 +193,7 @@
     <ClCompile Include="src\engine\renderer\modules\particleRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\imageRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\reflectionRenderer.cpp" />
+    <ClCompile Include="src\engine\renderer\modules\shadowRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\modules\skyboxRenderer.cpp" />
     <ClCompile Include="src\engine\renderer\rendererUniformLocations.h" />
     <ClCompile Include="src\engine\scene\components.cpp" />
