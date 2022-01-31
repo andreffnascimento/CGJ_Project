@@ -30,6 +30,9 @@ private:
 	float _dragThreshold = 1.0f;
 	bool _usesGravity = false;
 
+	float _maxLinearVelocity = std::numeric_limits<float>::max();
+	float _maxAngularVelocity = std::numeric_limits<float>::max();
+
 	const TransformComponent* transform = nullptr;
 	Coords3f _position = Coords3f();
 	Quaternion _rotation = Coords3f();
@@ -48,24 +51,28 @@ public:
 	RigidbodyComponent(RigidbodyComponent::RigidbodyType type, float mass, float drag, float angularDrag);
 	~RigidbodyComponent() = default;
 
-	inline const RigidbodyComponent::RigidbodyType& type() const{ return _type; }
-	inline float mass() const									{ return  _mass == 0.0f ? std::numeric_limits<float>::max() : 1.0f / _mass; }
-	inline float invMass() const								{ return _mass; }
-	inline float drag() const									{ return _drag; }
-	inline float angularDrag() const							{ return _angularDrag; }
-	inline float dragThreshold() const							{ return _dragThreshold; }
-	inline bool usesGravity() const								{ return _usesGravity; }
-	inline const Coords3f& position() const						{ return _position; }
-	inline const Quaternion& rotation() const					{ return _rotation; }
-	inline const Coords3f& velocity() const						{ return _velocity; }
-	inline const Coords3f& angularVelocity() const				{ return _angularVelocity; }
-	inline bool sleeping() const								{ return _sleeping; }
+	inline const RigidbodyComponent::RigidbodyType& type() const	{ return _type; }
+	inline float mass() const										{ return  _mass == 0.0f ? std::numeric_limits<float>::max() : 1.0f / _mass; }
+	inline float invMass() const									{ return _mass; }
+	inline float drag() const										{ return _drag; }
+	inline float angularDrag() const								{ return _angularDrag; }
+	inline float dragThreshold() const								{ return _dragThreshold; }
+	inline bool usesGravity() const									{ return _usesGravity; }
+	inline float maxLinearVelocity() const							{ return _maxLinearVelocity; }
+	inline float maxAngularVelocity() const							{ return _maxAngularVelocity; }
+	inline const Coords3f& position() const							{ return _position; }
+	inline const Quaternion& rotation() const						{ return _rotation; }
+	inline const Coords3f& velocity() const							{ return _velocity; }
+	inline const Coords3f& angularVelocity() const					{ return _angularVelocity; }
+	inline bool sleeping() const									{ return _sleeping; }
 
-	inline void setdrag(float drag)						{ _drag = drag; }
-	inline void setAngularDrag(float angularDrag)		{ _angularDrag = angularDrag; }
-	inline void setDragThreshold(float dragThreshold)	{ _dragThreshold = dragThreshold; }
-	inline void setUsesGravity(bool usesGravity)		{ _usesGravity = usesGravity; }
-	inline void setSleepThreshold(float sleepThreshold) { _sleepThreshold = sleepThreshold; }
+	inline void setdrag(float drag)							{ _drag = drag; }
+	inline void setAngularDrag(float angularDrag)			{ _angularDrag = angularDrag; }
+	inline void setDragThreshold(float dragThreshold)		{ _dragThreshold = dragThreshold; }
+	inline void setUsesGravity(bool usesGravity)			{ _usesGravity = usesGravity; }
+	inline void setMaxLinearVelocity(float maxVelocity)		{ _maxLinearVelocity = maxVelocity; }
+	inline void setMaxAngularVelocity(float maxVelocity)	{ _maxAngularVelocity = maxVelocity; }
+	inline void setSleepThreshold(float sleepThreshold)		{ _sleepThreshold = sleepThreshold; }
 
 	inline void setPosition(const Coords3f& position) { _position = position; }
 	inline void setRotation(const Coords3f& rotation) { _rotation = rotation; }

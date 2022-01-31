@@ -211,6 +211,9 @@ void PhysicsEngine::_calculateExpectedAngularVelocity(RigidbodyComponent& rigidb
 {
 	angularForce *= ts;
 	rigidbody._angularVelocity += angularForce;
+
+	if (rigidbody._angularVelocity.length() > rigidbody._maxAngularVelocity)
+		rigidbody._angularVelocity = rigidbody._angularVelocity.normalized() * rigidbody._maxAngularVelocity;
 }
 
 
@@ -221,6 +224,9 @@ void PhysicsEngine::_calculateExpectedLinearVelocity(RigidbodyComponent& rigidbo
 	rotation.rotatePoint(rigidbody._velocity);
 	linearForce *= ts;
 	rigidbody._velocity += linearForce;
+
+	if (rigidbody._velocity.length() > rigidbody._maxLinearVelocity)
+		rigidbody._velocity = rigidbody._velocity.normalized() * rigidbody._maxLinearVelocity;
 }
 
 

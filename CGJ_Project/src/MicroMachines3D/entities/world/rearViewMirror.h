@@ -22,6 +22,7 @@ public:
 		Entity camera = scene->createEntity("RearViewCamera");
 		camera.addComponent<CameraComponent>(CameraComponent::CameraProjection::PERSPECTIVE, ClippingPlanes({ 0.01f, 1000.0f }), 70.0f);
 		flatMirrorComponent.setCamera(camera);
+		flatMirrorComponent.setEnabled(false);
 
 		Transform::scale(*this, MIRROR_SIZE);
 		Transform::translateTo(*this, { windowCoords.x / 2.0f , windowCoords.y - MIRROR_SIZE.y / 2.0f, 0.0f });

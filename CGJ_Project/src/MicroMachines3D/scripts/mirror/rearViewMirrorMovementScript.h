@@ -28,7 +28,7 @@ private:
 
 	const RaceManagerScript* _raceManagerScript = nullptr;
 
-	bool _mirrorEnabled = true;
+	bool _mirrorEnabled = false;
 
 
 
