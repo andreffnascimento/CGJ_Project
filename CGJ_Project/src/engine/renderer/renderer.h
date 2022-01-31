@@ -84,8 +84,8 @@ private:
 	void _renderSkybox() const;
 	void _renderShadows(const Scene& scene);
 	void _renderLights(const Scene& scene) const;
-	void _renderMeshes(const Scene& scene) const;
-	void _renderModels(const Scene& scene) const;
+	void _renderMeshes(const Scene& scene, RendererSettings::RendererMode renderMode) const;
+	void _renderModels(const Scene& scene, RendererSettings::RendererMode renderMode) const;
 	void _renderImages(const Scene& scene) const;
 	void _renderColliders(const Scene& scene) const;
 	void _renderFixedMirrors(const Scene& scene);	

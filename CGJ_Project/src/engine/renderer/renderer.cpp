@@ -172,10 +172,10 @@ void Renderer::renderScene(const Scene& scene)
 	_renderSkybox();
 	_renderImages(scene);
 	_renderPlanarReflections(scene);
-	//_renderShadows(scene);
 	_renderLights(scene);
-	_renderModels(scene);
-	_renderMeshes(scene);
+	_renderShadows(scene);
+	_renderModels(scene, RendererSettings::RendererMode::MESH_RENDERER);
+	_renderMeshes(scene, RendererSettings::RendererMode::MESH_RENDERER);
 	_renderColliders(scene);
 	_renderParticles(scene);
 	_renderLensFlares(scene);

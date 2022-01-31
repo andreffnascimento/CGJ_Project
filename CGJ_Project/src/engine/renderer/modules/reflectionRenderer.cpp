@@ -13,8 +13,8 @@ void Renderer::_renderPlanarReflections(const Scene& scene)
 
 	// TODO flip position of all lightsources on y axis -> lightPos.y *= -1.0f
 
-	_renderMeshes(scene);
-	_renderModels(scene);
+	_renderMeshes(scene, RendererSettings::RendererMode::MESH_RENDERER);
+	_renderModels(scene, RendererSettings::RendererMode::MESH_RENDERER);
 
 	_disableReflectionsRendering();
 	_blendReflections(scene);

@@ -21,7 +21,7 @@ TransformMatrix::TransformMatrix(float matrix[16])
 	for (int i = 0; i < 4; i++)
 	{
 		for (int j = 0; j < 4; j++)
-			_matrix[i][j] = matrix[(i % 4) + j];
+			_matrix[i][j] = matrix[i * 4 + j];
 	}
 }
 

@@ -16,7 +16,6 @@ void Renderer::_renderShadows(const Scene& scene)
 	// 3. Calculate shadow matrix
 	// 4. Disable blending, render all the meshes normally
 	
-	table.getComponent<MeshComponent>().setEnabled(true);
 	const MeshData* tableMesh = &table.getComponent<MeshComponent>().meshData();
 	
 
@@ -33,9 +32,8 @@ void Renderer::_renderShadows(const Scene& scene)
 
 	// -- Draw scene into stenciled area -------------------------------------- //
 	_enableShadowsRendering();
-	table.getComponent<MeshComponent>().setEnabled(false);
-	GLfloat floor_plane[4] = { 0, 1, 0, 0 };
 
+	GLfloat floor_plane[4] = { 0,1,0,0 };
 
 	const auto& lightComponents = scene.getSceneComponents<LightComponent>();
 	if (lightComponents.size() > RendererSettings::MAX_LIGHTS)
@@ -56,54 +54,65 @@ void Renderer::_renderShadows(const Scene& scene)
 
 		if (light.lightType() == LightComponent::LightType::DIRECTIONAL)  // TODO check if light is enabled
 		{
-			float lightPos[4] = {0.0f, 10.0f, 0.0f, 1.0f };
+			float lightPos[4] = { translation.x, translation.y, translation.z, 0.0f };
 
 			float mat[16];
 
 			shadow_matrix(mat, floor_plane, lightPos);
 
-
-
 			_modelTransforms.preModelTransform = TransformMatrix(mat);
+		
+			_renderModels(scene, RendererSettings::RendererMode::SHADOWS_RENDERER);
+			_renderMeshes(scene, RendererSettings::RendererMode::SHADOWS_RENDERER);
 
-			//_renderMeshes(scene);		
-			_renderOpaqueMeshInstances();
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glUniform1ui(_uniformLocator[RendererUniformLocations::RENDER_MODE], (GLuint)RendererSettings::RendererMode::MESH_RENDERER);
+
+			_submitMeshData(*tableMesh);
+
+			_addObjectToInstanceBuffer(instanceBuffer, &table.transform());
+			_submitRenderableData(*tableMesh, instanceBuffer);
+
+			glDisable(GL_BLEND);
 
 
 		}
-		//else if (light.lightType() == LightComponent::LightType::POINT)
-		//{
-		//	float lightPos[4] = { translation.x, translation.y, translation.z, 0.0f };
-		//	shadow_matrix(mat, floor_plane, lightPos);
+		else if (light.lightType() == LightComponent::LightType::POINT)
+		{
+			float lightPos[4] = { translation.x, translation.y, translation.z, 0.0f };
+			float mat[16];
+			shadow_matrix(mat, floor_plane, lightPos);
 
 
-		//	//pushMatrix(MODEL);
-		//	//multMatrix(MODEL, mat);
 
-		//	_renderMeshes(scene);
-		//	//_renderModels(scene);
+			shadow_matrix(mat, floor_plane, lightPos);
 
-		//	//popMatrix(MODEL);
-		//}
+			_modelTransforms.preModelTransform = TransformMatrix(mat);
+
+			_renderModels(scene, RendererSettings::RendererMode::SHADOWS_RENDERER);
+			_renderMeshes(scene, RendererSettings::RendererMode::SHADOWS_RENDERER);
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glUniform1ui(_uniformLocator[RendererUniformLocations::RENDER_MODE], (GLuint)RendererSettings::RendererMode::MESH_RENDERER);
+
+			_submitMeshData(*tableMesh);
+
+			_addObjectToInstanceBuffer(instanceBuffer, &table.transform());
+			_submitRenderableData(*tableMesh, instanceBuffer);
+
+			glDisable(GL_BLEND);
+
+		}
 	}
-
+	_modelTransforms.preModelTransform = TransformMatrix().setIdentityMatrix();
 
 	_disableShadowsRendering();
 
-	//// -- Blend the table color with the reflected meshes  ------------------- //
-	//glEnable(GL_BLEND);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//table.getComponent<MeshComponent>().setEnabled(true);
-
-	//_submitMeshData(*tableMesh);
-
-	//_addObjectToInstanceBuffer(instanceBuffer, &table.transform());
-	//_submitRenderableData(*tableMesh, instanceBuffer);
-
-	//glDisable(GL_BLEND);
+	// -- Blend the table color with the reflected meshes  ------------------- //
 
 
-	table.getComponent<MeshComponent>().setEnabled(false);
 
 }
 
@@ -114,8 +123,8 @@ void Renderer::_enableShadowsRendering() const
 
 	glDisable(GL_DEPTH_TEST); //To force the shadow geometry to be rendered even if behind the floor
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_DST_COLOR, GL_ZERO);
+	//glEnable(GL_BLEND);
+	//glBlendFunc(GL_DST_COLOR, GL_ZERO);
 	glStencilFunc(GL_EQUAL, 0x1, 0x1);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
 }

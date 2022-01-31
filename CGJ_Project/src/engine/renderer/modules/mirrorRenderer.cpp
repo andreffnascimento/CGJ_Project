@@ -87,8 +87,8 @@ void Renderer::_renderMirrorView(const Scene& scene, const FlatMirrorComponent& 
 	_initMirrorCamera(flatMirror);
 	_renderSkybox();
 	_renderImages(scene);
-	_renderModels(scene);
-	_renderMeshes(scene);
+	_renderModels(scene, RendererSettings::RendererMode::MESH_RENDERER);
+	_renderMeshes(scene, RendererSettings::RendererMode::MESH_RENDERER);
 	_renderColliders(scene);
 	_renderParticles(scene);
 	_terminateMirrorRendering();
