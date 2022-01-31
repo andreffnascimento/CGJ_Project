@@ -351,7 +351,7 @@ vec4 renderLensFlare() {
 
 vec4 renderShadows() 
 {
-	vec4 shadowColor = vec4(0.04, 0.04, 0.1, 1.0);
+	vec4 shadowColor = vec4(0.02, 0.02, 0.05, 0.8);
 
 	return shadowColor;
 }
