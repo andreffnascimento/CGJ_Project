@@ -19,26 +19,19 @@ void Renderer::_renderModels(const Scene& scene) const
 	for (auto& modelIterator : scene.getSceneComponents<ModelComponent>())
 	{
 		const ModelComponent& model = modelIterator.second;
-
-		loadIdentity(MODEL);
 		TransformMatrix modelBaseTransformMatrix = Transform::calculateTransformMatrix((TransformComponent&)model.modelTransform());
-		TransformMatrix modelTransformMatrix = model.transform().transformMatrix() * modelBaseTransformMatrix;
-		loadMatrix(MODEL, modelTransformMatrix);
-		_recusiveModelRendering(model, model.scene()->mRootNode);
+		const TransformMatrix& modelTransform = scene.getEntityById(modelIterator.first).transform().transformMatrix();
+
+		loadMatrix(MODEL, _modelTransforms.preModelTransform);
+		multMatrix(MODEL, modelTransform * modelBaseTransformMatrix);
+		if (_modelTransforms.applyPostMatrix)
+			multMatrix(MODEL, _modelTransforms.postModelTransform);
+
+		_recusiveModelRendering(model);
 	}
 }
 
 
-
-
-void Renderer::_applyRecursiveModelTransform(const aiNode* node) const
-{
-	aiMatrix4x4 nodeTransform = node->mTransformation;
-	nodeTransform.Transpose();
-
-	pushMatrix(MODEL);
-	multMatrix(MODEL, (float*)&nodeTransform);
-}
 
 
 void Renderer::_submitModelMeshData(const MyMesh& mesh) const
@@ -68,18 +61,11 @@ void Renderer::_submitModelMeshInstance(const MyMesh& mesh) const
 }
 
 
-void Renderer::_recusiveModelRendering(const ModelComponent& model, const aiNode* node) const
+void Renderer::_recusiveModelRendering(const ModelComponent& model) const
 {
-	_applyRecursiveModelTransform(node);
-
-	for (unsigned int i = 0; i < node->mNumMeshes; i++)
+	for (unsigned int i = 0; i < model.meshes().size(); i++)
 	{
-		_submitModelMeshData(model.meshes()[node->mMeshes[i]]);
-		_submitModelMeshInstance(model.meshes()[node->mMeshes[i]]);
+		_submitModelMeshData(model.meshes()[i]);
+		_submitModelMeshInstance(model.meshes()[i]);
 	}
-
-	for (unsigned int n = 0; n < node->mNumChildren; ++n)
-		_recusiveModelRendering(model, node->mChildren[n]);
-
-	popMatrix(MODEL);
 }

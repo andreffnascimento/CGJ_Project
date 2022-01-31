@@ -362,8 +362,7 @@ SkyboxComponent::SkyboxComponent(unsigned int textureId, const Material& materia
 
 
 
-ModelComponent::ModelComponent(const Entity& entity, const char* modelPath)
-	: _transform(&entity.transform())
+ModelComponent::ModelComponent(const char* modelPath)
 {
 	Importer::importModel(*this, modelPath);
 }

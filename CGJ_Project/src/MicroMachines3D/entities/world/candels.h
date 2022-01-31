@@ -18,23 +18,26 @@ public:
 	{
 		GroupComponent& group = addComponent<GroupComponent>();
 
-		MeshComponent bottomMesh = MeshComponent(createCylinder(CANDEL_HEIGHT, CANDEL_RADIUS, CANDEL_SIDES), CANDEL_OFF_MATERIAL);
-		MeshComponent topMesh = MeshComponent(createCube(), CANDEL_OFF_MATERIAL);
+		ModelComponent model = ModelComponent("src/MicroMachines3D/models/candel/candel.obj");
+		TransformComponent& modelTransform = model.modelTransform();
+		Transform::rotate(modelTransform, Coords3f({ -90.0f, 0.0f, 0.0f }));
+		Transform::scale(modelTransform, Coords3f({ CANDEL_SCALE, CANDEL_SCALE, CANDEL_SCALE * 0.4f }));
+		Transform::translate(modelTransform, Coords3f({ 0.0f, -0.95f, 0.0f }));
 
-		_createCandel(scene, group, bottomMesh, -1.0f, -1.0f, "topLeft");
-		_createCandel(scene, group, bottomMesh,  0.0f, -1.0f, "topMiddle");
-		_createCandel(scene, group, bottomMesh,  1.0f, -1.0f, "topRight");
-		_createCandel(scene, group, bottomMesh, -1.0f,  1.0f, "bottomLeft");
-		_createCandel(scene, group, bottomMesh,  0.0f,  1.0f, "bottomMiddle");
-		_createCandel(scene, group, bottomMesh,  1.0f,  1.0f, "bottomRight");
-
-		_createCandelLight(scene, group, topMesh, -1.0f, -1.0f, "light_topLeft");
-		_createCandelLight(scene, group, topMesh,  0.0f, -1.0f, "light_topMiddle");
-		_createCandelLight(scene, group, topMesh,  1.0f, -1.0f, "light_topRight");
-		_createCandelLight(scene, group, topMesh, -1.0f,  1.0f, "light_bottomLeft");
-		_createCandelLight(scene, group, topMesh,  0.0f,  1.0f, "light_bottomMiddle");
-		_createCandelLight(scene, group, topMesh,  1.0f,  1.0f, "light_bottomRight");
-
+		_createCandel(scene, group, model, -1.0f, -1.0f, "topLeft");
+		_createCandel(scene, group, model,  0.0f, -1.0f, "topMiddle");
+		_createCandel(scene, group, model,  1.0f, -1.0f, "topRight");
+		_createCandel(scene, group, model, -1.0f,  1.0f, "bottomLeft");
+		_createCandel(scene, group, model,  0.0f,  1.0f, "bottomMiddle");
+		_createCandel(scene, group, model,  1.0f,  1.0f, "bottomRight");
+		
+		_createCandelLight(scene, group, -1.0f, -1.0f, "light_topLeft");
+		_createCandelLight(scene, group,  0.0f, -1.0f, "light_topMiddle");
+		_createCandelLight(scene, group,  1.0f, -1.0f, "light_topRight");
+		_createCandelLight(scene, group, -1.0f,  1.0f, "light_bottomLeft");
+		_createCandelLight(scene, group,  0.0f,  1.0f, "light_bottomMiddle");
+		_createCandelLight(scene, group,  1.0f,  1.0f, "light_bottomRight");
+		
 		addComponent<ScriptComponent>(std::make_shared<CandelsLightScript>(scene));
 	}
 
@@ -42,10 +45,10 @@ public:
 
 
 private:
-	void _createCandel(Scene* scene, GroupComponent& group, const MeshComponent& mesh, float xMod, float zMod, const char* candelId)
+	void _createCandel(Scene* scene, GroupComponent& group, const ModelComponent& model, float xMod, float zMod, const char* candelId)
 	{
 		Entity candel = group.addNewEntity(scene, *this, candelId);
-		candel.addComponent<MeshComponent>(mesh, candel);
+		candel.addComponent<ModelComponent>(model);
 
 		RigidbodyComponent& rigidbody = candel.addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::STATIC);
 		AABBColliderComponent& collider = candel.addComponent<AABBColliderComponent>(candel, ColliderIds::CANDEL, rigidbody, CANDEL_SIZE);
@@ -57,22 +60,23 @@ private:
 
 		Transform::scale(candel, CANDEL_SIZE);
 		Transform::translate(candel, Coords3f({ xPos, yPos, zPos }));
+		
+		if (zMod == 1)
+			Transform::rotate(candel, Coords3f({ 0.0f, 180.0f, 0.0f }));
 	}
 
 
-	void _createCandelLight(Scene* scene, GroupComponent& group, const MeshComponent& mesh, float xMod, float zMod, const char* candelId)
+	void _createCandelLight(Scene* scene, GroupComponent& group, float xMod, float zMod, const char* candelId)
 	{
 		Entity candel = group.addNewEntity(scene, *this, candelId);
-		candel.addComponent<MeshComponent>(mesh, candel);
 
 		LightComponent& light = candel.addComponent<LightComponent>(LightComponent::LightType::POINT, 30.0f);
 		light.setEnabled(false);
 
 		float xPos = (TABLE_SIZE.x - CANDEL_SIZE.x) * xMod / 2.0f;
-		float yPos = CANDEL_SIZE.y + CANDEL_TOP_SIZE.y / 2.0f;
+		float yPos = CANDEL_SIZE.y + 2.0f;
 		float zPos = (TABLE_SIZE.z - CANDEL_SIZE.z) * zMod / 2.0f;
 
-		Transform::scale(candel, CANDEL_TOP_SIZE);
 		Transform::translate(candel, Coords3f({ xPos, yPos, zPos }));
 	}
 

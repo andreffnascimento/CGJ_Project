@@ -20,7 +20,7 @@ public:
 	{
 		GroupComponent& group = addComponent<GroupComponent>();
 
-		ModelComponent& model = addComponent<ModelComponent>(*this, "src/MicroMachines3D/models/micra/micra.obj");
+		ModelComponent& model = addComponent<ModelComponent>("src/MicroMachines3D/models/micra/micra.obj");
 		TransformComponent& modelTransform = model.modelTransform();
 		Transform::translate(modelTransform, Coords3f({ 0.0f, -1.4f, 0.0f }));
 		Transform::scale(modelTransform, Coords3f({ CAR_SCALE, CAR_SCALE, CAR_SCALE }));

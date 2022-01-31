@@ -137,10 +137,9 @@ private:
 
 
 private:
-	void _applyRecursiveModelTransform(const aiNode* node) const;
 	void _submitModelMeshData(const MyMesh& mesh) const;
 	void _submitModelMeshInstance(const MyMesh& mesh) const;
-	void _recusiveModelRendering(const ModelComponent &model, const aiNode* node) const;
+	void _recusiveModelRendering(const ModelComponent &model) const;
 
 
 private:

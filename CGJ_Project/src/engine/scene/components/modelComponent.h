@@ -16,24 +16,18 @@
 
 struct ModelComponent
 {
-	// INFO: ModelComponents do not support textures!
-
 private:
 	std::vector<struct MyMesh> _meshes = std::vector<struct MyMesh>();
-	const aiScene* _scene = nullptr;
 
-	const TransformComponent* _transform = nullptr;
 	TransformComponent _modelTransform = TransformComponent();
 
 public:
 	ModelComponent() = delete;
 	ModelComponent(const ModelComponent&) = default;
-	ModelComponent(const Entity& entity, const char* modelPath);
+	ModelComponent(const char* modelPath);
 	~ModelComponent() = default;
 
 	inline const std::vector<struct MyMesh>& meshes() const		{ return _meshes; }
-	inline const aiScene* scene() const							{ return _scene; }
-	inline const TransformComponent& transform() const			{ return *_transform; }
 	inline const TransformComponent& modelTransform() const		{ return _modelTransform; }
 
 	inline TransformComponent& modelTransform() { return _modelTransform; }

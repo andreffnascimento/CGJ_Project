@@ -19,7 +19,6 @@ private:
 
 	const RaceManagerScript* _raceManagerScript = nullptr;
 
-	std::list<MeshComponent*> _meshes = std::list<MeshComponent*>();
 	std::list<LightComponent*> _lights = std::list<LightComponent*>();
 
 	bool _candelsOn = false;
@@ -40,35 +39,20 @@ public:
 		_eventHandler = &Application::getEventHandler();
 		_raceManagerScript = dynamic_cast<RaceManagerScript*>(_scene->getEntityByTag("GameManager").getComponent<ScriptComponent>().getScriptByTag("RaceManagerScript"));
 		for (auto& candel : _scene->getEntitiesByTag(std::regex("^Candels:light_.*$")))
-		{
-			_meshes.push_back(&candel.getComponent<MeshComponent>());
 			_lights.push_back(&candel.getComponent<LightComponent>());
-		}
 	}
 
 
 	void onUpdate(float ts) override
 	{
-		if (_raceManagerScript->paused())
+		if (!_raceManagerScript->playing())
 			return;
 
 		if (_eventHandler->keyState('C').pressed() || _eventHandler->keyState('c').pressed())
 		{
 			_candelsOn = !_candelsOn;
-
 			for (auto& light : _lights)
 				light->setEnabled(_candelsOn);
-
-			if (_candelsOn)
-			{
-				for (auto& mesh : _meshes)
-					mesh->setMaterial(CANDEL_ON_MATERIAL);
-			}
-			else
-			{
-				for (auto& mesh : _meshes)
-					mesh->setMaterial(CANDEL_OFF_MATERIAL);
-			}
 		}
 	}
 

@@ -21,10 +21,11 @@ void Importer::importModel(ModelComponent& modelComponent, const char* modelPath
 	else
 		throw std::string("Unable to open the model file with the path: \"" + std::string(modelPath) + "\"\n" + std::string(strerror(errno)) + "\n");
 
-	if ((modelComponent._scene = Import3DFromFile(modelPath)) == nullptr)
+	const aiScene* scene = Import3DFromFile(modelPath);
+	if (scene == nullptr)
 		throw std::string("Unable to import the model with the path: \"" + std::string(modelPath) + "\"");
 
-	modelComponent._meshes = createMeshFromAssimp(modelComponent._scene);
+	modelComponent._meshes = createMeshFromAssimp(scene);
 	std::cout << "Model file: \"" << std::string(modelPath) << "\" loaded.";
 }
 

@@ -41,7 +41,7 @@ public:
 
 	void onUpdate(float ts) override
 	{
-		if (_raceManagerScript->paused())
+		if (!_raceManagerScript->playing())
 			return;
 
 		if (_eventHandler->keyState('N').pressed() || _eventHandler->keyState('n').pressed())
