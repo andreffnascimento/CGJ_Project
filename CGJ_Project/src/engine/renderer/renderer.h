@@ -137,8 +137,10 @@ private:
 	void _blendReflections(const Scene & scene);
 
 private:
-	void _enableShadowsRendering() const;
-	void _disableShadowsRendering() const;
+	void _enableShadowsRendering();
+	void _disableShadowsRendering();
+	void _blendShadows(const Scene & scene);
+	void _renderActiveShadows(const Scene & scene);
 
 private:
 	void _applyRecursiveModelTransform(const aiNode* node) const;

@@ -70,6 +70,9 @@ public:
 					mesh->setMaterial(CANDEL_OFF_MATERIAL);
 			}
 		}
+
+		if (_eventHandler->keyState('X').pressed() || _eventHandler->keyState('x').pressed())
+			_lights.front()->setCastShadows(!_lights.front()->castShadows());
 	}
 
 };
