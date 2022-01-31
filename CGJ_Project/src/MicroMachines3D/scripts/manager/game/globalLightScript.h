@@ -36,7 +36,6 @@ public:
 		_eventHandler = &Application::getEventHandler();
 		_raceManagerScript = dynamic_cast<RaceManagerScript*>(_scene->getEntityByTag("GameManager").getComponent<ScriptComponent>().getScriptByTag("RaceManagerScript"));
 		_globalLight = &_scene->getEntityByTag("GlobalLight").getComponent<LightComponent>();
-		_globalLight->setCastShadows(true);
 	}
 
 
@@ -48,8 +47,6 @@ public:
 		if (_eventHandler->keyState('N').pressed() || _eventHandler->keyState('n').pressed())
 			_globalLight->setEnabled(!_globalLight->isEnabled());
 
-		if (_eventHandler->keyState('Z').pressed() || _eventHandler->keyState('z').pressed())
-			_globalLight->setCastShadows(!_globalLight->castShadows());
 	}
 
 };

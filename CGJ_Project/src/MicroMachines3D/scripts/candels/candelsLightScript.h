@@ -19,6 +19,8 @@ private:
 
 	const RaceManagerScript* _raceManagerScript = nullptr;
 
+	LightComponent* _shadowCastingLight = nullptr;
+
 	std::list<MeshComponent*> _meshes = std::list<MeshComponent*>();
 	std::list<LightComponent*> _lights = std::list<LightComponent*>();
 
@@ -44,6 +46,8 @@ public:
 			_meshes.push_back(&candel.getComponent<MeshComponent>());
 			_lights.push_back(&candel.getComponent<LightComponent>());
 		}
+		
+		_shadowCastingLight = &_scene->getEntityByTag("Candels:light_bottomLeft").getComponent<LightComponent>();
 	}
 
 
@@ -72,7 +76,7 @@ public:
 		}
 
 		if (_eventHandler->keyState('X').pressed() || _eventHandler->keyState('x').pressed())
-			_lights.front()->setCastShadows(!_lights.front()->castShadows());
+			_shadowCastingLight->setCastShadows(!_shadowCastingLight->castShadows());
 	}
 
 };

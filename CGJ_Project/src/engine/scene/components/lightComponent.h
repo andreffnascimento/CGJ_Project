@@ -19,7 +19,7 @@ private:
 	float _intensity = 1.0f;
 	float _cutOff = 0.0f;
 	bool _enabled = true;
-	bool _castShadows = true;
+	bool _castShadows = false;
 
 public:
 	LightComponent() = delete;

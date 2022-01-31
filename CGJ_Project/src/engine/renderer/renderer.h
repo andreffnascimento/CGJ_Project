@@ -184,6 +184,8 @@ private:
 
 	void _renderMirrorShape(const FlatMirrorComponent& flatMirror) const;
 	void _renderMirrorView(const Scene& scene, const FlatMirrorComponent& flatMirror);
+	void _enableTableTop(const Scene& scene);
+	void _disableTableTop(const Scene& scene);
 
 
 private:

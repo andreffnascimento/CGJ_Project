@@ -8,6 +8,7 @@
 
 void Renderer::_renderPlanarReflections(const Scene& scene)
 {
+	_disableTableTop(scene);
 	_stencilReflectorPlane(scene);
 	_enableReflectionsRendering();
 
