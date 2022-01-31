@@ -9,13 +9,6 @@
 void Renderer::_renderShadows(const Scene& scene)
 {
 	Entity table = scene.getEntityByTag("Table:top");
-
-	// How to render shadows:
-	// 1. Render "Table:top" into stencil buffer, without sending it to the color buffer
-	// 2. Tell the shader to use "shadow" mode - filling everything with constant color
-	// 3. Calculate shadow matrix
-	// 4. Disable blending, render all the meshes normally
-	
 	const MeshData* tableMesh = &table.getComponent<MeshComponent>().meshData();
 	
 
@@ -76,16 +69,10 @@ void Renderer::_renderShadows(const Scene& scene)
 
 		}
 	}
+
 	_modelTransforms.preModelTransform = TransformMatrix().setIdentityMatrix();
 
-
-
 	_disableShadowsRendering();
-
-	// -- Blend the table color with the reflected meshes  ------------------- //
-
-
-
 }
 
 
