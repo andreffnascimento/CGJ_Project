@@ -87,22 +87,10 @@ void Renderer::_renderMirrorView(const Scene& scene, const FlatMirrorComponent& 
 	_initMirrorCamera(flatMirror);
 	_renderSkybox();
 	_renderImages(scene);
-	_enableTableTop(scene); // Yikes, I know...
+	scene.getEntityByTag("Table:top").getComponent<MeshComponent>().setEnabled(true);
 	_renderModels(scene, RendererSettings::RendererMode::MESH_RENDERER);
 	_renderMeshes(scene, RendererSettings::RendererMode::MESH_RENDERER);
 	_renderColliders(scene);
 	_renderParticles(scene);
 	_terminateMirrorRendering();
-}
-
-void Renderer::_enableTableTop(const Scene& scene)
-{
-	Entity table = scene.getEntityByTag("Table:top");
-	table.getComponent<MeshComponent>().setEnabled(true);
-}
-
-void Renderer::_disableTableTop(const Scene& scene)
-{
-	Entity table = scene.getEntityByTag("Table:top");
-	table.getComponent<MeshComponent>().setEnabled(false);
 }

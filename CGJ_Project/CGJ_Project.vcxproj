@@ -241,8 +241,10 @@
     <ClInclude Include="src\engine\scene\components\modelComponent.h" />
     <ClInclude Include="src\engine\scene\components\parentComponent.h" />
     <ClInclude Include="src\engine\scene\components\particleGeneratorComponent.h" />
+    <ClInclude Include="src\engine\scene\components\reflectionPlaneComponent.h" />
     <ClInclude Include="src\engine\scene\components\rigidbodyComponent.h" />
     <ClInclude Include="src\engine\scene\components\scriptComponent.h" />
+    <ClInclude Include="src\engine\scene\components\shadowPlaneComponent.h" />
     <ClInclude Include="src\engine\scene\components\skyboxComponent.h" />
     <ClInclude Include="src\engine\scene\components\tagComponent.h" />
     <ClInclude Include="src\engine\scene\components\textComponent.h" />

@@ -39,6 +39,9 @@ private:
 	{
 		Entity top = group.addNewEntity(scene, *this, "top");
 		top.addComponent<MeshComponent>(mesh, top);
+		top.addComponent<ReflectionPlaneComponent>(top);
+		top.addComponent<ShadowPlaneComponent>(top);
+
 		Transform::scale(top, TABLE_SIZE);
 		Transform::translate(top, { 0.0f, TABLE_SIZE.y / 2.0f, 0.0f });
 
@@ -47,8 +50,6 @@ private:
 			RigidbodyComponent& rigidbody = top.addComponent<RigidbodyComponent>(RigidbodyComponent::RigidbodyType::STATIC);
 			AABBColliderComponent& collider = top.addComponent<AABBColliderComponent>(top, ColliderIds::TABLE, rigidbody, TABLE_SIZE);
 		}
-
-		top.getComponent<MeshComponent>().setEnabled(false);
 	}
 
 

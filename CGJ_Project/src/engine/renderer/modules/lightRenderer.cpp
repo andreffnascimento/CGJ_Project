@@ -19,7 +19,7 @@ void Renderer::_renderLights(const Scene& scene) const
 		Entity lightEntity = scene.getEntityById(lightIterator.first);
 		const LightComponent& light = lightIterator.second;
 
-		if (!light.isEnabled())
+		if (!light.enabled())
 			continue;
 
 		Coords3f translation;

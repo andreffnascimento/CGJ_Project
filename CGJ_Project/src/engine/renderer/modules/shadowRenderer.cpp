@@ -6,72 +6,33 @@
 
 
 
-void Renderer::_renderShadows(const Scene& scene)
+
+void Renderer::_renderShadowPlanes(const Scene& scene)
 {
-	_disableTableTop(scene);
-	_renderActiveShadows(scene);
+	for (auto& shadowPlaneIterator : scene.getSceneComponents<ShadowPlaneComponent>())
+	{
+		ShadowPlaneComponent& shadowPlane = shadowPlaneIterator.second;
+		if (!shadowPlane.enabled() || !shadowPlane.mesh().enabled())
+			continue;
+
+		shadowPlane.mesh().setEnabled(false);
+		_renderShadowPlane(scene, shadowPlane);
+		shadowPlane.mesh().setEnabled(true);
+	}
 }
 
-void Renderer::_renderActiveShadows(const Scene& scene)
-{
-	Entity lightEntity = scene.getEntityByTag("Candels:light_bottomLeft");
-	LightComponent light = lightEntity.getComponent<LightComponent>();
 
-	if(!light.isEnabled() || !light.castShadows())
-		return;
 
-	GLfloat floor_plane[4] = { 0,1,0,0 };
-	float mat[16];
-	float lightPos[4];
-	Coords3f translation;
-	Quaternion rotation;
-	Coords3f scale;
-
-	Transform::decomposeTransformMatrix(lightEntity, translation, rotation, scale);
-
-	lightPos[0] = translation.x;
-	lightPos[1] = translation.y;
-	lightPos[2] = translation.z;
-	lightPos[3] = 1.0f;
-
-	_stencilReflectorPlane(scene);
-	_enableShadowsRendering();
-
-	shadow_matrix(mat, floor_plane, lightPos);
-
-	_modelTransforms.preModelTransform = TransformMatrix(mat);
-
-	_renderModels(scene, RendererSettings::RendererMode::SHADOWS_RENDERER);
-	_renderMeshes(scene, RendererSettings::RendererMode::SHADOWS_RENDERER);
-
-	_blendShadows(scene);
-	_disableShadowsRendering();
-}
-
-void Renderer::_blendShadows(const Scene& scene)
-{
-	Entity table = scene.getEntityByTag("Table:top");
-	const MeshData* tableMesh = &table.getComponent<MeshComponent>().meshData();
-	RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
-
-	_modelTransforms.preModelTransform = TransformMatrix().setIdentityMatrix();
-
-	glUniform1ui(_uniformLocator[RendererUniformLocations::RENDER_MODE], (GLuint)RendererSettings::RendererMode::MESH_RENDERER);
-
-	_submitMeshData(*tableMesh);
-	_addObjectToInstanceBuffer(instanceBuffer, &table.transform());
-	_submitRenderableData(*tableMesh, instanceBuffer);
-}
 
 void Renderer::_enableShadowsRendering()
 {
 	glUniform1ui(_uniformLocator[RendererUniformLocations::RENDER_MODE], (GLuint)RendererSettings::RendererMode::SHADOWS_RENDERER);
 
-	glDisable(GL_DEPTH_TEST); //To force the shadow geometry to be rendered even if behind the floor
-
+	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_STENCIL_TEST);
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glStencilFunc(GL_EQUAL, 0x1, 0x1);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
 }
@@ -79,8 +40,50 @@ void Renderer::_enableShadowsRendering()
 
 void Renderer::_disableShadowsRendering()
 {
-	_modelTransforms.preModelTransform = TransformMatrix().setIdentityMatrix();
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);
 	glEnable(GL_DEPTH_TEST);
+}
+
+
+void Renderer::_blendShadows(const MeshComponent& mesh, const TransformComponent& transform) const
+{
+	glUniform1ui(_uniformLocator[RendererUniformLocations::RENDER_MODE], (GLuint)RendererSettings::RendererMode::MESH_RENDERER);
+
+	RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
+	_submitMeshData(mesh.meshData());
+	_addObjectToInstanceBuffer(instanceBuffer, &transform);
+	_submitRenderableData(mesh.meshData(), instanceBuffer);
+}
+
+
+void Renderer::_renderShadowPlane(const Scene& scene, ShadowPlaneComponent& shadowPlane)
+{
+	_stencilShadowReflectionPlane(shadowPlane.mesh(), shadowPlane.transform());
+	_enableShadowsRendering();
+
+	for (const auto& lightIterator : scene.getSceneComponents<LightComponent>())
+	{
+		const LightComponent& light = lightIterator.second;
+		if (!light.enabled() || !light.castShadows())
+			continue;
+
+		Coords3f translation;
+		Entity lightEntity = scene.getEntityById(lightIterator.first);
+		Transform::decomposeTransformMatrix(lightEntity, translation, Quaternion(), Coords3f());
+
+		GLfloat floor_plane[4] = { 0,1,0,0 };
+		float lightPos[4] = { translation.x, translation.y, translation.z, 1.0f };
+		shadow_matrix(_modelTransforms.preModelTransform, floor_plane, lightPos);
+
+		glCullFace(GL_FRONT);
+		_renderModels(scene, RendererSettings::RendererMode::SHADOWS_RENDERER);
+		_renderMeshes(scene, RendererSettings::RendererMode::SHADOWS_RENDERER);
+		glCullFace(GL_BACK);
+
+	}
+
+	_modelTransforms.preModelTransform = TransformMatrix().setIdentityMatrix();
+	_blendShadows(shadowPlane.mesh(), shadowPlane.transform());
+	_disableShadowsRendering();
 }

@@ -33,7 +33,7 @@ public:
 		rigidbody.setDragThreshold(20.0f);
 		rigidbody.setUsesGravity(GRAVITY_ENABLED);
 		rigidbody.setMaxLinearVelocity(200.0f);
-		rigidbody.setMaxAngularVelocity(1000.0f);
+		rigidbody.setMaxAngularVelocity(200.0f);
 
 		AABBColliderComponent& collider = addComponent<AABBColliderComponent>(*this, ColliderIds::CAR, rigidbody, CAR_SIZE);
 		collider.setCollisionResolver(std::make_shared<CarCollisionResolver>(scene, collider));

@@ -43,7 +43,6 @@ public:
 		for (auto& candel : _scene->getEntitiesByTag(std::regex("^Candels:light_.*$")))
 			_lights.push_back(&candel.getComponent<LightComponent>());
 		
-		
 		_shadowCastingLight = &_scene->getEntityByTag("Candels:light_bottomLeft").getComponent<LightComponent>();
 	}
 

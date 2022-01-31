@@ -22,6 +22,8 @@
 #include "engine/scene/components/modelComponent.h"
 #include "engine/scene/components/lensFlareComponent.h"
 #include "engine/scene/components/flatMirrorComponent.h"
+#include "engine/scene/components/reflectionPlaneComponent.h"
+#include "engine/scene/components/shadowPlaneComponent.h"
 
 
 #endif // !__engine_scene_components__

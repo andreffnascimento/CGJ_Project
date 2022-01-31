@@ -58,26 +58,26 @@ private:
 		float yPos = CANDEL_SIZE.y / 2.0f;
 		float zPos = (TABLE_SIZE.z - CANDEL_SIZE.z) * zMod / 2.0f;
 
-		Transform::scale(candel, CANDEL_SIZE);
-		Transform::translate(candel, Coords3f({ xPos, yPos, zPos }));
-		
 		if (zMod == 1)
 			Transform::rotate(candel, Coords3f({ 0.0f, 180.0f, 0.0f }));
+
+		Transform::scale(candel, CANDEL_SIZE);
+		Transform::translate(candel, Coords3f({ xPos, yPos, zPos }));
 	}
 
 
 	void _createCandelLight(Scene* scene, GroupComponent& group, float xMod, float zMod, const char* candelId)
 	{
-		Entity candel = group.addNewEntity(scene, *this, candelId);
+		Entity candelLight = group.addNewEntity(scene, *this, candelId);
 
-		LightComponent& light = candel.addComponent<LightComponent>(LightComponent::LightType::POINT, 30.0f);
+		LightComponent& light = candelLight.addComponent<LightComponent>(LightComponent::LightType::POINT, 30.0f);
 		light.setEnabled(false);
 
 		float xPos = (TABLE_SIZE.x - CANDEL_SIZE.x) * xMod / 2.0f;
 		float yPos = CANDEL_SIZE.y + 2.0f;
 		float zPos = (TABLE_SIZE.z - CANDEL_SIZE.z) * zMod / 2.0f;
 
-		Transform::translate(candel, Coords3f({ xPos, yPos, zPos }));
+		Transform::translate(candelLight, Coords3f({ xPos, yPos, zPos }));
 	}
 
 };

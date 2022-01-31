@@ -382,3 +382,21 @@ FlatMirrorComponent::FlatMirrorComponent(const Entity& entity, const MyMesh& mes
 {
 	// empty
 }
+
+
+
+
+ReflectionPlaneComponent::ReflectionPlaneComponent(const Entity& entity)
+	: _mesh(&entity.getComponent<MeshComponent>()), _transform(&entity.transform())
+{
+	// empty
+}
+
+
+
+
+ShadowPlaneComponent::ShadowPlaneComponent(const Entity& entity)
+	: _mesh(&entity.getComponent<MeshComponent>()), _transform(&entity.transform())
+{
+	// empty
+}

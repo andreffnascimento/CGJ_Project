@@ -131,6 +131,8 @@
     <ClInclude Include="src\engine\scene\components\flatMirrorComponent.h" />
     <ClInclude Include="src\MicroMachines3D\scripts\mirror\rearViewMirrorMovementScript.h" />
     <ClInclude Include="src\MicroMachines3D\entities\world\floatingCube.h" />
+    <ClInclude Include="src\engine\scene\components\shadowPlaneComponent.h" />
+    <ClInclude Include="src\engine\scene\components\reflectionPlaneComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependencies.exe" />

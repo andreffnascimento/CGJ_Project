@@ -23,7 +23,7 @@ const uint RENDER_MODE_IMAGE = 2;
 const uint RENDER_MODE_PARTICLE = 3;
 const uint RENDER_MODE_SKYBOX = 4;
 const uint RENDER_MODE_LENS_FLARE = 5;
-const uint RENDER_MODE_SHADOWS = 7;
+const uint RENDER_MODE_SHADOWS = 6;
 
 
 

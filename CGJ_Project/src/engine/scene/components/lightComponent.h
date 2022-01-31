@@ -18,8 +18,8 @@ private:
 	LightComponent::LightType _lightType = LightComponent::LightType::DIRECTIONAL;
 	float _intensity = 1.0f;
 	float _cutOff = 0.0f;
-	bool _enabled = true;
 	bool _castShadows = false;
+	bool _enabled = true;
 
 public:
 	LightComponent() = delete;
@@ -32,10 +32,10 @@ public:
 	inline float intensity() const				{ return _intensity; }
 	inline float cutOff() const					{ return _cutOff; }
 	inline bool castShadows() const				{ return _castShadows; }
+	inline bool enabled() const					{ return _enabled; }
 
-	inline bool isEnabled()	const				 { return _enabled; }
-	inline void setEnabled(bool enabled)		 { _enabled = enabled; }
 	inline void setCastShadows(bool castShadows) { _castShadows = castShadows; }
+	inline void setEnabled(bool enabled)		 { _enabled = enabled; }
 
 };
 

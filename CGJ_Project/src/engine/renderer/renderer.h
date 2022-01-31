@@ -86,17 +86,17 @@ private:
 	void _terminateSceneRendering();
 	void _renderCamera(const CameraEntity& camera) const;
 	void _renderSkybox() const;
-	void _renderShadows(const Scene& scene);
+	void _renderImages(const Scene& scene) const;
 	void _renderLights(const Scene& scene) const;
+	void _renderPlanarReflections(const Scene& scene);
+	void _renderShadowPlanes(const Scene& scene);
 	void _renderMeshes(const Scene& scene, RendererSettings::RendererMode renderMode) const;
 	void _renderModels(const Scene& scene, RendererSettings::RendererMode renderMode) const;
-	void _renderImages(const Scene& scene) const;
 	void _renderColliders(const Scene& scene) const;
 	void _renderFixedMirrors(const Scene& scene);	
 	void _renderParticles(const Scene& scene) const;
 	void _renderLensFlares(const Scene& scene) const;
 	void _renderCanvas(const Scene& scene) const;
-	void _renderPlanarReflections(const Scene& scene);
 
 
 private:
@@ -133,18 +133,24 @@ private:
 	void _renderOpaqueMeshInstances() const;
 	void _renderTranslucentMeshInstances(const RendererData::translucentMeshInstances_t& translucentMeshInstances) const;
 
+
 private:
-	void _enableReflectorPlaneStenciling();
+	void _initShadowReflectionPlaneStenciling() const;
+	void _terminateShadowReflectionPlaneStenciling() const;
+	void _stencilShadowReflectionPlane(const MeshComponent & mesh, const TransformComponent & transform) const;
+
 	void _enableReflectionsRendering();
 	void _disableReflectionsRendering();
-	void _stencilReflectorPlane(const Scene & scene);
-	void _blendReflections(const Scene & scene);
+	void _blendReflections(const MeshComponent & mesh, const TransformComponent & transform) const;
+	void _renderReflectionPlane(const Scene& scene, ReflectionPlaneComponent& reflectionPlane);
+
 
 private:
 	void _enableShadowsRendering();
 	void _disableShadowsRendering();
-	void _blendShadows(const Scene & scene);
-	void _renderActiveShadows(const Scene & scene);
+	void _blendShadows(const MeshComponent& mesh, const TransformComponent& transform) const;
+	void _renderShadowPlane(const Scene& scene, ShadowPlaneComponent& shadowPlane);
+
 
 private:
 	void _submitModelMeshData(const MyMesh& mesh) const;
@@ -158,6 +164,7 @@ private:
 	void _addImageToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform, const ImageComponent::ImageType& imageType, const Coords3f& cameraPos) const;
 	void _renderImageMeshInstances(const Scene& scene) const;
 
+
 private:
 	const MeshComponent& getColliderMesh() const;
 	void _addToColliderInstanceBuffer(RendererData::SubmitInstanceBuffer& colliderInstanceBuffer, const AABBColliderComponent& collider) const;
@@ -170,6 +177,7 @@ private:
 	void _submitParticleTextureData(const ParticleGeneratorComponent & particleGenerator) const;
 	void _addToParticleInstanceBuffer(RendererData::SubmitInstanceBuffer & instanceBuffer, const ParticleGeneratorComponent::ParticleData particle) const;
 	void _renderParticleGenerator(const ParticleGeneratorComponent & particleGenerator) const;
+
 
 private:
 	void _initLensFlareRendering() const;
@@ -187,8 +195,6 @@ private:
 
 	void _renderMirrorShape(const FlatMirrorComponent& flatMirror) const;
 	void _renderMirrorView(const Scene& scene, const FlatMirrorComponent& flatMirror);
-	void _enableTableTop(const Scene& scene);
-	void _disableTableTop(const Scene& scene);
 
 
 private:
