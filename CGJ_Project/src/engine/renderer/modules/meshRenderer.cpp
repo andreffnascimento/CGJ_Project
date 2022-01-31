@@ -100,11 +100,12 @@ void Renderer::_sortTranslucentMeshInstancesInto(const Scene& scene, RendererDat
 
 
 void Renderer::_addObjectToInstanceBuffer(RendererData::SubmitInstanceBuffer& instanceBuffer, const TransformComponent* transform) const
-{
+{ 
 	loadMatrix(MODEL, _modelTransforms.preModelTransform);
 	multMatrix(MODEL, transform->transformMatrix());
-	if (_modelTransforms.applyPostMatrix)
-		multMatrix(MODEL, _modelTransforms.postModelTransform);
+	//if (_modelTransforms.applyPostMatrix) 
+		//multMatrix(MODEL, _modelTransforms.postModelTransform);
+
 
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
 	computeNormalMatrix3x3();

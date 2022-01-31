@@ -63,13 +63,12 @@ void Renderer::_renderShadows(const Scene& scene)
 			shadow_matrix(mat, floor_plane, lightPos);
 
 
-			_modelTransforms.applyPostMatrix = true;
-			_modelTransforms.postModelTransform = TransformMatrix(mat);
+
+			_modelTransforms.preModelTransform = TransformMatrix(mat);
 
 			//_renderMeshes(scene);		
 			_renderOpaqueMeshInstances();
 
-			_modelTransforms.applyPostMatrix = false;
 
 		}
 		//else if (light.lightType() == LightComponent::LightType::POINT)

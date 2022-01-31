@@ -20,10 +20,10 @@ void Renderer::_renderModels(const Scene& scene) const
 	{
 		const ModelComponent& model = modelIterator.second;
 
-		loadIdentity(MODEL);
+		loadMatrix(MODEL, _modelTransforms.preModelTransform);
 		TransformMatrix modelBaseTransformMatrix = Transform::calculateTransformMatrix((TransformComponent&)model.modelTransform());
 		TransformMatrix modelTransformMatrix = model.transform().transformMatrix() * modelBaseTransformMatrix;
-		loadMatrix(MODEL, modelTransformMatrix);
+		multMatrix(MODEL, modelTransformMatrix);
 		_recusiveModelRendering(model, model.scene()->mRootNode);
 	}
 }

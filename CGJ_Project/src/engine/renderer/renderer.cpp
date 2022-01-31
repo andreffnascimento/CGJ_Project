@@ -171,11 +171,11 @@ void Renderer::renderScene(const Scene& scene)
 	_renderCamera(scene.activeCamera());
 	_renderSkybox();
 	_renderImages(scene);
+	_renderPlanarReflections(scene);
+	//_renderShadows(scene);
 	_renderLights(scene);
-	_renderShadows(scene);
-	//_renderPlanarReflections(scene);
-	//_renderModels(scene);
-	//_renderMeshes(scene);
+	_renderModels(scene);
+	_renderMeshes(scene);
 	_renderColliders(scene);
 	_renderParticles(scene);
 	_renderLensFlares(scene);

@@ -92,7 +92,7 @@ private:
 	void _renderParticles(const Scene& scene) const;
 	void _renderLensFlares(const Scene& scene) const;
 	void _renderCanvas(const Scene& scene) const;
-	void _renderPlanarReflections(const Scene& scene) const;
+	void _renderPlanarReflections(const Scene& scene);
 
 
 private:
@@ -129,16 +129,12 @@ private:
 	void _renderOpaqueMeshInstances() const;
 	void _renderTranslucentMeshInstances(const RendererData::translucentMeshInstances_t& translucentMeshInstances) const;
 
-
 private:
-	void _enableShapeStenciling() const;
-	void _enableRenderingIntoStencil() const;
-	void _disableStencilRendering() const;
-
-private:
-	void _enableReflectorPlaneStenciling() const;
-	void _enableReflectionsRendering() const;
-	void _disableReflectionsRendering() const;
+	void _enableReflectorPlaneStenciling();
+	void _enableReflectionsRendering();
+	void _disableReflectionsRendering();
+	void _stencilReflectorPlane(const Scene & scene);
+	void _blendReflections(const Scene & scene);
 
 private:
 	void _enableShadowsRendering() const;
