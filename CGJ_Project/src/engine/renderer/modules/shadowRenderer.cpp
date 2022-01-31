@@ -123,8 +123,8 @@ void Renderer::_enableShadowsRendering() const
 
 	glDisable(GL_DEPTH_TEST); //To force the shadow geometry to be rendered even if behind the floor
 
-	//glEnable(GL_BLEND);
-	//glBlendFunc(GL_DST_COLOR, GL_ZERO);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_DST_COLOR, GL_ZERO);
 	glStencilFunc(GL_EQUAL, 0x1, 0x1);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
 }
