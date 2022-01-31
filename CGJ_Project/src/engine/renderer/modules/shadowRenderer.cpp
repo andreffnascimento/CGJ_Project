@@ -48,7 +48,7 @@ void Renderer::_renderShadows(const Scene& scene)
 
 		if (light.lightType() == LightComponent::LightType::POINT)
 		{
-			float lightPos[4] = { translation.x, translation.y, translation.z, 0.0f };
+			float lightPos[4] = { translation.x, translation.y, translation.z, 1.0f };
 			float mat[16];
 			shadow_matrix(mat, floor_plane, lightPos);
 
