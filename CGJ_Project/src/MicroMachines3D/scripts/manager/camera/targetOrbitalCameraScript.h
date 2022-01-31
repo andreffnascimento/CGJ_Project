@@ -5,6 +5,7 @@
 #include "MicroMachines3D/common/include.h"
 
 #include "MicroMachines3D/scripts/car/carMovementScript.h"
+#include "MicroMachines3D/scripts/manager/game/raceManagerScript.h"
 
 
 
@@ -39,6 +40,7 @@ private:
 	const TransformComponent* _carTransform = nullptr;
 	const RigidbodyComponent* _carRigidbody = nullptr;
 	const CarMovementScript* _carMovementScript = nullptr;
+	const RaceManagerScript* _raceManagerScript = nullptr;
 
 	CameraEntity _camera = CameraEntity();
 	TargetOrbitalCameraScript::TrackingStatus _trackingStatus = TargetOrbitalCameraScript::TrackingStatus::NONE;
@@ -71,6 +73,7 @@ public:
 		_carTransform = &_car.getComponent<TransformComponent>();
 		_carRigidbody = &_car.getComponent<RigidbodyComponent>();
 		_carMovementScript = dynamic_cast<CarMovementScript*>(_car.getComponent<ScriptComponent>().getScriptByTag("CarMovementScript"));
+		_raceManagerScript = dynamic_cast<RaceManagerScript*>(_scene->getEntityByTag("GameManager").getComponent<ScriptComponent>().getScriptByTag("RaceManagerScript"));
 
 		_camera = _scene->getEntityByTag("Camera3");
 		_alpha = _alphaAux = _getDesiredAlpha();
@@ -81,7 +84,7 @@ public:
 
 	void onUpdate(float ts) override
 	{
-		if (_scene->activeCamera() != _camera)
+		if (_scene->activeCamera() != _camera || !_raceManagerScript->playing())
 			return;
 
 		const EventHandler::MouseInfo& mouseInfo = _eventHandler->getMouseInfo();

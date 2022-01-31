@@ -31,7 +31,7 @@ public:
 	void createPlanet(Scene* scene, GroupComponent& group, int id, const Coords3f& pos, float sizeCoeficient, const char* texturePath) {
 		Entity planet = group.addNewEntity(scene, *this, "planet_" + std::to_string(id));
 
-		ImageComponent& image = planet.addComponent<ImageComponent>(planet, ImageComponent::ImageType::FAST_CYLINDRICAL_BILLBOARD);
+		ImageComponent& image = planet.addComponent<ImageComponent>(planet, ImageComponent::ImageType::FAST_SPHERICAL_BILLBOARD);
 		image.addImage(Renderer::create2dTexture(texturePath));
 
 		Transform::scaleTo(planet, { 25.0f * sizeCoeficient, 25.0f * sizeCoeficient, 1.0f });
