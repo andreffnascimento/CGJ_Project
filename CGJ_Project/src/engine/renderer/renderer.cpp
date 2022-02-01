@@ -82,6 +82,13 @@ void Renderer::setFogActive(bool active)
 }
 
 
+void Renderer::setShadow(const RendererSettings::Shadow& shadow)
+{
+	Renderer& renderer = Application::getRenderer();
+	renderer._shadow = shadow;
+}
+
+
 void Renderer::setBumpActive(bool active)
 {
 	Renderer& renderer = Application::getRenderer();
@@ -180,9 +187,9 @@ void Renderer::renderScene(const Scene& scene)
 	_renderImages(scene);
 	_renderLights(scene);
 	_renderPlanarReflections(scene);
-	_renderShadowPlanes(scene);
 	_renderModels(scene, RendererSettings::RendererMode::MESH_RENDERER);
 	_renderMeshes(scene, RendererSettings::RendererMode::MESH_RENDERER);
+	_renderShadowPlanes(scene);
 	_renderColliders(scene);
 	_renderParticles(scene);
 	_renderLensFlares(scene);
@@ -249,6 +256,8 @@ void Renderer::_setupMeshShader()
 	_uniformLocator[RendererUniformLocations::FOG_END_DISTANCE] = glGetUniformLocation(_meshShader.getProgramIndex(), "fogData.endDistance");
 	_uniformLocator[RendererUniformLocations::FOG_ACTIVE] = glGetUniformLocation(_meshShader.getProgramIndex(), "fogData.isActive");
 
+	_uniformLocator[RendererUniformLocations::SHADOW_COLOR] = glGetUniformLocation(_meshShader.getProgramIndex(), "shadowData.color");
+
 	_uniformLocator[RendererUniformLocations::LENS_FLARE_COLOR] = glGetUniformLocation(_meshShader.getProgramIndex(), "lensFlareData.color");
 	_uniformLocator[RendererUniformLocations::LENS_FLARE_COLOR_MAP_ID] = glGetUniformLocation(_meshShader.getProgramIndex(), "lensFlareData.colorMapId");
 
@@ -285,12 +294,17 @@ void Renderer::_submitFogData() const
 	if (!_fog.active)
 		return;
 
-	float fogColor[4] = { _fog.color.x, _fog.color.y, _fog.color.z, _fog.color.w };
 	glUniform1ui(_uniformLocator[RendererUniformLocations::FOG_MODE], (unsigned int)_fog.mode);
-	glUniform4fv(_uniformLocator[RendererUniformLocations::FOG_COLOR], 4, fogColor);
+	glUniform4f(_uniformLocator[RendererUniformLocations::FOG_COLOR], _fog.color.x, _fog.color.y, _fog.color.z, _fog.color.w);
 	glUniform1f(_uniformLocator[RendererUniformLocations::FOG_START_DISTANCE], _fog.startDistance);
 	glUniform1f(_uniformLocator[RendererUniformLocations::FOG_END_DISTANCE], _fog.endDistance);
 	glUniform1f(_uniformLocator[RendererUniformLocations::FOG_DENSITY], _fog.density);
+}
+
+
+void Renderer::_submitShadowData() const
+{
+	glUniform4f(_uniformLocator[RendererUniformLocations::SHADOW_COLOR], _shadow.color.x, _shadow.color.y, _shadow.color.z, _shadow.color.w);
 }
 
 
@@ -340,6 +354,7 @@ void Renderer::_initSceneRendering()
 
 	glUseProgram(_meshShader.getProgramIndex());
 	_submitFogData();
+	_submitShadowData();
 	_submitTextureData();
 	_submitEnvironmentalMappingData();
 

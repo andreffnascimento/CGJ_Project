@@ -39,8 +39,10 @@ private:
 	{
 		Entity top = group.addNewEntity(scene, *this, "top");
 		top.addComponent<MeshComponent>(mesh, top);
-		top.addComponent<ReflectionPlaneComponent>(top);
-		top.addComponent<ShadowPlaneComponent>(top);
+		ReflectionPlaneComponent& reflectionPlane = top.addComponent<ReflectionPlaneComponent>(top);
+		reflectionPlane.setEnabled(false);
+		ShadowPlaneComponent& shadowPlane = top.addComponent<ShadowPlaneComponent>(top);
+		shadowPlane.setEnabled(false);
 
 		Transform::scale(top, TABLE_SIZE);
 		Transform::translate(top, { 0.0f, TABLE_SIZE.y / 2.0f, 0.0f });

@@ -34,7 +34,7 @@ public:
 		_createCandelLight(scene, group, -1.0f, -1.0f, "light_topLeft");
 		_createCandelLight(scene, group,  0.0f, -1.0f, "light_topMiddle");
 		_createCandelLight(scene, group,  1.0f, -1.0f, "light_topRight");
-		_createCandelLight(scene, group, -1.0f,  1.0f, "light_bottomLeft");
+		_createCandelLight(scene, group, -1.0f,  1.0f, "light_bottomLeft").getComponent<LightComponent>().setCastShadows(true);
 		_createCandelLight(scene, group,  0.0f,  1.0f, "light_bottomMiddle");
 		_createCandelLight(scene, group,  1.0f,  1.0f, "light_bottomRight");
 		
@@ -45,7 +45,7 @@ public:
 
 
 private:
-	void _createCandel(Scene* scene, GroupComponent& group, const ModelComponent& model, float xMod, float zMod, const char* candelId)
+	Entity _createCandel(Scene* scene, GroupComponent& group, const ModelComponent& model, float xMod, float zMod, const char* candelId)
 	{
 		Entity candel = group.addNewEntity(scene, *this, candelId);
 		candel.addComponent<ModelComponent>(model);
@@ -63,10 +63,11 @@ private:
 
 		Transform::scale(candel, CANDEL_SIZE);
 		Transform::translate(candel, Coords3f({ xPos, yPos, zPos }));
+		return candel;
 	}
 
 
-	void _createCandelLight(Scene* scene, GroupComponent& group, float xMod, float zMod, const char* candelId)
+	Entity _createCandelLight(Scene* scene, GroupComponent& group, float xMod, float zMod, const char* candelId)
 	{
 		Entity candelLight = group.addNewEntity(scene, *this, candelId);
 
@@ -78,6 +79,7 @@ private:
 		float zPos = (TABLE_SIZE.z - CANDEL_SIZE.z) * zMod / 2.0f;
 
 		Transform::translate(candelLight, Coords3f({ xPos, yPos, zPos }));
+		return candelLight;
 	}
 
 };

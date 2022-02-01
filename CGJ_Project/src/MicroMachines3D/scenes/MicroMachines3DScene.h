@@ -51,13 +51,17 @@ private:
 
 		RendererSettings::Fog fog = RendererSettings::Fog();
 		fog.mode = RendererSettings::Fog::FogMode::EXP;
-		fog.color = Coords4f{ 0.27f, 0.07f, 0.03f, 1.0f };
-		fog.density = 0.025f;
+		fog.color = Coords4f{ 0.02f, 0.07f, 0.1f, 1.0f };
+		fog.density = 0.05f;
 		fog.active = true;
+
+		RendererSettings::Shadow shadow = RendererSettings::Shadow();
+		shadow.color = Coords4f({ 0.05f, 0.2f, 0.05f, 0.5f });
 
 		Renderer::setReflectionCoefficients(reflectionCoefficients);
 		Renderer::setFog(fog);
-		Renderer::setEnvironmentalMappingBlendingAmount(0.9f);
+		Renderer::setShadow(shadow);
+		Renderer::setEnvironmentalMappingBlendingAmount(0.8f);
 
 		
 

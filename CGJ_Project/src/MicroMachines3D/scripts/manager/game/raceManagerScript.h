@@ -55,6 +55,8 @@ private:
 	float _resetFireworksTimer = 0.0f;
 
 	LensFlareComponent* _sunLensFlare = nullptr;
+	ReflectionPlaneComponent *_tableReflectionPlane = nullptr;
+	ShadowPlaneComponent *_tableShadowPlane = nullptr;
 
 	CarMovementScript* _carMovementScript = nullptr;
 	OrangesManagerScript* _orangesManagerScript = nullptr;
@@ -62,6 +64,8 @@ private:
 	bool _fogToggle = true;
 	bool _bumpToggle = true;
 	bool _lensFlareToggle = true;
+	bool _reflectionPlaneToggle = false;
+	bool _shadowPlaneToggle = false;
 
 	RaceManagerScript::GameState _gameState = RaceManagerScript::GameState::PLAYING;
 	unsigned int _lives = RaceManagerScript::MAX_LIVES;
@@ -94,6 +98,8 @@ public:
 
 		_fireworksGenerator = &_scene->getEntityByTag("Fireworks").getComponent<ParticleGeneratorComponent>();
 		_sunLensFlare = &_scene->getEntityByTag("GlobalLight").getComponent<LensFlareComponent>();
+		_tableReflectionPlane = &_scene->getEntityByTag("Table:top").getComponent<ReflectionPlaneComponent>();
+		_tableShadowPlane = &_scene->getEntityByTag("Table:top").getComponent<ShadowPlaneComponent>();
 		_carMovementScript = dynamic_cast<CarMovementScript*>(_car.getComponent<ScriptComponent>().getScriptByTag("CarMovementScript"));
 		_orangesManagerScript = dynamic_cast<OrangesManagerScript*>(_scene->getEntityByTag("Oranges").getComponent<ScriptComponent>().getScriptByTag("OrangesManagerScript"));
 
@@ -169,6 +175,12 @@ private:
 
 		if (_eventHandler->keyState('L').pressed() || _eventHandler->keyState('l').pressed())
 			_sunLensFlare->setEnabled(_lensFlareToggle = !_lensFlareToggle);
+
+		if (_eventHandler->keyState('Z').pressed() || _eventHandler->keyState('z').pressed())
+			_tableReflectionPlane->setEnabled(_reflectionPlaneToggle = !_reflectionPlaneToggle);
+
+		if (_eventHandler->keyState('X').pressed() || _eventHandler->keyState('x').pressed())
+			_tableShadowPlane->setEnabled(_shadowPlaneToggle = !_shadowPlaneToggle);
 
 		if (_eventHandler->keyState('G').pressed() || _eventHandler->keyState('g').pressed())
 			_startFireworks();

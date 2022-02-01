@@ -57,6 +57,12 @@ public:
 	};
 
 
+	struct Shadow
+	{
+		Coords4f color = Coords4f({0.0f, 0.0f, 0.0f, 1.0f});
+	};
+
+
 	struct ModelTransforms
 	{
 		TransformMatrix preModelTransform = TransformMatrix();

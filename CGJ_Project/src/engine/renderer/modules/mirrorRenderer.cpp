@@ -29,6 +29,7 @@ void Renderer::_renderFixedMirrors(const Scene& scene)
 void Renderer::_initMirrorShape(const WindowCoords& windowSize) const
 {
 	glClearStencil(0x0);
+	glClear(GL_STENCIL_BUFFER_BIT);
 
 	glEnable(GL_STENCIL_TEST);
 	glStencilFunc(GL_ALWAYS, 1, 0x1);

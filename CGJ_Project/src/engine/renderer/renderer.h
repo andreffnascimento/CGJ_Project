@@ -35,6 +35,7 @@ private:
 
 	RendererSettings::ReflectionCoefficients _reflectionCoefficients = RendererSettings::ReflectionCoefficients();
 	RendererSettings::Fog _fog = RendererSettings::Fog();
+	RendererSettings::Shadow _shadow = RendererSettings::Shadow();
 	RendererSettings::ModelTransforms _modelTransforms = RendererSettings::ModelTransforms();
 	bool _enableBump = true;
 
@@ -54,6 +55,7 @@ public:
 	static void setFog(const RendererSettings::Fog& fog);
 	static void setFogActive(bool active);
 	static void setBumpActive(bool active);
+	static void setShadow(const RendererSettings::Shadow& shadow);
 	static void setEnvironmentalMappingBlendingAmount(float environmentalMappingBlendingAmount);
 	static void setSkybox(const Entity& skyboxEntity);
 
@@ -77,6 +79,7 @@ private:
 
 private:
 	void _submitFogData() const;
+	void _submitShadowData() const;
 	void _submitTextureData() const;
 	void _submitEnvironmentalMappingData() const;
 
@@ -141,14 +144,12 @@ private:
 
 	void _enableReflectionsRendering();
 	void _disableReflectionsRendering();
-	void _blendReflections(const MeshComponent & mesh, const TransformComponent & transform) const;
 	void _renderReflectionPlane(const Scene& scene, ReflectionPlaneComponent& reflectionPlane);
 
 
 private:
 	void _enableShadowsRendering();
 	void _disableShadowsRendering();
-	void _blendShadows(const MeshComponent& mesh, const TransformComponent& transform) const;
 	void _renderShadowPlane(const Scene& scene, ShadowPlaneComponent& shadowPlane);
 
 

@@ -103,9 +103,8 @@ void Renderer::_addObjectToInstanceBuffer(RendererData::SubmitInstanceBuffer& in
 { 
 	loadMatrix(MODEL, _modelTransforms.preModelTransform);
 	multMatrix(MODEL, transform->transformMatrix());
-	//if (_modelTransforms.applyPostMatrix) 
-		//multMatrix(MODEL, _modelTransforms.postModelTransform);
-
+	if (_modelTransforms.applyPostMatrix) 
+		multMatrix(MODEL, _modelTransforms.postModelTransform);
 
 	computeDerivedMatrix(PROJ_VIEW_MODEL);
 	computeNormalMatrix3x3();

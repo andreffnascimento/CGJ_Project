@@ -6,6 +6,8 @@
 #include "engine/renderer/mesh/geometry.h"
 
 
+
+
 constexpr Material TABLE_MATERIAL = {
 	{ 0.2f, 0.1f, 0.0f, 1.0f },
 	{ 0.3f, 0.2f, 0.0f, 0.7f },
@@ -13,6 +15,7 @@ constexpr Material TABLE_MATERIAL = {
 	{ 0.0f, 0.0f, 0.0f, 0.0f },
 	100.0f,
 };
+
 
 constexpr Material FLOATING_CUBE_MATERIAL = {
 	{ 1.0f, 1.0f, 1.0f, 1.0f },
@@ -99,15 +102,6 @@ constexpr Material MIRROR_MATERIAL = {
 	{ 0.0f, 0.0f, 0.0f, 1.0f },
 	{ 0.0f, 0.0f, 0.0f, 1.0f },
 	{ 0.0f, 0.0f, 0.0f, 1.0f },
-	100.0f,
-};
-
-
-constexpr Material PLANE_MATERIAL = {
-	{ 0.2f, 0.1f, 0.0f, 0.5f },
-	{ 0.3f, 0.2f, 0.0f, 0.5f },
-	{ 0.0f, 0.0f, 0.0f, 0.5f },
-	{ 0.0f, 0.0f, 0.0f, 0.5f },
 	100.0f,
 };
 

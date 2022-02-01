@@ -19,8 +19,6 @@ private:
 
 	const RaceManagerScript* _raceManagerScript = nullptr;
 
-	LightComponent* _shadowCastingLight = nullptr;
-
 	std::list<LightComponent*> _lights = std::list<LightComponent*>();
 
 	bool _candelsOn = false;
@@ -42,8 +40,6 @@ public:
 		_raceManagerScript = dynamic_cast<RaceManagerScript*>(_scene->getEntityByTag("GameManager").getComponent<ScriptComponent>().getScriptByTag("RaceManagerScript"));
 		for (auto& candel : _scene->getEntitiesByTag(std::regex("^Candels:light_.*$")))
 			_lights.push_back(&candel.getComponent<LightComponent>());
-		
-		_shadowCastingLight = &_scene->getEntityByTag("Candels:light_bottomLeft").getComponent<LightComponent>();
 	}
 
 
@@ -58,9 +54,6 @@ public:
 			for (auto& light : _lights)
 				light->setEnabled(_candelsOn);
 		}
-
-		if (_eventHandler->keyState('X').pressed() || _eventHandler->keyState('x').pressed())
-			_shadowCastingLight->setCastShadows(!_shadowCastingLight->castShadows());
 	}
 
 };

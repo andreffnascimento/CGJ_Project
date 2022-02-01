@@ -28,7 +28,6 @@ void Renderer::_enableShadowsRendering()
 {
 	glUniform1ui(_uniformLocator[RendererUniformLocations::RENDER_MODE], (GLuint)RendererSettings::RendererMode::SHADOWS_RENDERER);
 
-	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_STENCIL_TEST);
 	glEnable(GL_BLEND);
 
@@ -42,18 +41,6 @@ void Renderer::_disableShadowsRendering()
 {
 	glDisable(GL_STENCIL_TEST);
 	glDisable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
-}
-
-
-void Renderer::_blendShadows(const MeshComponent& mesh, const TransformComponent& transform) const
-{
-	glUniform1ui(_uniformLocator[RendererUniformLocations::RENDER_MODE], (GLuint)RendererSettings::RendererMode::MESH_RENDERER);
-
-	RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
-	_submitMeshData(mesh.meshData());
-	_addObjectToInstanceBuffer(instanceBuffer, &transform);
-	_submitRenderableData(mesh.meshData(), instanceBuffer);
 }
 
 
@@ -84,6 +71,5 @@ void Renderer::_renderShadowPlane(const Scene& scene, ShadowPlaneComponent& shad
 	}
 
 	_modelTransforms.preModelTransform = TransformMatrix().setIdentityMatrix();
-	_blendShadows(shadowPlane.mesh(), shadowPlane.transform());
 	_disableShadowsRendering();
 }

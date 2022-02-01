@@ -19,7 +19,6 @@ void Renderer::_renderModels(const Scene& scene, RendererSettings::RendererMode 
 	for (auto& modelIterator : scene.getSceneComponents<ModelComponent>())
 	{
 		const ModelComponent& model = modelIterator.second;
-
 		TransformMatrix modelBaseTransformMatrix = Transform::calculateTransformMatrix((TransformComponent&)model.modelTransform());
 		const TransformMatrix& modelTransform = scene.getEntityById(modelIterator.first).transform().transformMatrix();
 
@@ -43,7 +42,9 @@ void Renderer::_submitModelMeshData(const MyMesh& mesh) const
 	glUniform4fv(_uniformLocator[RendererUniformLocations::MATERIAL_EMISSIVE], 1, mesh.mat.emissive);
 	glUniform1f(_uniformLocator[RendererUniformLocations::MATERIAL_SHININESS], mesh.mat.shininess);
 
-	glUniform1d(_uniformLocator[RendererUniformLocations::TEXTURE_MODE], 0);
+	glUniform1ui(_uniformLocator[RendererUniformLocations::TEXTURE_MODE], (unsigned int)Texture::TextureMode::NONE);
+	glUniform1ui(_uniformLocator[RendererUniformLocations::TEXTURE_N_COLOR_MAPS], 0);
+	glUniform1ui(_uniformLocator[RendererUniformLocations::TEXTURE_N_NORMAL_MAPS], 0);
 }
 
 

@@ -73,6 +73,11 @@ struct FogData {
 };
 
 
+struct ShadowData {
+	vec4 color;
+};
+
+
 struct LensFlareData {
 	vec4 color;
 	uint colorMapId;
@@ -100,6 +105,7 @@ uniform MaterialData materialData;
 uniform TextureData textureData;
 uniform LightingData lightingData;
 uniform FogData fogData;
+uniform ShadowData shadowData;
 uniform LensFlareData lensFlareData;
 uniform EnvironmentalMappingData environmentalMappingData;
 uniform uint renderMode;
@@ -370,12 +376,15 @@ vec4 renderLensFlare() {
 }
 
 
+
+
 vec4 renderShadows() 
 {
-	vec4 shadowColor = vec4(0.02, 0.02, 0.05, 0.8);
-
-	return shadowColor;
+	return vec4(0.05, 0.02, 0.05, 0.5);
+	return shadowData.color;
 }
+
+
 
 
 void main() {

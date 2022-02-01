@@ -72,29 +72,14 @@ void Renderer::_disableReflectionsRendering()
 }
 
 
-void Renderer::_blendReflections(const MeshComponent& mesh, const TransformComponent& transform) const
-{
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	
-	RendererData::SubmitInstanceBuffer instanceBuffer = RendererData::SubmitInstanceBuffer();
-	_submitMeshData(mesh.meshData());
-	_addObjectToInstanceBuffer(instanceBuffer, &transform);
-	_submitRenderableData(mesh.meshData(), instanceBuffer);
-
-	glDisable(GL_BLEND);
-}
-
-
 void Renderer::_renderReflectionPlane(const Scene& scene, ReflectionPlaneComponent& reflectionPlane)
 {
 	_stencilShadowReflectionPlane(reflectionPlane.mesh(), reflectionPlane.transform());
 	_enableReflectionsRendering();
 
 	// TODO flip position of all lightsources on y axis -> lightPos.y *= -1.0f
-	_renderMeshes(scene, RendererSettings::RendererMode::MESH_RENDERER);
 	_renderModels(scene, RendererSettings::RendererMode::MESH_RENDERER);
+	_renderMeshes(scene, RendererSettings::RendererMode::MESH_RENDERER);
 
 	_disableReflectionsRendering();
-	_blendReflections(reflectionPlane.mesh(), reflectionPlane.transform());
 }
